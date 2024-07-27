@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    
+    <ui:define name="body">
+        <pm:page id="verPage" >
+            <pm:header title="Registro " rendered="#{!oficinaPubController.blnFin}" />
+            <pm:content>            
+                 <h:form id="verForm"> 
+                     <pm:field>
+                         <h:inputHidden  id="hidden" value="#{oficinaPubController.hidden}"  />
+                     </pm:field>
+                     <pm:field rendered="#{oficinaPubController.blnFin}" >
+                        <div align="center">
+                            <h:outputLabel value="Muchas gracias por reportar la feria no autorizada" /><br/>
+                            <h:graphicImage url="/resources/icons/icon_pirotecnica.png" />
+                        </div>
+                     </pm:field>
+                     <pm:field rendered="#{!oficinaPubController.blnFin}">
+                         <h:outputLabel for="direccion" value="Dirección del lugar:" />
+                         <p:inputText id="direccion" value="#{oficinaPubController.direccion}" maxlength="200" />
+                     </pm:field>
+                     <pm:field rendered="#{!oficinaPubController.blnFin}">
+                         <h:outputLabel for="referencia" value="Referencia:" />
+                         <p:inputText id="referencia" value="#{oficinaPubController.referencia}" maxlength="300"/>
+                     </pm:field>
+                     <pm:field rendered="#{!oficinaPubController.blnFin}">
+                         <h:outputLabel for="descripcion" value="Descripción del reporte:" />
+                         <p:inputTextarea rows="5" cols="30" counter="restantes" maxlength="300" counterTemplate="{0} carácteres restantes." id="descripcion"
+                                          autoResize="false" value="#{oficinaPubController.descripcion}"  />
+                         <h:outputText id="restantes" value="" />
+                     </pm:field>
+                         
+                    <p:commandButton value="Enviar" icon="ui-icon-mail-closed" actionListener="#{oficinaPubController.addMarker}" style="border: 1px solid #1f89ce; color: #fff; background: #2399e5;" update="@form" process="@form" rendered="#{!oficinaPubController.blnFin}" />
+                    <p:commandButton value="Regresar" actionListener="#"  onclick="return regresar()" style="border: 1px solid #1f89ce; color: #fff; background: #2399e5;" rendered="#{!oficinaPubController.blnFin}" />
+                </h:form>
+                <script type="text/javascript">
+                    function regresar() {
+                        document.getElementById('verPage:verForm:direccion_input').value = '';
+                        document.getElementById('verPage:verForm:referencia_input').value = '';
+                        document.getElementById('verPage:verForm:descripcion').value = '';
+                        location.href= 'List.xhtml';
+                    }
+                </script>
+
+            </pm:content>
+        </pm:page>
+    </ui:define>
+        
+</ui:composition>

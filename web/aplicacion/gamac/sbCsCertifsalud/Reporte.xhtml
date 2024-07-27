@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{BundleBDIntegrado.ReportesbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'REPORTE'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="reporteForm" rendered="#{sbCsCertifsaludController.estado == 'REPORTE'}">
+            <p:defaultCommand target="btnBuscarReporte"/>                      
+            <h:panelGrid columns="2" width="100%" >
+                <p:fieldset>
+                    <h:panelGrid columns="3" >
+                        <h:outputText value="#{BundleBDIntegrado.sbCsCertifsalud_anio}" />
+                        <p:selectOneMenu id="anio"
+                                         value="#{sbCsCertifsaludController.anio}" >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item}"
+                                          value="#{sbCsCertifsaludController.obtenerListadoAnios() }"/>
+                        </p:selectOneMenu>
+                        
+                        <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                             id="btnBuscarReporte"
+                                             process="@form"
+                                             style="margin-left: 20px;"
+                                             icon="ui-icon-search "
+                                             actionListener="#{sbCsCertifsaludController.buscarReporte()}"
+                                             update="@form"/>
+                    </h:panelGrid>
+                </p:fieldset>
+            </h:panelGrid>
+            
+            
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="2" style="width: 100%;margin-bottom: -10px;" >     
+                    <h:panelGrid columns="1" style="float: right;" rendered="#{sbCsCertifsaludController.listadoRep.size() > 0}" >
+                        <h:commandLink  >
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleBDIntegrado.ExportarExcel}"/>
+                            <pe:exporter type="xlsx" target="buscarDatatableRegistro" fileName="ListadoCertificadosDeSalud"  />
+                        </h:commandLink>
+                    </h:panelGrid>
+                </h:panelGrid>
+                
+                <p:dataTable id="buscarDatatableRegistro" 
+                                value="#{sbCsCertifsaludController.listadoRep}"
+                                var="itemReg"
+                                emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                    
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column rowspan="3" headerText="ESTABLECIMIENTO" />
+                                    <p:column colspan="4" headerText="ESTADO" />
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="2" headerText="SIN TRANSMITIR" />
+                                    <p:column colspan="2" headerText="TRANSMITIDO" />
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="APTO" style="text-align: center;" />
+                                    <p:column headerText="NO APTO" style="text-align: center;" />
+                                    <p:column headerText="APTO" style="text-align: center;" />
+                                    <p:column headerText="NO APTO" style="text-align: center;" />
+                                </p:row>
+                            </p:columnGroup>
+                    
+                            <p:column style="text-align: center;" >
+                                <h:outputText value="#{itemReg.ESTABLECIMIENTO}" />
+                            </p:column>
+                            <p:column style="text-align: center;" >
+                                <h:outputText value="#{itemReg.CREADO_APTO}" />
+                            </p:column>
+                            <p:column style="text-align: center;" >
+                                <h:outputText value="#{itemReg.CREADO_NOAPTO}" />
+                            </p:column>
+                            <p:column style="text-align: center;" >
+                                <h:outputText value="#{itemReg.TRANSMITIDO_APTO}" />
+                            </p:column>
+                            <p:column style="text-align: center;" >
+                                <h:outputText value="#{itemReg.TRANSMITIDO_NOAPTO}" />
+                            </p:column>
+                            
+                        </p:dataTable>
+                <br/>
+            </h:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-06-17T17:23:25 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GuiaTransito" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="939cf733-c143-485f-81cb-70aa36deb7dc">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#D9D9D9">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Style1" hImageAlign="Center" vImageAlign="Middle" markup="html"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="dsArmas" uuid="dd7a30ea-5bd9-452e-9e87-f8cabd7f79e5">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nroRua" class="java.lang.String"/>
+		<field name="tipoArma" class="java.lang.String"/>
+		<field name="serie" class="java.lang.String"/>
+		<field name="marca" class="java.lang.String"/>
+		<field name="modelo" class="java.lang.String"/>
+		<field name="estado" class="java.lang.String"/>
+		<field name="calibres" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="p_nroDoc" class="java.lang.String"/>
+	<parameter name="p_fecVencRD" class="java.lang.String"/>
+	<parameter name="p_origen" class="java.lang.String"/>
+	<parameter name="p_destino" class="java.lang.String"/>
+	<parameter name="p_fecEmi" class="java.lang.String"/>
+	<parameter name="p_fecVenc" class="java.lang.String"/>
+	<parameter name="logoSucamec" class="java.lang.String"/>
+	<parameter name="firmaGerente" class="java.lang.String"/>
+	<parameter name="p_hashqr" class="java.lang.String"/>
+	<parameter name="p_urlsel" class="java.lang.String"/>
+	<parameter name="p_isBorrador" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="p_mostrar_qr_fir" class="java.lang.Boolean"/>
+	<parameter name="p_textFechaVen" class="java.lang.String"/>
+	<parameter name="p_armas" class="java.util.ArrayList"/>
+	<parameter name="p_fecha_exp" class="java.lang.String"/>
+	<parameter name="p_fecVenResolucion" class="java.lang.String"/>
+	<parameter name="p_tipoGuia" class="java.lang.String"/>
+	<parameter name="administrado" class="java.lang.String"/>
+	<parameter name="tipoNumDoc" class="java.lang.String"/>
+	<parameter name="sedeSucamec" class="java.lang.String"/>
+	<parameter name="sedeDireccion" class="java.lang.String"/>
+	<parameter name="p_fechaPie" class="java.lang.String"/>
+	<parameter name="P_WEBVALIDATOR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="108" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<rectangle>
+				<reportElement x="24" y="5" width="507" height="55" uuid="c28940be-faf9-4fdd-91aa-2d333d412103"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement positionType="Float" x="300" y="63" width="231" height="21" uuid="73fd06f5-0928-47de-9b07-a15f7572c5f4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NUMERO " + $P{p_nroDoc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="163" y="28" width="365" height="29" uuid="7191fc0b-a593-4912-aa0c-43abe559f277"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["AUTORIZACIÓN DE TRASLADO DE ARMAS DE FUEGO PAARA RENOVACIÓN DE LA LICENCIA DE USO"]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="29" y="8" width="131" height="49" uuid="eb1ef38b-f625-4515-b536-f6b51422f00f"/>
+				<imageExpression><![CDATA[$P{logoSucamec}]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="95" y="83" width="205" height="21" uuid="7597b909-fb54-422e-bf7d-25dbd32104a8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_fecVenResolucion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="25" y="83" width="70" height="20" uuid="407dc521-0f67-4b30-8ea0-ef07a9886687">
+					<printWhenExpression><![CDATA[$P{p_fecVenResolucion}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Vencimiento:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="82" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="30" y="3" width="501" height="21" uuid="b53360e1-5aa9-4caa-8471-a003af5fa8ee"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["El Sr(a). <b>" + $P{administrado} + "</b> con <b>" + $P{tipoNumDoc} + "</b> esta autorizado para realizar el traslado de sus armas de fuego para su verificación física en la SUCAMEC - <b>" + $P{sedeSucamec}  + "</p>, con dirección " + $P{sedeDireccion} + "."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="30" y="26" width="100" height="18" uuid="81c46174-efce-4249-abfd-533774f27e65"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lo siguiente:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="Float" x="30" y="47" width="501" height="32" isRemoveLineWhenBlank="true" forecolor="#030202" uuid="c7c3d052-715b-48cc-ab59-0d2934ba3bde">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsArmas" uuid="41c021e2-fb44-4eb1-b309-e302bf24eb6e">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{p_armas})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="4279ecd1-885d-4230-866b-31c2c21de1c7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="Table 1_TH" height="16" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="16" uuid="6269bd3e-0bec-44fc-bf7c-aa0da8ffb594"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[RUA]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="16">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+								<reportElement x="0" y="0" width="90" height="16" uuid="4463255d-e36d-4cf7-8f66-fe2aa6599a0b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nroRua}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="ed0e206a-0cd3-44b1-afb9-dbd7dc624d3a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:tableHeader style="Table 1_TH" height="16" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="16" uuid="b2682139-fdf8-4445-85fd-a79fa4824eae"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[SERIE]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="16">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="80" height="16" uuid="387eafd6-ccfe-4530-9572-6940f7148bbd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="260" uuid="e2a2ae20-841a-4ba4-8992-0b0d07264714">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:tableHeader style="Table 1_TH" height="16" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="260" height="16" uuid="fe318bcc-1afc-4308-897c-f213e2da6dc5"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[TIPO / MARCA / MODELO / CALIBRE]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="16">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="260" height="16" uuid="19be7ba1-0c86-4a41-922c-d9f268a81162"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{tipoArma} + " / " + $F{marca} + " / " + $F{modelo} + " / " + $F{calibres}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="adc4646c-cbff-408d-bb80-4a3e17725bad">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:tableHeader style="Table 1_TH" height="16" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="16" uuid="ec7965f4-4ace-463e-b07e-5e63004933ff"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[ESTADO]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="Table 1_TD" height="16">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+								<reportElement x="0" y="0" width="70" height="16" uuid="9caba7c4-49e3-463c-aa56-376f31352c1f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="183">
+			<textField>
+				<reportElement positionType="Float" x="290" y="3" width="235" height="20" uuid="0748492e-457d-44b0-a6da-bb844b9255e4"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Magdalena del Mar, " + $P{p_fechaPie}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="39" y="30" width="492" height="108" uuid="83d27d59-814f-4929-9dd8-b9064ebfb285"/>
+				<image hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="0" y="13" width="190" height="93" isRemoveLineWhenBlank="true" uuid="f4caee5c-b8b5-479a-bdf5-6762c8609733"/>
+					<imageExpression><![CDATA[$P{firmaGerente}]]></imageExpression>
+				</image>
+				<frame>
+					<reportElement positionType="Float" x="252" y="0" width="240" height="108" uuid="e7c372c3-3261-4947-a5fb-88f4943eccd1"/>
+					<componentElement>
+						<reportElement positionType="Float" mode="Transparent" x="72" y="0" width="97" height="72" isRemoveLineWhenBlank="true" uuid="61171bb3-fe7e-4f55-a116-8d6f886baf46"/>
+						<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+							<jr:codeExpression><![CDATA[$P{p_hashqr}]]></jr:codeExpression>
+						</jr:QRCode>
+					</componentElement>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement positionType="Float" x="0" y="73" width="240" height="35" isRemoveLineWhenBlank="true" uuid="bc8e132d-ad56-49f5-b839-6294c5009f20"/>
+						<textElement textAlignment="Center" markup="html">
+							<font size="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$P{P_WEBVALIDATOR}+"<br/>Puede validar este documento con el QR o a través del enlace <br/><u><a href=\'https://www.sucamec.gob.pe/sel\'>https://www.sucamec.gob.pe/sel</a></u>"]]></textFieldExpression>
+					</textField>
+				</frame>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="52" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="412" y="32" width="87" height="20" uuid="ce5fef71-b9f2-48a3-8637-0c9c2bd64912"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="499" y="32" width="45" height="20" uuid="0a61d460-a26d-45d0-a16c-ef02a669bd6f"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="23" y="3" width="508" height="27" uuid="81a8a3b8-c893-42b2-82c1-0e745ba92ced"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="25" y="7" width="500" height="12" uuid="b17692fa-5a56-453f-aba3-3e4257488f97"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NOTA: Documento autorizado únicamente para el traslado de la verificación física de las armas de fuego de la SUCAMEC, así como su retorno"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

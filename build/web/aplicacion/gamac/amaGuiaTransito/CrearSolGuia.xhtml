@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition>
+        <h:form id="registroSolForm" rendered="#{amaGuiaTransitoController.estado == 'CREAR'}">
+            <h:outputText value="" />
+            <p:panel id="datosSolicitante" header="#{bundleGamac.DatosSolicitante_panel}">
+                <h:panelGrid columns="4">
+                    <p:outputLabel value="#{bundleGamac.TipoDocumento_lb}"/>
+                    <p:outputLabel value="#{amaGuiaTransitoController.personaUsuario.tipoDoc==null?'RUC':amaGuiaTransitoController.personaUsuario.tipoDoc.nombre}" style="font-weight:bold"/>
+
+                    <p:outputLabel value="#{bundleGamac.TipoPersona_lb}"/>
+                    <p:outputLabel value="#{amaGuiaTransitoController.personaUsuario.tipoId.nombre}" style="font-weight:bold"/>
+
+                    <p:outputLabel value="#{bundleGamac.NumeroDocumento_lb}"/>
+                    <p:outputLabel value="#{amaGuiaTransitoController.personaUsuario.numDoc==null?amaGuiaTransitoController.personaUsuario.ruc:amaGuiaTransitoController.personaUsuario.numDoc}" style="font-weight:bold"/>
+
+                    <p:outputLabel value="#{amaGuiaTransitoController.personaUsuario.rznSocial!=null?bundleGamac.RazonSocial_lb:bundleGamac.ApellidosNombres_lb}"/>
+                    <p:outputLabel value="#{amaGuiaTransitoController.personaUsuario.rznSocial==null?amaGuiaTransitoController.personaUsuario.apePat.concat(' ').concat(amaGuiaTransitoController.personaUsuario.apeMat).concat(' ').concat(amaGuiaTransitoController.personaUsuario.nombres):amaGuiaTransitoController.personaUsuario.rznSocial}" style="font-weight:bold"/>
+                </h:panelGrid>
+            </p:panel>
+            <h:outputText value="" />
+            <p:panel id="datosTipoGuia" header="#{bundleGamac.TipoGuia_panel}">
+                <h:panelGrid columns="4">
+                    <p:outputLabel value="#{bundleGamac.TipoGuia_lb}"/>
+                    <p:selectOneMenu id="cboTipoGuia" value="#{amaGuiaTransitoController.idTipoGuia}"
+                                     required="true" requiredMessage="#{bundleGamac.MensajeTipoGuia_Requerido}">
+                        <f:selectItem itemLabel="#{bundleGamac.SeleccioneItem_lb}" itemValue="#{null}"/>
+                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                       value="#{amaGuiaTransitoController.listTipoGuia }"/>
+                        <p:ajax event="change" update="@this,datosArmas" process="@this, cboTipoGuia" listener="#{amaGuiaTransitoController.inicializarOrigenDestino()}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value="#{bundleGamac.RGReferido_lb}"/>
+                    <p:inputText value="#{amaGuiaTransitoController.rgReferido}"/>
+                </h:panelGrid>
+            </p:panel>
+            <h:outputText value="" />
+            <p:panel id="datosTraslado" header="#{bundleGamac.DatosTraslado_panel}">
+                <h:panelGrid columns="5">
+                    <p:outputLabel value="#{bundleGamac.TipoOrigen_lb}"/>
+                    <p:selectOneMenu id="cbOrigen" value="#{amaGuiaTransitoController.tipoOrigenSelect}" 
+                                     required="true" requiredMessage="#{bundleGamac.MensajeTipoOrigen_Requerido}">
+                        <f:selectItem itemLabel="#{bundleGamac.SeleccioneItem_lb}" itemValue="#{null}"/>
+                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                       value="#{amaGuiaTransitoController.listOrigen}"/>
+                        <p:ajax event="change" update="@this" process="@this, cbOrigen" listener="#{amaGuiaTransitoController.actualizarGridTraslado()}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="#{bundleGamac.Origen_lb}" rendered="#{amaGuiaTransitoController.tipoOrigenSelect!=null}"/>
+                    <p:autoComplete id="AuComOrigen" value="#{amaGuiaTransitoController.selectedOriAlm}"
+                                    size="50" 
+                                    required="true" requiredMessage="#{bundleGamac.MensajeOrigen_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_ALMA'}"
+                                    completeMethod="#{amaGuiaTransitoController.completeAlmacenAduanero}"
+                                    var="oringenSelected" itemLabel="#{oringenSelected.direccion}" 
+                                    minQueryLength="3" cache="true" itemValue="#{oringenSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComOrigen" process="@this"/>
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComOrigen"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_ALMA'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+
+                    <p:autoComplete id="AuComOrigen2" value="#{amaGuiaTransitoController.selectedOriPuer}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeOrigen_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_PUER'}"
+                                    completeMethod="#{amaGuiaTransitoController.completePuertoAduanero}"
+                                    var="oringenSelected" itemLabel="#{oringenSelected.nombre}" 
+                                    minQueryLength="3" cache="true" itemValue="#{oringenSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComOrigen2" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComOrigen2"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_PUER'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                    <p:autoComplete id="AuComOrigen3" value="#{amaGuiaTransitoController.selectedOriSucamec}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeOrigen_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_ALMS'}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccionSucamec}"
+                                    var="oringenSelected" itemLabel="#{oringenSelected.direccion} #{oringenSelected.referencia}"  
+                                    minQueryLength="3" cache="true" itemValue="#{oringenSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComOrigen3" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComOrigen3"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_ALMS'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+
+                    <p:autoComplete id="AuComOrigen4" value="#{amaGuiaTransitoController.selectedOriLocal}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeOrigen_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_LOC'}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccionLocal}"
+                                    var="oringenSelected" itemLabel="#{oringenSelected.direccion}"  
+                                    minQueryLength="3" cache="true" itemValue="#{oringenSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComOrigen4" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComOrigen4"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg=='TP_GTORDES_LOC'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+
+                    <p:autoComplete id="AuComOrigen5" value="#{amaGuiaTransitoController.selectedOriOtro}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeOrigen_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_ALMA' 
+                                                and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_PUER' 
+                                                and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_ALMS' 
+                                                and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_LOC'
+                                                and amaGuiaTransitoController.tipoOrigenSelect!=null}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccion}"
+                                    var="oringenSelected" itemLabel="#{oringenSelected.direccion}" 
+                                    minQueryLength="3" cache="true" itemValue="#{oringenSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComOrigen5" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComOrigen5"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  
+                                rendered="#{amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_ALMA' 
+                                            and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_PUER' 
+                                            and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_ALMS' 
+                                            and amaGuiaTransitoController.tipoOrigenSelect.codProg!='TP_GTORDES_LOC'
+                                            and amaGuiaTransitoController.tipoOrigenSelect!=null}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                </h:panelGrid>
+                <h:panelGrid columns="5">
+                    <p:outputLabel value="#{bundleGamac.TipoDestino_lb}"/>
+                    <p:selectOneMenu id="cbDestino" value="#{amaGuiaTransitoController.tipoDestinoSelect}" 
+                                     required="true" requiredMessage="#{bundleGamac.MensajeTipoDestino_Requerido}">
+                        <f:selectItem itemLabel="#{bundleGamac.SeleccioneItem_lb}" itemValue="#{null}"/>
+                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                       value="#{amaGuiaTransitoController.listDestino}"/>
+                        <p:ajax event="change" update="@this" process="@this, cbDestino" listener="#{amaGuiaTransitoController.actualizarGridTraslado()}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel value="#{bundleGamac.Destino_lb}" rendered="#{amaGuiaTransitoController.tipoDestinoSelect!=null}"/>
+                    <p:autoComplete id="AuComDestino" value="#{amaGuiaTransitoController.selectedDestOtro}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeDestino_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg!='TP_GTORDES_ALMS' 
+                                                and amaGuiaTransitoController.tipoDestinoSelect.codProg!='TP_GTORDES_LOC'
+                                                and amaGuiaTransitoController.tipoDestinoSelect!=null}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccion}"
+                                    var="destinoSelected" itemLabel="#{destinoSelected.direccion}" 
+                                    minQueryLength="3" cache="true" itemValue="#{destinoSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComDestino" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComDestino"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  
+                                rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg!='TP_GTORDES_ALMS' 
+                                            and amaGuiaTransitoController.tipoDestinoSelect.codProg!='TP_GTORDES_LOC'
+                                            and amaGuiaTransitoController.tipoDestinoSelect!=null}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                    <p:autoComplete id="AuComDestino1" value="#{amaGuiaTransitoController.selectedDestSucamec}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeDestino_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg=='TP_GTORDES_ALMS'}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccionSucamec}"
+                                    var="destinoSelected" itemLabel="#{destinoSelected.direccion} #{destinoSelected.referencia}" 
+                                    minQueryLength="3" cache="true" itemValue="#{destinoSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComDestino1" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComDestino1"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg=='TP_GTORDES_ALMS'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                    <p:autoComplete id="AuComDestino2" value="#{amaGuiaTransitoController.selectedDestLocal}"
+                                    size="50"
+                                    required="true" requiredMessage="#{bundleGamac.MensajeDestino_Requerido}"
+                                    rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg=='TP_GTORDES_LOC'}"
+                                    completeMethod="#{amaGuiaTransitoController.completeSbDireccionLocal}"
+                                    var="destinoSelected" itemLabel="#{destinoSelected.direccion}" 
+                                    minQueryLength="3" cache="true" itemValue="#{destinoSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:AuComDestino2" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComDestino2"  value="#{bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  rendered="#{amaGuiaTransitoController.tipoDestinoSelect.codProg=='TP_GTORDES_LOC'}"
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                </h:panelGrid>
+            </p:panel>
+            <h:outputText value="" />
+            <p:panel id="datosArmas" header="#{bundleGamac.Armas_panel}">
+                <h:panelGrid columns="4">
+                    <p:outputLabel value="#{bundleGamac.NroSerie_lb}" rendered="#{amaGuiaTransitoController.obtenerIdTipoBus()==1}"/>
+                    <p:outputLabel value="#{bundleGamac.Rua_lb}" rendered="#{amaGuiaTransitoController.obtenerIdTipoBus()==2}"/>
+                    <p:outputLabel value="#{bundleGamac.NroSerieORua_lb}" rendered="#{amaGuiaTransitoController.obtenerIdTipoBus()==3}"/>
+
+                    <p:autoComplete id="AuComArma" value="#{amaGuiaTransitoController.selectedAmaArma}"
+                                    disabled="#{amaGuiaTransitoController.idTipoGuia==null}"
+                                    completeMethod="#{amaGuiaTransitoController.completeDatosArmaAnterior}"
+                                    var="armaSelected" 
+                                    itemLabel="#{amaGuiaTransitoController.obtenerIdTipoBus()==1?armaSelected.serie:armaSelected.nroRua}" 
+                                    minQueryLength="3" cache="true" itemValue="#{armaSelected}"  forceSelection="true" scrollHeight="200">
+                        <p:ajax event="itemSelect" update="registroSolForm:datosArmas" process="@this" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComArma"  value="#{amaGuiaTransitoController.idTipoGuia==null?bundleGamac.SeleccioneTipoGuia_slide:bundleGamac.IngreseTresCaracteres_slide}" showEffect="slideToggle"  
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                    <p:commandButton value="#{bundleGamac.Agregar_cmmb}" actionListener="#{amaGuiaTransitoController.agregarArma}" 
+                                     process="@this" update="armasTraslado,botones"/>
+                </h:panelGrid>
+                <h:panelGrid>
+                    <p:dataTable id="armasTraslado" value="#{amaGuiaTransitoController.listaArmasGuia}" 
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 selection="#{amaGuiaTransitoController.listaArmasGuiaSelect}"                                 
+                                 emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                                 currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}">
+                        <p:column selectionMode="multiple" style="width:5%;text-align:center" />
+                        <p:column headerText="#{bundleGamac.Codigo_head}" style="text-align: center;" > 
+                            <h:outputText value="#{item.nroRua}" />
+                        </p:column>
+                        <p:column headerText="#{bundleGamac.TipoArma_head}" style="text-align: center;" > 
+                            <h:outputText value="#{item.modeloId.tipoArmaId.nombre}" />
+                        </p:column>
+                        <p:column headerText="#{bundleGamac.Marca_head}" style="text-align: center;" > 
+                            <h:outputText value="#{item.modeloId.marcaId.nombre}" />
+                        </p:column>
+                        <p:column headerText="#{bundleGamac.Modelo_head}" style="text-align: center;" > 
+                            <h:outputText value="#{item.modeloId.modelo}" />
+                        </p:column>
+                        <p:column headerText="#{bundleGamac.Calibre_head}" style="text-align: center;" > 
+                            <h:outputText value="#{amaGuiaTransitoController.obtenerCalibres(item)}" />
+                        </p:column>
+                        <p:column headerText="#{bundleGamac.Serie_head}" style="text-align: center;" > 
+                            <h:outputText value="#{item.serie}" />
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton value="#{bundleGamac.EliminarSeleccionados_cmmb}" actionListener="#{amaGuiaTransitoController.eliminarArmas()}"
+                                     process="@this,datosArmas" update=":registroSolForm:armasTraslado"/>
+                </h:panelGrid>
+                <h:panelGrid columns="2" id="botones">
+                    <p:commandButton icon="ui-icon-disk"
+                                     value="#{bundleGamac.Guardar}" actionListener="#{amaGuiaTransitoController.guardarSolicitud(true)}" 
+                                     rendered="#{amaGuiaTransitoController.validarCustodia()}"
+                                     update="@this"/>
+                    <p:commandButton icon="ui-icon-disk"
+                                     value="#{bundleGamac.Guardar}" actionListener="#{amaGuiaTransitoController.guardarSolicitud(false)}" 
+                                     rendered="#{!amaGuiaTransitoController.validarCustodia()}"
+                                     update="@all"/>
+                    <p:commandButton value="#{bundleGamac.Regresar}" actionListener="#{amaGuiaTransitoController.regresar}" 
+                                     immediate="true"
+                                     process="@this" update="@all"/>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+    </ui:composition>
+</html>

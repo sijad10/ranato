@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <div class="ui-fluid">
+        <p:dialog id="dlgCompletarProceso" widgetVar="wvDialogCompletarProceso" width="400"
+                  modal="true" resizable="false" appendTo="@(body)" 
+                  header="Transmisión de registros"
+                  responsive="true" 
+                  closable="false">
+            
+            <h:form id="frmCompletarProceso" >
+                <h:outputText value="#{BundleBDIntegrado.sspCarne_confirmarTransmitir}" />
+                <h:outputText value="#{BundleBDIntegrado.sspCarne_completarProceso_msje}" rendered="#{sspCarneController.blnProcesoTransmision}" />
+                
+                <div id="pnlProgressMsje" style="width: 100%;display: none;" >
+                    <br/>
+                    <h:outputText value="#{BundleBDIntegrado.sspCarne_confirmarTransmitirProceso}" style="font-weight: bold; font-size: large;" />
+                    <br/>
+                </div>
+                <br/>
+                <div id="pnlProgressBar" style="width: 100%;display: none;" >
+                    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{sspCarneController.progressCompletarProceso}" id="progressBar"
+                                   labelTemplate="{value}%" styleClass="animated" global="false" />
+                </div>
+                <br/>
+                <h:panelGrid style="float: right" columns="2">
+                    <p:commandButton value="#{BundleBDIntegrado.sspCarne_list_transmitido}"
+                                process="@form"
+                                style="margin-left: 20px;"
+                                rendered="#{!sspCarneController.blnProcesoTransmision}"
+                                onclick="setVisibleProgressBar(); PF('pbAjax').start(); "     
+                                icon="ui-icon-transferthick-e-w" actionListener="#{sspCarneController.transmitirCarne()}"
+                                update="@form" >
+                    </p:commandButton>
+                    <p:commandButton value="Cerrar"
+                                 process="@this"      
+                                 update="frmCompletarProceso"
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogCompletarProceso').hide()"
+                                 icon="ui-icon-closethick" />
+                </h:panelGrid>
+            </h:form>
+            <script type="text/javascript">
+                //<![CDATA[
+                function setVisibleProgressBar() {
+                    document.getElementById("pnlProgressBar").style.display = 'block';
+                    document.getElementById("pnlProgressMsje").style.display = 'block';                    
+                }
+                //]]>
+            </script> 
+        </p:dialog>
+    </div>
+        
+</html>

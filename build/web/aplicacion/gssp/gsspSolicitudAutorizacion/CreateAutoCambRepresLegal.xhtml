@@ -1,0 +1,789 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    
+      <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      </h:head>
+    
+    <body>
+
+        <ui:composition template="/template.xhtml">
+
+            <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_Title_Gral}" rendered="#{gsspSolicitudAutorizacionController.estado == 'CREARAUTCAMRPRESLEGAL'}"/>
+            </b>
+            </ui:define>
+
+            <ui:define name="body">
+                
+                
+                <h:form id="FormRegCambRepresLegal" rendered="#{gsspSolicitudAutorizacionController.estado == 'CREARAUTCAMRPRESLEGAL'}" >
+                    
+                    <p:remoteCommand name="testAutoRunCambiRepresLegal" action="#{gsspSolicitudAutorizacionController.onloadCreateCambioRLDefault}" autoRun="true" rendered="#{!gsspSolicitudAutorizacionController.termCondic_CambRepresLegal}" />
+                    <p:defaultCommand target="botonGuardarCambioDomicilioLegal" />
+                
+              
+                    <h:panelGrid columns="1" id="pnlGrid_ACRL_DatosModalidad" width="100%" >
+                         
+                        <p:panel id="pnl_ACRL_DatosModalidad" header="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_Panel_Title_Modalidad}" >
+                        
+                            <h:panelGrid columns="8">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaAuto}" style="display: block; width: 120px;" />
+                                <p:commandButton 
+                                    style="display: block;  margin-left: 5px;" 
+                                    type="button" 
+                                    icon="ui-icon-search" 
+                                    onclick="PF('wvDlgBuscarAutorizacionACRL').show()" 
+                                    disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaNumero}" style="display: block; margin-left: 5px; width: 60px;" />
+                                <p:outputLabel value="#{(gsspSolicitudAutorizacionController.registro != null) ? gsspSolicitudAutorizacionController.registro.nroSolicitiud : '---' }" style="display: block;  width: 250px;" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaVigencia}" style="display: block; width: 90px;" />
+                                
+                                <p:outputLabel value="#{(gsspSolicitudAutorizacionController.registro != null) ? gsspSolicitudAutorizacionController.registro.fechaIni : '---' }" style="display: block; width: 100px;" >
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaVigenciaAl}" style="display: block; width: 30px;" />
+                                <p:outputLabel value="#{(gsspSolicitudAutorizacionController.registro != null) ? gsspSolicitudAutorizacionController.registro.fechaFin : '---' }" style="display: block; width: 100px;" >       
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                
+                            </h:panelGrid>
+                            
+                            <h:panelGrid columns="4">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaTipoServicio}" style="display: block; width: 120px;" />
+                                <p:selectOneMenu id="bcoTipServicio"  value="#{gsspSolicitudAutorizacionController.regTipoSeguridadSelected}" disabled="true" style="display: block; width: 100px; " >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoSeguridadList}"/>
+                                    <p:ajax event="change" update="@this, pnl_ACRL_DatosModalidad, bcoFormaTipoServ" listener="#{gsspSolicitudAutorizacionController.listarFormasTipoSeguridad()}" />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaFormas}" rendered="#{gsspSolicitudAutorizacionController.habilitarFormaTipServACRL}" style="display: block; width: 70px; padding-left: 20px"/>
+                                <p:selectOneMenu id="bcoFormaTipoServ" value="#{gsspSolicitudAutorizacionController.regFormaTipoSeguridadSelected }" rendered="#{gsspSolicitudAutorizacionController.habilitarFormaTipServACRL}" style="display: block; width: 100px;" disabled="true"> 
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regFormaTipoSeguridadList}"/>
+                                </p:selectOneMenu>
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="3">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaServicioPrestado}" style="display: block; width: 120px;" />
+                                <p:selectOneMenu id="cboServPrestado"  value="#{gsspSolicitudAutorizacionController.regServicioPrestadoSelected }" style="display: block; width: 100px; " disabled="true" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regServicioPrestadoList}"/>                                 
+                                </p:selectOneMenu>
+                                
+                                <p:commandButton 
+                                    value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaBtnTermCondic}" 
+                                    type="button" 
+                                    icon="pi pi-book" 
+                                    onclick="PF('wvDlgTerminosCondicionesACRL').show()" 
+                                    disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal == true) ? true : false}" 
+                                />
+                                
+                            </h:panelGrid>
+                          
+                            
+                        </p:panel>
+                        
+                    </h:panelGrid>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <h:panelGrid columns="1" id="pnlGrid_ACRL_RepresLegal" width="100%" >
+                         
+                        <p:panel id="pnl_ACRL_RepresLegal" header="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_Panel_Title_RepLegal}" >
+                            
+                            <h:panelGrid columns="3">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_RL}" style="display: block; width: 180px;" />
+                                <p:selectOneMenu id="cboRepresLegal" value="#{gsspSolicitudAutorizacionController.regPersonasRLSelected}" style="display: block; width: 200px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >     
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombres}, #{item.apePat} #{item.apeMat}" value="#{gsspSolicitudAutorizacionController.regPersonasRLList}"/>
+                                    <p:ajax event="change" update="@this,pnl_ACRL_RepresLegal" listener="#{gsspSolicitudAutorizacionController.mostrarDomicilioRepresentanteLegal()}" />
+                                </p:selectOneMenu>
+                                
+                                <p:commandButton id="btnRLBuscar"
+                                     icon="ui-icon-search"
+                                     ajax="false"
+                                     action="#{gsspSolicitudAutorizacionController.openDlgPersonaACRL()}"
+                                     style="display: block; width: 30px; margin-left: 10px;"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="8">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_PartReg} *" style="display: block; width: 180px;"/>
+                                <p:inputText id="txtPartReg_RL" value="#{(gsspSolicitudAutorizacionController.regRLPartidaRegistral)}" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_AsientoReg} *" style="display: block; width: 120px; padding-left: 30px"/>
+                                <p:inputText id="txtAsientoReg_RL" value="#{(gsspSolicitudAutorizacionController.regRLAsientoRegistral)}" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_ZonaReg} *" style="display: block; width: 110px; padding-left: 10px" />                                    
+                                <p:selectOneMenu id="cboPJZonaRegistral_RL" value="#{gsspSolicitudAutorizacionController.regZonaRegSelectedRL }" style="width: 60px !important;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regZonaRegListRL}"/>
+                                    <p:ajax event="change" update="@this,cboPJOficinaRegistral_RL" listener="#{gsspSolicitudAutorizacionController.listarOficinasRegistrales_RL()}" />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_OficReg} *" style="display: block; width: 110px; padding-left: 10px" />                                    
+                                <p:selectOneMenu id="cboPJOficinaRegistral_RL"  value="#{gsspSolicitudAutorizacionController.regOficinaRegSelectedRL }" style="width: 60px !important;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}">   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regOficinaRegListRL}"/>                                    
+                                </p:selectOneMenu>                                
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="5">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_TipUbic} *" style="display: block; width: 180px;"/>
+                                <p:selectOneMenu id="cboRLDomicilioLegal_RL"  value="#{gsspSolicitudAutorizacionController.regTipoViasSelected }" style="display: block; width: 200px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoViasList}"/>                                    
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_LBL_DomLegal} *" style="display: block; width: 120px; padding-left: 30px"/>
+                                <p:inputText id="txtRLDomicLegal_RL" value="#{gsspSolicitudAutorizacionController.regDomicilioRLSelected }" style="display: block; width: 270px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                                <p:commandButton id="btnRLCambiar_RL"
+                                     icon="ui-icon-disk"                                      
+                                     action="#{gsspSolicitudAutorizacionController.cambiarDireccionRepresentanteLegal()}"
+                                     value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelRL_BTN_Cambiar}"
+                                     ajax="false"
+                                     update="pnl_ACRL_RepresLegal" 
+                                     style="display: block; width: 120px; margin-left: 10px;"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                                
+                            </h:panelGrid>          
+                            
+                            
+                            <h:panelGrid columns="9">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_BoucherPago}" style="display: block; width: 180px;" />
+                                <p:inputText id="txtNroComprobante" value="#{gsspSolicitudAutorizacionController.regNroComprobante}" style="display: block; width: 150px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >
+                                    <p:keyFilter mask="int" preventPaste="false" />
+                                </p:inputText>
+                                
+                                <p:commandButton id="btnValidarBoucher"                               
+                                     action="#{gsspSolicitudAutorizacionController.validarComprobanteACRL()}"
+                                     value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_BoucherPagoBtnVal}"
+                                     update="pnl_ACRL_RepresLegal" 
+                                     style="display: block; width: 100px; margin-left: 20px;"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_BoucherPagoFecha}" style="display: block; width: 40px; padding-left: 20px"/>
+                                <p:outputLabel id="lblReciboFecha" value="#{gsspSolicitudAutorizacionController.regDatoRecibos.fechaMovimiento}" style="display: block; width: 70px; padding-left: 10px; color: #cd0a0a;">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_BoucherPagoMonto}" style="display: block; width: 50px; padding-left: 20px"/>
+                                <p:outputLabel id="lblReciboImporte" value="#{gsspSolicitudAutorizacionController.regDatoRecibos.importe}" style="display: block; width: 70px; padding-left: 10px; color: #cd0a0a;"/>
+                                
+                            </h:panelGrid>
+                            
+                        </p:panel>
+                        
+                    </h:panelGrid>
+                    
+                    
+                    
+                    <h:panelGrid columns="1" id="pnlGrid_RepresentLegalEntidadPublicad" width="100%" >
+                        
+                        <p:panel id="pnl_RepresentLegalEntidadPublica" header="#{BundleBDIntegrado.gsspAutorizacionCambDomLegal_Panel_Title_ResolDesignaRL}" >
+                        
+                            <h:panelGrid columns="6">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_LBL_TipDoc}" style="display: block; width: 150px;" />
+                                <p:selectOneMenu id="cboTipoDocRL"  value="#{gsspSolicitudAutorizacionController.regTipoDocEPSelected }" style="display: block; width: 100px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoDocEPList}"/>
+                                </p:selectOneMenu>
+                                                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_LBL_NomDoc}" rendered="#{gsspSolicitudAutorizacionController.regTipoDocEPSelected.codProg eq 'TP_DOC_OTRO'}" style="display: block; width: 130px; padding-left: 20px;"/>
+                                <p:inputText id="txtEP_NombDocRL" value="#{gsspSolicitudAutorizacionController.regNombDocEP }" rendered="#{gsspSolicitudAutorizacionController.regTipoDocEPSelected.codProg eq 'TP_DOC_OTRO'}"  style="display: block; width: 100px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                    
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_LBL_NumDoc}" style="display: block; width: 150px; padding-left: 20px;"/>
+                                <p:inputText id="txtEP_NumDocRL" value="#{gsspSolicitudAutorizacionController.regNumDocEP }" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="4">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_LBL_FechEmis}" style="display: block; width: 150px;"/>
+                                <p:calendar id="txfEP_FechaEmisRL"
+                                            locale="es"
+                                            showOn="button"
+                                            value="#{gsspSolicitudAutorizacionController.regFechaEmisEP }"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                            disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                            >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>
+                                
+                                                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_LBL_Documento}" style="display: block; width: 150px; padding-left: 85px"/>
+                                
+                                <p:fileUpload id="txf_ArchivoRP" 
+                                          label="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelDesignRL_BTN_Documento}"
+                                          invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                          fileUploadListener="#{gsspSolicitudAutorizacionController.handleFileUploadPDF_RP}"
+                                          invalidSizeMessage="#{gsspSolicitudAutorizacionController.obtenerMsjeInvalidSizeFileSelAutoPrestacServ()}"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('selAutoPrestacServ_sizeArchivo').valor}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          auto="true" process="@this,pnl_RepresentLegalEntidadPublica" update="@this,pnl_RepresentLegalEntidadPublica"
+                                          allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                          disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                          >
+                                    <h:outputText value="#{gsspSolicitudAutorizacionController.nomArchivoRP }" />
+                                </p:fileUpload>
+                                
+                                
+                            </h:panelGrid>
+                            
+                        </p:panel>
+                        
+                    </h:panelGrid>
+                    
+                    
+                    
+                    
+                    
+                    <h:panelGrid columns="1" id="pnlGrid_LocalPresServACRL" width="100%" >
+                        
+                        <p:panel id="pnl_LocalPresServACRL" header="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_Panel_Title_LocalPrestServ}" >
+                        
+                            <h:outputText value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_Title_Local}" style="font-weight: bold" />                
+                            <BR/>
+                            <BR/>
+                            
+                            <h:panelGrid columns="5">
+                                
+                                <p:outputLabel for="@next" value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_AmbOperaciones} *" style="display: block; width: 180px;" />
+                                <p:selectOneMenu id="bcoLPE_AmbitoOperaDIstrito" filter="true"  value="#{gsspSolicitudAutorizacionController.regDistritoLPSSelected }" style="display: block; width: 647px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.provinciaId.departamentoId.nombre} / #{item.provinciaId.nombre} / #{item.nombre}" value="#{gsspSolicitudAutorizacionController.regDistritoLPSList}"/>
+                                    <p:ajax event="change" update="@this,bcoLPE_LocalAutorizacion" listener="#{gsspSolicitudAutorizacionController.listarLocalesAutorizXDistrito()}" />
+                                </p:selectOneMenu>
+                                
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Locales} *" style="display: block; width: 120px; padding-left: 30px" />
+                                <p:selectOneMenu id="bcoLPE_LocalAutorizacion" value="#{gsspSolicitudAutorizacionController.localAutorizacionSelectedString }" style="display: block; width: 300px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{gsspSolicitudAutorizacionController.mostrarLabelLocal(item)}" value="#{gsspSolicitudAutorizacionController.localAutorizacionListado}"/>
+                                    <p:ajax event="change" update="@this,pnl_LocalPresServACRL" listener="#{gsspSolicitudAutorizacionController.mostrarDatosLocalSeleccionado()}" />
+                                </p:selectOneMenu>
+                                
+                                <p:commandButton id="btnModalNuevoLocal"
+                                     icon="ui-icon-map" 
+                                     ajax="false"                                     
+                                     action="#{gsspSolicitudAutorizacionController.openDlgMapaACRL()}"
+                                     value="Nuevo"
+                                     style="display: block; width: 100px; margin-left: 20px;"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                                
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="6">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_TipoUbicacion} *" style="display: block; width: 180px;" />
+                                <p:selectOneMenu id="bcoLPE_TipUbica"  value="#{gsspSolicitudAutorizacionController.regTipoViasLPSSelected }" style="display: block; width: 200px;" disabled="true" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoViasLPSList}"/>
+                                </p:selectOneMenu>
+                               
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_DomLegal} *" style="display: block; width: 120px; padding-left: 30px" />
+                                <p:inputText id="txtLPE_DomiciLegal" value="#{gsspSolicitudAutorizacionController.regDireccionLPS }" style="display: block; width: 280px;" disabled="true" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_NroFisico} *" style="display: block; width: 120px; padding-left: 30px" />
+                                <p:inputText id="txtLPE_NroFisico" value="#{gsspSolicitudAutorizacionController.regNroFisicoLPS }" style="display: block; width: 100px;" disabled="true" />
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="2">                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_Referencia} " style="display: block; width: 180px;" />
+                                <p:inputText id="txtLPE_Refencia" value="#{gsspSolicitudAutorizacionController.regReferenciaLPS }" style="display: block; width: 665px;" disabled="true" />                                   
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="4">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_TipLocal} *" style="display: block; width: 180px;" />
+                                <p:selectOneMenu id="cboLPE_TipLocal"  value="#{gsspSolicitudAutorizacionController.regTipLocalLPSSelected }" style="display: block; width: 200px; " disabled="true" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipLocalLPSList}"/>
+                                </p:selectOneMenu>
+                               
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLocal_LBL_TipUso} " style="display: block; width: 120px; padding-left: 30px" />
+                                <p:selectOneMenu id="cboLPE_TipUso"  value="#{gsspSolicitudAutorizacionController.regTipUsoLPSSelected }" style="display: block; width: 110px; " disabled="true" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipUsoLPSList}"/>
+                                </p:selectOneMenu>
+                                
+                            </h:panelGrid>      
+                            
+                            
+                            
+                            <BR/>
+                            
+                            
+                            <h:outputText value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_Title_Contacto}" style="font-weight: bold" />                
+                            
+                            <BR/>
+                            <BR/>
+                            
+                            <h:panelGrid columns="6">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_LBL_Prioridad} *" style="display: block; width: 80px;" />
+                                <p:selectOneMenu id="cboLPE_Alm_Prioridad"  value="#{gsspSolicitudAutorizacionController.regPrioridadLPSSelected }" style="display: block; width: 100px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regPrioridadLPSList}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_LBL_MedioContacto} *" style="display: block; width: 120px; padding-left: 20px;" />
+                                <p:selectOneMenu id="cboLPE_Alm_MedioContacto"  value="#{gsspSolicitudAutorizacionController.regTipoMedioContactoLPSSelected }" style="display: block; width: 120px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoMedioContactoLPSList}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:inputText id="txtLPE_Alm_DescripMedioContacto" value="#{gsspSolicitudAutorizacionController.regtextoContactoLPS }" style="display: block; width: 180px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                                <p:commandButton id="btnLPE_AgregarTipoContacto"
+                                     icon="ui-icon-disk"                                      
+                                     action="#{gsspSolicitudAutorizacionController.agregarTipoContactoACRL()}"
+                                     value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_BTN_Agregar}"
+                                     ajax="true"
+                                     update="@this, pnl_LocalPresServACRL" 
+                                     style="display: block; width: 120px; margin-left: 10px;"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                />
+                            </h:panelGrid>
+                            
+                            
+                             <br/>
+                            <br/>
+                            
+                            <p:dataTable id="dtResultadosMedioContactos" style="width: 700px;"
+                                     value="#{gsspSolicitudAutorizacionController.lstContactosList}"
+                                     var="itemRegContacto"
+                                     rowKey="#{itemRegContacto.ID}"
+                                     selection="#{gsspSolicitudAutorizacionController.selectedContacto}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                                
+                                    <p:column headerText="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_TBL_ID}" style="text-align: center;" >
+                                        <h:outputText value="#{itemRegContacto.id}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_TBL_Valor}" style="text-align: center;" >
+                                        <h:outputText value="#{(itemRegContacto.valor eq '290'?'PRINCIPAL':'SECUNDARIO')}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_TBL_MedContacto}" style="text-align: center;" >
+                                        <h:outputText value="#{itemRegContacto.tipoMedioId.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_TBL_Descripcion}" style="text-align: center;" >
+                                        <h:outputText value="#{itemRegContacto.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelMedioContacto_TBL_Borrar}" style="text-align: center;" >
+
+                                        <p:commandButton 
+                                            immediate="true" 
+                                            update="@this, dtResultadosMedioContactos" 
+                                            icon="ui-icon-trash"
+                                            actionListener="#{gsspSolicitudAutorizacionController.deleteContactoACRL(itemRegContacto.id)}" >
+                                        </p:commandButton>
+                                        
+                                        
+                                    </p:column>
+                            </p:dataTable>
+                            
+                            
+                            <BR/>
+                            <h:outputText value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_Title_LicencMuni}" style="font-weight: bold" />                
+                            <BR/><BR/>
+                            
+                            
+                            <h:panelGrid columns="8">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_NroLicMuni} *" style="display: block; width: 160px;" />
+                                <p:inputText id="txt_LM_NroLicMuni" value="#{gsspSolicitudAutorizacionController.regNroLicenciaMunicLPS}" style="display: block; width: 150px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                    
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_Emision} *" style="display: block; width: 70px; padding-left: 20px" />
+                                <p:calendar id="txt_LM_FechaEmis"
+                                            locale="es"
+                                            showOn="button"
+                                            value="#{gsspSolicitudAutorizacionController.regFechaEmisLPS }"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                            disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? ( (gsspSolicitudAutorizacionController.regDisabledCalendar) ? true : false)  : true}"
+                                            >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_Venci} *" style="display: block; width: 80px; padding-left: 20px" />
+                                <p:calendar id="txt_LM_FechaVenc"
+                                            locale="es"
+                                            showOn="button"
+                                            value="#{gsspSolicitudAutorizacionController.regFechaVencLPS }"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                            disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? ( (gsspSolicitudAutorizacionController.regDisabledCalendar) ? true : false)  : true}"
+                                            >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>
+                                
+                                <p:selectBooleanCheckbox value="#{gsspSolicitudAutorizacionController.regIndeterminadoLPS }" itemLabel="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_Indeterm}" style="padding-left: 20px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >
+                                    <p:ajax update="@this,txt_LM_FechaEmis, txt_LM_FechaVenc" listener="#{gsspSolicitudAutorizacionController.verificarCheckIndeterminado()}"/>
+                                </p:selectBooleanCheckbox>
+                                
+                            </h:panelGrid>
+                            
+                            
+                            <h:panelGrid columns="4">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_TipoMunic} *" style="display: block; width: 160px;" />
+                                <p:selectOneMenu id="cbo_LM_TipMunic"  value="#{gsspSolicitudAutorizacionController.regTipMunicipalidadLPSSelected }" style="display: block; width: 120px; " disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipMunicipalidadLPSList}"/>
+                                    <p:ajax event="change" update="@this,cbo_LM_Municip" listener="#{gsspSolicitudAutorizacionController.listarMunicipalidades()}"  />
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_Municip} *" style="display: block; width: 120px; padding-left: 80px;" />
+                                <p:selectOneMenu id="cbo_LM_Municip"  value="#{gsspSolicitudAutorizacionController.regMunicLPSSelected }" style="width: 60px !important;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regMunicLPSList}"/>
+                                </p:selectOneMenu>
+                                
+                            </h:panelGrid>
+                            
+                            
+                            
+                            
+                            <h:panelGrid columns="4">
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_GiroComerc} *" style="display: block; width: 160px;" />
+                                <p:inputText id="txt_LM_GiroComercial" value="#{gsspSolicitudAutorizacionController.regGiroComercialLPS}"  style="display: block; width: 250px;" disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelLicMuni_LBL_LicMunic} *" style="display: block; width: 120px; padding-left: 30px;"/>
+                                <p:fileUpload id="txf_ArchivoLM" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_btn_LM_LicAdjPDF}"
+                                          invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                          fileUploadListener="#{gsspSolicitudAutorizacionController.handleFileUploadPDF_LM}"
+                                          invalidSizeMessage="#{gsspSolicitudAutorizacionController.obtenerMsjeInvalidSizeFileSelAutoPrestacServ()}"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('selAutoPrestacServ_sizeArchivo').valor}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          auto="true" process="@this,pnl_LocalPresServACRL" update="@this,pnl_LocalPresServACRL"
+                                          allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                          disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                          >
+                                    <h:outputText value="#{gsspSolicitudAutorizacionController.nomArchivoLM }" />
+                                </p:fileUpload>
+
+                            </h:panelGrid>
+                            
+                            
+                            
+                            
+                        </p:panel>
+                        
+                    </h:panelGrid>
+                    
+                    
+                    
+                    
+                    
+                <br />
+                <h:panelGrid columns="2" >
+                    <p:commandButton id="botonGuardarCambioDomicilioLegal"
+                                     icon="ui-icon-disk"                                      
+                                     action="#{gsspSolicitudAutorizacionController.crearSolicitudCambioDomicilioLegal}"
+                                     value="#{BundleBDIntegrado.Guardar}"
+                                     update="@all"
+                                     process="@all"
+                                     disabled="#{(gsspSolicitudAutorizacionController.termCondic_CambRepresLegal== true) ? false : true}"
+                                     />
+                    <p:commandButton icon="ui-icon-closethick"
+                                     action="#{gsspSolicitudAutorizacionController.mostrarCrear() }"
+                                     value="Cancelar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" 
+                                     update="@all"  
+                                     />
+                    <br/><br/>
+                </h:panelGrid>
+                    
+                
+                    <p:dialog header="Terminos y Condiciones" widgetVar="wvDlgTerminosCondicionesACRL" minHeight="60" width="550" showEffect="fade">
+                        
+                        <f:facet name="header">
+                            
+                        </f:facet>
+                        <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        
+                        <f:facet name="footer">
+                            <div style="text-align: center;">
+                                <p:commandButton value="Aceptar" icon="pi pi-check" styleClass="ui-confirmdialog-yes" action="#{gsspSolicitudAutorizacionController.btnAceptarTerminosCondicionACRL(true) }" update="@all"  process="@all" style="width: 5rem" />
+                                <p:commandButton value="Cancelar" icon="pi pi-times"  styleClass="ui-confirmdialog-no ui-button-flat" action="#{gsspSolicitudAutorizacionController.btnAceptarTerminosCondicionACRL(false) }" update="@all"  process="@all" style="width: 6rem" />
+                            
+                            </div>
+                        </f:facet>
+                        
+                    </p:dialog> 
+                
+                
+                
+                    <p:dialog header="Buscar Autorización" widgetVar="wvDlgBuscarAutorizacionACRL" height="15%" width="650" closable="true"   >
+                    
+                        <h:form id="frmBuscarAutorizacion" > 
+                            <p:growl id="messageAutorizacion" showDetail="true" life="2000" />
+                            
+                            <h:panelGrid columns="1" width="100%" >                        
+                                
+                                <p:panel id="pnl_BuscarAutorizacion" header="Datos de la Autorización" >
+                                    
+                                    <h:panelGrid columns="7">                                   
+
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspAutorizacionCambRepresLegal_PanelModalidad_LBL_BscaNumero}" style="display: block; width: 150px; padding-left: 10px;" />
+                                        <p:inputText id="txtFiltroNumAutorizacion" value="#{gsspSolicitudAutorizacionController.nroAutoBuscarACRL}" style="display: block; width: 200px; font-weight: bold;" />
+                                        
+                                        <p:commandButton 
+                                            value = "Buscar"
+                                            update="@all" 
+                                            style="display: block;  margin-left: 10px;"
+                                            action="#{gsspSolicitudAutorizacionController.Buscar_NumeroAutorizacion_Dialog_ACRL()}"
+                                       />
+                                        
+                                        <p:commandButton 
+                                            value = "Cancelar" 
+                                            styleClass = "ui-confirmdialog-no ui-button-flat" 
+                                            onclick = "PF('wvDlgBuscarAutorizacionACRL').hide()"
+                                            update = "@all"  
+                                            process = "@all" 
+                                            style = "width: 120px" 
+                                        />
+                                        
+                                    </h:panelGrid>                                    
+                                    
+                                </p:panel>
+                                                                
+                            </h:panelGrid>
+                            
+                        </h:form>
+                            
+                        
+                    </p:dialog>
+                
+                                    
+                </h:form>
+                
+                
+                
+                <p:dialog id="dlgCompletarProcesoACRL" widgetVar="dlgMapaACRL" style="width:1200px; height:600px;"
+                  modal="true" resizable="false" appendTo="@(body)" 
+                  header="Local de Prestación de Servicio - Ubicar coordenadas (Latitud, Longitud)"
+                  responsive="true" 
+                  closable="true">
+                    
+                    
+                    
+                        <h:form id="frmCuerpoMapaACRL"> 
+                            
+                            <p:growl id="messagesACRL" showDetail="true" life="2000" />        
+                            
+                            
+                            <h:panelGrid columns="1" id="pnl_RegLocal" width="100%" >                        
+                                <p:panel id="pnl_RegLocal_Title" header="Datos de local" >
+                                    
+                                     <h:panelGrid columns="6">
+                                
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUbica} *" style="display: block; width: 180px;" />
+                                        <p:selectOneMenu id="bcoLPE_TipUbica_Form"  value="#{gsspSolicitudAutorizacionController.regTipoViasLPSSelected_Form }" style="display: block; width: 200px;">   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoViasLPSList_Form}"/>
+                                            <p:ajax event="change" update="@this,bcoLPE_TipUbica_Form" />
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_DomLegal} *" style="display: block; width: 120px; padding-left: 30px" />
+                                        <p:inputText id="txtLPE_DomiciLegal_Form" value="#{gsspSolicitudAutorizacionController.regDireccionLPS_Form }" style="display: block; width: 280px;" >
+                                            <p:ajax event="blur" update="@this,txtLPE_DomiciLegal_Form" />
+                                        </p:inputText>
+
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_NroFisico} *" style="display: block; width: 120px; padding-left: 30px" />
+                                        <p:inputText id="txtLPE_NroFisico_Form" value="#{gsspSolicitudAutorizacionController.regNroFisicoLPS_Form }" style="display: block; width: 100px;" >
+                                            <p:ajax event="blur" update="@this,txtLPE_NroFisico_Form" />
+                                        </p:inputText>
+
+                                    </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="2">                                
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Referencia} " style="display: block; width: 180px;" />
+                                        <p:inputText id="txtLPE_Refencia_Form" value="#{gsspSolicitudAutorizacionController.regReferenciaLPS_Form }" style="display: block; width: 665px;" >
+                                            <p:ajax event="blur" update="@this,txtLPE_Refencia_Form" />
+                                        </p:inputText>
+                                    </h:panelGrid>       
+                                    
+                                    
+                                    <h:panelGrid columns="5">
+                                
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipLocal} *" style="display: block; width: 180px;" />
+                                        <p:selectOneMenu id="cboLPE_TipLocal_Form"  value="#{gsspSolicitudAutorizacionController.regTipLocalLPSSelected_Form }" style="display: block; width: 200px; ">   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipLocalLPSList_Form}"/>
+                                            <p:ajax event="change" update="@this,cboLPE_TipLocal_Form" />
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUso} " style="display: block; width: 120px; padding-left: 30px" />
+                                        <p:selectOneMenu id="cboLPE_TipUso_Form"  value="#{gsspSolicitudAutorizacionController.regTipUsoLPSSelected_Form }" style="display: block; width: 110px; ">   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipUsoLPSList_Form}"/>
+                                            <p:ajax event="change" update="@this,cboLPE_TipUso_Form" />
+                                        </p:selectOneMenu>
+                                        
+                                        <p:commandButton id="btnAgregarLocalAutoACRL"
+                                                         update="frmCuerpoMapaACRL"
+                                                         action="#{gsspSolicitudAutorizacionController.btnAgregarLocalAutorizacionMapaACRL()}" 
+                                                         value="Agregar Local" 
+                                                         style="display: block; width: 150px; margin-left: 20px;"
+                                       />
+
+                                    </h:panelGrid>   
+
+                                    
+                                </p:panel>
+                            </h:panelGrid>
+                            
+                            <h:panelGrid columns="1" id="pnl_CoordenadasACRL" width="100%" >                        
+                                <p:panel id="pnl_CoordenadasACRL_Title" header="Datos de las coordenadas" >
+                                    <h:panelGrid columns="5">
+
+                                        <p:outputLabel value="Latitud" style="display: block; width: 100px;" />
+                                        <p:inputText id="txtLatitudACRL" value="#{gsspSolicitudAutorizacionController.regGeoLatitudLPS_Form}" disabled="true" style="display: block; width: 200px; font-weight: bold;"  />
+
+                                        <p:outputLabel value="Longitud" style="display: block; width: 100px; padding-left: 10px" />
+                                        <p:inputText id="txtLongitudACRL" value="#{gsspSolicitudAutorizacionController.regGeoLongitudPS_Form}" disabled="true" style="font-weight: bold;" />
+                                        
+
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:panelGrid>
+                            
+                            <br/>
+
+                            <p:gmap id="gmapACRL" center="-12.096059312898058, -77.05885673035358" zoom="17" type="ROADMAP" model="#{gsspSolicitudAutorizacionController.emptyModelACRL}" style="width:1200px; height:600px;">
+                                <p:ajax event="stateChange" listener="#{gsspSolicitudAutorizacionController.onStateChangeACRL}" update="messagesACRL" />
+                                <p:ajax event="pointSelect" listener="#{gsspSolicitudAutorizacionController.onPointSelectACRL}" update="messagesACRL" />
+                            </p:gmap>
+                        </h:form>
+                        
+                    </p:dialog>
+                
+                
+                
+                
+                
+                
+                
+                 <p:dialog id="dlgRepresentanteLegal" widgetVar="dlgPersona" height="15%"  closable="true" 
+                          modal="true" resizable="false" appendTo="@(body)" header="Registro de persona como representante legal" >
+                    
+                        <h:form id="frmCuerpoPersona" > 
+                            <p:growl id="messagePersona" showDetail="true" life="2000" />
+                            
+                            <h:panelGrid columns="1" id="pnl_Persona" width="100%" >                        
+                                <p:panel id="pnl_Persona_Title" header="Datos de la persona" >
+                                    <h:panelGrid columns="7">
+                                        
+                                        <p:outputLabel value="Tipo Doc.: * " style="display: block; width: 75px;" />                                    
+                                        <p:selectOneMenu id="cboPersonaTipDoc" value="#{gsspSolicitudAutorizacionController.regTipoDocSelected }" style="width: 60px;" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoDocList}"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel value="Número: *" style="display: block; width: 70px; padding-left: 10px;" />
+                                        <p:inputText id="txtPersonaNumDoc" value="#{gsspSolicitudAutorizacionController.regNroDocBuscar}" style="display: block; width: 100px; font-weight: bold;" >
+                                        </p:inputText>
+                                        
+                                        <p:commandButton 
+                                            id="btnBuscarDNIRepresentante" 
+                                            icon="ui-icon-search" 
+                                            ajax="true" 
+                                            update="frmCuerpoPersona" 
+                                            style="display: block;  margin-left: 10px;"
+                                            action="#{gsspSolicitudAutorizacionController.BuscarPersonaRepresentanteLegal()}"
+                                       />
+                                    </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="6">
+                                        <p:outputLabel value="Nombres " style="display: block; width: 80px;" />
+                                        <p:inputText id="txtNomRepresentante" value="#{(gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL.nombres: ''}" disabled="true" style="display: block; width: 130px; font-weight: bold;"  /> 
+                                        
+                                        <p:outputLabel value="Ape. Paterno " style="display: block; width: 90px;" />
+                                        <p:inputText id="txtApePatRepresentante" value="#{(gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL.apePat : ''}" disabled="true" style="display: block; width: 130px; font-weight: bold;"  /> 
+                                        
+                                        <p:outputLabel value="Ape. Materno " style="display: block; width: 90px;" />
+                                        <p:inputText id="txtApeMatRepresentante" value="#{(gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionController.regDatoPersonaByNumDocRL.apeMat : ''}" disabled="true" style="display: block; width: 130px; font-weight: bold;"  /> 
+                                        
+                                    </h:panelGrid>
+                                    
+                                </p:panel>
+                                
+                                <h:panelGrid columns="2">
+                                    <p:commandButton id="registrar"  actionListener="#{gsspSolicitudAutorizacionController.btnRegistrarPersonaRL_ACRL}" ajax="true"
+                                                     value="Registrar" icon="ui-icon-disk" update="@form"  process="@form" iconPos="left" />
+                                    <p:commandButton id="btnCancelar"  actionListener="#{gsspSolicitudAutorizacionController.regresarRegPersonaSCRL()}"
+                                                     icon="ui-icon-closethick" value="Cancelar" update="@none" 
+                                                     process="@this"/>
+                                </h:panelGrid>
+                                
+                            </h:panelGrid>
+                            
+                        </h:form>
+                        
+                    </p:dialog>
+                
+                
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

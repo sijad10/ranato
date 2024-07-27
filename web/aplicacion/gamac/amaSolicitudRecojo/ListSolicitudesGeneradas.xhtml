@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGamac.ListadoSolicitudes_Titulo}" rendered="#{amaSolicitudRecojoController.estado == 'VERSOLREC'}"/>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listarSolForm" rendered="#{amaSolicitudRecojoController.estado == 'VERSOLREC'}">
+                <h:panelGrid columns="2">
+                    <p:fieldset legend="Tipo de solicitud">
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Tipo de Solicitud"/>
+                            <p:selectOneMenu id="cbTipoSolicitud" value="#{amaSolicitudRecojoController.tipoSolicitud}">
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                               value="#{amaSolicitudRecojoController.listTipoSolicitud}"/>
+                                <p:ajax event="change" update="@form" process="@this," listener="#{amaSolicitudRecojoController.mostrarListaSolicitudes()}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value=""/>
+                            <p:outputLabel value="Cod. Solicitud o Serie arma"/>
+                            <p:inputText id="serie" value="#{amaSolicitudRecojoController.valorBusqueda}"/>
+                            <p:commandButton actionListener="#{amaSolicitudRecojoController.mostrarListaSolicitudes}" 
+                                             value="Buscar"
+                                             process="@this, serie" update="@this, dtSolRecojo, dtSolReingreso"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset  rendered="#{amaSolicitudRecojoController.tipoSolicitud ne null}" legend="Consideraciones">
+                        <h:panelGrid>
+                            <p:outputLabel value="1. #{bundleGamac.MensajeAvisoSolicitudRecojo} #{amaSolicitudRecojoController.obtenerCorreoSol()}"
+                                           rendered="#{amaSolicitudRecojoController.tipoSolicitud.codProg eq 'TP_SOLIC_RECARM'}"/>
+                            <p:outputLabel value="1. #{bundleGamac.MensajeAvisoSolicitudReingreso} #{amaSolicitudRecojoController.obtenerCorreoSol()}"
+                                           rendered="#{amaSolicitudRecojoController.tipoSolicitud.codProg eq 'TP_SOLIC_REIARM'}"/>
+                            <p:outputLabel value="2. #{bundleGamac.MensajeAvisoSolicitudCorreo}" style="font-weight: bold"/>
+                            <p:outputLabel value="3. #{bundleGamac.VisualizarListadoSolicitudRecojoArmas}" style="color: red"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                </h:panelGrid>
+                <p:dataTable id="dtSolRecojo" value="#{amaSolicitudRecojoController.listaSolicitudRecojo}" 
+                             rendered="#{amaSolicitudRecojoController.tipoSolicitud.codProg eq 'TP_SOLIC_RECARM'}"
+                             reflow="true"
+                             var="item"
+                             rowKey="#{item.id}"
+                             emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                             paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                             currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}">
+                    <p:column headerText="PDF" style="text-align: center;">
+                        <p:panelGrid columns="1">
+
+                            <p:graphicImage name="/icons/pdf.png" width="32" alt="#{bundleGamac.verPDF}" />
+                            <p:commandButton id="botonImprimir" icon="ui-icon-print" value="#{bundleGamac.VerPDF}"
+                                             rendered="true"
+                                             ajax="false"
+                                             onclick="this.form.target = '_blank'"
+                                             process="@this" 
+                                             onblur="this.form.target = '_self'" 
+                                             immediate="true">
+                                <p:fileDownload value="#{amaSolicitudRecojoController.verPdf(item)}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column headerText="Código" style="text-align: center;">
+                        <h:outputText value="#{item.correlativo}"/><br/>
+                        <h:outputText value="Exp: #{item.nroExpediente}" rendered="#{item.nroExpediente != null}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Generación" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaEmision}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Lugar de Entrega" style="text-align: center;" >
+                        <h:outputText value="#{amaSolicitudRecojoController.descripcionDireccion(item.direccionLocalArmeriaId,'/')}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Programada" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaRetiroProgramada}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Fecha Recojo" style="text-align: center;" >
+                        <h:outputText value="#{amaSolicitudRecojoController.fechaMovimientoArma(item)}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Estado" style="text-align: center;" >
+                        <h:outputText value="#{item.estado eq -1?'RECHAZADO':(!amaSolicitudRecojoController.tieneGuiaEmitida(item) ?'PENDIENTE':(amaSolicitudRecojoController.fechaMovimientoArma(item) ne null?'PROCESADO':'ATENDIDO'))}"/>
+                    </p:column>
+                    <ui:remove>
+                    <p:column headerText="Opciones" style="text-align: center;" >
+                        <p:growl id="message" showDetail="true" />
+                        <p:commandLink actionListener="#{amaSolicitudRecojoController.anular(item)}" style="color: red"
+                                       value="#{bundleGamac.Eliminar}" rendered="#{item.fechaRetiroProgramada eq null or item.estado eq -1}">
+                            <p:confirm header="Confirmación" message="¿Está seguro que desea eliminar la Solicitud seleccionada?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                    </ui:remove>
+                </p:dataTable>
+                <p:dataTable id="dtSolReingreso" value="#{amaSolicitudRecojoController.listaSolicitudRecojo}" 
+                             rendered="#{amaSolicitudRecojoController.tipoSolicitud.codProg eq 'TP_SOLIC_REIARM'}"
+                             reflow="true"
+                             var="item"
+                             rowKey="#{item.id}"
+                             emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                             paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                             currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}">
+                    <p:column headerText="PDF" style="text-align: center;">
+                        <p:panelGrid columns="1">
+
+                            <p:graphicImage name="/icons/pdf.png" width="32" alt="#{bundleGamac.verPDF}" />
+                            <p:commandButton id="botonImprimir" icon="ui-icon-print" value="#{bundleGamac.VerPDF}"
+                                             rendered="true"
+                                             ajax="false"
+                                             onclick="this.form.target = '_blank'"
+                                             process="@this" 
+                                             onblur="this.form.target = '_self'" 
+                                             immediate="true">
+                                <p:fileDownload value="#{amaSolicitudRecojoController.verPdf(item)}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:column>
+                    <p:column headerText="Código" style="text-align: center;">
+                        <h:outputText value="#{item.correlativo}"/><br/>
+                        <h:outputText value="Exp: #{item.nroExpediente}" rendered="#{item.nroExpediente != null}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Generación" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaEmision}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Sede destino" style="text-align: center;" >
+                        <h:outputText value="#{item.direccionAlmacenSucamecId.referencia} - #{amaSolicitudRecojoController.descripcionDireccion(item.direccionAlmacenSucamecId,'/')}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Programada" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaRetiroProgramada}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column> 
+                    <p:column headerText="Fecha Reingreso" style="text-align: center;" >
+                        <h:outputText value="#{amaSolicitudRecojoController.fechaMovimientoArma(item)}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha12Horas}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Estado" style="text-align: center;" >
+                        <h:outputText value="#{item.estado eq -1?'RECHAZADO':(!amaSolicitudRecojoController.tieneGuiaEmitida(item) ?'PENDIENTE':(amaSolicitudRecojoController.fechaMovimientoArma(item) ne null?'PROCESADO':'ATENDIDO'))}"/>
+                    </p:column> 
+                    <ui:remove>
+                    <p:column headerText="Opciones" style="text-align: center;" > 
+                        <p:growl id="message" showDetail="true" />
+                        <p:commandLink actionListener="#{amaSolicitudRecojoController.anular(item)}" style="color: red"
+                                       value="#{bundleGamac.Eliminar}" rendered="#{item.fechaRetiroProgramada eq null or item.estado eq -1}">
+                            <p:confirm header="Confirmación" message="¿Está seguro que desea eliminar la Solicitud seleccionada?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                    </ui:remove>
+                </p:dataTable>
+            </h:form>
+            <ui:include src="dlgNotificacion.xhtml" />
+        </ui:define>
+    </ui:composition>
+</html>

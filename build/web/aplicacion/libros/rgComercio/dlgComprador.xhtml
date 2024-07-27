@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="ComprafDlg" widgetVar="ComprafDialog" width="50%" height="60%" position="400,200"
+                  modal="true" resizable="false" appendTo="@(body)" header="Comprador">
+            <h:form id="compForm" >
+                <h:panelGroup id="compr">
+                    <p:panel>
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Puede Buscar Por" for="res"/>
+                            <p:inputText value="#{eppLibroController.filtroComprador}" required="true"
+                                         id="res" size="60" placeholder="Resolucion / Ruc / Razon Social"/>
+                            <p:commandButton value="Buscar" update="@form" 
+                                             actionListener="#{eppLibroController.buscarComprador()}">
+                                <f:param name="ACTION" value="SNLIBRO"/>
+                            </p:commandButton>
+                        </h:panelGrid>
+                        <p:dataTable id="dtAutGE" value="#{eppLibroController.resultadosComprador}"                        
+                                     var="item" widgetVar="lmes"                                  
+                                     rowKey="#{item.id}" style="margin-bottom:0"
+                                     emptyMessage="#{bundle.MensajeNoResultados}"
+                                     paginator="true" 
+                                     rows="10"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                            <p:column headerText="Id" 
+                                      sortBy="#{item.id}" width="5%">
+                                <f:facet name="header">
+                                    <h:outputText value="Id" />
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+                            <p:column headerText="Empresa" 
+                                      >
+                                <f:facet name="header">
+                                    <h:outputText value="Empresa" />
+                                </f:facet>
+                             <h:outputText value="#{item.empresaId.rznSocial == null ? item.empresaId.nombreCompleto : item.empresaId.rznSocial } "/>
+                            </p:column>
+                             <p:column headerText="Ruc" 
+                                      >
+                                <f:facet name="header">
+                                    <h:outputText value="Ruc" />
+                                </f:facet>
+                                 <h:outputText value="#{item.empresaId.ruc}"/>
+                            </p:column>
+                            <p:column headerText="Resolucion" 
+                                      >
+                                <f:facet name="header">
+                                    <h:outputText value="Resolucion" />
+                                </f:facet>
+                                <h:outputText value="#{item.eppResolucion.numero}"/>
+                            </p:column>
+                            <p:column headerText="Vigencia" 
+                                      >
+                                <f:facet name="header">
+                                    <h:outputText value="Vigencia" />
+                                </f:facet>
+                                <h:outputText value="#{item.eppResolucion.fechaFin}">
+                                    <f:convertDateTime pattern="#{bundle.FormatoFecha}"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="#{bundle.Opciones}" >  
+                                <p:commandButton value="Seleccionar"  process="@this,dtAutGE"
+                                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('ComprafDialog').hide()"
+                                                 update="dtAutGE,:editarForm:comp,:editarForm:des" 
+                                                 actionListener="#{eppLibroController.seleccionarComprador()}">
+                                </p:commandButton> &emsp;&emsp;
+
+
+                            </p:column> 
+
+                        </p:dataTable>    
+
+                    </p:panel>
+
+                </h:panelGroup>           
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>
+

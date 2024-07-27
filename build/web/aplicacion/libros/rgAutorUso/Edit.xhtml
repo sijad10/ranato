@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="editarForm" rendered="#{eppLibroController.estado == 'EDITAR'}" >
+        <p:focus context="editarForm" />     
+        <p:panel header="Datos de Movimiento">
+            <h:panelGrid columns="4" cellspacing="5">
+                <p:outputLabel value="RG Adquisicion de Uso"/>
+                <p:selectOneMenu value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 disabled="#{eppLibroController.disabledCabeceraEdit}"
+                                 filter="true" required="true" id="resPL" autoWidth="false"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxMostrarResolucion()}" 
+                            process="@this,resPL" partialSubmit="true"
+                            update="@form"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Tipo Lugar de Uso" id="tluso" />
+                <p:inputText value="#{eppLibroController.tipoLugarUso}" size="80"  disabled="#{eppLibroController.disabledCabeceraEdit}"/>
+
+                <p:outputLabel value="Lugar de Uso"/>
+                <p:inputTextarea value="#{eppLibroController.labelLugaUso}" 
+                                 id="nroRes" maxlength="500" styleClass="inputTextArea" disabled="true"
+                                 rows="3" cols="80"/>
+                <p:outputLabel value="Periodo"/>
+                <h:panelGroup>
+                    <p:selectOneMenu value="#{eppLibroController.libroMes.mesId}" disabled="true"
+                                     >
+                        <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_MES', null)}"                                     
+                                       var="mes" itemLabel="#{mes.abreviatura}" itemValue="#{mes}"/>
+                    </p:selectOneMenu>
+                    <p:inputText value="#{eppLibroController.libroMes.libromAnio}" disabled="true"/>
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+
+
+
+        </p:panel><br/><br/>
+        <!-- explosivos -->
+        <p:panel header="Explosivos o Material Relacionado Vendidos" id="pnExUso" >
+            <h:panelGrid columns="4" cellspacing="5">
+                <p:outputLabel value="Tipo Movimiento"/>
+                <p:selectOneMenu value="#{eppLibroController.tipoUso}" id="tpm">
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{tipoExplosivoController.selectItemsTipo('TP_LIBUSO', null)}" 
+                                   var="tiUso" itemLabel="#{tiUso.nombre}"
+                                   itemValue="#{tiUso}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxDisabledGuiaTransito()}" process="@this,tpm" 
+                            partialSubmit="true" update="@form"/>
+
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Guia Transito" id="guita"/>
+                <h:panelGroup>
+                    <p:selectOneMenu id="guiaTra" value="#{eppLibroController.eppGuiaTransito}"
+                                     filter="true"  disabled="#{eppLibroController.disabledGuiaTransito}"
+                                     effect="fade" filterMatchMode="contains" 
+                                     >
+                        <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                        <f:selectItems value="#{eppLibroController.listGuiaTransito}" 
+                                       var="reso" itemLabel="Guia de Transito #{reso.registroId.eppResolucion.numero}"
+                                       itemValue="#{reso}"/>
+
+                    </p:selectOneMenu>
+                </h:panelGroup>
+                <p:outputLabel value="Explosivos"/>
+                <p:selectOneMenu value="#{eppLibroController.eppDetalleAutUso}" 
+                                 id="expU" disabled="#{eppLibroController.disabledPanExplRela}"
+                                 filter="true" effect="fade">
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listEppDetalleAutUso}"               
+                                   var="det" itemLabel="#{det.explosivoId.nombre}"
+                                   itemValue="#{det}"/> 
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxBuscarSaldoProcAuUso()}"
+                            update="sal,umUso,@this,canti" process="@this,tpm,guiaTra" partialSubmit="true"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Dia"/>
+                <p:selectOneMenu value="#{eppLibroController.diaUsoDiario}" id="da">
+                    <f:selectItems value="#{eppLibroController.listaDiasMes}" 
+                                   var="dia" itemLabel="#{dia}" itemValue="#{dia}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Nro Lote"/>
+                <p:inputText value="#{eppLibroController.nroLote}" disabled="#{eppLibroController.disabledPanExplRela}" maxlength="20"/>
+                <p:outputLabel value="Cantidad"/>
+                <p:inputText value="#{eppLibroController.cantidad}" id="canti" disabled="#{eppLibroController.disabledPanExplRela}" >
+                    <p:keyFilter mask="money" preventPaste="false"/>  
+                    <f:validateDoubleRange minimum="0.0" maximum="9999999999.99" />
+                </p:inputText>
+
+                <p:outputLabel value="Saldo"/>
+                <p:inputText value="#{eppLibroController.saldo}" id="sal" disabled="#{eppLibroController.saldoBol}" >
+                    <f:convertNumber locale="en-US"/>
+                </p:inputText>
+                <p:outputLabel value="Unidad Medida" />
+                <p:inputText value="#{eppLibroController.unidadMedidaExplo}" id="umUso" disabled="#{eppLibroController.uniMedidaBol}" /> 
+
+                <p:commandButton value="Agregar" update="editarForm:pnExUso" icon="ui-icon-plus"
+                                 actionListener="#{eppLibroController.agregarExplosivosAutUso()}"/>
+
+
+            </h:panelGrid>
+
+            <p:dataTable id="deExpM"  
+                         value="#{eppLibroController.listEppLibroExploFabricados}"
+                         var="explo"  
+                         selection="#{eppLibroController.selectExplosivos}"
+                         rowKey="#{explo.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.explosivoId.nombre}"/>
+                </p:column>
+                <p:column headerText="Tipo Registro">
+                    <f:facet name="header">
+                        <p:outputLabel value="Tipo Registro"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.tipoRegistroId.nombre} / de la guia /  #{explo.guiaTransitoId.registroId.eppResolucion.numero}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Año">
+                    <f:facet name="header">
+                        <p:outputLabel value="Año"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.libroMesId.libromAnio}"/>
+                </p:column>
+                <p:column headerText="Mes ">
+                    <f:facet name="header">
+                        <p:outputLabel value="Mes"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.libroMesId.mesId.nombre}"/>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.dia}"/>
+                </p:column>
+                <p:column headerText="Opciones">
+                    <p:commandButton value="Editar" 
+                                     oncomplete="PF('ConfDialogExpl').show()"  update="exploForm,:editarForm:pnExUso"
+                                     actionListener="#{eppLibroController.cargarValores(explo)}"/>
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton value="Eliminar Explosivos" process="@this,deExpM" update="exploForm,deExpM,:editarForm:pnExUso" icon="ui-icon-trash"
+                                     actionListener="#{eppLibroController.mostrarDialogBorrarUso()}"
+                                     style="float: left">
+                        <p:confirm header="#{bundle.ConfirmarTitulo}" message="#{bundle.ConfirmarAnular}" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                </f:facet>
+            </p:dataTable>  
+
+        </p:panel><br/>
+        <br/>
+        <div align="center">
+            <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" 
+                             actionListener="#{eppLibroController.editarLibroMesUso()}" 
+                             value="#{bundle.Guardar}"/>
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroUso()}" 
+                             value="Cancelar" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

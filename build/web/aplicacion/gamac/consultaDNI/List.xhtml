@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="Consulta de Documento"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <div class="ui-fluid">
+            <h:form>
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-2">
+                        <p:outputLabel value="Tipo de Documento"></p:outputLabel>
+                        <p:selectOneMenu>
+                            <f:selectItem itemValue="1" itemLabel="DNI"/>
+                            <f:selectItem itemValue="2" itemLabel="CARNET DE EXTRANJERIA"/>
+                            <f:selectItem itemValue="3" itemLabel="PASAPORTE"/>
+                            <f:selectItem itemValue="4" itemLabel="OTROS"/>
+                        </p:selectOneMenu>
+                    </div> 
+                     <div class="ui-g-12 ui-md-6 ui-lg-2">
+                         <p:outputLabel value="N° de Documento"></p:outputLabel>
+                         <p:inputText value="#{consultaDniController.numDoc}"/>
+                    </div>
+                     <div class="ui-g-12 ui-md-6 ui-lg-2">
+                         <p:outputLabel value="&nbsp;"></p:outputLabel>
+                         <p:commandButton icon="ui-icon-search" actionListener="#{consultaDniController.buscarDocumento()}" update="dtPersona" value="Buscar"/>
+                    </div>
+                    
+                    
+                </div>    
+               
+                <p:dataTable value="#{consultaDniController.resultado}" var="persona" id="dtPersona">
+                    <p:column headerText="Tipo De Documento">
+                        <h:outputText value="#{persona.tipoDoc.nombre}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Documento">
+                        <h:outputText value="#{persona.numDoc}"/>
+                    </p:column>
+                    
+                    
+                    <p:column headerText="Nombre Completo">
+                        <h:outputText value="#{persona.nombreCompleto}"/>
+                    </p:column>
+                </p:dataTable>
+                
+            </h:form>
+            </div>
+            
+         
+            
+        </ui:define>
+    </ui:composition>
+
+</html>

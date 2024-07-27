@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <div class="ui-fluid">
+        <p:dialog id="dlgCompletarProceso" widgetVar="wvDialogCompletarProceso" width="45%"
+                  modal="true" resizable="false" appendTo="@(body)" 
+                  header="Completar Proceso"
+                  responsive="true" 
+                  closable="false">
+            
+            <h:form id="frmCompletarProceso" >
+                <div id="pnlProgressBar" style="width: 100%;" >
+                    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{amaRegEmpArmaController.progressCompletarProceso}" id="progressBar"
+                                   labelTemplate="{value}%" styleClass="animated" global="false" />
+                </div>
+                <h:panelGrid style="float: right" columns="2">
+                    <p:commandButton  icon="ui-icon-disk"
+                                  id ="btnImprimir"
+                                  ajax="false"
+                                  value="#{BundleBDIntegrado.amaRegEmpArma_descargarPDF}"
+                                  rendered="#{amaRegEmpArmaController.renderImprimir}"
+                                  process="@all"
+                                  immediate="true" >
+                        <p:fileDownload value="#{amaRegEmpArmaController.imprimir()}" />
+                    </p:commandButton>
+                    <p:commandButton value="Cerrar"
+                                 process="@this"      
+                                 update="frmCompletarProceso"
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogCompletarProceso').hide()"
+                                 icon="ui-icon-closethick" />
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </div>
+        
+</html>

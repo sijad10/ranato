@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions" 
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>SUCAMEC en Línea - Recuperar Clave</title>
+            </f:facet>
+            <f:metadata>
+                <f:viewParam name="id" value="#{recuperarClaveController.hash}" />
+                <f:viewParam name="paso" value="#{recuperarClaveController.estado}" />
+            </f:metadata>
+            <h:outputStylesheet name="css/estilos.css"/>
+        </h:head>
+
+        <h:body>
+            <p:idleMonitor timeout="900000" onidle="window.location.href = 'RecuperarClave.xhtml?id=#{recuperarClaveController.hash}&amp;faces-redirect=true'">
+                <p:ajax event="idle" listener="#{recuperarClaveController.volverInicio()}"/>
+            </p:idleMonitor>
+            <center>
+                <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+                <h:form id="formRecuperar">
+                    <p:focus context=":formRecuperar" />
+                    <h:graphicImage url="/resources/imagenes/logo_sucamec.png" /><br/><br/>
+
+                    <p:panel header="#{bundleSistemaBase.RecuperarClave_Titulo}"  style="width:400px;" rendered="#{recuperarClaveController.estado == 'INICIO'}">
+                        <br></br>
+                        <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Texto}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="true" id="continuar" actionListener="#{recuperarClaveController.mostrarRecuperar()}" value="#{bundleSistemaBase.Continuar}" icon="ui-icon-triangle-1-e" update=":formRecuperar" partialSubmit="true" process=":formRecuperar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.RecuperarClave_Titulo}" style="width:400px;" rendered="#{recuperarClaveController.estado == 'DATOS'}">
+                        <br></br> 
+                        <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Texto2}" />
+                        <br></br> 
+                        <br></br> 
+                        <h:panelGrid columns="2" cellpadding="3">
+                            <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Documento}" for="documento" />
+                            <h:panelGrid columns="2">
+                                <p:selectOneMenu id="tipoDoc" value="#{recuperarClaveController.tipoDoc}" style="vertical-align: middle; clear: both;">
+                                    <f:selectItem itemValue="RUC" itemLabel="RUC" />
+                                    <f:selectItem itemValue="DNI" itemLabel="DNI" />
+                                    <f:selectItem itemValue="CE" itemLabel="CE" />
+                                </p:selectOneMenu>
+                                <p:inputText validatorMessage="#{bundleSistemaBase.RecuperarClaveValidator_documento}" maxlength="11" value="#{recuperarClaveController.documento}" id="documento" required="true" requiredMessage="#{bundleSistemaBase.RecuperarClaveRequiredMessage_documento}" autocomplete="false" size="15">
+                                    <f:validateLength for="documento" minimum="8" maximum="11"/>
+                                </p:inputText>
+                            </h:panelGrid>
+                            <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Usuario}" for="usuario" />
+                            <p:inputText validatorMessage="#{bundleSistemaBase.RecuperarClaveValidator_usuario}" maxlength="20" value="#{recuperarClaveController.usuario}" id="usuario" required="true" requiredMessage="#{bundleSistemaBase.RecuperarClaveRequiredMessage_usuario}" autocomplete="false" size="30">
+                                <f:validateLength for="usuario" minimum="5" maximum="20"/>
+                            </p:inputText>
+                            <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Correo}" for="correo" />
+                            <p:inputText validatorMessage="#{bundleSistemaBase.RecuperarClaveValidator_correo}" maxlength="200" value="#{recuperarClaveController.correo}" id="correo" required="true" requiredMessage="#{bundleSistemaBase.RecuperarClaveRequiredMessage_correo}" autocomplete="false" size="50">
+                                <f:validateRegex pattern="#{bundleSistemaBase.RegexEmail}" for="correo"/>
+                            </p:inputText>
+                        </h:panelGrid>
+                        <br></br> 
+                        <br></br> 
+                        <p:commandButton ajax="true" id="cambioClave" actionListener="#{recuperarClaveController.solicitarCambioClave()}" value="#{bundleSistemaBase.Continuar}" icon="ui-icon-triangle-1-e" update="@all" partialSubmit="true" process=":formRecuperar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.RecuperarClave_Titulo}"  style="width:400px;" rendered="#{recuperarClaveController.estado == 'FIN'}">
+                        <br></br>
+                        <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Texto3}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="false" id="aceptar2"  action="#{recuperarClaveController.direccionarLogin()}" value="#{bundleSistemaBase.Aceptar}" immediate="true"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.RecuperarClave_Titulo}"  style="width:400px;" rendered="#{recuperarClaveController.estado == 'FIN_CLAVE'}">
+                        <br></br>
+                        <p:outputLabel value="#{recuperarClaveController.datosUsuario}" />
+                        <br></br>
+                        <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Texto5}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="false" id="aceptar3"  action="#{recuperarClaveController.direccionarLogin()}" value="#{bundleSistemaBase.Aceptar}" immediate="true"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.RecuperarClave_Titulo}" style="width:400px;" rendered="#{recuperarClaveController.estado == 'NUEVA_CLAVE'}">
+                        <br></br> 
+                        <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Texto4}" escape="false" style="text-align: left;"/>
+                        <br></br> 
+                        <br></br> 
+                        <h:panelGrid columns="2" cellpadding="3">
+                            <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Clave1}" for="clave1" />
+                            <p:password validatorMessage="#{bundleSistemaBase.RecuperarClaveValidator_clave}" maxlength="20" value="#{recuperarClaveController.clave1}" id="clave1" required="true" requiredMessage="#{bundleSistemaBase.RecuperarClaveRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                                <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                            </p:password>
+                            <p:outputLabel value="#{bundleSistemaBase.RecuperarClave_Clave1}" for="clave2" />
+                            <p:password validatorMessage="#{bundleSistemaBase.RecuperarClaveValidator_clave}" maxlength="20" value="#{recuperarClaveController.clave2}" id="clave2" required="true" requiredMessage="#{bundleSistemaBase.RecuperarClaveRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                                <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                            </p:password>
+                        </h:panelGrid>
+                        <br></br> 
+                        <br></br> 
+                        <p:commandButton ajax="true" id="generar" actionListener="#{recuperarClaveController.cambiarClave()}" value="#{bundleSistemaBase.Continuar}" icon="ui-icon-triangle-1-e" update="@all" partialSubmit="true" process=":formRecuperar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.ActivarCuenta_Titulo}"  style="width:400px;" rendered="#{recuperarClaveController.estado == 'ERROR'}">
+                        <br></br>
+                        <p:outputLabel value="#{recuperarClaveController.msgError}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="false" id="aceptar" action="#{recuperarClaveController.direccionarLogin()}" value="#{bundleSistemaBase.Aceptar}" immediate="true"/>
+                    </p:panel>
+                </h:form>
+                <ui:include src="Loading.xhtml" />
+            </center>
+        </h:body>
+    </f:view>
+</html>

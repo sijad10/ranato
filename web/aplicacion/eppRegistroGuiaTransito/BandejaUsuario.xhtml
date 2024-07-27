@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="Gestión de Guía de Tránsito Electrónica de Explosivos y Materiales Relacionados"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" >                
+                <h:panelGroup>
+                    <h:panelGrid columns="2" >
+                        <h:panelGrid columns="1">    
+                            <p:fieldset legend="Búsqueda" style="margin-bottom:20px">
+                                <h:panelGrid columns="5" id="pnlBusqueda">
+                                    <p:outputLabel value="Buscar Por: " />                                   
+                                    <p:selectOneMenu id="bus" 
+                                                     autoWidth="false"
+                                                     style="width: 100px"
+                                                     value="#{eppRegistroGuiaTransitoController.tipoBusqueda}"  >
+                                        <f:selectItem itemValue="#{null}" itemLabel="---"/>
+                                        <f:selectItem itemValue="1" itemLabel="NRO. RG" />
+                                        <f:selectItem itemValue="5" itemLabel="NRO. COMPROBANTE" />
+                                        <f:selectItem itemValue="3" itemLabel="FECHA COMPROBANTE" />
+                                        <p:ajax event="change" update="pnlBusqueda"/>
+                                    </p:selectOneMenu>
+                                    <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" 
+                                                 disabled="#{eppRegistroGuiaTransitoController.tipoBusqueda == null}"
+                                                 rendered="#{eppRegistroGuiaTransitoController.tipoBusqueda != '3'}"/>  
+                                    <p:calendar id="fechainicio" 
+                                                rendered="#{eppRegistroGuiaTransitoController.tipoBusqueda == '3'}"
+                                                showOn="button" value="#{eppRegistroGuiaTransitoController.fechaIni}"
+                                                pattern="#{bundleGeppGte.FormatoFecha}" >  
+                                        <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                                    </p:calendar> 
+                                    <p:commandButton value="Buscar" actionListener="#{eppRegistroGuiaTransitoController.buscarBandeja('2')}" 
+                                                     update="@form" />           
+                                </h:panelGrid>
+                            </p:fieldset> 
+
+                            <h:panelGrid columns="2" >
+                                <p:outputLabel value="Guías Seleccionadas: " />
+                                <p:commandButton value="TRANSFERIR A FABRICANTE" 
+                                                 oncomplete="PF('confirmTransmitir').show()"
+                                                 update="cdTransmitir" >
+                                </p:commandButton>
+                            </h:panelGrid>
+
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" >
+                            <p:fieldset legend="Pagos Realizados" style="margin-bottom:10px" >
+                                <h:panelGrid columns="1" >
+                                    <h:panelGrid columns="2" >
+                                        <p:inputText placeholder="Escriba Nro. Voucher si desea filtrar" 
+                                                     style="width: 150px"
+                                                     value="#{eppRegistroGuiaTransitoController.nroVoucher}" />
+                                        <p:commandButton value="Mostrar Pagos" 
+                                                         update="@form" 
+                                                         style="float: left"
+                                                         actionListener="#{eppRegistroGuiaTransitoController.buscarRecibo}"
+                                                         icon="ui-icon-refresh" />
+                                    </h:panelGrid>
+
+                                    <p:dataTable id="buscarDatatableExpe" 
+                                                 style="width: 65%"
+                                                 value="#{eppRegistroGuiaTransitoController.lstRecibosBn}"
+                                                 var="item" 
+                                                 rowKey="#{item.id}"                                                       
+                                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                                                 paginator="true" rows="5"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"  
+                                                 rowsPerPageTemplate="5,10,20">         
+                                        <p:column headerText="Fecha" style="width: 20%" >
+                                            <h:outputText value="#{item.fechaMovimiento}">
+                                                <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Numero" style="width: 20%" >                                
+                                            <h:outputText value="#{item.nroSecuencia}"/>
+                                        </p:column>
+                                        <p:column headerText="Monto" style="width: 20%" >                                
+                                            <h:outputText value="#{item.importe}"/>
+                                        </p:column>                                        
+                                        <p:column headerText="Opciones" style="width: 15%">
+                                            <p:commandButton value="Crear Guía" 
+                                                             icon="ui-icon-newwin" 
+                                                             update="@form" 
+                                                             process="@this"
+                                                             ajax="false"
+                                                             action="#{eppRegistroGuiaTransitoController.mostrarCrear()}"/>
+                                        </p:column>   
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:panelGrid>
+                    </h:panelGrid>  
+                    <br/>
+
+                    <p:commandButton value="Eliminar Seleccionados" actionListener="#{eppRegistroGuiaTransitoController.eliminarGuiasSeleccionadasUsua()}" update="@form" />
+                    <p:dataTable id="datatable" 
+                                 value="#{eppRegistroGuiaTransitoController.resultados}" 
+                                 var="item" 
+                                 widgetVar="usrTable"   
+                                 selection="#{eppRegistroGuiaTransitoController.registrosSeleccionados}" 
+                                 rowKey="#{item.id}" 
+                                 style="margin-bottom:0"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 paginator="true" 
+                                 scrollable="true" 
+                                 scrollHeight="400"  
+                                 rows="#{bundleGeppGte.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}">
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center" />   
+                        <p:column headerText="Id." style="width:110px;text-align:center">
+                            <h:outputText value="#{item.registroId.id}"/>
+                        </p:column>
+                        <p:column headerText="Nro. Expediente" style="width:110px;text-align:center">
+                            <h:outputText value="#{item.registroId.nroExpediente}"/>
+                        </p:column>
+                        <p:column headerText="Comprobante" >
+                            <h:outputText value="#{eppRegistroGuiaTransitoController.mostrarNroComprobante(item.registroId)}"/>
+                        </p:column>
+                        <p:column headerText="Nro. RG" >
+                            <h:outputText value="#{item.resolucionId==null?'SIN RG':item.resolucionId.numero}"/>
+                        </p:column>                                           
+                        <p:column headerText="Origen" >
+                            <h:outputText value="#{eppRegistroGuiaTransitoController.mostrarNombreOrigen(item,false)}"/>
+                        </p:column>
+                        <p:column headerText="Destino" >
+                            <h:outputText value="#{eppRegistroGuiaTransitoController.mostrarNombreDestino(item,false)}"/>
+                        </p:column>
+                        <p:column headerText="Estado" style="width:110px;text-align:center">
+                            <h:outputText value="#{item.registroId.estado.nombre}" /><br/><br/>
+                            <h:outputText value="#{item.registroId.eppResolucion==null?'':item.registroId.eppResolucion.numero}" />
+                        </p:column>                        
+                        <p:column headerText="Responsable" >
+                            <h:outputText value="#{item.registroId.audLogin}"/>
+                        </p:column>
+                        <p:column headerText="Acciones" >  
+                            <p:commandButton update="@form" 
+                                             ajax="false"
+                                             action="#{eppRegistroGuiaTransitoController.mostrarVer()}" 
+                                             value="#{bundleGeppGte.Ver}" >
+                            </p:commandButton> 
+                            <p:commandButton update="@form"
+                                             ajax="false" 
+                                             rendered="#{eppRegistroGuiaTransitoController.mostrarBtnEditar(item)}"
+                                             action="#{eppRegistroGuiaTransitoController.mostrarEditar}" 
+                                             value="#{bundleGeppGte.Editar}" >
+                            </p:commandButton>
+                            <p:commandButton update="@form" 
+                                             ajax="false" 
+                                             action="#{eppRegistroGuiaTransitoController.borrarGt(item)}" 
+                                             value="Borrar" >
+                            </p:commandButton>
+                        </p:column>                        
+                    </p:dataTable>
+
+                </h:panelGroup>
+
+                <p:confirmDialog id="cdTransmitir" widgetVar="confirmTransmitir" 
+                                 global="true" 
+                                 width="30%" 
+                                 height="20%"
+                                 header="Confirmación de Emisión de Guía de Transito" 
+                                 severity="alert"                         
+                                 closable="false"
+                                 appendTo="@(body)" >
+                    <h:outputText value="#{bundleGeppGte.TransferirFabricante}" escape="false" />                    
+                    <p:commandButton value="Cancelar" 
+                                     process="@this" 
+                                     style="float: right" 
+                                     update="@form"  
+                                     oncomplete="PF('confirmTransmitir').hide()" />
+                    <p:commandButton value="Emitir" 
+                                     process="@this" 
+                                     actionListener="#{eppRegistroGuiaTransitoController.transferirFabricante()}"
+                                     style="float: right" 
+                                     update="@form" 
+                                     oncomplete="PF('confirmTransmitir').hide()" />
+                </p:confirmDialog>                
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

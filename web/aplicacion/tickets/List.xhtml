@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{BundleBDIntegrado.BuscarTicketsTitulo}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" >
+                <p:focus context="listForm" />
+                <p:defaultCommand target="botonBuscar"/>
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:panel>
+                        <p:panel>
+                            <h:panelGrid columns="8" cellpadding="5">
+                                <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_incidencia}" for="tipo" />
+                                <p:selectOneMenu id="tipo" value="#{ticketsController.filtroTipo}" >
+                                    <f:selectItems value="#{tipoIntegradoController.itemsTipoPorTipo('TKSEL')}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_cerrado}" for="cerrado" />
+                                <p:selectOneMenu id="cerrado" value="#{ticketsController.filtroCerrado}" >
+                                    <f:selectItem itemValue="%" itemLabel="---"/>
+                                    <f:selectItem itemValue="0" itemLabel="NO"/>
+                                    <f:selectItem itemValue="1" itemLabel="SI"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value=""/><p:outputLabel value=""/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel>
+                            <h:panelGrid columns="5">
+                                <p:outputLabel value="#{BundleBDIntegrado.Filtro}" for="busqueda"/>
+                                <p:selectOneMenu id="tipoBus" value="#{ticketsController.tipoBus}" >
+                                    <f:selectItem itemValue="NUMERO" itemLabel="NUMERO"/>
+                                    <f:selectItem itemValue="ASUNTO" itemLabel="ASUNTO"/>
+                                    <f:selectItem itemValue="EXPEDIENTE" itemLabel="EXPEDIENTE"/>
+                                    <f:selectItem itemValue="SOLICITUD" itemLabel="SOLICITUD"/>
+                                    <f:selectItem itemValue="TELEFONO" itemLabel="TELEFONO"/>
+                                </p:selectOneMenu>
+                                <p:inputText id="busqueda" onblur="this.value = this.value.toUpperCase();"  value="#{ticketsController.filtro}" size="60"/>
+                                <p:commandButton id="botonBuscar" value="#{BundleBDIntegrado.Buscar}" update="datatable" action="#{ticketsController.buscar}" />
+                                <p:commandButton style="float: right;" ajax="false" action="#{ticketsController.prepareCreate}" value="#{BundleBDIntegrado.Crear}" partialSubmit="true" />
+                            </h:panelGrid>
+                        </p:panel>
+                    </p:panel>
+                    <br />
+                    <p:fieldset legend="#{BundleBDIntegrado.informacion}"  style="width: 100%;" >
+                        <h:panelGrid columns="10" id="pnlEstados">
+                            <p:graphicImage name="/imagenes/estadosRegularizacion/estado_pendienteRegularizar.png" 
+                                            width="40" alt="#{BundleBDIntegrado.amaArma_Estado_SinVerificar}" style="margin-left: 20px;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_Abierto}" />
+                            
+                            <p:graphicImage name="/imagenes/estadosRegularizacion/estado_verificado.png" 
+                                            width="40" alt="#{BundleBDIntegrado.amaArma_Estado_Verificado}" style="margin-left: 20px;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_Cerrado}" />
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="&lt;br/&gt;#{BundleBDIntegrado.Resultados}" escape="false" />
+                    </h:panelGrid>
+                    <p:dataTable id="datatable" value="#{ticketsController.items}" 
+                                 var="item" widgetVar="usrTable"   
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                 paginator="true" rows="20"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="20,40,100"
+                                 rowStyleClass="#{ticketsController.estiloPorAtencion(item)}">
+                        <p:column headerText="#{BundleBDIntegrado.TicketsTitle_numero}" sortBy="#{item.numero}" width="4%">
+                            <h:outputText value="#{item.numero}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.TicketsTitle_nombre}" sortBy="#{item.nombre}" width="10%">
+                            <h:outputText value="#{item.nombre}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.TicketsTitle_asunto}" sortBy="#{item.asunto}" width="30%">
+                            <h:outputText value="#{item.asunto}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.TicketsTitle_fechaIni}" sortBy="#{item.fechaIni}" width="5%">
+                            <h:outputText value="#{item.fechaIni}">
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFechaHora2}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.TicketsTitle_tipo}" sortBy="#{item.tipo.nombre}" width="5%">
+                            <h:outputText value="#{item.tipo.nombre}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.Acciones}" width="4%">
+                            <p:commandLink ajax="false" action="#{ticketsController.prepareView}" value="#{BundleBDIntegrado.Ver}"/>
+                            <h:outputText value=" "/>
+                            <h:outputText value=" "/>
+                            <h:outputText value=" "/>
+                            <p:commandLink actionListener="#{ticketsController.cerrarTicket}" update=":listForm" value="#{BundleBDIntegrado.TicketsCerrar}" 
+                                           rendered="#{ticketsController.permisoPorAtencion(item)=='0'}" style="float: right;">
+                                <p:confirm header="#{BundleBDIntegrado.ConfirmarTitulo}" message="#{BundleBDIntegrado.ConfirmarCerrarTicket}" icon="ui-icon-alert" />  
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

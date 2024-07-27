@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.CopiarRegistroGuiaTransitoTitulo}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="editarForm">
+                <h:panelGrid columns="2" > 
+                    <p:outputLabel value="Presione para obtener: " />
+                    <p:commandButton value="Ayuda" actionListener="#" icon="ui-icon-help" />
+                </h:panelGrid>
+                
+                <p:panel id="pnlTipoGuia" header="TIPO DE GUÍA DE TRÁNSITO ELECTRÓNICA" style="margin-bottom:20px" >
+                    <p:outputLabel value="Tipo de Guía: " />
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.obtenerDescripcionTipoGuia()}" />
+                </p:panel>
+                
+                <p:panel id="pnlDeposito" header="DEPÓSITO" style="margin-bottom:20px" rendered="#{eppRegistroGuiaTransitoController.solicitarVoucherTemp}" >
+                    <h:panelGrid  columns="3" id="pnlgVoucherTemporal" cellpadding="3" cellspacing="5">
+                        <p:outputLabel value="Nro. depósito: "  />
+                        <p:inputText id="nroDeposito" value="#{eppRegistroGuiaTransitoController.nroDeposito}" maxlength="12">
+                            <p:keyFilter mask="pint" />
+                        </p:inputText>
+                        <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+                            <p:ajax event="click" process="@this" update="@this" listener="#{eppRegistroGuiaTransitoController.openDlgAyuda(1)}" />
+                        </h:graphicImage>
+                        
+                        <p:outputLabel value="Monto: "  />
+                        <p:inputText id="montoDeposito" value="#{eppRegistroGuiaTransitoController.montoDeposito}" maxlength="5" >
+                            <p:keyFilter mask="pnum" />
+                        </p:inputText>
+                        <p:outputLabel value=""  />
+                        
+                        <p:outputLabel value="Fecha depósito: "  />
+                        <p:calendar id="fechaNac"
+                                        locale="es"
+                                        mindate="#{eppRegistroGuiaTransitoController.fechaMinDeposito}"
+                                        maxdate="#{eppRegistroGuiaTransitoController.maxDate}"
+                                        showOn="button" value="#{eppRegistroGuiaTransitoController.fechaDeposito}"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                        <p:outputLabel value=""  />
+                        
+                        <p:outputLabel value="Depósito adjunto: "  />
+                        <p:fileUpload id="depositoAdjunto" label="#{BundleBDIntegrado.eppRegistroGuiaTransito_deposito_adjunto}"
+                                      invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessage}"
+                                      fileUploadListener="#{eppRegistroGuiaTransitoController.handleFileUploadDeposito}"
+                                      invalidSizeMessage="#{eppRegistroGuiaTransitoController.obtenerMsjeInvalidSizeAdjunto()}"
+                                      onstart="PF('loadingDialog').show()"
+                                      oncomplete="PF('loadingDialog').hide()"
+                                      mode="advanced" dragDropSupport="false"
+                                      multiple="false"
+                                      sizeLimit="#{sbParametroController.obtenerParametroXNombre('eppRegistroGuiaTransito_sizeImageDep').valor}"
+                                      auto="true" process="@form" update="@form"
+                                      allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.depositoAdjunto}"  />
+                        </p:fileUpload>
+                        <p:outputLabel value=""  />
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel id="pnlDatosGuia" header="DATOS DE LA GUÍA DE TRÁNSITO ELECTRÓNICA" style="margin-bottom:20px" >
+                    <h:panelGrid rendered="#{eppRegistroGuiaTransitoController.solicitarRecibo}" columns="8" id="pnlgComprobante" cellpadding="3" cellspacing="5">    
+                        <p:outputLabel value="Comprobante: " for="acReciboBn" />
+                        <p:column>
+                            <p:autoComplete id="acReciboBn" 
+                                            value="#{eppRegistroGuiaTransitoController.reciboBn}"
+                                            completeMethod="#{eppRegistroGuiaTransitoController.autoCompleteRecibos}"
+                                            disabled="#{eppRegistroGuiaTransitoController.disableReciboBn}"
+                                            placeholder="NRO. COMPROBANTE"
+                                            required="true"
+                                            requiredMessage="Debe ingresar el número del comprobante" 
+                                            var="item" 
+                                            itemLabel="#{item.nroSecuencia}" 
+                                            itemValue="#{item}"  
+                                            minQueryLength="3" 
+                                            cache="true" 
+                                            forceSelection="true" >
+                                <p:ajax event="itemSelect" listener="#{eppRegistroGuiaTransitoController.lstnrSelectRecibo}" update="@form" />
+                            </p:autoComplete>
+                            <p:commandButton value="x" 
+                                             styleClass="botonBorrar" 
+                                             title="Borrar Recibo seleccionado"
+                                             rendered="#{eppRegistroGuiaTransitoController.reciboBn != null}"
+                                             process="pnlgComprobante" 
+                                             partialSubmit="true" 
+                                             actionListener="#{eppRegistroGuiaTransitoController.borrarReciboSeleccionado}" 
+                                             update="pnlgComprobante" />
+                            <pe:tooltip for="acReciboBn"  
+                                        rendered="#{eppRegistroGuiaTransitoController.reciboBn == null}"
+                                        value="Ingrese el número del recibo del Banco de la Nación" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>  
+                        </p:column>
+                        <p:outputLabel value="Numero Comprobante:" rendered="#{eppRegistroGuiaTransitoController.reciboBn != null}"/>
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strNroSecuencia}" escape="false"/>
+                        <p:outputLabel value="Fecha Comprobante:" rendered="#{eppRegistroGuiaTransitoController.reciboBn != null}"/>
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strFechaMovimiento}" escape="false"/>  
+                        <p:outputLabel value="Monto:" rendered="#{eppRegistroGuiaTransitoController.reciboBn != null}"/>                        
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strImporte}" escape="false"/>
+                    </h:panelGrid>          
+
+
+                    <h:panelGrid columns="2" id="pnlgResolucionPrevia" cellpadding="3" cellspacing="5">
+                        <p:column>
+                            <p:outputLabel value="Número Resolución: " />
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.resolucionGerencia.eppResolucion.numero}" escape="false"/>
+                        </p:column>                         
+                        <p:column rendered="#{eppRegistroGuiaTransitoController.mostrarresglobprev}" >
+                            <h:panelGrid columns="7" cellpadding="3" cellspacing="5">                                
+                                <p:outputLabel value="Tipo de Resolucion: "  />                                
+                                <p:outputLabel value="#{eppRegistroGuiaTransitoController.tipoResolucionGerencia}" escape="false"/>
+                                <p:outputLabel value="Fecha de caducidad: " />
+                                <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewVencimiento}" escape="false"/>                               
+                            </h:panelGrid>
+                        </p:column>                       
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="3" id="pnlgOrigenDestino" cellpadding="3" cellspacing="5">
+                        <p:outputLabel value="Origen: " />
+                        <p:selectOneMenu id="cboOrigen" style="width: 200px" 
+                                         disabled="true"
+                                         value="#{eppRegistroGuiaTransitoController.tipoOrigen}">
+                            <f:selectItem itemValue="#{null}" itemLabel="---" />
+                            <f:selectItems value="#{eppRegistroGuiaTransitoController.lstTipoGtOrigen}" 
+                                           var="od" itemLabel="#{od.nombre}" itemValue="#{od}"/>
+                            <p:ajax event="change" update="cboOrigen,lblEmpresaOrigen" 
+                                    listener="#{eppRegistroGuiaTransitoController.openDlgOrigen()}" >                            
+                            </p:ajax>
+                        </p:selectOneMenu>
+                        <h:panelGrid columns="1" id="pnlgOrigen">
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.nombreEmpresaOrigen}" 
+                                           id="lblEmpresaOrigen" style="width: 200px" />
+                            <p:column>
+                                <p:outputLabel value="Ubigeo: " rendered="#{eppRegistroGuiaTransitoController.mostrarLugarUsoUbigeoOrigen}"/>
+                                <p:selectOneMenu rendered="#{eppRegistroGuiaTransitoController.mostrarLugarUsoUbigeoOrigen}" 
+                                                 disabled="true"
+                                                 value="#{eppRegistroGuiaTransitoController.lugarUsoUbigeoOrigen}" >
+                                    <f:selectItem itemValue="#{null}" itemLabel="---" />
+                                    <f:selectItems value="#{eppRegistroGuiaTransitoController.lstLugarUsoUbigeo}" 
+                                                   var="luu" 
+                                                   itemLabel="#{luu.distId.nombre} / #{luu.distId.provinciaId.nombre} / #{luu.distId.provinciaId.departamentoId.nombre}" 
+                                                   itemValue="#{luu}"/>
+                                    <p:ajax event="change" update="pnlgOrigen" listener="#{eppRegistroGuiaTransitoController.lstnrLugarUsoUbigeoOrigen}"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                        </h:panelGrid>                        
+
+                        <p:outputLabel value="Destino: " />
+                        <p:selectOneMenu id="cboDestino" 
+                                         style="width: 200px" 
+                                         disabled="true"
+                                         value="#{eppRegistroGuiaTransitoController.tipoDestino}" >
+                            <f:selectItem itemValue="#{null}" itemLabel="---" />
+                            <f:selectItems value="#{eppRegistroGuiaTransitoController.lstTipoGtDestino}" 
+                                           var="od" itemLabel="#{od.nombre}" itemValue="#{od}"/>
+                            <p:ajax event="change" update="cboDestino, lblEmpresaDestino" 
+                                    listener="#{eppRegistroGuiaTransitoController.openDlgDestino()}" >                            
+                            </p:ajax>
+                        </p:selectOneMenu>
+
+                        <h:panelGrid columns="1" id="pnlgDestino">
+                            <p:outputLabel rendered="#{eppRegistroGuiaTransitoController.nombreEmpresaDestino != null}"
+                                             value="#{eppRegistroGuiaTransitoController.nombreEmpresaDestino}" 
+                                             style="display: block;width: 400px;text-align: justify;"
+                                             id="lblEmpresaDestino" />
+                            <p:selectOneMenu rendered="#{eppRegistroGuiaTransitoController.mostrarLugarUsoUbigeoDestino}" 
+                                             disabled="true"
+                                             value="#{eppRegistroGuiaTransitoController.lugarUsoUbigeoDestino}" >
+                                <f:selectItem itemValue="#{null}" itemLabel="--- Seleccione Ubicación Geográfica ---" />
+                                <f:selectItems value="#{eppRegistroGuiaTransitoController.lstLugarUsoUbigeo}" 
+                                               var="luu" 
+                                               itemLabel="#{luu.distId.nombre} / #{luu.distId.provinciaId.nombre} / #{luu.distId.provinciaId.departamentoId.nombre}" 
+                                               itemValue="#{luu}"/>
+                                <p:ajax event="change" update="pnlgDestino" listener="#{eppRegistroGuiaTransitoController.lstnrLugarUsoUbigeoDestino}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>                        
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="7" id="pnlgEmpresaTransporte" cellpadding="3" cellspacing="5">
+                        <p:outputLabel value="Tipo de Transporte: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.tipoTransporte.nombre}" />
+                        <p:outputLabel value="Empresa: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.empresaTransporte.rznSocial}" />
+                    </h:panelGrid>
+                </p:panel>                
+
+                <p:panel header="EXPLOSIVOS Y MATERIALES RELACIONADOS" style="margin-bottom:20px" id="pnlProductos">
+                    <h:panelGrid columns="1" id="pnlgProductos">                        
+                        <p:dataTable id="dtProductos" 
+                                     value="#{eppRegistroGuiaTransitoController.lstExplosivosActivosBulk}"
+                                     emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                                     var="item" >
+                            <p:column headerText="Producto">                                
+                                <h:outputText value="#{item.explosivoId.nombre}" />
+                            </p:column>                            
+                            <p:column headerText="Cantidad a transportar">                                
+                                <h:outputText value="#{item.cantidad}" >
+                                    <f:convertNumber locale="en-US" maxFractionDigits="2"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Medida">                              
+                                <h:outputText value="#{item.explosivoId.unidadMedidaList[0].nombre}" />
+                            </p:column>                                                      
+                        </p:dataTable>                        
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel header="DOCUMENTOS QUE ACREDITAN LA PROPIEDAD DEL MATERIAL A TRASLADAR" style="margin-bottom:20px" id="pnlDocumentos">
+                    <h:panelGrid columns="1"  id="pnlgDocumentos">                        
+                        <p:dataTable id="dtDocumentos"  
+                                     value="#{eppRegistroGuiaTransitoController.lstDocumentosGtBulk}"
+                                     emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                                     var="item" >
+                            <p:column headerText="Tipo" >
+                                <h:outputText value="#{item.tipoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Número Documento" >
+                                <h:outputText value="#{item.numero}"/>
+                            </p:column>                                                                                                         
+                            <p:column headerText="fecha emisión" >
+                                <h:outputText value="#{item.fechaEmision}">
+                                    <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Archivo" >
+                                <h:outputText value="#{item.ruta}"/>
+                            </p:column>                                                      
+                        </p:dataTable>                        
+                    </h:panelGrid>
+                </p:panel>
+
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                    <p:commandButton icon="ui-icon-disk" update="@form" 
+                                     style="height: 40px;width: 150px"
+                                     value="Guardar" 
+                                     action="#{eppRegistroGuiaTransitoController.crear}" >
+                        <p:confirm header="Confirmación" message="¿Está seguro de copiar el registro?" icon="ui-icon-alert" /> 
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-search" 
+                                     process="@this"
+                                     action="#{eppRegistroGuiaTransitoController.direccionarListadoGTUsua()}" 
+                                     style="height: 40px;width: 150px" value="Ir a Listado Traslado" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+
+            </h:form>
+            <ui:include src="dlgAyuda.xhtml"/>
+            <ui:include src="dlgBuscarResolucionG.xhtml"/>
+            <ui:include src="dlgBuscarPolvorinGt.xhtml"/>
+            <ui:include src="dlgBuscarPolvorinGtOrigen.xhtml"/>
+            <ui:include src="dlgBuscLugarUsoGt.xhtml"/>
+            <ui:include src="dlgBuscarEmpTransGt.xhtml"/>
+            <ui:include src="dlgBuscarDocumentoGT.xhtml"/>
+            <ui:include src="dlgBuscarConductorGt.xhtml"/>
+            <ui:include src="dlgCrearDocumento.xhtml"/>
+            <ui:include src="dlgBuscarFabricasGt.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

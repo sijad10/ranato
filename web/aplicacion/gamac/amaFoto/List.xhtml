@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaFotoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaFotoEmpty}" rendered="#{amaFotoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaFotoController.items.rowCount > 0}">
+                    <h:outputText value="#{amaFotoController.pagination.pageFirstItem + 1}..#{amaFotoController.pagination.pageLastItem + 1}/#{amaFotoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaFotoController.previous}" value="#{bundle.Previous} #{amaFotoController.pagination.pageSize}" rendered="#{amaFotoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaFotoController.next}" value="#{bundle.Next} #{amaFotoController.pagination.pageSize}" rendered="#{amaFotoController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaFotoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_nroExpediente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroExpediente}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_rutaFile}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.rutaFile}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaFotoTitle_verificarFotoId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.verificarFotoId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaFotoController.prepareView}" value="#{bundle.ListAmaFotoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaFotoController.prepareEdit}" value="#{bundle.ListAmaFotoEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaFotoController.destroy}" value="#{bundle.ListAmaFotoDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaFotoController.prepareCreate}" value="#{bundle.ListAmaFotoCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaFotoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

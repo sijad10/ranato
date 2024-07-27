@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgDeclaracionJuradaAccionista" widgetVar="wvDlgDeclaracionJuradaAcc" closable="true" header="Declaración Jurada" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogAccionista()" width="50%">
+        <h:form id="frmDeclaraJuradaAccionista">
+            <div class="ui-fluid">
+                <p:focus context="frmDeclaraJuradaAccionista" />
+              
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12"> 
+                        <p:panel id="buscarPanelAccionista" style="margin-bottom:5px;" toggleable="true" toggleSpeed="500" >
+                            <div class="ui-g">
+                                <div class="ui-g-12" style="padding-left:16px;">
+                                    <p style="font-weight: bold; font-size: small; margin: 0px;">
+                                        Se declara bajo juramento que todas las personas mencionadas en el siguiente cuadro, no tienen ninguno de los impedimentos contenidos en el artículo 22 del DL Nº 1213:
+                                    </p>    
+                                </div>
+                            </div>        
+
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">   
+                                     <p:dataTable id="dtResultadosPersonasDJ" 
+                                               value="#{gsspSolicitudAutorizacionTDVController.lstPersonasDJ}"
+                                               var="itemPersonaDJ"
+                                               rowKey="#{itemPersonaDJ.ID}"
+
+                                               emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                               paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                               {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                               {RowsPerPageDropdown}"
+                                               currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                               rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                                            <p:column headerText="Tipo Doc." style="text-align: center;" class="ui-lg-1">
+                                                <h:outputText value="#{(itemPersonaDJ.tipoDoc.codProg.equals('TP_DOCID_EC') ? itemPersonaDJ.empresaExtId.tipoDoc.nombre : itemPersonaDJ.personaId.tipoDoc.nombre)}" />
+                                            </p:column>
+
+                                            <p:column headerText="Nro. Documento" style="text-align: center;" class="ui-lg-2">
+                                                <h:outputText value="#{(itemPersonaDJ.tipoDoc.codProg.equals('TP_DOCID_EC') ? itemPersonaDJ.empresaExtId.numDoc : itemPersonaDJ.personaId.numDoc)}" />
+                                            </p:column>
+
+                                            <p:column headerText="Apellidos y Nombres/Razón Social" style="text-align: center;" class="ui-lg-3">
+                                                <h:outputText value="#{(itemPersonaDJ.tipoDoc.codProg.equals('TP_DOCID_EC') ? itemPersonaDJ.empresaExtId.denominacion :  itemPersonaDJ.datosCompletos) }" />
+                                            </p:column>
+                                      </p:dataTable>
+                                 </div>   
+                             </div>   
+
+                            
+                            <div class="ui-g">
+                                <ul style="font-size: small; margin: 0px;">
+                                    <li>
+                                        <div class="ui-g-12 ui-md-10 ui-lg-10">
+                                            <div style="padding-left:24px;">
+                                                <p style="font-size: small; margin: 0px;">
+                                                    No tener antecedentes penales por la comisión de delitos dolosos, excepto aquellos referidos a matrimonios ilegales o la omisión por asistencia familiar.
+                                                </p>
+                                            </div> 
+                                        </div>
+                                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                            <p:selectBooleanCheckbox value="#{gsspSolicitudAutorizacionTDVController.noAntecedentesPenales}">
+                                                <p:ajax event="change" update="@this, registrar" listener="#{gsspSolicitudAutorizacionTDVController.activaGrabarBotonAceptar()}"  />
+                                            </p:selectBooleanCheckbox> 
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>    
+
+                            <div class="ui-g">
+                                 <ul style="font-size: small; margin: 0px;">
+                                    <li>
+                                        <div class="ui-g-12 ui-md-10 ui-lg-10">
+                                            <div style="padding-left:24px;">
+                                                <p style="font-size: small; margin: 0px;">
+                                                    No ejercer o haber desempeñado funciones o labores en la SUCAMEC, bajo cualquier régimen laboral o contractual. Esta prohibición se extiende hasta por un (1) año posterior al término del vínculo laboral o contractual con la SUCAMEC.
+                                                </p>
+                                            </div> 
+                                        </div>
+                                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                            <p:selectBooleanCheckbox value="#{gsspSolicitudAutorizacionTDVController.noLaboresEntidad}">
+                                                <p:ajax event="change" update="@this, registrar" listener="#{gsspSolicitudAutorizacionTDVController.activaGrabarBotonAceptar()}"  />
+                                            </p:selectBooleanCheckbox> 
+                                        </div>
+                                    </li>
+                                </ul>                                        
+                            </div>    
+
+                            <div class="ui-g">
+                                <ul style="font-size: small; margin: 0px;">
+                                    <li>
+                                        <div class="ui-g-12 ui-md-10 ui-lg-10">
+                                            <div style="padding-left:24px;">
+                                                <p style="font-size: small; margin: 0px;">
+                                                    No haber sido accionista, socio, director, gerente o representante legal de una empresa de seguridad privada que haya sido suspendida o cancelada por incurrir en alguna de las prohibiciones previstas en el artículo 21 precedente. En caso de la cancelación el impedimento se mantendrá vigente hasta treinta y seis (36) meses, contados a partir de la fecha en que la sanción haya quedado firme.
+                                                </p>
+                                            </div> 
+                                        </div>
+                                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                            <p:selectBooleanCheckbox value="#{gsspSolicitudAutorizacionTDVController.noEmpresaSeguridad}">
+                                                <p:ajax event="change" update="@this, registrar" listener="#{gsspSolicitudAutorizacionTDVController.activaGrabarBotonAceptar()}"  />
+                                            </p:selectBooleanCheckbox> 
+                                        </div>
+                                    </li>
+                                </ul>                                           
+                            </div>    
+
+                        </p:panel>    
+                    </div>
+                </div>            
+
+                <br />
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4 ui-lg-4"></div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="padding-left:24px;">
+                        <p:commandButton id="registrar"  action="#{gsspSolicitudAutorizacionTDVController.guardarDatosSolicitud()}" 
+                                value="Aceptar" iconPos="left"
+                                process="@this, frmDeclaraJuradaAccionista"
+                                update="#{(gsspSolicitudAutorizacionTDVController.grabaSolicitud == true) ? '@all' : ''}"
+                                disabled ="#{(gsspSolicitudAutorizacionTDVController.grabaSolicitud == false) ? 'true' : 'false'}"
+                                />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4"></div>
+                </div>    
+                
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        function showDlgMarcoDialogAccionista() {
+            $("div[id*='dlgDeclaracionJuradaAccionista'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgDeclaracionJuradaAccionista'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgDeclaracionJuradaAccionista'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+
+</ui:composition>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h="http://xmlns.jcp.org/jsf/html"
+		xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pm="http://primefaces.org/mobile">
+    <pm:page id="verPage" >
+        <pm:header title="#{bundleDisca.VerMvDcGsspInstructoresTitulo}" />
+        <pm:content>
+			<h:form id="verForm">
+					<p:focus context="verForm" />
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_ID}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.ID}" title="#{bundleDisca.MvDcGsspInstructoresTitle_ID}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_DNI}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.DNI}" title="#{bundleDisca.MvDcGsspInstructoresTitle_DNI}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_NOMBRES}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.NOMBRES}" title="#{bundleDisca.MvDcGsspInstructoresTitle_NOMBRES}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_CODCURSO}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.CODCURSO}" title="#{bundleDisca.MvDcGsspInstructoresTitle_CODCURSO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_NOMCURSO}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.NOMCURSO}" title="#{bundleDisca.MvDcGsspInstructoresTitle_NOMCURSO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_NROFICHA}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.NROFICHA}" title="#{bundleDisca.MvDcGsspInstructoresTitle_NROFICHA}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_FECHAEMISION}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.FECHAEMISION}" title="#{bundleDisca.MvDcGsspInstructoresTitle_FECHAEMISION}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_FECHACADUCIDAD}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.FECHACADUCIDAD}" title="#{bundleDisca.MvDcGsspInstructoresTitle_FECHACADUCIDAD}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_TELEFONO}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.TELEFONO}" title="#{bundleDisca.MvDcGsspInstructoresTitle_TELEFONO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundleDisca.MvDcGsspInstructoresLabel_CORREO}"/>
+							<p:outputLabel value="#{mvDcGsspInstructoresController.registro.CORREO}" title="#{bundleDisca.MvDcGsspInstructoresTitle_CORREO}"/>
+		                </pm:field>
+						<p:button icon="ui-icon-search" outcome="pm:buscarPage" value="#{bundleDisca.MvDcGsspInstructoresVolverBusqueda}" />
+			</h:form>
+        </pm:content>
+    </pm:page>
+</ui:composition>

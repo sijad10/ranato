@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgCambiarHorario" widgetVar="wvDlgCambiarHorario" width="50%" height="55%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CAMBIAR HORARIO" closable="false">
+        <h:form id="frmCambiarHorario">
+            <h:panelGrid columns="1" >
+                    <p:outputLabel value="#{sspRegistroCursoController.obtenerTituloCambioHorario()}" style="font-weight: bold;display: block;" /><br/>
+                    <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.lstProgramacionHorario}"
+                                 editable="true" editMode="cell"
+                                  var="itemHorario" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                        <p:ajax event="cellEdit" listener="#{sspRegistroCursoController.onCellEditHorario}" update="@this" />
+                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_fecha}" style="text-align: center;" >
+                            <h:outputText value="#{itemHorario.fecha}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaIni}" style="text-align: center;">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{itemHorario.horaInicio}" style="#{sspRegistroCursoController.obtenerColorCambioHorario(itemHorario, 1)}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                    </h:outputText>
+                                </f:facet>
+                               <f:facet name="input">
+                                    <pe:timePicker value="#{itemHorario.horaInicio}" mode="popup"
+                                                    id="horaInicio" startHours="#{sspRegistroCursoController.horaInicioPermitido}" endHours="#{sspRegistroCursoController.horaFinPermitido}" locale="es" maxHour="23" maxMinute="59"
+                                                    widgetVar="spnHoraInicio" validatorMessage="Ingrese correctamente la hora de inicio"
+                                                    showOn="button" label="Hora de inicio" >
+                                        <p:ajax event="timeSelect" listener="#{sspRegistroCursoController.timeSelectListener}" 
+                                                update="#{sspRegistroCursoController.updateCambioHorarioInicio()}" />  
+                                        <p:ajax event="close" listener="#{sspRegistroCursoController.closeListener}" />
+                                    </pe:timePicker>
+                               </f:facet>
+                           </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaFin}" style="text-align: center;">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{itemHorario.horaFin}" style="#{sspRegistroCursoController.obtenerColorCambioHorario(itemHorario, 2)}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                    </h:outputText>
+                                </f:facet>
+                               <f:facet name="input">
+                                    <pe:timePicker value="#{itemHorario.horaFin}" mode="popup"
+                                                    id="horaFin" startHours="#{sspRegistroCursoController.horaInicioPermitido}" endHours="#{sspRegistroCursoController.horaFinPermitido}" locale="es" maxHour="23" maxMinute="59"
+                                                    widgetVar="spnHoraFin" validatorMessage="Ingrese correctamente la hora de fin"
+                                                    showOn="button" label="Hora de fin" >
+                                        <p:ajax event="timeSelect" listener="#{sspRegistroCursoController.timeSelectListener}"
+                                                update="#{sspRegistroCursoController.updateCambioHorarioFin()}" />
+                                        <p:ajax event="close" listener="#{sspRegistroCursoController.closeListener}" />
+                                    </pe:timePicker>
+                               </f:facet>
+                           </p:cellEditor>
+                        </p:column>
+                    </p:dataTable>
+            </h:panelGrid>
+            <br/><br/>
+            <div align="right">
+                    <p:commandButton  icon="ui-icon-disk"
+                                      value="Cambiar"
+                                      process="@form" update="@form"
+                                      rendered="#{sspRegistroCursoController.flagBtnCambio}"
+                                      actionListener="#{sspRegistroCursoController.confirmarCambioHorarioCurso()}" />
+
+                    <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                     process="@form"
+                                     update="@form" 
+                                     actionListener="#{sspRegistroCursoController.cancelarCambioHorarioCurso()}" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="crearForm" rendered="#{eppLibroController.estado == 'CREAR'}" >
+        <p:focus context="crearForm" />
+        <p:defaultCommand target="botonGuardar"/>
+        <p:panel header="Datos de Venta" id="pnDv">
+            <h:panelGrid columns="4"  id="pndVenta">
+                <p:outputLabel value="RG Comercializacion" for="resPL"/>
+                <p:selectOneMenu value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 filter="true"  id="resPL"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxMostrarRgfabricaComercio()}"
+                            process="@this,resPL" 
+                            update="crearForm"/>
+
+                </p:selectOneMenu>
+                <p:outputLabel value="RG Fabricacion"/>
+                <p:inputText value="#{eppLibroController.numeroResFabri}" id="nroRes" size="40" disabled="true"/>
+
+                <p:outputLabel value="Local Comercial"/>
+                <p:inputTextarea value="#{eppLibroController.registroPlantaUsoComercio.eppLocalList.get(0).getDireccionCompleta()}" 
+                                 id="resCo" maxlength="200"  rows="3" cols="40" styleClass="inputTextArea"  disabled="true" />
+                
+                <p:outputLabel value="Fabrica" id="tluso" />
+                <p:inputTextarea value="#{eppLibroController.direccionFabrica}" maxlength="200" 
+                                 rows="3" cols="40" styleClass="inputTextArea" disabled="true" />
+
+
+
+
+
+
+
+
+
+
+
+            </h:panelGrid>
+
+
+
+
+        </p:panel><br/><br/>
+
+
+
+
+
+        <br/>
+        <div align="center">
+            <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" 
+                             actionListener="#{eppLibroController.aperturarTiposDeFabrica()}" 
+                             value="#{bundle.Guardar}"/>
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroComercio()}" 
+                             value="Listado Venta/Comercio" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

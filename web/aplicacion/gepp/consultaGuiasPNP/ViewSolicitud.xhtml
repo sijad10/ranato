@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="verForm">                                
+                <h:panelGrid columns="1" id="pnlgResolucionPrevia" >   
+                    
+                    <p:graphicImage value="/resources/imagenes/header-gt-preview.png" style="width: 60%"/>
+                    
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.NRO_RG}" escape="false"/>
+                    <p:outputLabel value="Se otorga la presente autorización a la empresa: " />
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.SOLICITANTE}" />
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.ORIGEN}" escape="false" />
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.DESTINO}" escape="false" />
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.A_FAVOR}" escape="false"/>
+                    <p:outputLabel value="Los siguientes explosivos: " />
+
+                    <p:dataTable id="dtProductos" 
+                                 style="width: 45%"
+                                 value="#{consultaGuiasPNPController.lstExplosivos}"
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                 var="item" >
+                        <p:column headerText="Explosivo o material relacionado">                                
+                            <h:outputText value="#{item.EXPLOSIVO}" />
+                        </p:column>                        
+                        <p:column headerText="Unidad de Medida">                              
+                            <h:outputText value="#{item.UNIDAD_MEDIDA}" />
+                        </p:column>
+                        <p:column headerText="Cantidad a transportar">                                
+                            <h:outputText value="#{item.CANTIDAD}" />
+                        </p:column>                                                                                       
+                    </p:dataTable>
+                    
+                    <p:outputLabel value="Los explosivos o materiales relacionados serán trasladados por: "  
+                                   rendered="#{consultaGuiasPNPController.registro.EMP_TRANSPORT != null}"
+                                   escape="false"/>
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.EMP_TRANSPORT}"  
+                                   rendered="#{consultaGuiasPNPController.registro.EMP_TRANSPORT != null}"
+                                   escape="false"/>
+                    
+                    <p:outputLabel value="Conductores:" />
+                    <p:dataTable id="dtConductor" 
+                                 style="width: 35%"
+                                 value="#{consultaGuiasPNPController.lstConductores}"
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                 var="item" >
+                        <p:column headerText="dni">                                
+                            <h:outputText value="#{item.DNI}" />
+                        </p:column>         
+                        <p:column headerText="Nombres">                                
+                            <h:outputText value="#{item.NOMBRES}" />
+                        </p:column>
+                        <p:column headerText="Nro. Licencia">                              
+                            <h:outputText value="#{item.NRO_LIC}" />
+                        </p:column>                                                                                                        
+                    </p:dataTable>
+                    
+                    <p:outputLabel value="Vehiculos:" />
+                    <p:dataTable id="dtVehiculos" 
+                                 style="width: 25%"
+                                 value="#{consultaGuiasPNPController.lstVehiculos}"
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                 var="item" >
+                        <p:column headerText="Marca">                                
+                            <h:outputText value="#{item.MARCA}" />
+                        </p:column>         
+                        <p:column headerText="Placa">                                
+                            <h:outputText value="#{item.PLACA}" />
+                        </p:column>                                                                                                                            
+                    </p:dataTable>
+                    
+                    <p:outputLabel value="#{consultaGuiasPNPController.registro.REQUIERE_CUSTODIA}" escape="false"/>
+
+                    <p:column style="float: right; margin-bottom:20px; clear: both;">
+                        <p:commandButton icon="ui-icon-search" 
+                                         action="#{consultaGuiasPNPController.direccionarSolicitud()}" 
+                                         value="Regresar" />
+                    </p:column>   
+                </h:panelGrid>
+            </h:form>        
+        </ui:define>
+    </ui:composition>
+
+</html>

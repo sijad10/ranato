@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <p:dialog id="dlgDeclaracionJuradaSISPE" widgetVar="wvDlgDeclaracionJuradaSISPE" closable="false" 
+              header="TERMINOS Y CONDICIONES" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgDDJJ();" width="55%">
+        
+        <h:form id="frmCuerpoDDJJ">
+            
+            <div class="ui-fluid">
+                
+                <p:panel id="pnl_DDJJ" header="DECLARACIÓN JURADA">
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Declaro bajo juramento cumplir con las condiciones establecidas en el artículo 57 del DS Nº XX-2023-IN que aprueba el Reglamento de la Ley de Servicios de Seguridad Privada, en concordancia con el artículo  24 del DL Nº 1213:" />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:selectManyCheckbox id="custom" value="#{gsspSolicitudAutorizacionSISPEController.selectedOptions}" layout="custom" >                                        
+                                <f:selectItem itemValue="A001" />                                
+                                <f:selectItem itemValue="A002" />
+                                <f:selectItem itemValue="A003" />
+                                <f:selectItem itemValue="A004" />
+                                <f:selectItem itemValue="A005" />
+                                <f:selectItem itemValue="A006" />
+                                <f:selectItem itemValue="A007" />
+                                <f:selectItem itemValue="A008" />
+                                <p:ajax update="@this,pnl_DDJJ" listener="#{gsspSolicitudAutorizacionSISPEController.selectedOptionsChanged}" />
+                            </p:selectManyCheckbox>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt0" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item00}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt0" for="custom" itemIndex="0"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt1" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item01}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt1" for="custom" itemIndex="1"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt2" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item02}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt2" for="custom" itemIndex="2"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt3" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item03}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt3" for="custom" itemIndex="3"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt4" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item04}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt4" for="custom" itemIndex="4"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt5" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item05}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt5" for="custom" itemIndex="5"  />
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt6" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item06}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt6" for="custom" itemIndex="6"  />
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-11 ui-lg-11">
+                            <p:outputLabel for="opt7" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_SISPE_DDJJ_Item07}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:checkbox id="opt7" for="custom" itemIndex="7"  />
+                        </div>
+                    </div> 
+                    
+                </p:panel>
+                
+                <div class="ui-g">                        
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        &nbsp;
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:commandButton id="btnAceptar" value="ACEPTAR" 
+                                         action="#{gsspSolicitudAutorizacionSISPEController.btnAceptarDDJJ()}" 
+                                         icon="ui-icon-disk" update="@this"  process="@this" iconPos="left" />
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:commandButton id="btnCancelar" value="CANCELAR" action="#{gsspSolicitudAutorizacionSISPEController.btnCancelarDDJJ()}"
+                                         icon="ui-icon-closethick"  update="@all" process="@all" iconPos="left" onstart="limpiarForm()" />
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        &nbsp;
+                    </div>
+                </div>
+            
+                
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        function showDlgDDJJ() {
+            $("div[id*='dlgDeclaracionJuradaSISPE'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgDeclaracionJuradaSISPE'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgDeclaracionJuradaSISPE'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+        
+        function limpiarForm(){
+            document.getElementById("frmCuerpoDDJJ").reset();
+        }
+
+    </script>
+
+</ui:composition>
+
+

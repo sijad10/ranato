@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{dcGsspVigilantesRenagiController.estado == 'VER_TER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid columns="2">
+            <p:graphicImage  value="#{dcGsspVigilantesRenagiController.foto}" width="180" height="240" cache="false" style="border-color: #000; border-width: 2px; border-style: solid; margin: 10px;"/>
+            <h:panelGroup>
+                <h:panelGrid id="panelGrid" columns="2">
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_NRO_CRN_VIG}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.NRO_CRN_VIG}" title="#{bundleRenagi.DcGsspVigilantesTitle_NRO_CRN_VIG}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_DES_MOD}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.DES_MOD}" title="#{bundleRenagi.DcGsspVigilantesTitle_DES_MOD}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_RUC}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.RUC}" title="#{bundleRenagi.DcGsspVigilantesTitle_RUC}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_EMPRESA}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.EMPRESA}" title="#{bundleRenagi.DcGsspVigilantesTitle_EMPRESA}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_NOMBRE}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.NOMBRE}" title="#{bundleRenagi.DcGsspVigilantesTitle_NOMBRE}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_FEC_EMI}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.FEC_EMI}" title="#{bundleRenagi.DcGsspVigilantesTitle_FEC_EMI}">
+                        <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_FEC_VENC}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.FEC_VENC}" title="#{bundleRenagi.DcGsspVigilantesTitle_FEC_VENC}">
+                        <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_DES_USR}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.DES_USR}" title="#{bundleRenagi.DcGsspVigilantesTitle_DES_USR}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_COD_USR}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.COD_USR}" title="#{bundleRenagi.DcGsspVigilantesTitle_COD_USR}"/>
+                    <p:outputLabel value="#{bundleRenagi.DcGsspVigilantesLabel_ESTADO}"/>
+                    <p:outputLabel value="#{dcGsspVigilantesRenagiController.registro.ESTADO}" title="#{bundleRenagi.DcGsspVigilantesTitle_ESTADO}" style="font-size: large; color: red; font-weight: bold;"/>
+                </h:panelGrid>
+            </h:panelGroup>
+        </h:panelGrid>
+        <p:commandButton icon="ui-icon-search" actionListener="#{dcGsspVigilantesRenagiController.mostrarBuscar}" value="#{bundleRenagi.DcGsspVigilantesVolverBusqueda}" immediate="true" update="@all"/><br/><br/>
+    </h:form>
+</ui:composition>
+

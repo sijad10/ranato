@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{dcGsspTotVigilantesController.estado == 'VER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid columns="2">
+            <p:graphicImage  value="#{dcGsspTotVigilantesController.foto}" width="180" height="240" cache="false" style="border-color: #000; border-width: 2px; border-style: solid; margin: 10px;"/>
+            <h:panelGroup rendered="true">
+                <h:panelGrid id="panelGrid" columns="2" rendered="#{dcGsspTotVigilantesController.registro.TIPO ne 2}">
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_NRO_CRN_VIG}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.NRO_CRN_VIG}" title="#{bundleDisca.DcGsspVigilantesTitle_NRO_CRN_VIG}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_DES_MOD}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.DES_MOD}" title="#{bundleDisca.DcGsspVigilantesTitle_DES_MOD}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_RUC}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.RUC}" title="#{bundleDisca.DcGsspVigilantesTitle_RUC}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_EMPRESA}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.EMPRESA}" title="#{bundleDisca.DcGsspVigilantesTitle_EMPRESA}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_NOMBRE}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.NOMBRE}" title="#{bundleDisca.DcGsspVigilantesTitle_NOMBRE}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_EXPEDIENTE}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.EXPEDIENTE}" title="#{bundleDisca.DcGsspVigilantesLabel_EXPEDIENTE}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_NRO_EXP}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.NRO_EXP}" title="#{bundleDisca.DcGsspVigilantesTitle_NRO_EXP}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_ANO_EXP}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.ANO_EXP}" title="#{bundleDisca.DcGsspVigilantesTitle_ANO_EXP}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_FEC_EMI}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.FEC_EMI}" title="#{bundleDisca.DcGsspVigilantesTitle_FEC_EMI}">
+                        <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_FEC_VENC}"/>
+                    <p:outputLabel value=""/>
+                    <ui:remove>
+                        rfv - quitar remove y el outputlabel de arriba
+                        <p:outputLabel value="#{dcGsspTotVigilantesController.obtenerFechaFinCarne(dcGsspTotVigilantesController.registro.FEC_VENC)}" />
+                    </ui:remove>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_DES_USR}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.DES_USR}" title="#{bundleDisca.DcGsspVigilantesTitle_DES_USR}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?bundleDisca.DcGsspVigilantesLabel_COD_USR:bundleDisca.DcGsspVigilantesLabel_CE}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?dcGsspTotVigilantesController.registro.COD_USR:dcGsspTotVigilantesController.registro.CRNT_EXT}" title="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?bundleDisca.DcGsspVigilantesTitle_COD_USR:bundleDisca.DcGsspVigilantesTitle_CE}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_ESTADO}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.obtenerEstadoVigilante(dcGsspTotVigilantesController.registro)}" title="#{bundleDisca.DcGsspVigilantesTitle_ESTADO}" style="font-size: large; color: red; font-weight: bold;"/>
+                </h:panelGrid>
+                <h:panelGrid id="panelGridNoVigilantes" columns="2" rendered="#{dcGsspTotVigilantesController.registro.TIPO == 2 and dcGsspTotVigilantesController.registro.TIP_USR ne 5}">                
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_NOMBRE}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.NOMBRE}" title="#{bundleDisca.DcGsspVigilantesTitle_NOMBRE}"/>
+                    <p:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_DES_USR}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.DES_USR}" title="#{bundleDisca.DcGsspVigilantesTitle_DES_USR}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?bundleDisca.DcGsspVigilantesLabel_COD_USR:bundleDisca.DcGsspVigilantesLabel_CE}"/>
+                    <p:outputLabel value="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?dcGsspTotVigilantesController.registro.COD_USR:dcGsspTotVigilantesController.registro.CRNT_EXT}" title="#{dcGsspTotVigilantesController.registro.TIP_USR == 2?bundleDisca.DcGsspVigilantesTitle_COD_USR:bundleDisca.DcGsspVigilantesTitle_CE}"/>
+                </h:panelGrid>
+            </h:panelGroup>
+        </h:panelGrid>
+        <br/>
+        <h:panelGroup rendered="true" >
+            <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                <h:outputLabel value="#{bundleDisca.DcGsspVigilantesLicVigentes}" escape="false" style="font-weight: bold;"/>
+            </h:panelGrid>
+            <p:dataTable id="licDatatable" value="#{dcGsspTotVigilantesController.listLicVigentes}"
+                         reflow="true"
+                         var="item"
+                         rowKey="#{item.id}"
+                         emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                         paginator="false" rows="#{bundleDisca.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundleDisca.PaginatorFilasPorPagina}">
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_NRO_LIC}" sortBy="#{item.licenciaId.nroLicencia}" width="5%" style="text-align: center;" >
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_NRO_LIC}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.licenciaId.nroLicencia}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_FEC_EMISION}" sortBy="#{item.licenciaId.fechaEmision}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_FEC_EMISION}" style="font-weight: bold"/>
+                    </f:facet>
+                    <h:outputText value="#{item.licenciaId.fechaEmision}">
+                        <f:converter converterId="fechaConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_FEC_VENCIMIENTO}" sortBy="#{item.licenciaId.fechaVencimietnto}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_FEC_VENCIMIENTO}" style="font-weight: bold"/>
+                    </f:facet>
+                    <h:outputText value="#{item.licenciaId.fechaVencimietnto}">
+                        <f:converter converterId="fechaConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Modalidad" sortBy="#{item.modalidadId.nombre}" width="20%">
+                    <f:facet name="header">
+                        <h:outputText value="Modalidad" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.modalidadId.nombre}"/>
+                </p:column>
+                <p:column headerText="Restricciones" sortBy="#{item.licenciaId.restriccionId.nombre}">
+                    <f:facet name="header">
+                        <h:outputText value="Restricciones" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.licenciaId.restriccionId eq null?'SIN RESTRICCION':item.licenciaId.restriccionId.nombre}"/>
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+        <br/>
+        <h:panelGroup rendered="#{dcGsspTotVigilantesController.armas ne null}" >
+            <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                <h:outputLabel value="#{bundleDisca.DcGsspVigilantesHistoricoArmas}" escape="false" style="font-weight: bold;"/>
+            </h:panelGrid>
+            <p:dataTable id="armasDatatable" value="#{dcGsspTotVigilantesController.armas}"
+                         reflow="true"
+                         var="item"
+                         rowKey="#{item.id}"
+                         emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                         paginator="false" rows="#{bundleDisca.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundleDisca.PaginatorFilasPorPagina}">
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_NRO_LIC}" sortBy="#{item.NRO_LIC}" width="5%" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_NRO_LIC}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.NRO_LIC}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_DATOS_ARMA}" sortBy="#{item.TIPO_ARMA} #{item.MARCA} #{item.MODELO} #{item.CALIBRE}" width="20%">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_DATOS_ARMA}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.TIPO_ARMA} #{item.MARCA} #{item.MODELO} #{item.CALIBRE}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_NRO_SERIE}" sortBy="#{item.NRO_SERIE}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_NRO_SERIE}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.NRO_SERIE}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_FEC_EMISION}" sortBy="#{item.FEC_EMISION}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_FEC_EMISION}" style="font-weight: bold"/>
+                    </f:facet>
+                    <h:outputText value="#{item.FEC_EMISION}">
+                        <f:converter converterId="fechaConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_FEC_VENCIMIENTO}" sortBy="#{item.FEC_VENCIMIENTO}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_FEC_VENCIMIENTO}" style="font-weight: bold"/>
+                    </f:facet>
+                    <h:outputText value="#{item.FEC_VENCIMIENTO}">
+                        <f:converter converterId="fechaConverter" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_PORTADOR}" sortBy="#{item.PORTADOR}" width="20%">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_PORTADOR}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.PORTADOR} - #{item.DOC_PORTADOR}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_SITUACION}" sortBy="#{item.SITUACION}">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_SITUACION}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.SITUACION}"/>
+                </p:column>
+                <p:column headerText="#{bundleDisca.DcGamacLicenciasTitle_ESTADO}" sortBy="#{item.ESTADO}" style="text-align: center;">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundleDisca.DcGamacLicenciasTitle_ESTADO}" style="font-weight: bold"/>
+                    </f:facet>
+
+                    <h:outputText value="#{item.ESTADO}" />
+                </p:column>
+                <p:column headerText="#{bundleDisca.Ver}" exportable="false" width="4%" rendered="false" style="text-align: center;">
+                    <p:commandLink actionListener="#{dcGsspVigilantesController.mostrarVerArma}" value="#{bundleDisca.Ver}" update="@all" ajax="true"/>
+                    <h:outputText value=" "/>
+                </p:column>                                 
+            </p:dataTable>
+        </h:panelGroup>
+        <br/>
+        <h:panelGroup id="buscarHistPanel" >
+            <h:panelGroup rendered="#{dcGsspTotVigilantesController.resultados != null}">
+                <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                    <h:outputLabel value="#{bundleDisca.HistorialDcGsspVigilantes}" escape="false" style="font-weight: bold;"/>
+                </h:panelGrid>
+                <p:dataTable id="buscarHistDatatable" value="#{dcGsspTotVigilantesController.historico}"
+                             reflow="true"
+                             var="item"
+                             rowKey="#{item.id}"
+                             emptyMessage="#{bundleDisca.MensajeNoResultados}"
+                             >
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_RUC}" sortBy="#{item.RUC}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_RUC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.RUC}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_RZN_SOC}" sortBy="#{item.RZN_SOC}" width="30%">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_RZN_SOC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.RZN_SOC}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_DES_MOD}" sortBy="#{item.DES_MOD}" width="30%">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_DES_MOD}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.DES_MOD}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_DES_CAR}" style="text-align: center" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_DES_CAR}" />
+                            </f:facet>
+                            <h:outputText value="#{dcGsspTotVigilantesController.obtenerDescTipoRegistro(item)}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_EMI}" sortBy="#{item.FEC_EMI}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_EMI}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.FEC_EMI}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputText>
+
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_VENC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.FEC_VENC}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputText>
+
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_BAJA}" sortBy="#{item.FEC_BAJA}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesHistTitle_FEC_BAJA}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.FEC_BAJA}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputText>
+
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:panelGroup><br/>
+        <h:panelGroup id="buscarCurPanel">
+            <h:panelGroup rendered="#{dcGsspTotVigilantesController.resultados != null}">
+                <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                    <h:outputLabel value="#{bundleDisca.RelacionDcGsspVigilantesCursosTitulo}" escape="false" style="font-weight: bold;"/>
+                </h:panelGrid>
+                <p:dataTable id="buscarCurDatatable" value="#{dcGsspTotVigilantesController.cursos}"
+                             reflow="true"
+                             var="item"
+                             rowKey="#{item.id}"
+                             emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                             >
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_RUC}" sortBy="#{item.RUC}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_RUC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.RUC}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_RZN_SOC}" sortBy="#{item.RZN_SOC}" width="25%">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_RZN_SOC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.RZN_SOC}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_EVALUACION}" sortBy="#{item.EVALUACION}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_EVALUACION}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.EVALUACION}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_TIPO}" sortBy="#{item.TIPO}" width="15%" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_TIPO}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.TIPO}"/>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_FEC_FINAL}" sortBy="#{item.FEC_FINAL}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_FEC_FINAL}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.FEC_FINAL}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_FEC_VENC}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{dcGsspTotVigilantesController.obtenerFechaFinCarne(item.FEC_VENC)}" />
+                    </p:column>
+                    <p:column headerText="#{bundleDisca.DcGsspVigilantesCursosTitle_VIGENTE}" sortBy="#{item.VIGENTE}" style="text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="#{bundleDisca.DcGsspVigilantesCursosTitle_VIGENTE}" style="font-weight: bold"/>
+                        </f:facet>
+
+                        <h:outputText value="#{item.VIGENTE}"/>
+
+                    </p:column>
+                </p:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>
+        <br/>
+        <h:panelGrid columns="2">
+            <p:commandButton icon="ui-icon-print"
+                             ajax="false"                             
+                             value="Imprimir"
+                             process="@all"
+                             onclick="this.form.target = '_blank'"
+                             onblur="this.form.target = '_self'"
+                             immediate="true" >
+                <p:fileDownload value="#{dcGsspTotVigilantesController.exportVigilantePdf()}" contentDisposition="inline"  />
+            </p:commandButton>
+            
+            <p:commandButton icon="ui-icon-search" actionListener="#{dcGsspTotVigilantesController.mostrarBuscar}" value="#{bundleDisca.DcGsspVigilantesVolverBusqueda}" immediate="true" update="@all"/><br/><br/>
+        </h:panelGrid>
+    </h:form>
+</ui:composition>
+

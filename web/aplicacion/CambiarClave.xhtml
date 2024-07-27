@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="formClave">
+            <p:focus context="formClave" />
+            <p:defaultCommand target="cambiar" />
+            <div align="center">
+                <br></br> 
+                <br></br> 
+                <br></br> 
+                <p:panel header="#{bundleSistemaBase.CambiarClave}" style="width:500px;" >
+                    <p:outputLabel value="#{bundleSistemaBase.CriteriosClaveNueva}" escape="false" style="text-align: left;"/>
+                    <br></br> 
+                    <br></br> 
+                    <h:panelGrid columns="2" cellpadding="3">
+                        <p:outputLabel value="#{bundleSistemaBase.CambiarClave_ClaveActual}" for="claveActual" />
+                        <p:password validatorMessage="#{bundleSistemaBase.CambiarClaveValidator_claveActual}" maxlength="20" value="#{cambiarClaveController.claveActual}" id="claveActual" required="true" requiredMessage="#{bundleSistemaBase.CambiarClaveRequiredMessage_claveActual}" autocomplete="false" style="width:100px; min-width: 150px;">
+                        </p:password>
+                        <p:outputLabel value="#{bundleSistemaBase.CambiarClave_Clave1}" for="clave1" />
+                        <p:password validatorMessage="#{bundleSistemaBase.CambiarClaveValidator_clave}" maxlength="20" value="#{cambiarClaveController.clave1}" id="clave1" required="true" requiredMessage="#{bundleSistemaBase.CambiarClaveRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                            <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                        </p:password>
+                        <p:outputLabel value="#{bundleSistemaBase.CambiarClave_Clave2}" for="clave2" />
+                        <p:password validatorMessage="#{bundleSistemaBase.CambiarClaveValidator_clave}" maxlength="20" value="#{cambiarClaveController.clave2}" id="clave2" required="true" requiredMessage="#{bundleSistemaBase.CambiarClaveRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                            <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                        </p:password>
+                    </h:panelGrid>
+                    <br></br> 
+                    <br></br> 
+                    <p:commandButton ajax="true" id="cambiar" actionListener="#{cambiarClaveController.cambiarClave()}" value="#{bundleSistemaBase.CambiarClave}" icon="ui-icon-key" iconPos="right" update=":formClave"/>
+                </p:panel>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

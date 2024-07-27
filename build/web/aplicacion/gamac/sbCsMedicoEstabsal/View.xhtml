@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="viewForm" rendered="#{sbCsMedicoEstabsalController.estado == 'VER'}" >
+        <p:focus context="viewForm" />
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_profesionalesAutorizados}" id="pnlDatosCrear" >
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedico_registrar_cmp}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.medicoId.nroCmp}" style="font-weight: bold;"  />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_medico}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.obtenerDescMedicoVer(sbCsMedicoEstabsalController.registro.medicoId)}" style="font-weight: bold;"  />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_establecimiento}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.obtenerDescripcionEstablecimiento(sbCsMedicoEstabsalController.registro.establecimientoId)}" style="font-weight: bold;" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_cargo}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.cargoId.nombre }" style="font-weight: bold;" />
+            </h:panelGrid>
+            
+            <h:panelGrid columns="4">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaInicio}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.fechaIni }" style="font-weight: bold;" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaFin}" style="display: block; width: 190px;margin-left: 20px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.fechaFin }" style="font-weight: bold;" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaInicioHabilitacion}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.fechaIniHab }" style="font-weight: bold;" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaFinHabilitacion}" style="display: block; width: 190px;margin-left: 20px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.registro.fechaFinHab }" style="font-weight: bold;" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_activo}" style="display: block; width: 190px;" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.obtenerEstadoMedico(sbCsMedicoEstabsalController.registro) }" style="font-weight: bold;" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedico_registrar_esDelegado}" style="display: block; width: 190px;" rendered="#{sbCsMedicoEstabsalController.renderDelegadoMedico()}" />
+                <p:outputLabel value="#{sbCsMedicoEstabsalController.obtenerDescEsDelegado() }" style="font-weight: bold;" rendered="#{sbCsMedicoEstabsalController.renderDelegadoMedico()}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_firma}" style="display: block; width: 100px;" />
+                <h:panelGrid columns="2" id="pnlFirma">
+                    <p:graphicImage rendered="#{sbCsMedicoEstabsalController.renderFotoFirma()}"
+                                    value="#{sbCsMedicoEstabsalController.fotoFirma}" cache="false"
+                                    width="250" height="250" >
+                    </p:graphicImage>
+                    <p:media rendered="#{sbCsMedicoEstabsalController.renderPdfFirma()}"
+                             value="#{sbCsMedicoEstabsalController.pdfFirma}"
+                             cache="false" player="pdf" height="300px" />
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:panel>
+        
+        <br/>
+        <br/>
+        <p:commandButton icon="ui-icon-closethick"
+                         action="#{sbCsMedicoEstabsalController.prepareList()}"
+                         value="Cancelar"
+                         style="margin-left: 20px;"
+                         immediate="true" update="@all"  />
+        <br />
+    </h:form>
+</ui:composition>
+

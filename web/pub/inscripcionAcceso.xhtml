@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>SUCAMEC en Línea - Inscripción acceso</title>
+            </f:facet>
+            <h:outputStylesheet name="css/estilos.css"/>
+            <h:outputScript name="js/general.js"/>
+        </h:head>
+
+        <h:body>
+            <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+            <h:form id="formInscAcceso">
+                <div class="ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                            <p:focus context=":formInscAcceso" />
+                            <center><h:graphicImage url="/resources/imagenes/logo_sucamec.png" /></center><br/><br/>
+                            <p:panel style="width:100%;" rendered="#{inscripcionAccesoController.estado == 'INICIO'}">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                        <center><p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Titulo}" style="font-size: 180%;" /></center>
+                                    </div>
+                                </div>
+                                <br></br> 
+                                <h:panelGroup id="datos">
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-6 ui-lg-6" >
+                                            <p:outputLabel value="#{bundleSistemaBase.NotaAyuda_Texto}" style="font-weight: bold"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-4 ui-lg-2" >
+                                            <p:commandButton value="Ayuda" actionListener="#{inscripcionAccesoController.openAyudaDNI}" process="@this"/>
+                                        </div>
+                                    </div>
+                                    <h:panelGroup id="datosPer">
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_TipoDoc}" style="font-weight: bold" for="cbTipoDoc"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:selectOneMenu id="cbTipoDoc" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_TipoDoc}"
+                                                                 value="#{inscripcionAccesoController.datos.tipoDoc}" autoWidth="false">
+                                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                                   value="#{inscripcionAccesoController.listTipoDoc}"/>
+                                                    <p:ajax event="change" update="@this,datosPer" process="@this" listener="#{inscripcionAccesoController.obtenerNumCaract}" />
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_NumDoc}" style="font-weight: bold" for="numDoc"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-2 ui-lg-3" >
+                                                <p:inputText value="#{inscripcionAccesoController.datos.numDoc}" id="numDoc" maxlength="#{inscripcionAccesoController.cantNumeros}"
+                                                             required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_NumDocA}" placeholder="A">
+                                                    <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('NUMDOC')}"/>
+                                                </p:inputText>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-1 ui-lg-1" >
+                                                <p:inputText value="#{inscripcionAccesoController.datos.numCod}" id="numCod" size="5" maxlength="1" rendered="#{inscripcionAccesoController.datos.tipoDoc.codProg=='TP_DOCID_DNI'}"
+                                                             required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_NumDocB}" placeholder="B">
+                                                </p:inputText>
+                                                <p:outputLabel/><p:outputLabel rendered="#{inscripcionAccesoController.datos.tipoDoc.codProg!='TP_DOCID_DNI'}"/>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Nombres}" style="font-weight: bold" for="nomb"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:inputText value="#{inscripcionAccesoController.datos.nombres}" id="nomb" 
+                                                             maxlength="200"
+                                                             required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Nombres}">
+                                                    <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('NOM')}"/>
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_ApePat}" style="font-weight: bold" for="appat"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:inputText value="#{inscripcionAccesoController.datos.apePat}" id="appat"
+                                                             maxlength="200"
+                                                             required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_ApePat}">
+                                                    <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('APPAT')}"/>
+                                                </p:inputText>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_ApeMat}" style="font-weight: bold" for="apmat"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:inputText value="#{inscripcionAccesoController.datos.apeMat}" id="apmat"
+                                                             maxlength="200"
+                                                             required="#{inscripcionAccesoController.datos.tipoDoc.codProg=='TP_DOCID_DNI'}" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_ApeMat}">
+                                                    <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('APMAT')}"/>
+                                                </p:inputText>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Genero}" style="font-weight: bold" for="cbGenero"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:selectOneMenu id="cbGenero" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Genero}"
+                                                                 autoWidth="false"
+                                                                 value="#{inscripcionAccesoController.datos.genero}" >
+                                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                                   value="#{inscripcionAccesoController.listGenero}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_FecNac}" style="font-weight: bold" for="fecha"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:calendar id="fecha" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_FecNac}"
+                                                            pagedate="true"
+                                                            maxdate="#{inscripcionAccesoController.fechaMaxima}"
+                                                            showOn="button" value="#{inscripcionAccesoController.datos.fechaNac}" 
+                                                            pattern="#{bundle.FormatoFecha}"
+                                                            navigator="true" locale="es">  
+                                                    <p:ajax event="dateSelect"  />
+                                                    <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                                </p:calendar>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_EstCivil}" style="font-weight: bold" for="cbEstadoCiv"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:selectOneMenu id="cbEstadoCiv" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_EstCivil}"
+                                                                 autoWidth="false"
+                                                                 value="#{inscripcionAccesoController.datos.estCivil}" >
+                                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                                   value="#{inscripcionAccesoController.listEstCivil}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                                <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Ocupacion}" style="font-weight: bold" for="cbOcupacion"/>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                                <p:selectOneMenu id="cbOcupacion" autoWidth="false"
+                                                                 required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Ocupacion}"
+                                                                 value="#{inscripcionAccesoController.datos.ocupacion}" >
+                                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                                   value="#{inscripcionAccesoController.listOcupacion}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Direccion}" style="font-weight: bold" for="numero"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:selectOneMenu id="cbTipoVia" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_TipoVia}"
+                                                             autoWidth="false"
+                                                             value="#{inscripcionAccesoController.datos.tipoVia}" >
+                                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                               value="#{inscripcionAccesoController.listTipoVia}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:inputText value="#{inscripcionAccesoController.datos.direccion}" placeholder="Direccion"
+                                                         maxlength="300"
+                                                         id="direccion" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Direccion}">
+                                            </p:inputText>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:inputText value="#{inscripcionAccesoController.datos.numero}" placeholder="Numero" id="numero"
+                                                         maxlength="20"
+                                                         requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_NumDir}">
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Referencia}" style="font-weight: bold"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-5" >
+                                            <p:inputTextarea rows="3" cols="50" value="#{inscripcionAccesoController.datos.referencia}" maxlength="300" />
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Ubigeo}" style="font-weight: bold" for="ubigeo"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-5" >
+                                            <p:autoComplete id="ubigeo" value="#{inscripcionAccesoController.datos.ubigeo}"
+                                                            placeholder="Ingresar Departamento o Provincia o Distrito"
+                                                            required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Ubigeo}"
+                                                            completeMethod="#{inscripcionAccesoController.completeUbigeo}"
+                                                            var="origenSelected" 
+                                                            itemLabel="#{origenSelected.provinciaId.departamentoId.nombre.concat('/').concat(origenSelected.provinciaId.nombre).concat('/').concat(origenSelected.nombre)}"  
+                                                            minQueryLength="3" cache="true" itemValue="#{origenSelected}"  forceSelection="true" scrollHeight="200">
+                                            </p:autoComplete>
+                                            <pe:tooltip for="ubigeo"  value="#{bundleSistemaBase.IngreseTresCaracteres_Slide}" showEffect="slideToggle" 
+                                                        hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Correo}" style="font-weight: bold" for="correo"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-5" >
+                                            <p:inputText id="correo" value="#{inscripcionAccesoController.datos.correoElec}"
+                                                         requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Correo}" required="true"
+                                                         validatorMessage="#{bundleSistemaBase.InscripcionAccesoValidator_Correo}">
+                                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                                <p:ajax event="change" process="@this" update="@this" listener="#{inscripcionAccesoController.verificarCorreo}"/>
+                                            </p:inputText>
+                                            <p:message for="correo" />
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-5">
+                                            <p:outputLabel value="NOTA: Correo personal para enviar el link de activación de la cuenta" style="font-weight: bold; color: #FE2E2E"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Celular}" style="font-weight: bold" for="celular"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:inputText value="#{inscripcionAccesoController.datos.numCelular}" maxlength="9"
+                                                         id="celular" required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Celular}">
+                                                <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('CEL')}"/>
+                                            </p:inputText>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Telefono}" style="font-weight: bold"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                                            <p:inputText value="#{inscripcionAccesoController.datos.numTelf}" id="telefono">
+                                                <f:ajax listener="#{inscripcionAccesoController.validarDatoIngresado('TEL')}"/>
+                                            </p:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                            <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_IngCodigo}" style="font-weight: bold"/>
+                                        </div>
+                                    </div>
+                                    <h:panelGroup id="gridCaptcha">
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-6 ui-lg-3" >
+                                                <p:graphicImage id="imgCaptcha" value="#{inscripcionAccesoController.captcha.imagen}" cache="false"/>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12 ui-md-2 ui-lg-1" >
+                                                <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" style="height: 60px"
+                                                                 actionListener="#{inscripcionAccesoController.captcha.generarCaptcha()}" 
+                                                                 partialSubmit="true" 
+                                                                 process="@this" 
+                                                                 update="gridCaptcha" />
+                                            </div>
+                                            <div class="ui-g-12 ui-md-4 ui-lg-3" >
+                                                <div class="ui-g">
+                                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                                        <p:outputLabel for="textoCaptcha" value="#{bundleSistemaBase.InscripcionAcceso_Captcha}"/>
+                                                    </div>
+                                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                                        <p:inputText id="textoCaptcha" value="#{inscripcionAccesoController.captcha.textoInput}" 
+                                                                     required="true" 
+                                                                     requiredMessage="#{bundleSistemaBase.Captcha_Requerido}" 
+                                                                     validatorMessage="#{bundleSistemaBase.Captcha_Invalido}" 
+                                                                     maxlength="5" >
+                                                            <p:keyFilter for="textoCaptcha" preventPaste="false"  regEx="/[a-z0-9]/i" />
+                                                        </p:inputText>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="ui-g-12 ui-md-4 ui-lg-2" >
+                                                <p:commandButton ajax="true" id="registrar"  actionListener="#{inscripcionAccesoController.openTerminos}"
+                                                                 style="height: 60px"
+                                                                 value="Registrarse" icon="ui-icon-disk" update="@form"  process="@form" iconPos="right" />
+                                            </div>
+                                        </div>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </p:panel>
+                            <center>
+                                <p:panel header="#{bundleSistemaBase.InscripcionAcceso_Titulo}"  style="width:400px;" rendered="#{inscripcionAccesoController.estado == 'ERROR'}">
+
+                                    <br></br>
+                                    <p:outputLabel value="#{inscripcionAccesoController.mensajeError}" />
+                                    <br></br>
+                                    <p:commandButton ajax="true" id="aceptar" actionListener="#{inscripcionAccesoController.volverInicio()}" value="#{bundleSistemaBase.Aceptar}" update="@all" partialSubmit="true" iconPos="right"/>
+
+                                </p:panel>
+                            </center>
+                            <center>
+                                <p:panel header="#{bundleSistemaBase.InscripcionAcceso_Titulo}"  style="width:400px;" rendered="#{inscripcionAccesoController.estado == 'FIN'}">
+
+                                    <br></br>
+                                    <p:outputLabel value="Estimado #{inscripcionAccesoController.datos.nombres.concat(' ').concat(inscripcionAccesoController.apePat).concat(' ').concat(inscripcionAccesoController.apeMat)}" />
+                                    <br></br>
+                                    <p:outputLabel value="#{inscripcionAccesoController.mensajeExito}" />
+                                    <br></br>
+                                    <br></br>
+                                    <p:commandButton ajax="false" id="aceptar2"  action="#{inscripcionAccesoController.direccionarLogin()}" value="#{bundleSistemaBase.Aceptar}" immediate="true"/>
+
+                                </p:panel>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+            <ui:include src="dlgTermCond.xhtml"/>
+            <ui:include src="dlgImagenDNI.xhtml"/>
+            <ui:include src="Loading.xhtml" />
+        </h:body>
+    </f:view>
+</html>

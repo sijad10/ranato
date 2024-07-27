@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgRepresentanteLegal" widgetVar="wvDlgRepresentanteLegal" closable="true" header="#{gsspSolicitudAutorizacionSCBCController.tituloBuscaModalRepresentanteLegal}" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogRepresentante()" width="55%">
+        <h:form id="frmCuerpoPersona">
+            <p:focus context="frmCuerpoPersona" />
+            <div class="ui-fluid">
+                <p:panel id="pnl_Persona_Title" header="Datos de la persona" >
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="Tipo Doc.: * " />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">
+                            <p:selectOneMenu id="cboPersonaTipDoc" value="#{gsspSolicitudAutorizacionSCBCController.regTipoDocSelected}" >   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSCBCController.regTipoDocList}"/>
+                                <p:ajax event="change" update="@this,pnl_Persona_Title" listener="#{gsspSolicitudAutorizacionSCBCController.obtenerNumCaractDocumentoRepresentanteLegal()}" />
+                            </p:selectOneMenu>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:outputLabel value="Número: *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:inputText id="txtPersonaNumDoc" value="#{gsspSolicitudAutorizacionSCBCController.regNroDocBuscar}" style="font-weight: bold;" 
+                                         maxlength="#{gsspSolicitudAutorizacionSCBCController.cantNumerosDniCarnetTipoDocRepresentanteLegal}" >
+                                <!--<p:keyFilter mask="pint"/>-->
+                                <p:keyFilter mask="#{!(gsspSolicitudAutorizacionSCBCController.regTipoDocSelected.codProg eq 'TP_DOCID_EC') ? 'pint' : ''}"/>                                
+                            </p:inputText>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:commandButton 
+                                id="btnBuscarDNIRepresentante" 
+                                icon="ui-icon-search" 
+                                update="@this, frmCuerpoPersona" 
+                                action="#{gsspSolicitudAutorizacionSCBCController.BuscarPersonaRepresentanteLegal()}"
+                                style="display: block; width: 30px"
+                            />
+                        </div>
+                        <div class="ui-g-12 ui-md-5 ui-lg-6" style="display:none;"></div>
+                    </div>
+                    
+                    <!--accionistaNumDoc,accionistaApePat,accionistaApeMat,accionistaNombres-->
+                    <h:panelGroup id="grpConsorcio" rendered="#{gsspSolicitudAutorizacionSCBCController.regTipoDocSelected.codProg.equals('TP_DOCID_EC')}" 
+                                  >
+                        <div class="ui-g" style="display: #{(!gsspSolicitudAutorizacionSCBCController.renderEsAccionista) ? 'none' : 'block' }"><span id="error_msg_contacto" style="color: red;" class="ui-g-12 ui-md-12 ui-lg-12">
+                                No se encontraron datos con la EMPRESA ingresada, se habilitaron los campos para poder hacer un NUEVO registro.
+                            </span></div>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="País: * " />
+                            </div>
+                            <div class="ui-g-12 ui-md-1 ui-lg-3">
+                                <p:selectOneMenu id="cboPaisLista" value="#{gsspSolicitudAutorizacionSCBCController.regPaisSelected_id}" 
+                                                 disabled="#{!gsspSolicitudAutorizacionSCBCController.renderEsAccionista}" class="combo_tipo_100">   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item.id}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSCBCController.regPaisLista}"/>
+                                   
+                                </p:selectOneMenu>
+                            </div>
+                        </div> 
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="Razón Social" />
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-5">
+                                <p:inputText id="txtRazonSocial" value="#{gsspSolicitudAutorizacionSCBCController.accionistaNombres}" style="font-weight: bold;" 
+                                             disabled="#{!gsspSolicitudAutorizacionSCBCController.renderEsAccionista}"/> 
+                            </div>
+                        </div> 
+                        
+                    </h:panelGroup>
+                    
+                    
+                    <h:panelGroup id="grpPersona" rendered="#{!gsspSolicitudAutorizacionSCBCController.regTipoDocSelected.codProg.equals('TP_DOCID_EC')}" >
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="Nombres: " />
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:inputText id="txtNomRepresentante" value="#{(!gsspSolicitudAutorizacionSCBCController.renderEsAccionista) 
+                                                                                    ? ( (gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL.nombres : '') 
+                                                                                    : gsspSolicitudAutorizacionSCBCController.accionistaNombres}" 
+                                             disabled="#{!gsspSolicitudAutorizacionSCBCController.renderEsAccionista}" style="font-weight: bold;" /> 
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="Apellido Paterno " />
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:inputText id="txtApePatRepresentante" value="#{(!gsspSolicitudAutorizacionSCBCController.renderEsAccionista) ? (
+                                                                                        (gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL.apePat : '')
+                                                                                        : gsspSolicitudAutorizacionSCBCController.accionistaApePat}" 
+                                                disabled="#{!gsspSolicitudAutorizacionSCBCController.renderEsAccionista}" style="font-weight: bold;" /> 
+                            </div>
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="Apellido Materno " />
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                <p:inputText id="txtApeMatRepresentante" value="#{(!gsspSolicitudAutorizacionSCBCController.renderEsAccionista) ? (
+                                                                                        (gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL != null) ? gsspSolicitudAutorizacionSCBCController.regDatoPersonaByNumDocRL.apeMat : '')
+                                                                                        : gsspSolicitudAutorizacionSCBCController.accionistaApeMat}" 
+                                             disabled="#{!gsspSolicitudAutorizacionSCBCController.renderEsAccionista}" style="font-weight: bold;" /> 
+                            </div>
+                        </div>     
+                    
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <p:outputLabel value="Fecha de Nacimiento:" />
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <p:calendar id="txt_Representante_FechaNac"
+                                        locale="es"
+                                        navigator="true"
+                                        showOn="button"
+                                        maxdate="#{gsspSolicitudAutorizacionSCBCController.fechaMayorDeEdadCalendario}"
+                                        value="#{gsspSolicitudAutorizacionSCBCController.regRepresentanteFechaNacimiento}"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                        disabled="#{(gsspSolicitudAutorizacionSCBCController.regDisabledRepresentanteFechaNacimiento == true) ? 'true' : 'false'}"
+                                        >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>                        
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </p:panel>
+                
+                
+            
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:commandButton id="registrar"  actionListener="#{gsspSolicitudAutorizacionSCBCController.btnRegistrarPersonaRL()}" 
+                                     value="Registrar" icon="ui-icon-disk" update=":frmCuerpoPersona"  process=":frmCuerpoPersona" iconPos="left" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:commandButton id="btnCancelar"  actionListener="#{gsspSolicitudAutorizacionSCBCController.regresarRegPersona()}"
+                                     icon="ui-icon-closethick" value="Cancelar" update="@none" 
+                                     process="@this"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-8 ui-lg-8" style="display:none;"></div>
+                </div>
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        function showDlgMarcoDialogRepresentante() {
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+
+</ui:composition>
+
+

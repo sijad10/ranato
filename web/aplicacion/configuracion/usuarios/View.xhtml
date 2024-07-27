@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{sbUsuarioController.estado == 'VER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid id="panelGrid" columns="2">
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_login}"/>
+            <p:outputLabel value="#{sbUsuarioController.registro.login}" title="#{bundleSistemaBase.SbUsuarioTitle_login}"/>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_fechaIni}"/>
+            <p:outputLabel value="#{sbUsuarioController.registro.fechaIni}" title="#{bundleSistemaBase.SbUsuarioTitle_fechaIni}">
+                <f:convertDateTime pattern="#{bundleSistemaBase.FormatoFecha}" />
+            </p:outputLabel>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_numDoc}"/>
+            <p:outputLabel value="#{sbUsuarioController.registro.numDoc}" title="#{bundleSistemaBase.SbUsuarioTitle_numDoc}"/>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_nombres}"/>
+            <p:outputLabel value="#{sbUsuarioController.registro.nombres} #{sbUsuarioController.registro.apePat} #{sbUsuarioController.registro.apeMat}" title="#{bundleSistemaBase.SbUsuarioTitle_nombres}"/>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_correo}"/>
+            <p:outputLabel value="#{sbUsuarioController.registro.correo}" title="#{bundleSistemaBase.SbUsuarioTitle_correo}"/>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_descripcion}" style="vertical-align: top;"/>
+            <p:inputTextarea id="descripcion" value="#{sbUsuarioController.registro.descripcion}" title="#{bundleSistemaBase.SbUsuarioTitle_descripcion}"  validatorMessage="#{bundleSistemaBase.SbUsuarioValidatorMessage_descripcion}" cols="50" rows="5" readonly="true">
+            </p:inputTextarea>
+            <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_activo}"/>
+            <p:outputLabel value="#{(sbUsuarioController.registro.activo == 1)? 'SI': 'NO'}" title="#{bundleSistemaBase.SbUsuarioTitle_activo}"/>
+        </h:panelGrid>
+        <h:panelGrid columns="1">
+            <p:outputLabel value="#{bundleSistemaBase.SbPerfilesTitle}"/>
+            <p:dataTable id="listPerfiles" value="#{sbUsuarioController.registro.sbPerfilList}" style="width: 10%; align-self: center" 
+                         var="itemPer"
+                         rowKey="#{itemPer.id}"
+                         emptyMessage="#{bundle.MensajeNoResultados}" 
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilas_busqueda}">
+                <p:column headerText="Perfiles" style="text-align: center;">
+                    <h:outputText value="#{sbUsuarioController.obtenerNombrePer(itemPer.nombre)}"/>
+                </p:column>
+            </p:dataTable>
+        </h:panelGrid>
+        <br />
+        <p:commandButton icon="ui-icon-search" actionListener="#{sbUsuarioController.mostrarBuscar}" value="#{bundleSistemaBase.SbUsuarioVolverBusqueda}" immediate="true" update="@all"/>
+    </h:form>
+</ui:composition>
+

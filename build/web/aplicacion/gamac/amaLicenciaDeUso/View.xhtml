@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_id}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.id}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_nroLicencia}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.nroLicencia}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_nroLicencia}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_fechaInscripcion}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.fechaInscripcion}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_fechaInscripcion}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_fechaEmision}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.fechaEmision}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_fechaEmision}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_fechaVencimietnto}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.fechaVencimietnto}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_fechaVencimietnto}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_descripcion}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.descripcion}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_descripcion}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_nroExpedienteAnula}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.nroExpedienteAnula}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_nroExpedienteAnula}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_fechaAnula}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.fechaAnula}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_fechaAnula}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_motivoAnula}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.motivoAnula}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_motivoAnula}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_emitido}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.emitido}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_emitido}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_hashQr}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.hashQr}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_hashQr}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_activo}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.activo}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_audLogin}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.audLogin}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_audNumIp}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.audNumIp}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaLicenciaDeUsoLabel_fotoId}"/>
+                    <h:outputText value="#{amaLicenciaDeUsoController.selected.fotoId}" title="#{bundle.ViewAmaLicenciaDeUsoTitle_fotoId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaLicenciaDeUsoController.destroyAndView}" value="#{bundle.ViewAmaLicenciaDeUsoDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaLicenciaDeUsoEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaLicenciaDeUsoController.prepareCreate}" value="#{bundle.ViewAmaLicenciaDeUsoCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaLicenciaDeUsoController.prepareList}" value="#{bundle.ViewAmaLicenciaDeUsoShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaLicenciaDeUsoIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

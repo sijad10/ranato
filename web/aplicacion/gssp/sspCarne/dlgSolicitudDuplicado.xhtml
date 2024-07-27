@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgSolicitudDuplicado" widgetVar="wvDlgSolicitudDuplicado" width="700px" 
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="#{BundleBDIntegrado.sspCarne_duplicado_title}" closable="false">
+        <h:form id="frmSolicitudDuplicado">
+            <h:panelGrid columns="3" >
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_dondeRecoger} *" />    
+                <p:selectOneMenu id="dondeRecogerDuplicado" value="#{sspCarneController.sedeRecojoDuplicado }" >
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{sspCarneController.obtenerDescDondeRecoger(item)}" value="#{sspCarneController.lstAreas}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_duplicado_motivo} *" />
+                <p:selectOneMenu id="motivo" value="#{sspCarneController.estadoSelected }" >
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarneController.listadoMotivosCarnes}"/>
+                    <p:ajax event="change" process="@form" update="@form" listener="#{sspCarneController.cambiarEstadoDuplicado(sspCarneController.estadoSelected)}" />
+                </p:selectOneMenu>
+                <p:commandButton value="Ver carné"
+                                 style="margin-left: 20px;"
+                                 actionListener="#{sspCarneController.openDlgBuscarCarne()}"
+                                 process="@form"
+                                 update="@form"
+                                 icon="ui-icon-search" />
+
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_duplicado_detalle} *" />
+                <p:inputTextarea cols="60" rows="4" maxlength="500"  autoResize="false"
+                                 onblur="this.value = this.value.toUpperCase();" 
+                                 id="detalle" value="#{sspCarneController.detalleDuplicado}" >
+                </p:inputTextarea>
+                <p:outputLabel value="" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_comprobante} *" rendered="#{sspCarneController.solicitarRecibo}" />
+                <h:panelGrid columns="3" rendered="#{sspCarneController.solicitarRecibo}" >
+                    <p:inputText id="nroSecuenciaDuplicado"
+                                 value="#{sspCarneController.nroSecuencia}"
+                                 maxlength="12"
+                                 placeholder="NRO. COMPROBANTE" >
+                        <p:keyFilter mask="int" preventPaste="false" />
+                    </p:inputText>
+
+                    <p:commandButton icon="ui-icon-search"
+                                     id="btnBuscarRecibo"
+                                     style="margin-left: 20px;"
+                                     value="#{BundleBDIntegrado.Verificar}"
+                                     process="@form" update="@form"
+                                     actionListener="#{sspCarneController.buscarRecibosCarneDuplicado()}" >
+                    </p:commandButton>
+                    <p:outputLabel value="#{sspCarneController.obtenerComprobanteSeleccionado(sspCarneController.reciboNuevo)}" style="font-weight: bold;display: block;" />
+                </h:panelGrid>
+                <p:outputLabel value="" rendered="#{sspCarneController.solicitarRecibo}" />
+
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjuntarDJ} *" rendered="false" />
+                <p:fileUpload id="archivoDJ" label="#{BundleBDIntegrado.sspCarne_crear_archivoDJ}"
+                              invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                              fileUploadListener="#{sspCarneController.handleFileUploadPDF}"
+                              invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeDJ()}"
+                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeDj').valor}"
+                              onstart="PF('loadingDialog').show()"
+                              oncomplete="PF('loadingDialog').hide()"
+                              mode="advanced" dragDropSupport="false"
+                              multiple="false"
+                              rendered="false"
+                              auto="true" process="@form" update="@form"
+                              allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" >
+                    <h:outputText value="#{sspCarneController.archivo }" />
+                </p:fileUpload>
+                <p:outputLabel value="" rendered="false" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjuntarDenunciaPolicial}" rendered="#{sspCarneController.renderDenunciaPolicial}" />
+                <p:fileUpload id="archivoDP" label="#{BundleBDIntegrado.sspCarne_crear_archivoDJ}"
+                              invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                              fileUploadListener="#{sspCarneController.handleFileUploadDenuniciaPDF}"
+                              invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeDJ()}"
+                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeDj').valor}"
+                              rendered="#{sspCarneController.renderDenunciaPolicial}"
+                              onstart="PF('loadingDialog').show()"
+                              oncomplete="PF('loadingDialog').hide()"
+                              mode="advanced" dragDropSupport="false"
+                              multiple="false"
+                              auto="true" process="@form" update="@form"
+                              allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" >
+                    <h:outputText value="#{sspCarneController.archivoDenuncia }" />
+                </p:fileUpload>
+                <p:outputLabel value="" rendered="#{sspCarneController.renderDenunciaPolicial}" />
+
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjFoto} *" rendered="#{sspCarneController.renderFotoDuplicado()}" />
+                <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.sspCarne_crear_agregarFoto}"
+                              invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessage}"
+                              fileUploadListener="#{sspCarneController.handleFileUpload}"
+                              invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeFoto()}"
+                              onstart="PF('loadingDialog').show()"
+                              oncomplete="PF('loadingDialog').hide()"
+                              mode="advanced" dragDropSupport="false"
+                              multiple="false"
+                              rendered="#{sspCarneController.renderFotoDuplicado()}"
+                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeFoto').valor}"
+                              auto="true" process="@form" update="@form"
+                              allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                    <p:graphicImage value="#{sspCarneController.foto}" cache="false" width="150" height="200">
+                    </p:graphicImage>
+                </p:fileUpload>
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_msjeCaracteristicasFoto}" escape="false" rendered="#{sspCarneController.renderFotoDuplicado()}" />
+            </h:panelGrid>
+            <br/>
+
+            <div align="right">
+                <p:commandButton  icon="ui-icon-disk"
+                                  value="Guardar"
+                                  process="@all" update="@form"
+                                  actionListener="#{sspCarneController.guardarDuplicado()}" >
+                    <p:confirm header="Confirmación" message="#{BundleBDIntegrado.sspCarne_confirmarGuardarDuplicado}" icon="ui-icon-alert" />
+                </p:commandButton>
+                <p:commandButton value="#{BundleBDIntegrado.Salir}" 
+                                 style="float: right"
+                                 icon="ui-icon-arrowthick-1-w"
+                                 process="@this"
+                                 update="frmSolicitudDuplicado" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgSolicitudDuplicado').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

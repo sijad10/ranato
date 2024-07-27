@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de Carne Digital de Manipulador de Productos Pirot&eacute;cnicos</title>
+            </f:facet>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+                .celdaCentrada {
+                    text-align: center;
+                }
+            </style>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 100%; background: white;" cellpadding="5" >
+                        <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                        <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGrid columns="1" style="width: 100%; background: white; padding: 20px; font-size: medium;text-align: center">
+                        <h:outputLabel  value="CARNE DIGITAL DE MANIPULADOR DE PRODUCTOS PIROTÉCNICOS Y MATERIALES RELACIONADOS" style="font-weight: bold;font-size:large"/>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelGrid" columns="2" rendered="#{verificadorQRController.registro != null}" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                        <h:outputLabel value="DATOS:" style="display: block; font-weight: bold;"/><h:outputLabel value=""/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_nroLicencia}"/>
+                        <h:outputLabel  value="#{verificadorQRController.registro.NRO_CARNE}" title="#{BundleBDIntegrado.qr_lmpp_nroLicencia}"/>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_fecEmi}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.FECHA_EMISION}" title="#{BundleBDIntegrado.qr_lmpp_fecEmi}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputLabel>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_fecVen}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.FECHA_VENCIMIENTO}" title="#{BundleBDIntegrado.qr_lmpp_fecVen}">
+                            <f:converter converterId="fechaConverter" />
+                        </h:outputLabel>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_estado}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ESTADO}" rendered="#{verificadorQRController.registro.ESTADO == 'VIGENTE'}" title="#{BundleBDIntegrado.qr_lmpp_estado}" style="font-size: large; color: #245eff; font-weight: bold;"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ESTADO}" rendered="#{verificadorQRController.registro.ESTADO != 'VIGENTE'}" title="#{BundleBDIntegrado.qr_lmpp_estado}" style="font-size: large; color: red; font-weight: bold;"/>
+                        
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_activo}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ACTIVO}" rendered="#{verificadorQRController.registro.ACTIVO == 'ACTIVO'}" title="#{BundleBDIntegrado.qr_lmpp_activo}" style="font-size: large; color: #245eff; font-weight: bold;"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ACTIVO}" rendered="#{verificadorQRController.registro.ACTIVO != 'ACTIVO'}" title="#{BundleBDIntegrado.qr_lmpp_activo}" style="font-size: large; color: red; font-weight: bold;"/>
+                        
+                        <h:outputLabel value="USUARIO:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_docEmpresa}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.DOC_EMPRESA}" title="#{BundleBDIntegrado.qr_lmpp_docEmpresa}"/>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_empresa}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.RZN_SOCIAL}" title="#{BundleBDIntegrado.qr_lmpp_empresa}"/>
+                        
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_docPropietario}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.DOC_PROPIETARIO}" title="#{BundleBDIntegrado.qr_lmpp_docPropietario}"/>
+                        <h:outputLabel value="#{BundleBDIntegrado.qr_lmpp_portador}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.NOMBRES}" title="#{BundleBDIntegrado.qr_lmpp_portador}"/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelGridImg" style="width: 100%; background: white; text-align: center;">
+                        
+                        <ui:repeat value="#{verificadorQRController.visualizador.imagenes}" var="img">
+                            <h:graphicImage value="img/GEPP_CMPPD?imagen=#{img}&amp;rnd=#{verificadorQRController.visualizador.millis}" width="95%" style="max-width: 500px;" /><br/>
+                        </ui:repeat>
+                    </h:panelGrid>
+                    <h:panelGroup layout="block" rendered="#{verificadorQRController.registro == null}" style="color: red; font-size: large; font-weight: bold; width: 100%; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

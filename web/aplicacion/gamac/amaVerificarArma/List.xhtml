@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaVerificarArmaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaVerificarArmaEmpty}" rendered="#{amaVerificarArmaController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaVerificarArmaController.items.rowCount > 0}">
+                    <h:outputText value="#{amaVerificarArmaController.pagination.pageFirstItem + 1}..#{amaVerificarArmaController.pagination.pageLastItem + 1}/#{amaVerificarArmaController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaVerificarArmaController.previous}" value="#{bundle.Previous} #{amaVerificarArmaController.pagination.pageSize}" rendered="#{amaVerificarArmaController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaVerificarArmaController.next}" value="#{bundle.Next} #{amaVerificarArmaController.pagination.pageSize}" rendered="#{amaVerificarArmaController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaVerificarArmaController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_nroExpediente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroExpediente}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_pesoActual}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.pesoActual}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_resultadoEvaluacion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resultadoEvaluacion}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_fechaVerifica}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaVerifica}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaVerificarArmaTitle_armaId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.armaId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaVerificarArmaController.prepareView}" value="#{bundle.ListAmaVerificarArmaViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaVerificarArmaController.prepareEdit}" value="#{bundle.ListAmaVerificarArmaEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaVerificarArmaController.destroy}" value="#{bundle.ListAmaVerificarArmaDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaVerificarArmaController.prepareCreate}" value="#{bundle.ListAmaVerificarArmaCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaVerificarArmaIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

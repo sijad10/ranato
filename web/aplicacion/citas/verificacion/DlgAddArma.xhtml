@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgAddArma" widgetVar="wvDlgAddArma" closable="true" header="Agregar arma Registrada o NO Registrada" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgAddArma()" width="70%">
+        <h:form id="addArmaForm">
+            <div class="ui-fluid">
+                <p:focus context="addArmaForm" />
+                <p:panel id="pnlDatArma" style="margin-bottom:8px">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Nro de Serie:" />
+                            <p:inputText id="armSerie" value="#{citasVerificacionController.detalleArma.nroSerie}">
+                                <p:ajax event="blur" update="pnlDatArma" listener="#{citasVerificacionController.buscaPorSerie()}"/>
+                            </p:inputText>                            
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel for="AuComArma" value="Datos del Arma:" />
+                            <p:autoComplete id="AuComArma" value="#{citasVerificacionController.selectedArmaString}"
+                                            placeholder="Ingrese Tipo de arma / Marca / Modelo / Calibre"
+                                            size="100" queryDelay="2000" onblur="this.value = this.value.toUpperCase();"
+                                            completeMethod="#{citasVerificacionController.completeArma}"
+                                            var="ArmaSelected" itemLabel="#{citasVerificacionController.obtenerDescripArmaListadoString(ArmaSelected)}"
+                                            minQueryLength="3" cache="true" itemValue="#{ArmaSelected}"  forceSelection="true" scrollHeight="200" 
+                                            disabled="#{citasVerificacionController.encuentraSerie}">
+                                <p:ajax event="itemSelect" process="@this" update="AuComArma" listener="#{citasVerificacionController.seleccionaArma()}" global="false"/>
+                            </p:autoComplete>                            
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Estado del Arma:"  />
+                            <p:selectOneMenu id="addEstado" autoWidth="false" value="#{citasVerificacionController.detalleArma.estadoId}" rendered="#{citasVerificacionController.detalleArma!=null}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasVerificacionController.getItemsEstadoVerifica()}" />
+                                <p:ajax event="change" partialSubmit="true" process="@this" update="addEstado"/>                                            
+                            </p:selectOneMenu>                        
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel for="nroCaf" value="Número de Licencia CAF:" />
+                            <p:inputText id="nroCaf" value="#{citasVerificacionController.detalleArma.nroLicenciaCaf}">
+                                <p:ajax event="blur" update="@this"/>
+                            </p:inputText>                            
+                        </div>
+                    </div>
+                </p:panel>
+
+                <p:panel id="pnlgPregunta" style="margin-bottom: 5px!important">
+                    <div class="ui-g">
+                        <div class="ui-g-10 ui-md-10 ui-lg-10">
+                            <p:outputLabel value="¿tengo oficio que me solicita verificacion de arma de fuego como parte de la evaluacion de un expediente en tramite?" />
+                        </div>
+                        <div class="ui-g-2 ui-md-2 ui-lg-2">
+                            <p:selectOneButton value="#{citasVerificacionController.solicitarRecibo}">
+                                <f:selectItem itemLabel="Si" itemValue="false"/>
+                                <f:selectItem itemLabel="No" itemValue="true"/>
+                                <p:ajax event="change" update="@form" listener="#{citasVerificacionController.validarSolicitarRecibo()}"/>
+                            </p:selectOneButton>
+                        </div>
+                    </div>
+                </p:panel>
+
+                <p:panel id="pnlgExpediente" rendered="#{!citasVerificacionController.solicitarRecibo}" style="margin-bottom: 5px!important">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Por favor, ingrese el nro. de Expediente y nro. de oficio" />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Nro. Expediente: " class="txtLabel"/>
+                            <p:inputText id="nroExpId" value="#{citasVerificacionController.nroExpOficio}"
+                                         required="true" requiredMessage="Ingresar expediente del oficio">
+                                <p:ajax event="blur" update="resoId" listener="#{citasVerificacionController.limpiarOficios()}"/>
+                            </p:inputText>
+
+                            <p:commandButton icon="ui-icon-search" label="Validar Expediente"
+                                             actionListener="#{citasVerificacionController.buscarOficios()}" 
+                                             partialSubmit="true" process="@this, nroExpId" update="resoId"/>
+
+                            <p:outputLabel value="Nro. Oficio: " class="txtLabel"/>
+                            <p:selectOneMenu id="resoId" value="#{citasVerificacionController.nroOficioSelected}" style="width: 200px" 
+                                             required="true" requiredMessage="Seleccionar nro. de oficio">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item.numero}" itemLabel="#{item.numero}" value="#{citasVerificacionController.listDocumentosTramdoc}" />
+                                <p:ajax event="change" update="resoId"/>
+                            </p:selectOneMenu>
+
+
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel value="Numero Comprobante: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Monto: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strImporte}" escape="false" class="txtLabel"/>
+                        </div>
+                    </div>
+                </p:panel>
+                 
+                <p:panel id="pnlgComprobante" rendered="false" style="margin-bottom: 5px!important">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:outputLabel value="Comprobante: " for="acReciboBn" class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">
+                            <div class="ui-inputgroup">
+                                <p:autoComplete id="acReciboBn"
+                                                value="#{citasVerificacionController.reciboBn}"
+                                                completeMethod="#{citasVerificacionController.autoCompleteRecibos}"
+                                                disabled="#{citasVerificacionController.disableReciboBn}"
+                                                placeholder="NRO. COMPROBANTE"
+                                                required="true"
+                                                requiredMessage="Debe ingresar el número del comprobante"
+                                                var="item"
+                                                itemLabel="#{item.nroSecuencia}"
+                                                itemValue="#{item}"
+                                                minQueryLength="2"
+                                                cache="true"
+                                                onchange="buscaRecAddArm()"
+                                                forceSelection="true" >
+                                    <p:ajax event="itemSelect" listener="#{citasVerificacionController.lstnrSelectRecibo}" update="pnlgComprobante" oncomplete="buscaRecAddArm()" />
+                                </p:autoComplete>
+                                <p:commandButton id="regDelBusLic" icon="ui-icon-close" class="red-button btnBusqueda" title="Borrar Recibo seleccionado"
+                                                 process="@this" update="pnlgComprobante" actionListener="#{citasVerificacionController.borrarReciboSeleccionado()}"
+                                                 rendered="#{citasVerificacionController.reciboBn != null}" partialSubmit="true" oncomplete="buscaRecAddArm()"/>
+                                <pe:tooltip for="acReciboBn"
+                                            rendered="#{citasVerificacionController.reciboBn == null}"
+                                            value="Ingrese el número del recibo del Banco de la Nación"
+                                            showEffect="slideToggle"
+                                            hideEffect="slideToggle"
+                                            showDelay="0"
+                                            myPosition="left center"
+                                            atPosition="right center"/>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel value="Numero Comprobante: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Monto: " rendered="#{citasVerificacionController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasVerificacionController.strImporte}" escape="false" class="txtLabel"/>
+                        </div>
+                    </div>
+                </p:panel>            
+                   
+                <p:panel id="pnlBtns" style="border: 0px!important; margin-bottom: 3px" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+
+                        <div class="ui-g-12 ui-md-5 ui-lg-3">
+                            <p:commandButton id="btnConfAdd" icon="ui-icon-check" partialSubmit="true"
+                                             process="@this, addArmaForm"
+                                             action="#{citasVerificacionController.addArma()}" value="AGREGAR" 
+                                             />
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-3" style="text-align: right">
+                            <p:commandButton immediate="true" icon="ui-icon-close" value="Cerrar" update="@this" onclick="PF('wvDlgAddArma').hide();" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+                    </div>
+                </p:panel>                
+
+            </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+
+        function showDlgAddArma() {
+            $("div[id*='dlgAddArma']").css('top', 100);
+            //$("div[id*='buscarArmaId_content']").attr("style", "padding:2px!important");
+
+            $("div[id*='dlgAddArma'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgAddArma'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgAddArma'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+
+            //$("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'], div[id*='pnlgComprobante_content'], div[id*='pnlBtns_content']").attr("style", "padding:0!important");
+            //$("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'], div[id*='pnlgComprobante_content'], div[id*='pnlBtns_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            
+            $("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'],  div[id*='pnlBtns_content']").attr("style", "padding:0!important");
+            $("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'],  div[id*='pnlBtns_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+        function buscaRecAddArm() {
+            //$("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'], div[id*='pnlgComprobante_content'], div[id*='pnlBtns_content']").attr("style", "padding:0!important");
+            //$("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'], div[id*='pnlgComprobante_content'], div[id*='pnlBtns_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'],  div[id*='pnlBtns_content']").attr("style", "padding:0!important");
+            $("div[id*='pnlDatArma_content'], div[id*='pnlDatArmGam_content'],  div[id*='pnlBtns_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+    </script>
+
+</ui:composition>
+

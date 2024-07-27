@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="newMunicion" header="#{bundleGamacCVMuni.CrearMunicionTitulo}" 
+              widgetVar="newMunicionDialog" modal="true" showEffect="fade" hideEffect="fade" width="1200px"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="updateDialogInicio()" onHide="updateDialogInicioHide()" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="viewDetailInicioCurso" style="text-align:left; padding:0px!important">
+            <h:form id="newMunicionForm">
+                <div class="ui-fluid">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="local" value="#{bundleGamacCVMuni.InventMuniFrmCre_Local_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:selectOneMenu id="local" value="#{gamacMunicionesMiInventarioController.direccion}"
+                                             required="true" requiredMessage="Seleccionar el local destino">
+                                <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                <f:selectItems value="#{gamacMunicionesMiInventarioController.listDire()}" var="item" itemValue="#{item}"
+                                               itemLabel="#{item.direccion} #{item.numero}, #{item.distritoId.nombre} - #{item.distritoId.provinciaId.nombre} - #{item.distritoId.provinciaId.departamentoId.nombre}" /> 
+                                <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="transaccion" value="#{bundleGamacCVMuni.InventMuniFrmCre_TipoTransaccion_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:selectOneMenu id="transaccion" value="#{gamacMunicionesMiInventarioController.tipoTransaccion}"
+                                             required="true" requiredMessage="Seleccionar Tipo de Transacción">
+                                <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                <f:selectItems value="#{gamacMunicionesMiInventarioController.listTipoTransaccion()}" var="item" itemValue="#{item}"
+                                               itemLabel="#{item.nombre}" /> 
+                                <p:ajax event="change" update="@form" process="@this" partialSubmit="true" 
+                                        listener="#{gamacMunicionesMiInventarioController.selectTransaccion}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="localOri" value="#{bundleGamacCVMuni.InventMuniFrmCre_Local_Origen_Label}" styleClass="txtLabel"
+                                           rendered="#{gamacMunicionesMiInventarioController.sucursales}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:selectOneMenu id="localOri" value="#{gamacMunicionesMiInventarioController.direccionOrigen}"
+                                             required="true" requiredMessage="Seleccionar el local origen"
+                                             rendered="#{gamacMunicionesMiInventarioController.sucursales}">
+                                <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                <f:selectItems value="#{gamacMunicionesMiInventarioController.listDire()}" var="item" itemValue="#{item}"
+                                               itemLabel="#{item.direccion} #{item.numero}, #{item.distritoId.nombre} - #{item.distritoId.provinciaId.nombre} - #{item.distritoId.provinciaId.departamentoId.nombre}" /> 
+                                <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Copia de la Denuncia Policial:" style="display: block; width: 110px;" 
+                                           rendered="#{gamacMunicionesMiInventarioController.perdidaORobo}"/>
+                            <p:outputLabel value="Número de Autorización de Internamiento:" style="display: block; width: 110px;" 
+                                           rendered="#{gamacMunicionesMiInventarioController.internamiento}"/>
+                            <p:outputLabel value="Número de Guia de Tránsito:" style="display: block; width: 110px;" 
+                                           rendered="#{gamacMunicionesMiInventarioController.sucursales}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:fileUpload id="fileUpload" label="Adjuntar"
+                                          invalidFileMessage="#{bundleGamacCVMuni.InventMuniFrmCre_fileUpload_InvalidFileMessage}"
+                                          invalidSizeMessage="#{bundleGamacCVMuni.InventMuniFrmCre_fileUpload_InvalidSizeMessage}"
+                                          fileUploadListener="#{gamacMunicionesMiInventarioController.handleFileUploadAdjunto}"
+                                          mode="advanced" dragDropSupport="true"
+                                          multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarteraCli_MaxSize').valor}"
+                                          auto="true" process="@this" update="@this"
+                                          allowTypes="/(\.|\/)(jpg|JPG|jpeg|JPEG|pdf|PDF)$/" immediate="true"  
+                                          rendered="#{gamacMunicionesMiInventarioController.perdidaORobo}">
+                                <h:outputText value="#{gamacMunicionesMiInventarioController.archivo}" />
+                            </p:fileUpload>
+                            <p:inputText value="#{gamacMunicionesMiInventarioController.nroAutoInt}"
+                                     required="true" requiredMessage="Ingresar el número de autorizacion de internamiento"
+                                     rendered="#{gamacMunicionesMiInventarioController.internamiento}"/>
+                            <p:inputText value="#{gamacMunicionesMiInventarioController.nroGuiaTrans}"
+                                     required="true" requiredMessage="Ingresar el número de guia de transito"
+                                     rendered="#{gamacMunicionesMiInventarioController.sucursales}"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="fechaRegistro" value="#{bundleGamacCVMuni.InventMuniFrmCre_FechaReg_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:calendar id="fechaRegistro" value="#{gamacMunicionesMiInventarioController.fechaRegistro}" required="true" size="10"
+                                        autocomplete="false" requiredMessage="Ingresar la fecha de registro"
+                                        pattern="#{bundleGamacCVMuni.FormatoFecha}" navigator="true" locale="es" showOn="button">
+                            </p:calendar>
+                        </div>
+                    </div>
+
+
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="articulo" value="#{bundleGamacCVMuni.InventMuniFrmCre_Articulo_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:autoComplete id="articulo" value="#{gamacMunicionesMiInventarioController.municion}"
+                                            placeholder="MARCA o CALIBRE o TIPO MUNICION"
+                                            completeMethod="#{gamacMunicionesMiInventarioController.autcompleteMunicion}"
+                                            var="muniSelected" 
+                                            itemLabel="#{muniSelected.calibrearmaId.nombre.concat(' ').concat(muniSelected.marcaId.nombre)}" 
+                                            minQueryLength="3" cache="true" itemValue="#{muniSelected}" forceSelection="true" scrollHeight="200" 
+                                            required="true" requiredMessage="Ingresar la munición">  
+                                <p:ajax event="itemSelect" listener="#{gamacMunicionesMiInventarioController.eligeMunicion}" process="@this, articulo" update="@none"/>
+                            </p:autoComplete>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel for="codFabINV" value="Código de fabricante(SKU):" styleClass="txtLabel"/>
+                            <p:inputText id="codFabINV" autocomplete="false"
+                                         value="#{gamacMunicionesMiInventarioController.codFabricante}"
+                                         required="true" requiredMessage="Ingresar el codigo de fabricante"
+                                         maxlength="15"/>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel for="loteFabINV" value="Lote de fabricación:" styleClass="txtLabel"/>
+                            <p:inputText id="loteFabINV" autocomplete="false"
+                                         value="#{gamacMunicionesMiInventarioController.loteFabricacion}"
+                                         required="true" requiredMessage="Ingresar el lote de fabricacion"
+                                         maxlength="14"/>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:outputLabel for="cantEmpINV" value="Cantidad de empaques:" styleClass="txtLabel"/>
+                            <p:inputText id="cantEmpINV" autocomplete="false"
+                                         value="#{gamacMunicionesMiInventarioController.cantEmpaques}"
+                                         required="true" requiredMessage="Ingresar la cantidad de empaques"
+                                         maxlength="6">
+                                <p:keyFilter mask="pint"/>
+                                <p:ajax event="keyup" partialSubmit="true" process="@this" update="munTotINV"/>
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:outputLabel for="munXEmpINV" value="Municiones por empaque:" styleClass="txtLabel"/>
+                            <p:inputText id="munXEmpINV" autocomplete="false"
+                                         value="#{gamacMunicionesMiInventarioController.munXEmpaque}"
+                                         required="true" requiredMessage="Ingresar las municiones por empaque"
+                                         maxlength="3">
+                                <p:keyFilter mask="pint"/>
+                                <p:ajax event="keyup" partialSubmit="true" process="@this" update="munTotINV"/>
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:outputLabel value="Total de municiones:" styleClass="txtLabel"/><br/>
+                            <p:outputLabel id="munTotINV" value="#{gamacMunicionesMiInventarioController.cantMunicion}" styleClass="txtLabel"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-9">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:commandButton value="Guardar" id="btnGuardarIni" icon="ui-icon-disk"
+                                             actionListener="#{gamacMunicionesMiInventarioController.guardarStockInicial}" 
+                                             process="@this, local, transaccion, fileUpload, fechaRegistro, articulo, codFabINV, loteFabINV, cantEmpINV, munXEmpINV" update="@all"
+                                             partialSubmit="true" >
+                                <p:confirm header="#{bundleGamacCVMuni.ConfirmarTitulo}" message="#{bundleGamacCVMuni.ConfirmarGuardarStockInicial}" icon="ui-icon-alert"  />
+                            </p:commandButton>
+                        </div>
+
+                    </div>
+
+                </div>
+                <p:blockUI block="viewDetailInicioCurso" trigger="btnGuardarIni" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+
+</ui:composition>

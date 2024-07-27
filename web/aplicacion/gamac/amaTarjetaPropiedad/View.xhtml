@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_id}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.id}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_nroExpediente}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.nroExpediente}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_nroExpediente}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_nroResolucion}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.nroResolucion}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_nroResolucion}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_fechaInscripcion}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.fechaInscripcion}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_fechaInscripcion}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_fechaEmision}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.fechaEmision}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_fechaEmision}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_numeroCp}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.numeroCp}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_numeroCp}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_fechaPago}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.fechaPago}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_fechaPago}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_descripcion}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.descripcion}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_descripcion}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_fechaEntregaPropietario}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.fechaEntregaPropietario}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_fechaEntregaPropietario}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_emitido}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.emitido}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_emitido}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_hashQr}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.hashQr}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_hashQr}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_activo}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.activo}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_audLogin}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.audLogin}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_audNumIp}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.audNumIp}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_armaId}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.armaId}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_armaId}"/>
+                    <h:outputText value="#{bundle.ViewAmaTarjetaPropiedadLabel_licenciaId}"/>
+                    <h:outputText value="#{amaTarjetaPropiedadController.selected.licenciaId}" title="#{bundle.ViewAmaTarjetaPropiedadTitle_licenciaId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaTarjetaPropiedadController.destroyAndView}" value="#{bundle.ViewAmaTarjetaPropiedadDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaTarjetaPropiedadEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaTarjetaPropiedadController.prepareCreate}" value="#{bundle.ViewAmaTarjetaPropiedadCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaTarjetaPropiedadController.prepareList}" value="#{bundle.ViewAmaTarjetaPropiedadShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaTarjetaPropiedadIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

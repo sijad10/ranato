@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html template="/template.xhtml"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <f:facet name="first">
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>Buscar Licencia Manipulador de Explosivos</title>
+        </f:facet>
+        <h:outputStylesheet name="css/estilos.css"/>
+    </h:head>
+    <h:body>
+        <h:form id="buscarForm" >
+            <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+            <p:focus context="buscarForm" />
+            <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="Nro Documento" for="fil"/>    
+                    <p:inputText  value="#{geppLmeController.filtro}" required="true"  size="40" id="fil"/>
+                    <p:commandButton id="botonBuscar" value="#{BundleGeppLme.Buscar}" icon="ui-icon-search" actionListener="#{geppLmeController.buscarPublica}"  update=":buscarForm" />&nbsp;
+                </h:panelGrid>
+                <h:panelGroup rendered="#{geppLmeController.resultadosPub != null}">
+                    <p:dataTable id="buscarDatatable" value="#{geppLmeController.resultadosPub}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{BundleGeppLme.MensajeNoResultados}" 
+                                 paginator="true" rows="#{BundleGeppLme.PaginatorFilas}"                                  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{BundleGeppLme.PaginatorFilasPorPagina}">                     
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NUM_DOC}" sortBy="#{item.NUM_DOC}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NUM_DOC}" />
+                            </f:facet>                          
+                            <h:outputText value="#{item.NUM_DOC}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_APE_PAT}" sortBy="#{item.APE_PAT}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_APE_PAT}" />
+                            </f:facet>                          
+                            <h:outputText value="#{item.APE_PAT}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_APE_MAT}" sortBy="#{item.APE_MAT}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_APE_MAT}" />
+                            </f:facet>                            
+                            <h:outputText value="#{item.APE_MAT}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NOMBRES}" sortBy="#{item.NOMBRES}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NOMBRES}" />
+                            </f:facet>                          
+                            <h:outputText value="#{item.NOMBRES}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_FEC_EMI}" sortBy="#{item.FEC_EMI}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_FEC_EMI}" />
+                            </f:facet>
+                            <h:outputText value="#{item.FEC_EMI}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_FEC_VENC}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FEC_VENC}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_USUARIO}" sortBy="#{item.APE_MAT}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_USUARIO}" />
+                            </f:facet>                            
+                            <h:outputText value="#{item.RZN_SOCIAL}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+            <h:outputLabel value="#{BundleGeppLme.Instrucciones}" style="font-weight: bold"/><br/>
+            <h:outputLabel value="#{BundleGeppLme.InstruccionesDetallePub}" escape="false" style="color: #0085ca;font-family: cursive"/>
+        </h:form>
+        <h:form> 
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" appendTo="@(body)" >  
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+            </p:confirmDialog>
+            <p:ajaxStatus  onstart="PF('loadingDialog').show()" onsuccess="PF('loadingDialog').hide()" />
+            <p:dialog id="loadingDialog" style="background-color: transparent; border: none; box-shadow: none;"
+                      widgetVar="loadingDialog"
+                      showHeader="false"
+                      resizable="false" modal="true" 
+                      closable="false"
+                      appendTo="@(body)" draggable="false">
+                <p:graphicImage name="icons/ajax-loader.gif"/>
+            </p:dialog>
+
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgVerCitaVer" header="#{bundleCitas.CitaDlgVer_Title} " 
+              widgetVar="wvDlgVerCitaVer" modal="true" showEffect="fade" hideEffect="fade" width="90%" maximizable="false"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="dlgVerCitaVerDialogInit()" onHide="" position="center top"
+              style="padding:0!important" >
+        <p:outputPanel id="dlgVerCitaVerPanel" style="text-align:left; padding:0px!important">
+                
+            <h:form id="dlgVerCitaVerForm">
+                <div class="ui-fluid">
+
+                    <p:panel id="panelVerResumen" header="#{bundleCitas.CitaDlgVer_Resumen_Title}" style="margin-bottom: 8px" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Tram_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                <p:outputLabel value="Sub Trámite: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.subTramiteId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Sede_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Fecha_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.fechaTurno}" style="font-weight: bold;">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Hora_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.horaProgra}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                    </p:panel>
+                    
+                    <p:panel id="panelVerDatGen" header="#{bundleCitas.CitaDlgVer_General_Title}" style="margin-bottom: 8px" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_TipDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.tipoDoc.abreviatura}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_NumDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.numDoc}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Nom_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.nombres}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Ape_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.apePat} #{citasReservadasController.turnoSeleccionado.perExamenId.apeMat}" style="font-weight: bold;"/>
+                            </div>
+                        </div>                    
+                    </p:panel>
+
+                    <p:panel id="panelVerDatArm" header="#{bundleCitas.CitaDlgVer_DatosArma_Title}" >
+                        <p:dataTable id="armasDTView" value="#{citasReservadasController.lstDetalleArma}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                     paginator="false" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="10, 20"
+                                     reflow="true">
+
+                            <p:column headerText="nro RUA" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.nroRua}"/>
+                                <h:inputHidden id="codCur" value="#{item.id}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Serie_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.nroSerie}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Arma_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.tipoArma}" rendered="#{item.modeloId==null}"/>
+                                <h:outputText value="#{item.modeloId.tipoArmaId.nombre}" rendered="#{item.modeloId!=null}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Marca_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.marca}" rendered="#{item.modeloId==null}"/>
+                                <h:outputText value="#{item.modeloId.marcaId.nombre}" rendered="#{item.modeloId!=null}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Modelo_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.modelo}" rendered="#{item.modeloId==null}"/>
+                                <h:outputText value="#{item.modeloId.modelo}" rendered="#{item.modeloId!=null}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Calibre_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.calibre}" rendered="#{item.modeloId==null}"/>
+                                <h:outputText value="#{citasVerificacionController.obtenerCalibreArma(item.modeloId.amaCatalogoList)}" rendered="#{item.modeloId!=null}"/>
+                            </p:column>
+
+                            <p:column headerText="VOUCHER DE PAGO" style="font-size:92%!important" class="ui-lg-2">
+                                <h:outputText value="#{citasVerificacionController.obtenerDatosRecibo(item.turLicenciaRegId)}" style="font-weight: bold" rendered="#{item.turLicenciaRegId!=null}"/>
+                            </p:column>
+                            
+                            <p:column headerText="RESULTADO" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.tipoEvaluado.nombre}" style="font-weight: bold"/>
+                            </p:column>
+
+                            <p:column headerText="CONSTANCIA" class="ui-lg-1"
+                                      rendered="#{citasReservadasController.turnoSeleccionado.subTramiteId.codProg!='TP_PROG_VER_RLU'}"
+                                      style="font-size:92%!important; display: #{(citasReservadasController.turnoSeleccionado.subTramiteId.codProg!='TP_PROG_VER_RLU')? '' : 'none'};"
+                                      >
+                                    <p:commandButton  id="botonFormulario" icon="ui-icon-print" 
+                                                      ajax="false"
+                                                      process="@this" 
+                                                      partialSubmit="true"                              
+                                                      onclick="this.form.target = '_blank'" 
+                                                      onblur="this.form.target = '_self'"
+                                                      immediate="true" rendered="#{item.tipoEvaluado!=null}">
+                                        <p:fileDownload value="#{citasReservadasController.mostrarConstanciaVer(item)}" contentDisposition="inline"  />
+                                    </p:commandButton>
+                            </p:column>
+                            
+                            <ui:remove>
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Estado_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <h:outputText value="#{item.estado}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Situac_Title}" style="font-size:92%!important" class="ui-lg-2">
+                                <h:outputText value="#{item.situacion}"/>
+                            </p:column>
+                            </ui:remove>
+
+                        </p:dataTable>                                
+
+                    </p:panel>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:commandButton  id="btnTraslado" icon="ui-icon-print" class="green-button" value="Autorización de traslado de armas"
+                                              ajax="false"
+                                              process="@this" 
+                                              partialSubmit="true"                              
+                                              onclick="this.form.target = '_blank'" 
+                                              onblur="this.form.target = '_self'"
+                                              immediate="true" rendered="#{citasReservadasController.turnoSeleccionado.turLicenciaRegList.size()>5}">
+                                <p:fileDownload value="#{citasReservadasController.generarTrasladoPdf(citasReservadasController.turnoSeleccionado)}" contentDisposition="inline"  />
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:commandButton value="Cerrar" actionListener="#{citasReservadasController.cerrarVerCita('VER')}" id="btnCancelView" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                    </div>
+
+                </div>
+                <p:blockUI block="dlgVerCitaVerPanel" trigger="btnCancelView" />
+            </h:form>
+
+        </p:outputPanel>
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("#dlgVerCitaVer > .ui-dialog-titlebar").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;"); 
+        $("#dlgVerCitaVer > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+        $("#dlgVerCitaVer > .ui-dialog-content").attr("style", "padding:4px!important;");
+        
+        function dlgVerCitaVerDialogInit() {
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").attr("style", "padding:0!important");
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("#dlgVerCitaVer").css('top', 35);
+        }
+
+    </script>
+    
+</ui:composition>

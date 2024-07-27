@@ -1,0 +1,1195 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="librerias">
+        <!-- Aqu puedes incluir tus librerías específicas de la página --> 
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script type="text/javascript" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="/sel/faces/javax.faces.resource/js/gssp/gsspSolicitudAutorizacion/cefoesp/create.js" type="text/javascript"></script>
+        <link type="text/css" rel="stylesheet" href="/sel/faces/javax.faces.resource/js/gssp/gsspSolicitudAutorizacion/proteccion_personal/create.css"  />
+    </ui:define>
+    <ui:define name="title">
+        <b><h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_title_AutorizacionServicioSeguridad}" rendered="#{gsspSolicitudAutorizacionDepartamentoController.estado == 'CREARVIGILANCIAPRIVADA'}"/></b>
+    </ui:define>
+    <ui:define name="body">
+    <h:form id="FormRegSolicAuto" rendered="#{gsspSolicitudAutorizacionDepartamentoController.estado == 'EDITARDEPARTAMENTO'}" >
+        <div class="ui-fluid">
+            <!--PANEL DEL ADMINISTRADO-->
+            <p:panel id="pnl_AdministradoPJ_Title" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_title_DatAdministrado}" rendered="#{gsspSolicitudAutorizacionDepartamentoController.tipoAdministradoUsuario eq 'PersonaJuridica'}" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PJ_RzonSocial}" style="font-weight: bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:inputText id="txtPJRzonSocial" value="#{gsspSolicitudAutorizacionDepartamentoController.administRazonSocial}" style="font-weight: bold;" disabled="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PJ_RUC}" style="font-weight: bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:inputText id="txtPJRuc" value="#{gsspSolicitudAutorizacionDepartamentoController.administRUC}" style="font-weight: bold;" disabled="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                </div>    
+            </p:panel>
+            <!--FIN DEL ADMINISTRADO-->
+                
+            <!--PANEL DE MODALIDAD-->
+            <p:panel id="pnlDatosModalidad" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_title_DatModalidad}" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_TipServ} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-3">
+                        <p:selectOneMenu id="bcoTipServicio"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSeguridadSelected}" >   
+                            <f:selectItems var="itemServicio" itemValue="#{itemServicio}" itemLabel="#{itemServicio.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSeguridadList}"/>
+                        </p:selectOneMenu>
+                    </div>
+               </div>   
+
+            </p:panel>
+            <!--FIN DE PANEL DE MODALIDAD-->
+            
+            <!--PANEL DE MEDIOS DE CONTACTO-->
+            <p:panel id="pnl_MediosContacto" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Titulo_03}" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Prioridad} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:selectOneMenu id="cboLPE_Alm_Prioridad"  value="#{gsspSolicitudAutorizacionDepartamentoController.regPrioridadLPSSelected }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemLPE_Alm_Prioridad" itemValue="#{itemLPE_Alm_Prioridad}" itemLabel="#{itemLPE_Alm_Prioridad.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regPrioridadLPSList}"/>
+                            <p:ajax event="change" update="@this" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_MedioContacto} *" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="cboLPE_Alm_MedioContacto"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoMedioContactoLPSSelected }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemLPE_Alm_MedioContacto" itemValue="#{itemLPE_Alm_MedioContacto}" itemLabel="#{itemLPE_Alm_MedioContacto.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoMedioContactoLPSList}"/>
+                            <p:ajax event="change" update="@this,pnl_MediosContacto" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:inputText id="txtLPE_Alm_DescripMedioContacto" value="#{gsspSolicitudAutorizacionDepartamentoController.regtextoContactoLPS}" 
+                                     maxlength="20" rendered="#{!(gsspSolicitudAutorizacionDepartamentoController.regTipoMedioContactoLPSSelected.codProg eq 'TP_MEDCO_COR')}" />
+                        <p:inputText id="txtLPE_Alm_CorreoElectronico" value="#{gsspSolicitudAutorizacionDepartamentoController.regtextoCorreoContactoLPS}" 
+                                     maxlength="200" 
+                                     validatorMessage="#{BundleBDIntegrado.gsspSolicitudAutorizacion_validator_correo}" 
+                                     requiredMessage="#{BundleBDIntegrado.sspCursosRequiredMessage_correo}"
+                                     rendered="#{gsspSolicitudAutorizacionDepartamentoController.regTipoMedioContactoLPSSelected.codProg eq 'TP_MEDCO_COR'}">
+                            <f:validateRegex pattern="#{BundleBDIntegrado.RegexEmail}" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:commandButton id="btnLPE_AgregarTipoContacto"
+                            icon="ui-icon-plus"                                      
+                            action="#{gsspSolicitudAutorizacionDepartamentoController.agregarTipoContacto()}"
+                            value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_btn_LPS_titulo_Agregar}"
+                            update="@this, pnl_MediosContacto" />
+                        <p:tooltip for="btnLPE_AgregarTipoContacto" value="Agregar Contacto" showEffect="clip" hideEffect="fold" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                </div>   
+                <br/>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-8 ui-lg-8" >
+                        <p:dataTable id="dtResultadosMedioContactos"
+                                 value="#{gsspSolicitudAutorizacionDepartamentoController.lstContactos}"
+                                 var="itemRegContacto"
+                                 rowKey="#{itemRegContacto.ID}"
+                                 selection="#{gsspSolicitudAutorizacionDepartamentoController.selectedContacto}"
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                 paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                 {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                            <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_ID}" style="text-align: center;" class="ui-lg-1" rendered="false" >
+                                    <h:outputText value="#{itemRegContacto.id}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Prioridad}" style="text-align: center;" class="ui-lg-2" >
+                                    <h:outputText value="#{(itemRegContacto.valor eq '290'?'PRINCIPAL':'SECUNDARIO')}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Contacto}" style="text-align: center;" class="ui-lg-2" >
+                                    <h:outputText value="#{itemRegContacto.tipoMedioId.nombre}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Descripcion}" style="text-align: center;" class="ui-lg-3" >
+                                    <h:outputText value="#{itemRegContacto.descripcion}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Borrar}" style="text-align: center;" class="ui-lg-1" >
+                                    <p:commandButton 
+                                        value="Eliminar" 
+                                        update="@this, dtResultadosMedioContactos" 
+                                        icon="ui-icon-trash"
+                                        actionListener="#{gsspSolicitudAutorizacionDepartamentoController.deleteContacto(itemRegContacto.id)}" >
+                                    </p:commandButton>
+                                </p:column>
+                        </p:dataTable>
+                    </div>    
+                </div>    
+            </p:panel>
+            <!--FIN DE PANEL DE MEDIOS DE CONTACTO-->
+            
+            <!--PANEL DE REPRESENTANTE LEGAL-->
+            <p:panel id="pnl_RepreLegal" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_title_RL}" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_RepLegal} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:selectOneMenu id="cboRepresLegal" value="#{gsspSolicitudAutorizacionDepartamentoController.personaDetalleSelectedString}" >     
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemRepresLegal" itemValue="#{itemRepresLegal.id}" itemLabel="#{itemRepresLegal.nombres}, #{itemRepresLegal.apePat} #{itemRepresLegal.apeMat}" value="#{gsspSolicitudAutorizacionDepartamentoController.personaDetalleListado}"/>     
+                            <p:ajax event="change" update="@this,pnl_RepreLegal" listener="#{gsspSolicitudAutorizacionDepartamentoController.mostrarDomicilioRepresentanteLegal()}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:commandButton id="btnRLBuscar"
+                             icon="ui-icon-plus"
+                             actionListener="#{gsspSolicitudAutorizacionDepartamentoController.openDlgPersonaRepresentanteLegal()}"
+                             value="Nuevo"
+                        />
+                        <p:tooltip for="btnRLBuscar" value="#{'Nuevo Representante Legal'}" showEffect="clip" hideEffect="fold" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-7 ui-lg-7" style="display:none;"></div>
+                </div>   
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_PartRegSUNARP} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:inputText id="txtPartReg_RL" value="#{(gsspSolicitudAutorizacionDepartamentoController.regRLPartidaRegistral)}" 
+                                     maxlength="25"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_AsiReg} *" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:inputText id="txtAsientoReg_RL" value="#{(gsspSolicitudAutorizacionDepartamentoController.regRLAsientoRegistral)}" 
+                                     maxlength="25"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PJ_ZonaReg} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:selectOneMenu id="cboPJZonaRegistral_RL" value="#{gsspSolicitudAutorizacionDepartamentoController.regZonaRegSelectedRL }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemPJZonaRegistral" itemValue="#{itemPJZonaRegistral}" itemLabel="#{itemPJZonaRegistral.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regZonaRegListRL}"/>
+                            <p:ajax event="change" update="@this,cboPJOficinaRegistral_RL" listener="#{gsspSolicitudAutorizacionDepartamentoController.listarOficinasRegistrales_RL()}" />
+                        </p:selectOneMenu>
+                    </div>    
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_OficReg} *" />                                    
+                    </div>    
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:selectOneMenu id="cboPJOficinaRegistral_RL"  value="#{gsspSolicitudAutorizacionDepartamentoController.regOficinaRegSelectedRL }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemPJOficinaRegistral" itemValue="#{itemPJOficinaRegistral}" itemLabel="#{itemPJOficinaRegistral.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regOficinaRegListRL}"/>                                    
+                        </p:selectOneMenu>
+                    </div>    
+                </div>   
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_TipUbic} *"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="cboRLDomicilioLegal_RL"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasSelected }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemRLDomicilioLegal" itemValue="#{itemRLDomicilioLegal}" itemLabel="#{itemRLDomicilioLegal.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab3_AutoServSeg_lbl_RL_DomicLegal} *" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:inputText id="txtRLDomicLegal_RL" value="#{gsspSolicitudAutorizacionDepartamentoController.regDomicilioRLSelected }" 
+                                     maxlength="200"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="Ubigeo (Dpto/Prov/Distrito): *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:selectOneMenu id="cboRLDistrito_RL" filter="true" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoRLSelected}" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemRLDistrito" itemValue="#{itemRLDistrito}" itemLabel="#{itemRLDistrito.provinciaId.departamentoId.nombre} / #{itemRLDistrito.provinciaId.nombre} / #{itemRLDistrito.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoRLSList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>   
+            </p:panel>
+            <!--FIN DE PANEL DE REPRESENTANTE LEGAL-->
+            
+
+            <!--PANEL DE COMPROBANTE DE PAGO-->
+            <p:panel id="pnlDatosComprobante" header="Datos del Comprobante" rendered="false" >
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_Boucher}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:inputText id="txtNroComprobante" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroComprobante}" >
+                            <p:keyFilter mask="int" preventPaste="false" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:commandButton id="btnValidarBoucher"
+                            icon="ui-icon-search"                                      
+                            action="#{gsspSolicitudAutorizacionDepartamentoController.validarComprobante()}"
+                            value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_btn_DatModalidad_Validar}"
+                            update="pnlDatosComprobante" />
+                        <p:tooltip for="btnValidarBoucher" value="Validar Voucher de Pago" showEffect="clip" hideEffect="fold" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_Fecha}" />
+                        <p:outputLabel id="lblReciboFecha" value="#{gsspSolicitudAutorizacionDepartamentoController.regDatoRecibos.fechaMovimiento}" style="color: #cd0a0a;">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </p:outputLabel>
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_Monto}" />
+                        <p:outputLabel id="lblReciboImporte" value="#{gsspSolicitudAutorizacionDepartamentoController.regDatoRecibos.importe}" style="color: #cd0a0a;"/>
+                    </div>
+                </div>
+            </p:panel>
+            <!--FIN DE PANEL DE COMPROBANTE DE PAGO-->
+            
+            <!--PANEL DE LOCAL DE PRESTACION DE SERVICIO-->
+            <p:panel id="pnl_LocalPresEstadoTU" header="Local de Capacitación" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_AmbitOpera} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:selectOneMenu id="bcoLPE_AmbitoOperaDIstrito" filter="true" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoLPSSelected}" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemAmbitoOperaDIstrito" itemValue="#{itemAmbitoOperaDIstrito}" itemLabel="#{itemAmbitoOperaDIstrito.provinciaId.departamentoId.nombre} / #{itemAmbitoOperaDIstrito.provinciaId.nombre} / #{itemAmbitoOperaDIstrito.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoLPSList}"/>
+                            <p:ajax event="change" update="@this,bcoLPE_LocalAutorizacion,pnl_LocalPresEstadoTU" listener="#{gsspSolicitudAutorizacionDepartamentoController.listarLocalesAutorizXDistrito()}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Locales} *" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:selectOneMenu id="bcoLPE_LocalAutorizacion" value="#{gsspSolicitudAutorizacionDepartamentoController.localAutorizacionSelectedString}" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemLocalAutorizacion" itemValue="#{itemLocalAutorizacion.id}" itemLabel="#{gsspSolicitudAutorizacionDepartamentoController.mostrarLabelLocal(itemLocalAutorizacion)}" value="#{gsspSolicitudAutorizacionDepartamentoController.localAutorizacionListado}"/>
+                            <p:ajax event="change" update="@this,pnl_LocalPresEstadoTU" listener="#{gsspSolicitudAutorizacionDepartamentoController.mostrarDatosLocalSeleccionado()}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:commandButton id="btnModalNuevoLocal"
+                                     icon="ui-icon-map" 
+                                     actionListener="#{gsspSolicitudAutorizacionDepartamentoController.openDlgMapa('normal')}"
+                                     value="Nuevo" 
+                                     process="@this"
+                                     rendered="#{(gsspSolicitudAutorizacionDepartamentoController.regBuscaDepartamentoPrincipal == false) ? 'true' : 'false'}"/>
+                            <p:tooltip for="btnModalNuevoLocal" value="Nuevo Local" showEffect="clip" hideEffect="fold" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                </div>   
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUbica} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="bcoLPE_TipUbica"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasLPSSelected }" disabled="true" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemTipUbica" itemValue="#{itemTipUbica}" itemLabel="#{itemTipUbica.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasLPSList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_DomLegal} *" />
+                    </div>  
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:inputText id="txtLPE_DomiciLegal" value="#{gsspSolicitudAutorizacionDepartamentoController.regDireccionLPS}" disabled="true" 
+                                     maxlength="100" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_NroFisico} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:inputText id="txtLPE_NroFisico" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroFisicoLPS}" disabled="true" 
+                                     maxlength="9" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Referencia}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                        <p:inputText id="txtLPE_Refencia" value="#{gsspSolicitudAutorizacionDepartamentoController.regReferenciaLPS }" disabled="true" 
+                                     maxlength="300" />                                   
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3" style="display:none;"></div>
+                </div>    
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUso}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="cboLPE_TipUso"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipUsoLPSSelected }" disabled="true" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemTipUso" itemValue="#{itemTipUso}" itemLabel="#{itemTipUso.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipUsoLPSList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_NomArchivo} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:fileUpload id="txf_ArchivoLocal" 
+                                  label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Adjuntar}"
+                                  invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                  fileUploadListener="#{gsspSolicitudAutorizacionDepartamentoController.handleFileUploadPDF_Local}"
+                                  invalidSizeMessage="#{gsspSolicitudAutorizacionDepartamentoController.obtenerMsjeInvalidSizeFileSelPlanoDistribucionAutoPrestacServ()}"
+                                  sizeLimit="#{sbParametroController.obtenerParametroXNombre('selPlanoDistribucionPrestaServ_sizeArchivo').valor}"
+                                  onstart="PF('loadingDialog').show()"
+                                  oncomplete="PF('loadingDialog').hide()"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  auto="true" process="@this,pnl_LocalPresEstadoTU" update="@this,pnl_LocalPresEstadoTU"
+                                  allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"                                                   
+                                  >
+                            <h:outputText value="#{gsspSolicitudAutorizacionDepartamentoController.nomArchivoLocal }" />
+                        </p:fileUpload>
+                        <p:tooltip for="txf_ArchivoLocal" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                </div>  
+                
+                
+                                    <h:panelGroup rendered="#{gsspSolicitudAutorizacionDepartamentoController.renderVerMapa}">
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-1 ui-lg-1"  >
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Coordenadas}"  />
+                            </div>
+                            <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                <p:inputText id="txtLPE_Latitud" value="#{gsspSolicitudAutorizacionDepartamentoController.lat_x }" disabled="true" />                                   
+                            </div>
+                            <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                <p:inputText id="txtLPE_Longitud" value="#{gsspSolicitudAutorizacionDepartamentoController.long_x }" disabled="true" />                                   
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:commandButton type="button" icon="ui-icon-image"  id="openDialogButton" value="Ver Mapa" onclick="mostrarDialogo(#{gsspSolicitudAutorizacionDepartamentoController.lat_x},#{gsspSolicitudAutorizacionDepartamentoController.long_x}); return false;" ajax="false"/>    
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                
+                
+            </p:panel>
+            
+            <!--FIN DE PANEL LOCAL DE PRESTACION DE SERVICIO-->
+           
+            <!--PANEL DE LICENCIA MUNICIPAL-->    
+            <p:panel id="pnl_LicenciaMuni" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LPS_Titulo_04}" >
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_NroLicenciaMuni} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:inputText id="txt_LM_NroLicMuni" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroLicenciaMunicLPS}" 
+                                     maxlength="50"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_Emis} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:calendar id="txt_LM_FechaEmis"
+                                locale="es"
+                                navigator="true"
+                                showOn="button"
+                                maxdate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMaximaCalendario}"
+                                value="#{gsspSolicitudAutorizacionDepartamentoController.regFechaEmisLPS }"
+                                pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </p:calendar>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_Vencim} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:calendar id="txt_LM_FechaVenc"
+                                locale="es"
+                                navigator="true"
+                                showOn="button"
+                                mindate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMinimaCalendario}"
+                                value="#{gsspSolicitudAutorizacionDepartamentoController.regFechaVencLPS }"
+                                pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledCalendar == true) ? 'true' : 'false'}"
+                                >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </p:calendar>                        
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:selectBooleanCheckbox value="#{gsspSolicitudAutorizacionDepartamentoController.regIndeterminadoLPS }" itemLabel="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_Indeterm}" style="padding-left: 20px;" >
+                            <p:ajax update="@this,txt_LM_FechaVenc" listener="#{gsspSolicitudAutorizacionDepartamentoController.verificarCheckIndeterminado()}"/>
+                        </p:selectBooleanCheckbox>
+                    </div>    
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                </div>   
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_TipMuni} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="cbo_LM_TipMunic"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipMunicipalidadLPSSelected }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemLM_TipMunic" itemValue="#{itemLM_TipMunic}" itemLabel="#{itemLM_TipMunic.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipMunicipalidadLPSList}"/>
+                            <p:ajax event="change" update="@this,cbo_LM_Municip" listener="#{gsspSolicitudAutorizacionDepartamentoController.listarMunicipalidades()}"  />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_Municip} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:selectOneMenu id="cbo_LM_Municip"  value="#{gsspSolicitudAutorizacionDepartamentoController.regMunicLPSSelected }" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemLM_Municip" itemValue="#{itemLM_Municip}" itemLabel="#{itemLM_Municip.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regMunicLPSList}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                </div>   
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_GiroComerc} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:inputText id="txt_LM_GiroComercial" value="#{gsspSolicitudAutorizacionDepartamentoController.regGiroComercialLPS}"  
+                                     maxlength="100"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_lbl_LM_LicMuniAdj} *" />
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:fileUpload id="txf_ArchivoLM" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab6_AutoServSeg_btn_LM_LicAdjPDF}"
+                              invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                              fileUploadListener="#{gsspSolicitudAutorizacionDepartamentoController.handleFileUploadPDF_LM}"
+                              invalidSizeMessage="#{gsspSolicitudAutorizacionDepartamentoController.obtenerMsjeInvalidSizeFileSelLicenciaMunicipalAutoPrestacServ()}"
+                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('selLicenciaMunicipalPrestaServ_sizeArchivo').valor}"
+                              onstart="PF('loadingDialog').show()"
+                              oncomplete="PF('loadingDialog').hide()"
+                              mode="advanced" dragDropSupport="false"
+                              multiple="false"
+                              auto="true" process="@this,pnl_LicenciaMuni" update="@this,pnl_LicenciaMuni"
+                              allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                              >
+                            <h:outputText value="#{gsspSolicitudAutorizacionDepartamentoController.nomArchivoLM }" />
+                        </p:fileUpload>
+                        <p:tooltip for="txf_ArchivoLM" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                </div>   
+            </p:panel>
+            <!--FIN DE PANEL DE LICENCIA MUNICIPAL-->
+ 
+            <!--PANEL DE ACCIONISTAS-->
+            <p:panel id="pnl_Accionistas" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_title}"
+                         class="mg-b-10">
+                 <div class="ui-g"><span id="error_msg_accionistas" class="ui-g-12 ui-md-12 ui-lg-12"></span></div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_lbl_TipDoc}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:commandButton id="btnRLBuscarSocio"
+                             icon="ui-icon-search" 
+                             actionListener="#{gsspSolicitudAutorizacionDepartamentoController.openDlgPersonaAccionistaSocio()}"
+                             value="Buscar"
+                        />
+                        <p:tooltip for="btnRLBuscarSocio" value="Nuevo Socio" showEffect="clip" hideEffect="fold" />
+                    </div>   
+                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                        <p:outputLabel value="Persona: " />
+                            <p:outputLabel value="#{gsspSolicitudAutorizacionDepartamentoController.regNombreSocioEncontrado}" rendered="#{gsspSolicitudAutorizacionDepartamentoController.regNombreSocioEncontrado != null}" style="font-weight: bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                </div>   
+                    
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-2 ui-lg-1">
+                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_lbl_TipAccionista}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-22">
+                        <p:selectOneMenu id="cboAcc_TipAccionista"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSocioSelected}" >   
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems var="itemTipAccionista" itemValue="#{itemTipAccionista}" itemLabel="#{itemTipAccionista.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSocioList}"/>
+                            <p:ajax event="change" update="@this,pnl_Accionistas" listener="#{gsspSolicitudAutorizacionDepartamentoController.actualizarDatosCargo()}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                        <p:outputLabel id="txtTitulo_Cargo" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_lbl_Cargo}" rendered="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSocioSelected.codProg eq 'TP_ACCNSTA_DIRECT'}" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-3 ui-lg-2">
+                        <p:inputText id="txtAcc_Cargo" value="#{gsspSolicitudAutorizacionDepartamentoController.regCargoSocio}" rendered="#{gsspSolicitudAutorizacionDepartamentoController.regTipoSocioSelected.codProg eq 'TP_ACCNSTA_DIRECT'}" 
+                                     maxlength="100">
+                            <p:ajax event="blur" update="@this"/>
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                </div>   
+
+                <div class="ui-g">
+                    <!-- SUB PANEL PARA APORTES DEL ACCIONISTA -->
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:panel header="Aportes" id="panAportesAccionista">
+                            <div class="ui-g">
+                                <p:selectOneRadio id="aporteOpcion" value="#{gsspSolicitudAutorizacionDepartamentoController.checkTipoAporte}" layout="custom">
+                                    <f:selectItem itemLabel="" itemValue="1" />
+                                    <f:selectItem itemLabel="" itemValue="2" />
+                                    <p:ajax event="change" listener="#{gsspSolicitudAutorizacionDepartamentoController.verificarCheckAporteMontoAccionista}" process="@this" update="@this, panAportesAccionista" />
+                                </p:selectOneRadio>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:radioButton id="AporteOpt1" for="aporteOpcion" itemIndex="0" />
+                                </div>    
+                                <div class="ui-g-12 ui-md-5 ui-lg-5">    
+                                    <p:outputLabel for="AporteOpt1" value="Monto (S/.)"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-5">
+                                    <p:inputNumber maxValue="100000000" 
+                                               decimalPlaces="2" id="txtAportante_Monto" maxlength="11" 
+                                               value="#{gsspSolicitudAutorizacionDepartamentoController.regMontoAportante}" 
+                                               minValue="0"
+                                               inputStyle="text-align: right"
+                                               disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledMontoAportante == true) ? 'true' : 'false'}"
+                                               >
+                                        <p:keyFilter mask="pnum" preventPaste="false" />
+                                    </p:inputNumber>  
+                                </div>    
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:radioButton id="AporteOpt2" for="aporteOpcion" itemIndex="1" />
+                                </div>
+                                <div class="ui-g-12 ui-md-5 ui-lg-5">
+                                    <p:outputLabel for="AporteOpt2" value="No Dinerario"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-5" style="display:none;"></div>
+                            </div>
+                        </p:panel> 
+                    </div>    
+                    <!-- SUB PANEL PARA APORTES DEL ACCIONISTA -->
+                    
+                    <!-- SUB PANEL PARA ACCIONES DEL ACCIONISTA -->
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:panel header="Acciones" id="panAccionesAccionista">
+                            <div class="ui-g">
+                                <p:selectOneRadio id="accionesOpcion" value="#{gsspSolicitudAutorizacionDepartamentoController.checkTipoAcciones}" layout="custom">
+                                    <f:selectItem itemLabel="" itemValue="1" />
+                                    <f:selectItem itemLabel="" itemValue="2" />
+                                    <p:ajax event="change" listener="#{gsspSolicitudAutorizacionDepartamentoController.verificarCheckNumeroPorcentajeAcciones}" process="@this" update="@this, panAccionesAccionista" />
+                                </p:selectOneRadio>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:radioButton id="AccionesOpt1" for="accionesOpcion" itemIndex="0" />
+                                </div>    
+                                <div class="ui-g-12 ui-md-5 ui-lg-5">    
+                                    <p:outputLabel for="AccionesOpt1" value="Número"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-5">
+                                    <p:inputNumber maxValue="100000000" 
+                                               decimalPlaces="2" id="txtNumero_Acciones" maxlength="11" 
+                                               value="#{gsspSolicitudAutorizacionDepartamentoController.regNumeroAcciones}" 
+                                               minValue="0"
+                                               inputStyle="text-align: right"
+                                               disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledNumerojeAcciones == true) ? 'true' : 'false'}"
+                                               >
+                                        <p:keyFilter mask="pnum" preventPaste="false" />
+                                    </p:inputNumber>  
+                                </div>    
+                            </div>
+                            <div class="ui-g flex-nwrap">
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:radioButton id="AccionesOpt2" for="accionesOpcion" itemIndex="1" />
+                                </div>
+                                <div class="ui-g-12 ui-md-5 ui-lg-5">
+                                    <p:outputLabel for="AccionesOpt2" value="Porcentaje (%)"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                    <p:inputNumber maxValue="100" 
+                                               decimalPlaces="2" id="txtPorcentaje_Acciones" maxlength="5" 
+                                               value="#{gsspSolicitudAutorizacionDepartamentoController.regPorcentajeAcciones}" 
+                                               minValue="0"
+                                               inputStyle="text-align: right"
+                                               disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledPorcentajeAcciones == true) ? 'true' : 'false'}"
+                                               >
+                                        <p:keyFilter mask="pnum" preventPaste="false" />
+                                    </p:inputNumber>  
+                                </div> 
+                            </div>
+                        </p:panel> 
+                    </div>
+                    
+                     <div class="ui-g-12 ui-md-2 ui-lg-1" style="align-self: end;">
+                        <!--<br/><br/><br/><br/><br/><br/>-->
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <p:commandButton id="btnLPE_AgregarSocio"
+                                    icon="ui-icon-plus"                                      
+                                    action="#{gsspSolicitudAutorizacionDepartamentoController.agregarTipoSocio()}"
+                                    value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_btn_AgregarDoc}"
+                                    process="@this, panAportesAccionista, panAccionesAccionista" />  
+                                    <p:tooltip for="btnLPE_AgregarSocio" value="Agregar Socio" showEffect="clip" hideEffect="fold" />
+                            </div>    
+                            <!--<div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>-->
+                        </div>    
+                    </div>
+                    <!-- SUB PANEL PARA ACCIONES DEL ACCIONISTA -->    
+                </div>
+                
+                <br/>
+                <div class="ui-g">
+                   <div class="ui-g-12 ui-md-12 ui-lg-12">   
+                        <p:dataTable id="dtResultadosSocios" 
+                                  value="#{gsspSolicitudAutorizacionDepartamentoController.lstSocios}"
+                                  var="itemRegSocio"
+                                  rowKey="#{itemRegSocio.ID}"
+
+                                  emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                  paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                  {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                  {RowsPerPageDropdown}"
+                                  currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                  rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                                 <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_ID}" style="text-align: center;" class="ui-lg-1" rendered="false" >
+                                     <h:outputText value="#{itemRegSocio.id}" />
+                                 </p:column>
+
+                                 <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_Tipo}" style="text-align: center;" class="ui-lg-2">
+                                     <h:outputText value="#{gsspSolicitudAutorizacionDepartamentoController.MostrarDescripcionTipoSocio(itemRegSocio.tipoParticipacion)}" />
+                                 </p:column>     
+
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_Tipo_Doc_NomAcc}" style="text-align: center;" class="ui-lg-1">
+                                    <h:outputText value="#{(itemRegSocio.personaId.tipoDoc.nombre)}" />
+                                </p:column>
+                            
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_Num_Doc_NomAcc}" style="text-align: center;" class="ui-lg-1">
+                                    <h:outputText value="#{(itemRegSocio.personaId.numDoc)}" />
+                                </p:column>
+                            
+                                <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_NomAcc}" style="text-align: center;" class="ui-lg-2">
+                                    <h:outputText value="#{(itemRegSocio.personaId.apePat)} #{(itemRegSocio.personaId.apeMat)} #{(itemRegSocio.personaId.nombres)}" />
+                                </p:column>
+
+                                 <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_Cargo}" style="text-align: center;" class="ui-lg-2">
+                                     <h:outputText value="#{itemRegSocio.cargo}" />
+                                 </p:column>
+                            
+                                <p:column headerText="Aporte por Monto (S/.)" style="text-align: center;" class="ui-lg-1">
+                                    <h:outputText value="#{itemRegSocio.aporteMonto}" />
+                                </p:column>
+                            
+                                <p:column headerText="Número de Acciones" style="text-align: center;" class="ui-lg-1">
+                                    <h:outputText value="#{itemRegSocio.numeroAccion}" />
+                                </p:column>
+                            
+                                <p:column headerText="(%) de Acciones" style="text-align: center;" class="ui-lg-1">
+                                    <h:outputText value="#{itemRegSocio.porcentajeAccion}" />
+                                </p:column>
+                            
+                                 <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Accionista_tbl_Acciones}" style="text-align: center;" class="ui-lg-1">
+                                     <p:commandButton 
+                                         value="Eliminar" 
+                                         update="@this, dtResultadosSocios" 
+                                         icon="ui-icon-trash"
+                                         actionListener="#{gsspSolicitudAutorizacionDepartamentoController.deleteSocio(itemRegSocio.id)}"
+                                         >
+                                     </p:commandButton>
+                                 </p:column>
+                         </p:dataTable>
+                    </div>   
+                </div>   
+            </p:panel>
+            <!--PANEL DE ACCIONISTAS-->
+            
+            <!--PANEL DE CARTA FIANZA-->
+            <p:panel id="pnl_CartaFianza">
+                <p:panel header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_title}" rendered="#{(gsspSolicitudAutorizacionDepartamentoController.habilitarCartaFianza == true) ? 'true' : 'false'}" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="Buscar Carta Fianza:" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:selectOneMenu id="cboCF_CartaFianza"  value="#{gsspSolicitudAutorizacionDepartamentoController.regBuscaCartaFianzaSelectedString}" >   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="itemCartaFianza" itemValue="#{itemCartaFianza.id}" itemLabel="#{itemCartaFianza.numero}" value="#{gsspSolicitudAutorizacionDepartamentoController.regBuscaCartaFianzaList}"/>
+                                <p:ajax event="change" update="@this,pnl_CartaFianza" listener="#{gsspSolicitudAutorizacionDepartamentoController.buscaCartaFianza()}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:commandButton id="btnNuevaCarta"
+                                         icon="ui-icon-plus" 
+                                         action="#{gsspSolicitudAutorizacionDepartamentoController.nuevaCartaFianza()}"
+                                         rendered="#{gsspSolicitudAutorizacionDepartamentoController.regBuscaCartaFianzaSelectedString != null}"
+                                         value="Nuevo" 
+                                         process="@this"/>
+                                <p:tooltip for="btnNuevaCarta" value="Nueva Carta" showEffect="clip" hideEffect="fold" />
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-8" style="display:none;"></div>
+                    </div>    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_NroCartaFianza} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:inputText id="txtCF_NroCartaFianza" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroCartaFianza }"
+                                         maxlength="20" disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_TipoFinanciera} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:selectOneMenu id="cboCF_TipFinanciera"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoFinancieraCFSelected}"
+                                             disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}" >   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="itemTipFinanciera" itemValue="#{itemTipFinanciera}" itemLabel="#{itemTipFinanciera.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoFinancieraCFList}"/>
+                                <p:ajax event="change" update="@this,cboCF_EntFinanciera" listener="#{gsspSolicitudAutorizacionDepartamentoController.listarEntidadFinancieras()}"  />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                    </div>    
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_EntidadFinanciera} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:selectOneMenu id="cboCF_EntFinanciera"  value="#{gsspSolicitudAutorizacionDepartamentoController.regEntidadFinancieraCFSelected}" 
+                                             disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}" >   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="itemEntFinanciera" itemValue="#{itemEntFinanciera}" itemLabel="#{itemEntFinanciera.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regEntidadFinancieraCFList}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_Monto} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:inputNumber maxValue="100000000" 
+                                       decimalPlaces="2" id="txtCF_Monto" maxlength="11" 
+                                       value="#{gsspSolicitudAutorizacionDepartamentoController.regMontoCartaFianza}" 
+                                       minValue="0"
+                                       inputStyle="text-align: right"
+                                       disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}"
+                                       >
+                                <p:keyFilter mask="pnum" preventPaste="false" />
+                            </p:inputNumber>  
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                    </div>    
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_VigeniciaDesde} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:calendar id="txfCF_FechVigenciaIni"
+                                                locale="es"
+                                                navigator="true"
+                                                showOn="button"
+                                                maxdate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMaximaCalendario}"
+                                                value="#{gsspSolicitudAutorizacionDepartamentoController.regFechVigenciaIni }"
+                                                disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                <p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this"/>
+                            </p:calendar>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1"></div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_VigeniciaHasta} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:calendar id="txfCF_FechVigenciaFin"
+                                                locale="es"
+                                                navigator="true"
+                                                showOn="button"
+                                                mindate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMinimaCalendario}"
+                                                value="#{gsspSolicitudAutorizacionDepartamentoController.regFechVigenciaFin }"
+                                                disabled="#{(gsspSolicitudAutorizacionDepartamentoController.regDisabledDatosCartaFianza== true) ? 'true' : 'false'}"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}">
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                <p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this"/>
+                            </p:calendar>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_lbl_CartaFianza}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:commandButton icon="ui-icon-document" rendered="#{gsspSolicitudAutorizacionDepartamentoController.regBuscaCartaFianzaSelectedString != null}"
+                                        immediate="true" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" ajax="false">
+                                   <p:fileDownload value="#{gsspSolicitudAutorizacionDepartamentoController.obtenerArchivoCartaFianza()}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:fileUpload id="txf_ArchivoCF" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab8_CartaFianza_btn_AdjCartaFianza}"
+                                          rendered="#{gsspSolicitudAutorizacionDepartamentoController.regBuscaCartaFianzaSelectedString == null}"
+                                  invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                  fileUploadListener="#{gsspSolicitudAutorizacionDepartamentoController.handleFileUploadPDF_CF}"
+                                  invalidSizeMessage="#{gsspSolicitudAutorizacionDepartamentoController.obtenerMsjeInvalidSizeFileSelCartaFianzaAutoPrestacServ()}"
+                                  sizeLimit="#{sbParametroController.obtenerParametroXNombre('selCartaFianzaPrestaServ_sizeArchivo').valor}"
+                                  onstart="PF('loadingDialog').show()"
+                                  oncomplete="PF('loadingDialog').hide()"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  auto="true" process="@this,pnl_CartaFianza" update="@this,pnl_CartaFianza"
+                                  allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                  >
+                                <h:outputText value="#{gsspSolicitudAutorizacionDepartamentoController.nomArchivoCF}" />
+                            </p:fileUpload>
+                            <p:tooltip for="txf_ArchivoCF" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-3" style="display:none;"></div>
+                    </div>    
+                </p:panel>
+            </p:panel>                    
+            <!--FIN DE PANEL DE CARTA FIANZA-->
+            
+            
+                <!--PANEL DE CAPACITADORES ACREDITADOS-->
+                <p:panel id="pnl_Capacitadores" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_title_CapAcreditados}" >
+                    
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_lbl_CA_TipDoc}" />
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:selectOneMenu id="cboCapacitadorTipoDoc" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoDocCapSelected}" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoDocCapList}"/>
+                                    <p:ajax event="change" update="@this,pnl_Capacitadores" listener="#{gsspSolicitudAutorizacionDepartamentoController.obtenerNumCaractDocumentoCapacitador()}" />
+                            </p:selectOneMenu>
+                        </div>  
+                        
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:inputText id="txtCapacitadorNumDoc" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroDocCapBuscar}" style="font-weight: bold;" 
+                                             maxlength="#{gsspSolicitudAutorizacionDepartamentoController.cantNumerosDniCarnetTipoDocCapacitador}" >
+                                        <p:keyFilter mask="pint"/>
+                            </p:inputText>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:commandButton 
+                                    id="btnBuscarDoc" 
+                                    icon="ui-icon-search"                                 
+                                    value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_btn_CA_Validar}"
+                                    action="#{gsspSolicitudAutorizacionDepartamentoController.validarDatosCapacitador()}"
+                                    update="pnl_Capacitadores, txtNombrescomp"
+                                />
+                                <p:tooltip for="btnBuscarDoc" value="Validar" showEffect="clip" hideEffect="fold" />
+                        </div>
+                        
+                    </div>                   
+                    
+                    
+                    
+                    <div class="ui-g">                         
+                        
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">
+                            <p:outputLabel id="txtNombrescomp" value="#{gsspSolicitudAutorizacionDepartamentoController.regNombreCapacitadorEncontrado}"   style="font-weight: bold;" /> 
+                        </div> 
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel id="txtMsgCapacitador" value="#{gsspSolicitudAutorizacionDepartamentoController.regMsgCapacitador}"  style="font-weight: bold; color: #cd0a0a;" /> 
+                        </div> 
+
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:commandButton id="btnLPE_ValidarAgregarCapacitador"
+                                        icon="ui-icon-plus"                                      
+                                        actionListener="#{gsspSolicitudAutorizacionDepartamentoController.agregarCapacitadorAcreditado()}"
+                                        value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_btn_CA_Agregar}"
+                                        update="pnl_Capacitadores, dtResultCapacitadores" />  
+                                    <p:tooltip for="btnLPE_ValidarAgregarCapacitador" value="Agregar Capacitador" showEffect="clip" hideEffect="fold" />
+                        </div>
+
+                    </div>   
+
+                    <br/>
+                    <div class="ui-g">
+                       <div class="ui-g-12 ui-md-10 ui-lg-6">   
+                            <p:dataTable id="dtResultCapacitadores" 
+                                      value="#{gsspSolicitudAutorizacionDepartamentoController.lstCapacitadores}"
+                                      var="itemRegCapacitador"
+                                      rowKey="#{itemRegCapacitador.ID}"
+
+                                      emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                      paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                      {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                      {RowsPerPageDropdown}"
+                                      currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                      rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                                     <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_table_CA_Title_ID}" style="text-align: center;" class="ui-lg-1" rendered="false" >
+                                         <h:outputText value="#{itemRegCapacitador.id}" />
+                                     </p:column>
+
+                                     <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_table_CapAcreditados_Title_Nombre}" style="text-align: center;" class="ui-lg-4">
+                                         <h:outputText value="#{(itemRegCapacitador.personaId.apePat)} #{(itemRegCapacitador.personaId.apeMat)} #{(itemRegCapacitador.personaId.nombres)}" />
+                                     </p:column>                                                                                      
+
+                                     <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_table_Accionista_Title_Acciones}" style="text-align: center;" class="ui-lg-1">
+                                         <p:commandButton 
+                                             value="Eliminar" 
+                                             update="@this, dtResultCapacitadores" 
+                                             icon="ui-icon-trash"
+                                             actionListener="#{gsspSolicitudAutorizacionDepartamentoController.deleteCapacitador(itemRegCapacitador.id)}"
+                                             >
+                                         </p:commandButton>
+                                     </p:column>
+                             </p:dataTable>
+                        </div>   
+                    </div> 
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel id="txtTitulo_planEstudios" value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_lbl_CA_AdjPlanEstudios}"/> 
+                        </div>    
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">                        
+                            <p:fileUpload id="txf_ArchivoPE" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab7_Cefoesp_btn_CA_AdjPlanEstudiosPDF}"
+                                  invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                  fileUploadListener="#{gsspSolicitudAutorizacionDepartamentoController.handleFileUploadPDF_PE}"
+                                  invalidSizeMessage="#{gsspSolicitudAutorizacionDepartamentoController.obtenerMsjeInvalidSizeFileSelPlanEstudiosAutoPrestacServ()}"
+                                  sizeLimit="#{sbParametroController.obtenerParametroXNombre('selPlanEstudiosCefoesp_sizeArchivo').valor}"
+                                  onstart="PF('loadingDialog').show()"
+                                  oncomplete="PF('loadingDialog').hide()"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  auto="true" process="@this,pnl_Capacitadores" update="@this,pnl_Capacitadores"
+                                  allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                  >
+                                <h:outputText value="#{gsspSolicitudAutorizacionDepartamentoController.nomArchivoPE }" />
+                            </p:fileUpload>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                    </div> 
+                </p:panel>
+                <!--PANEL DE CAPACITADORES ACREDITADOS-->
+            
+
+                
+                
+                
+                      <!--POLIGONO-->
+                      
+                   
+                      
+                      <p:panel id="pnl_AdministradoPoligonoPJ_Title" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_title_DatPoligono}">
+
+
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                          </div>
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_AmbitOpera} *" />
+                              </div>
+                              <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                  <p:selectOneMenu id="bcoLPE_AmbitoOperaDIstrito_adicional" filter="true" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoLPSSelected2}" >   
+                                      <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                      <f:selectItems var="itemAmbitoOperaDIstrito" itemValue="#{itemAmbitoOperaDIstrito}" itemLabel="#{itemAmbitoOperaDIstrito.provinciaId.departamentoId.nombre} / #{itemAmbitoOperaDIstrito.provinciaId.nombre} / #{itemAmbitoOperaDIstrito.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regDistritoLPSList2}"/>
+                                      <p:ajax event="change" update="@this,bcoLPE_LocalAutorizacion_adicional,pnl_AdministradoPoligonoPJ_Title" listener="#{gsspSolicitudAutorizacionDepartamentoController.listarLocalesAutorizXDistrito2()}" />
+                                  </p:selectOneMenu>
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Locales} *" />
+                              </div>    
+                              <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                  <p:selectOneMenu id="bcoLPE_LocalAutorizacion_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.localAutorizacionSelectedString2}" >   
+                                      <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                      <f:selectItems var="itemLocalAutorizacion" itemValue="#{itemLocalAutorizacion.id}" itemLabel="#{itemLocalAutorizacion.tipoUbicacionId.abreviatura} #{itemLocalAutorizacion.direccion} #{itemLocalAutorizacion.nroFisico}" value="#{gsspSolicitudAutorizacionDepartamentoController.localAutorizacionListado2}"/>
+                                      <p:ajax event="change" update="@this,pnl_AdministradoPoligonoPJ_Title" listener="#{gsspSolicitudAutorizacionDepartamentoController.mostrarDatosLocalSeleccionado()}" />
+                                  </p:selectOneMenu>
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:commandButton id="btnModalNuevoLocal_adicional"
+                                                   icon="ui-icon-map" 
+                                                   actionListener="#{gsspSolicitudAutorizacionDepartamentoController.openDlgMapa('poligono_modal')}"
+                                                   value="Nuevo" 
+                                                   process="@this"
+                                                   rendered="#{(gsspSolicitudAutorizacionDepartamentoController.regBuscaDepartamentoPrincipal == false) ? 'true' : 'false'}"/>
+                                  <p:tooltip for="btnModalNuevoLocal" value="Nuevo Local" showEffect="clip" hideEffect="fold" />
+                              </div>
+                              <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                          </div>   
+
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUbica} *" />
+                              </div>
+                              <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                  <p:selectOneMenu id="bcoLPE_TipUbica_adicional"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasLPSSelected2}" disabled="true" >   
+                                      <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                      <f:selectItems var="itemTipUbica" itemValue="#{itemTipUbica}" itemLabel="#{itemTipUbica.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipoViasLPSList2}"/>
+                                  </p:selectOneMenu>
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_DomLegal} *" />
+                              </div>  
+                              <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                  <p:inputText id="txtLPE_DomiciLegal_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.regDireccionLPS2}" disabled="true" 
+                                               maxlength="100" />
+                              </div>    
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_NroFisico} *" />
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:inputText id="txtLPE_NroFisico_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.regNroFisicoLPS2}" disabled="true" 
+                                               maxlength="9" />
+                              </div>
+                              <div class="ui-g-12 ui-md-2 ui-lg-2" style="display:none;"></div>
+                          </div>
+
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Referencia}" />
+                              </div>
+                              <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                  <p:inputText id="txtLPE_Refencia_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.regReferenciaLPS2 }" disabled="true" 
+                                               maxlength="300" />                                   
+                              </div>
+                              <div class="ui-g-12 ui-md-3 ui-lg-3" style="display:none;"></div>
+                          </div>    
+
+
+                          <div class="ui-g-12 ui-md-1 ui-lg-1">
+                              <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUso}" />
+                          </div>
+                          <div class="ui-g-12 ui-md-2 ui-lg-2">
+                              <p:selectOneMenu id="cboLPE_TipUso_adicional"  value="#{gsspSolicitudAutorizacionDepartamentoController.regTipUsoLPSSelected2}" disabled="true" >   
+                                  <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                  <f:selectItems var="itemTipUso" itemValue="#{itemTipUso}" itemLabel="#{itemTipUso.nombre}" value="#{gsspSolicitudAutorizacionDepartamentoController.regTipUsoLPSList2}"/>
+                              </p:selectOneMenu>
+                          </div>
+
+
+                          <h:panelGroup rendered="#{gsspSolicitudAutorizacionDepartamentoController.renderVerMapa2}">
+                              <div class="ui-g" >
+                                  <div class="ui-g-12 ui-md-1 ui-lg-1"  >
+                                      <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Coordenadas}"  />
+                                  </div>
+                                  <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                      <p:inputText id="txtLPE_Latitud_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.lat_x2 }" disabled="true" />                                   
+                                  </div>
+                                  <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                      <p:inputText id="txtLPE_Longitud_adicional" value="#{gsspSolicitudAutorizacionDepartamentoController.long_x2 }" disabled="true" />                                   
+                                  </div>
+                                  <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                      <p:commandButton type="button" icon="ui-icon-image"  id="openDialogButton_adicional" value="Ver Mapa" onclick="mostrarDialogo(#{gsspSolicitudAutorizacionDepartamentoController.lat_x2},#{gsspSolicitudAutorizacionDepartamentoController.long_x2}); return false;" ajax="false"/>    
+                                  </div>
+                              </div>
+                          </h:panelGroup>
+
+
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatPoligono_PJ_NResolucion}" style="font-weight: bold;"/>
+                              </div>
+                              <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                  <p:inputText id="txtPJNResolucion" value="#{gsspSolicitudAutorizacionDepartamentoController.cefoeNumResol}" />
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatPoligono_PJ_TipoLocal}" style="font-weight: bold;"/>
+                              </div>
+                              <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                  <p:selectOneMenu id="bcoTipLocal"  value="#{gsspSolicitudAutorizacionDepartamentoController.cefoeTipoLocal}" >   
+                                      <f:selectItem itemLabel="SELECCIONAR" itemValue="" />
+                                      <f:selectItem itemLabel="ALQUILADO" itemValue="A" />
+                                      <f:selectItem itemLabel="PROPIO" itemValue="P" />
+                                  </p:selectOneMenu>
+                              </div>
+                              <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                          </div>    
+
+                          <div class="ui-g">
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatPoligono_PJ_FechaInicio}" style="font-weight: bold;"/>
+                              </div>
+                              <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                  <p:calendar id="txt_LM_FechaInicio"
+                                              locale="es"
+                                              navigator="true"
+                                              showOn="button"
+                                              maxdate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMaximaCalendario}"
+                                              value="#{gsspSolicitudAutorizacionDepartamentoController.cefoeFechaResolIni}"
+                                              pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                              >
+                                      <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                  </p:calendar>
+                              </div>
+                              <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                  <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatPoligono_PJ_FechaFin}" style="font-weight: bold;"/>
+                              </div>
+                              <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                  <p:calendar id="txt_LM_FechaFin"
+                                              locale="es"
+                                              navigator="true"
+                                              showOn="button"
+                                              mindate="#{gsspSolicitudAutorizacionDepartamentoController.fechaMinimaCalendario}"
+                                              value="#{gsspSolicitudAutorizacionDepartamentoController.cefoeFechaResolFin}"
+                                              pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                              >
+                                      <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                  </p:calendar>      
+                              </div>
+                              <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                          </div>  
+
+                      </p:panel>
+            <!--FIN DEL POLIGONO-->
+                
+               
+                
+                
+                
+            <br />
+            <!--GRABAR o CANCELAR-->
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                    <p:commandButton id="botonGuardarAutorizacionServicio"
+                             icon="ui-icon-disk"                                      
+                             actionListener="#{gsspSolicitudAutorizacionDepartamentoController.openDlgDeclaracionJurada()}"
+                             value="#{BundleBDIntegrado.Guardar}"/>
+                </div>
+                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                    <p:commandButton icon="ui-icon-closethick"
+                             action="#{gsspSolicitudAutorizacionDepartamentoController.prepareList() }"
+                             value="Cancelar"
+                             style="margin-left: 20px;"
+                             immediate="true" 
+                             update="@all"  
+                             />
+                </div>
+                <div class="ui-g-12 ui-md-10 ui-lg-10" style="display:none;"></div>
+            </div> 
+            <!--FIN DE GRABAR o CANCELAR-->
+        </div>
+    </h:form>
+    <ui:include src="dlgDeclaracionJuradaAccionista.xhtml" />
+    <ui:include src="dlgRepresentanteLegal.xhtml" />
+    <ui:include src="dlgMapa.xhtml" />
+    </ui:define>
+</ui:composition>
+
+
+

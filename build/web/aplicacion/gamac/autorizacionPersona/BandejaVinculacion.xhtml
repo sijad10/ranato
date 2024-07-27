@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="title">
+        <h:outputText value="#{bundleGamac.BandejaVinculacionTitle_perAut}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="vincForm">
+            <p:panel>
+                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_seleccione}"/>
+                <br/>
+                <h:panelGrid columns="5" style="border: 0px" rendered="#{sbPersonaGtController.casaComercial != null}">
+                    <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_perVin}"/>
+                    <p:inputText  value="#{sbPersonaGtController.personaVinc.numDoc}" readonly="true"/>
+                    <p:commandButton id="botonBuscarPer" icon="ui-icon-search"
+                                     action="#{sbPersonaGtController.mostrarBuscarPersonas()}" 
+                                     partialSubmit="true" process="@this" oncomplete="PF('dlgBuscarPersona').show();"
+                                     update=":buscarPersonaForm"/>
+                    <p:commandButton id="botonVinc" value="#{bundleGamac.BandejaVinculacionButton_vincular}" 
+                                     style="background-color: #8BC34A;color: #FDFEFE;border-color: #8BC34A;"
+                                     actionListener="#{sbPersonaGtController.vincular()}"
+                                     update="@form"
+                                     rendered="#{sbPersonaGtController.personaVinc != null}"/>
+                    <p:commandButton id="botonMostrarNP" value="#{bundleGamac.BandejaVinculacionButton_nuePer}"
+                                     style="background-color: #F8C471;color: #FDFEFE;border-color: #F8C471;"
+                                     action="#{sbPersonaGtController.mostrarCrearPersonas()}" 
+                                     partialSubmit="true" process="@this" oncomplete="PF('dlgCrearPersona').show();"
+                                     update=":crearPersonaForm"/>
+                </h:panelGrid>
+            </p:panel>
+            <br/>
+            <p:dataTable id="buscarDatatable" value="#{sbPersonaGtController.perVincLst}"
+                         var="item"
+                         rowKey="#{item.id}"                                
+                         emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                         paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                         currentPageReportTemplate="Total {totalRecords} encontrados"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}"
+                         rendered="#{sbPersonaGtController.casaComercial != null}">
+                <p:column headerText="#{bundleGamac.BandejaVinculacionGrilla_tipoDoc}" style="width:16px;text-align:center">
+                    <h:outputText value="#{item.personaDestId.tipoDoc.nombre}"/>
+                </p:column>
+                <p:column headerText="#{bundleGamac.BandejaVinculacionGrilla_nroDoc}" style="width:16px;text-align:center">
+                    <h:outputText value="#{item.personaDestId.numDoc}"/>
+                </p:column>
+                <p:column headerText="#{bundleGamac.BandejaVinculacionGrilla_apellidos}" style="width:16px;text-align:center">
+                    <h:outputText value="#{item.personaDestId.apePat} #{item.personaDestId.apeMat}"/>
+                </p:column>
+                <p:column headerText="#{bundleGamac.BandejaVinculacionGrilla_nombres}" style="width:16px;text-align:center">
+                    <h:outputText value="#{item.personaDestId.nombres}"/>
+                </p:column>
+                <p:column headerText="#{bundleGamac.BandejaVinculacionGrilla_opciones}" style="width:16px;text-align:center">
+                    <p:commandButton value="#{bundleGamac.BandejaVinculacionButton_desvincular}" actionListener="#{sbPersonaGtController.desvincular(item)}"
+                                     process="@this"
+                                     update="@this, buscarDatatable">
+                        <p:confirm header="#{bundleGamac.ConfirmarTitulo}" 
+                                   message="¿Confirma que desea desvincular a #{item.personaDestId.nombres} #{item.personaDestId.apePat} #{item.personaDestId.apeMat} 
+                                   con #{item.personaDestId.tipoDoc.nombre} #{item.personaDestId.numDoc} como persona autorizada para el recojo de armas por parte de la casa comercializadora 
+                                   #{sbPersonaGtController.casaComercial.rznSocial}?" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:commandButton value="Limpiar"
+                             action="#{sbPersonaGtController.limpiarBandejaVinculacion()}"
+                             update="@form"/>
+        </h:form>
+        <ui:include src="DlgBuscarPersona.xhtml" />
+        <ui:include src="DlgCrearPersona.xhtml" />
+        <ui:include src="DlgConfirmRegistroPersona.xhtml" />
+    </ui:define>
+</ui:composition>
+

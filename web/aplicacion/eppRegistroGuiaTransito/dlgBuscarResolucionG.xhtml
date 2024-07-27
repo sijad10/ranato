@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgResGer" widgetVar="CreateViewDialogResGer" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR RESOLUCION DE GERENCIA" closable="false">
+        <h:form id="frmDlgResGer">            
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="Número Resolución: " />
+                    <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" onblur="this.value = this.value.toUpperCase();"/>
+                    <p:commandButton value="Buscar" update="@form"
+                                     action="#{eppRegistroGuiaTransitoController.buscarResolucion()}"/>
+                </h:panelGrid>
+                <p:dataTable id="dtRegAutUso"
+                             value="#{eppRegistroGuiaTransitoController.itemsXGT}" 
+                             var="item" widgetVar="usrTablebusqexped"   
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="5"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}">
+                    <p:column headerText="Id." >
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="Nro. Expediente" >
+                        <h:outputText value="#{item.nroExpediente}"/>
+                    </p:column>
+                    <p:column headerText="Nro. Resolución Gerencia" >
+                        <h:outputText value="#{item.eppResolucion==null?'':item.eppResolucion.numero}"/>
+                    </p:column>
+                    <p:column headerText="Tipo Autorizacion" >
+                        <h:outputText value="#{item.tipoProId.abreviatura}"/>
+                    </p:column>
+                    <p:column headerText="Razón Social" >
+                        <h:outputText value="#{item.empresaId.rznSocial}"/>
+                    </p:column>                                        
+                    <p:column headerText="Fecha Emisión" >
+                        <h:outputText value="#{item.eppResolucion.fechaIni}" >
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>                                        
+                    <p:column headerText="Fecha Vencimiento" >
+                        <h:outputText value="#{item.eppResolucion.fechaFin}" >
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Opción" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogResGer').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgResGer(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgResGer" 
+                                 actionListener="#"
+                                 oncomplete="PF('CreateViewDialogResGer').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

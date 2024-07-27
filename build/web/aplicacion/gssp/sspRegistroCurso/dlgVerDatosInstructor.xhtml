@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgVerDatosInstructor" widgetVar="wvDlgVerDatosInstructor" width="500px" 
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="Datos del Instructor" closable="false">
+        <h:form id="frmVerDatosInstructor">
+            <h:panelGrid columns="4" >
+                <p:outputLabel value="Nombres:" />
+                <p:outputLabel value="#{sspRegistroCursoController.instructor.personaId.nombres}" style="font-weight: bold;" />
+                <p:outputLabel value="" />
+                <p:outputLabel value="" />
+                
+                <p:outputLabel value="Apellido paterno:" />
+                <p:outputLabel value="#{sspRegistroCursoController.instructor.personaId.apePat}" style="font-weight: bold;" />
+                <p:outputLabel value="Apellido materno:" />
+                <p:outputLabel value="#{sspRegistroCursoController.instructor.personaId.apeMat}" style="font-weight: bold;" />
+                
+                <p:outputLabel value="Nro. documento:" />
+                <p:outputLabel value="#{sspRegistroCursoController.instructor.personaId.numDoc}" style="font-weight: bold;" />
+                <p:outputLabel value="Nro. ficha:" />
+                <p:outputLabel value="#{sspRegistroCursoController.instructor.nroFicha}" style="font-weight: bold;" />
+            </h:panelGrid>
+            <br/>
+
+            <div align="right">
+                <p:commandButton value="#{BundleBDIntegrado.Salir}" 
+                                 style="float: right"
+                                 icon="ui-icon-arrowthick-1-w"
+                                 process="@this"
+                                 update="frmVerDatosInstructor" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgVerDatosInstructor').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

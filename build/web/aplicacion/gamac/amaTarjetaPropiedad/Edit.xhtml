@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditAmaTarjetaPropiedadTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaTarjetaPropiedadController.selected.id}" title="#{bundle.EditAmaTarjetaPropiedadTitle_id}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_nroExpediente}" for="nroExpediente" />
+                    <h:inputText id="nroExpediente" value="#{amaTarjetaPropiedadController.selected.nroExpediente}" title="#{bundle.EditAmaTarjetaPropiedadTitle_nroExpediente}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_nroExpediente}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_nroResolucion}" for="nroResolucion" />
+                    <h:inputText id="nroResolucion" value="#{amaTarjetaPropiedadController.selected.nroResolucion}" title="#{bundle.EditAmaTarjetaPropiedadTitle_nroResolucion}" />
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_fechaInscripcion}" for="fechaInscripcion" />
+                    <h:inputText id="fechaInscripcion" value="#{amaTarjetaPropiedadController.selected.fechaInscripcion}" title="#{bundle.EditAmaTarjetaPropiedadTitle_fechaInscripcion}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_fechaInscripcion}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_fechaEmision}" for="fechaEmision" />
+                    <h:inputText id="fechaEmision" value="#{amaTarjetaPropiedadController.selected.fechaEmision}" title="#{bundle.EditAmaTarjetaPropiedadTitle_fechaEmision}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_fechaEmision}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_numeroCp}" for="numeroCp" />
+                    <h:inputText id="numeroCp" value="#{amaTarjetaPropiedadController.selected.numeroCp}" title="#{bundle.EditAmaTarjetaPropiedadTitle_numeroCp}" />
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_fechaPago}" for="fechaPago" />
+                    <h:inputText id="fechaPago" value="#{amaTarjetaPropiedadController.selected.fechaPago}" title="#{bundle.EditAmaTarjetaPropiedadTitle_fechaPago}" >
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_descripcion}" for="descripcion" />
+                    <h:inputText id="descripcion" value="#{amaTarjetaPropiedadController.selected.descripcion}" title="#{bundle.EditAmaTarjetaPropiedadTitle_descripcion}" />
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_fechaEntregaPropietario}" for="fechaEntregaPropietario" />
+                    <h:inputText id="fechaEntregaPropietario" value="#{amaTarjetaPropiedadController.selected.fechaEntregaPropietario}" title="#{bundle.EditAmaTarjetaPropiedadTitle_fechaEntregaPropietario}" >
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_emitido}" for="emitido" />
+                    <h:inputText id="emitido" value="#{amaTarjetaPropiedadController.selected.emitido}" title="#{bundle.EditAmaTarjetaPropiedadTitle_emitido}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_emitido}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_hashQr}" for="hashQr" />
+                    <h:inputText id="hashQr" value="#{amaTarjetaPropiedadController.selected.hashQr}" title="#{bundle.EditAmaTarjetaPropiedadTitle_hashQr}" />
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaTarjetaPropiedadController.selected.activo}" title="#{bundle.EditAmaTarjetaPropiedadTitle_activo}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaTarjetaPropiedadController.selected.audLogin}" title="#{bundle.EditAmaTarjetaPropiedadTitle_audLogin}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaTarjetaPropiedadController.selected.audNumIp}" title="#{bundle.EditAmaTarjetaPropiedadTitle_audNumIp}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_armaId}" for="armaId" />
+                    <h:selectOneMenu id="armaId" value="#{amaTarjetaPropiedadController.selected.armaId}" title="#{bundle.EditAmaTarjetaPropiedadTitle_armaId}" required="true" requiredMessage="#{bundle.EditAmaTarjetaPropiedadRequiredMessage_armaId}">
+                        <f:selectItems value="#{amaArmaController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditAmaTarjetaPropiedadLabel_licenciaId}" for="licenciaId" />
+                    <h:selectOneMenu id="licenciaId" value="#{amaTarjetaPropiedadController.selected.licenciaId}" title="#{bundle.EditAmaTarjetaPropiedadTitle_licenciaId}" >
+                        <f:selectItems value="#{amaLicenciaDeUsoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{amaTarjetaPropiedadController.update}" value="#{bundle.EditAmaTarjetaPropiedadSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditAmaTarjetaPropiedadViewLink}"/>
+                <br />
+                <h:commandLink action="#{amaTarjetaPropiedadController.prepareList}" value="#{bundle.EditAmaTarjetaPropiedadShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditAmaTarjetaPropiedadIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

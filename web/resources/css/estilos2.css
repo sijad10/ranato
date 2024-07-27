@@ -1,0 +1,47 @@
+/* 
+    Document   : estilos
+    Created on : 04/10/2013, 11:54:06 AM
+    Author     : Renato
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-widget {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-widget .ui-widget {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-panelmenu .ui-menuitem-link {
+    font-size: 10px;
+    text-decoration: none;
+}
+
+.ui-dialog.ui-widget-content .ui-dialog-title {
+    font-size: 14px;
+}
+
+.ui-dialog.ui-widget-content .ui-dialog-content {
+    font-size: 12px;
+}
+
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea {
+    text-transform: uppercase;
+}
+
+.ui-widget button {
+    font-size: 12px;
+}
+
+#botones-w { background:#009FDA !important; padding:20px 0; text-align:center; border:0px; padding-right:20px; }

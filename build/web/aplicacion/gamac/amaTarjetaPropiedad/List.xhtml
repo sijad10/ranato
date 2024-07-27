@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaTarjetaPropiedadEmpty}" rendered="#{amaTarjetaPropiedadController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaTarjetaPropiedadController.items.rowCount > 0}">
+                    <h:outputText value="#{amaTarjetaPropiedadController.pagination.pageFirstItem + 1}..#{amaTarjetaPropiedadController.pagination.pageLastItem + 1}/#{amaTarjetaPropiedadController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaTarjetaPropiedadController.previous}" value="#{bundle.Previous} #{amaTarjetaPropiedadController.pagination.pageSize}" rendered="#{amaTarjetaPropiedadController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaTarjetaPropiedadController.next}" value="#{bundle.Next} #{amaTarjetaPropiedadController.pagination.pageSize}" rendered="#{amaTarjetaPropiedadController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaTarjetaPropiedadController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_nroExpediente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroExpediente}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_nroResolucion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroResolucion}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_fechaInscripcion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaInscripcion}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_fechaEmision}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaEmision}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_numeroCp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numeroCp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_fechaPago}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaPago}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_descripcion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_fechaEntregaPropietario}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaEntregaPropietario}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_emitido}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.emitido}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_hashQr}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.hashQr}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_armaId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.armaId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaTarjetaPropiedadTitle_licenciaId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.licenciaId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaTarjetaPropiedadController.prepareView}" value="#{bundle.ListAmaTarjetaPropiedadViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaTarjetaPropiedadController.prepareEdit}" value="#{bundle.ListAmaTarjetaPropiedadEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaTarjetaPropiedadController.destroy}" value="#{bundle.ListAmaTarjetaPropiedadDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaTarjetaPropiedadController.prepareCreate}" value="#{bundle.ListAmaTarjetaPropiedadCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaTarjetaPropiedadIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

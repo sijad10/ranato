@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="msjeDialog" widgetVar="confirmCese" width="20%" height="20%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Advertencia" closable="true"  >
+            <h:form id="msjeForm" >
+                <div class="ui-fluid">
+                
+                <p:panel >
+                    <h:outputText value="#{sspCarneController.msjeCese}" style="font-size: 14px; font-weight: bold;" />
+                </p:panel>
+                <p:spacer/>
+                <br/>
+                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_Carne_Advertencia}" style="color:red; font-style: italic;" />
+                <br/>
+                <br/>
+                <div class="ui-g" style="float: center">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton value="Si"
+                             icon="ui-icon-disk"
+                             process="@all"
+                             update="@all"
+                             action="#{sspCarneController.crearCese()}"
+                             />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton value="No"
+                            process="@this"
+                            actionListener="#"
+                            icon="ui-icon-cancel"
+                            update="msjeForm"
+                            oncomplete="PF('confirmCese').hide()" />               
+                    </div>
+                </div>    
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgCambiarLocal" widgetVar="wvDlgCambiarLocal" width="70%" height="55%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CAMBIAR PLATAFORMA / LOCAL" closable="false">
+        <h:form id="frmCambiarLocal">
+            <h:panelGrid columns="1" >
+                <p:fieldset id="fsDatosPlataforma" legend="#{BundleBDIntegrado.sspCursos_modificar_agregarLocal}" rendered ="#{sspRegistroCursoController.esVirtual}">
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_nombrePlataforma} *" style="font-weight: bold; display: block; width: 110px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.nombreLocal}" id="nombrePlataforma" maxlength="200" style="width: 400px;"  />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_aforoTotal}" style="font-weight: bold;margin-left: 20px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.aforoLocal}" id="aforoTotal" maxlength="8" >
+                                <p:keyFilter mask="int" preventPaste="false" />
+                            </p:inputText>
+                        </h:panelGrid>
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursosLabel_descripcion} *" for="caracteristicas" style="font-weight: bold; display: block; width: 110px;"/>
+                            <p:inputTextarea id="caracteristicas" style="width: 600px; text-transform: none;" rows="4" maxlength="1400" counter="contador1" counterTemplate="#{BundleBDIntegrado.CounterTemplate}" value="#{sspRegistroCursoController.caracteristicas}" 
+                                             title="#{BundleBDIntegrado.sspCursosTitle_descripcion}" requiredMessage="#{BundleBDIntegrado.sspCursosRequiredMessage_descripcion}" validatorMessage="#{BundleBDIntegrado.sspCursosValidatorMessage_descripcion}">
+                            </p:inputTextarea>
+                             <p:outputLabel value="" /><p:outputLabel value="" /><p:outputLabel value="" />
+                            <h:outputText id="contador1" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="4" style="margin-bottom: 8px" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_plan}" style="font-weight: bold; display: block; width: 180px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.direccionLocal}" id="direccionLocal" maxlength="200" style="width: 300px;" />
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_responsable}" style="font-weight: bold;margin-left: 20px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.referenciaLocal}" id="referenciaLocal" maxlength="200" style="width: 200px;" />
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_telefono}" style="font-weight: bold; display: block; width: 110px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.telefonoLocal}" id="telefono" maxlength="20"  />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_correoElectronico}" style="font-weight: bold;margin-left: 20px;"  />
+                            <p:inputText value="#{sspRegistroCursoController.correoLocal}" id="correoElectronico" maxlength="200" style="width: 200px;" validatorMessage="#{BundleBDIntegrado.sspCursos_validator_correo}" >
+                                <f:validateRegex pattern="#{BundleBDIntegrado.RegexEmail}" />
+                            </p:inputText>
+                            <p:outputLabel value=""/>                            
+                            <p:outputLabel value=""/>  
+                        </h:panelGrid>
+                </p:fieldset>                
+            </h:panelGrid>
+            <br/>
+            <div align="right">
+                    <p:commandButton  icon="ui-icon-disk"
+                                      value="Cambiar"
+                                      process="@form" update="@form"
+                                      rendered="#{sspRegistroCursoController.flagBtnCambio}"
+                                      actionListener="#{sspRegistroCursoController.confirmarCambioLocalCurso()}" />
+
+                    <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                     process="@this"
+                                     update="frmCambiarLocal" 
+                                     actionListener="#"
+                                     oncomplete="PF('wvDlgCambiarLocal').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

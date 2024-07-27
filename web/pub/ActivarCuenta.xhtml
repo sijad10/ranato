@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions" 
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>SUCAMEC en Línea - Activar Cuenta</title>
+            </f:facet>
+            <f:metadata>
+                <f:viewParam name="id" value="#{activarCuentaController.hash}"/>
+            </f:metadata>
+            <h:outputStylesheet name="css/estilos.css"/>
+        </h:head>
+
+        <h:body>
+            <p:idleMonitor timeout="900000" onidle="window.location.href = 'ActivarCuenta.xhtml?id=#{activarCuentaController.hash}&amp;faces-redirect=true'">
+                <p:ajax event="idle" listener="#{activarCuentaController.volverInicio()}"/>
+            </p:idleMonitor>
+            <center>
+                <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+                <h:form id="formActivar">
+                    <p:focus context=":formActivar" />
+                    <h:graphicImage url="/resources/imagenes/logo_sucamec.png" /><br/><br/>
+
+                    <p:panel header="#{bundleSistemaBase.ActivarCuenta_Titulo}"  style="width:400px;" rendered="#{activarCuentaController.estado == 'INICIO'}">
+                        <br></br>
+                        <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Texto}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="true" id="continuar" actionListener="#{activarCuentaController.mostrarActivarCuenta()}" value="#{bundleSistemaBase.Continuar}" icon="ui-icon-triangle-1-e" update="@all" partialSubmit="true" process=":formActivar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.ActivarCuenta_Titulo}" style="width:400px;" rendered="#{activarCuentaController.estado == 'DATOS'}">
+                        <br></br> 
+                        <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Texto2}" />
+                        <br></br> 
+                        <br></br> 
+                        <h:panelGrid >
+                            <h:panelGrid columns="3" cellpadding="3" id="datosCredenciales">
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Documento}" for="documento" />
+                                <p:inputText validatorMessage="#{bundleSistemaBase.ActivarCuentaValidator_documento}" maxlength="11" value="#{activarCuentaController.documento}" id="documento" required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_documento}" autocomplete="false" style="width:100px; min-width: 100px;">
+                                    <f:validateLength for="documento" minimum="8" maximum="11"/>
+                                    <f:ajax listener="#{activarCuentaController.validarDatoIngresado('DOC')}"/>
+                                </p:inputText>
+                                <p:outputLabel/>
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Usuario}" for="usuario" />
+                                <p:inputText validatorMessage="#{bundleSistemaBase.ActivarCuentaValidator_usuario}" maxlength="11" value="#{activarCuentaController.usuario}" id="usuario" required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_usuario}" autocomplete="false" style="width:100px; min-width: 100px;">
+                                    <f:validateLength for="usuario" minimum="8" maximum="11"/>
+                                    <f:ajax listener="#{activarCuentaController.validarDatoIngresado('USU')}"/>
+                                </p:inputText>
+                                <p:outputLabel/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="4" cellpadding="3" rendered="#{activarCuentaController.envioMensaje}">
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Celular}" for="celular"/>
+                                <p:inputText value="#{activarCuentaController.celular}" id="celular" style="width:100px; min-width: 110px;" maxlength="9"
+                                             required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_Celular}">
+                                    <f:ajax listener="#{activarCuentaController.validarDatoIngresado('CEL')}"/>
+                                </p:inputText>
+                                <p:commandLink value="#{bundleSistemaBase.ActivarCuenta_SolicitarCodVerificacion}" partialSubmit="true" update="codigo" id="commLSolicitar" disabled="#{activarCuentaController.activarLink}"
+                                               actionListener="#{activarCuentaController.solicitarCodigo}" process="@this, datosCredenciales">
+                                </p:commandLink>
+                                <p:commandButton icon="ui-icon-refresh" process="@this" update="commLSolicitar, celular" actionListener="#{activarCuentaController.limpiarNumCel}" title="Refrescar link de solicitud"/>
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_CodVerificacion}" for="codigo"/>
+                                <p:inputText value="#{activarCuentaController.codigoVer}" id="codigo" style="width:100px; min-width: 110px;" maxlength="5"
+                                             disabled="#{!activarCuentaController.enviado}"
+                                             required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_CodVerificacion}">
+                                    <f:ajax listener="#{activarCuentaController.validarDatoIngresado('COD')}"/>
+                                </p:inputText>
+                            </h:panelGrid>
+                            <br></br> 
+                            <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Texto3}" escape="false" style="text-align: left;"/>
+                            <br></br> 
+                            <h:panelGrid columns="2" cellpadding="3" >
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Clave1}" for="clave1" />
+                                <p:password validatorMessage="#{bundleSistemaBase.ActivarCuentaValidator_clave}" maxlength="20" value="#{activarCuentaController.clave1}" id="clave1" required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                                    <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                                </p:password>
+                                <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Clave2}" for="clave2" />
+                                <p:password validatorMessage="#{bundleSistemaBase.ActivarCuentaValidator_clave}" maxlength="20" value="#{activarCuentaController.clave2}" id="clave2" required="true" requiredMessage="#{bundleSistemaBase.ActivarCuentaRequiredMessage_clave}" autocomplete="false" style="width:100px; min-width: 150px;">
+                                    <f:validateRegex pattern="#{bundleSistemaBase.RegexPass}" />
+                                </p:password>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <br></br> 
+                        <br></br> 
+                        <p:commandButton ajax="true" id="generar" actionListener="#{activarCuentaController.activarCuenta()}" value="#{bundleSistemaBase.ActivarCuenta}" icon="ui-icon-triangle-1-e" update="@all" partialSubmit="true" process=":formActivar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.ActivarCuenta_Titulo}"  style="width:400px;" rendered="#{activarCuentaController.estado == 'ERROR'}">
+                        <br></br>
+                        <p:outputLabel value="#{bundleSistemaBase.ActivarCuenta_Error}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="true" id="aceptar" actionListener="#{activarCuentaController.volverInicio()}" value="#{bundleSistemaBase.Aceptar}" update="@all" partialSubmit="true" process=":formActivar" iconPos="right"/>
+                    </p:panel>
+
+                    <p:panel header="#{bundleSistemaBase.ActivarCuenta_Titulo}"  style="width:400px;" rendered="#{activarCuentaController.estado == 'FIN'}">
+                        <br></br>
+                        <p:outputLabel value="#{activarCuentaController.datosUsuario}" />
+                        <br></br>
+                        <p:outputLabel value="#{activarCuentaController.mensajeFinal}" />
+                        <br></br>
+                        <br></br>
+                        <p:commandButton ajax="false" id="aceptar2"  action="#{activarCuentaController.direccionarLogin()}" value="#{bundleSistemaBase.Aceptar}" immediate="true"/>
+                    </p:panel>
+                </h:form>
+                <ui:include src="Loading.xhtml" />
+            </center>
+        </h:body>
+    </f:view>
+</html>

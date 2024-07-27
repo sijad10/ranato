@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"      
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="registrarObservacion" widgetVar="wvRegistrarObservacion" width="30%" height="35%"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{amaRegEmpArmaController.tipoRegistroObservacion == 1?BundleBDIntegrado.amaRegEmpArma_registrar_observacion:(amaRegEmpArmaController.tipoRegistroObservacion == 2?BundleBDIntegrado.amaRegEmpArma_editar_observacion:BundleBDIntegrado.amaRegEmpArma_ver_observacion)}" closable="true"  >
+            <h:form id="observacionForm" >
+                
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_observacion_asunto}" onblur="this.value = this.value.toUpperCase();" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.asunto}" style="width: 200px;" rendered="#{amaRegEmpArmaController.tipoRegistroObservacion == 3}" />
+                    <p:inputText value="#{amaRegEmpArmaController.asunto}" style="width: 200px;" rendered="#{amaRegEmpArmaController.tipoRegistroObservacion != 3}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_observacion_desc}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.descripOservacion}" rendered="#{amaRegEmpArmaController.tipoRegistroObservacion == 3}" />
+                    <p:inputTextarea rows="4" cols="80" queryDelay="400" minQueryLength="4" rendered="#{amaRegEmpArmaController.tipoRegistroObservacion != 3}"
+                                     value="#{amaRegEmpArmaController.descripOservacion}" onblur="this.value = this.value.toUpperCase();" />
+                </h:panelGrid>
+                <br/><br/>
+                
+                <h:panelGroup style="float: right">
+                     <p:commandButton value="#{BundleBDIntegrado.Aceptar}"
+                                     process="@this"
+                                     update="observacionForm"
+                                     actionListener="#"
+                                     oncomplete="PF('wvRegistrarObservacion').hide()"
+                                     icon="ui-icon-check" />
+                </h:panelGroup>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

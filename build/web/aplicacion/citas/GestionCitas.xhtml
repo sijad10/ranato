@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="title">
+        <h:outputText value="#{bundleCitas.TurnoTitle_programarTurno}"/>
+    </ui:define>
+    <ui:define name="body">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12 ui-lg-12">
+
+                    <h:form id="gestionCitasForm">
+                        <p:focus context="gestionCitasForm" />
+                        <p:panel id="panelCita">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:outputLabel value="#{bundleCitas.CitaArmas_paso1TipTram_Label}" class="txtLabelGest"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-5 ui-lg-5">
+                                    <p:selectOneMenu value="#{citasGestionController.tipoTramite}" required="true" requiredMessage="#{bundleCitas.CitaArmas_paso1TipTram_Msg}" style="font-size: medium;">
+                                        <f:selectItem itemLabel="---" itemValue=""/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasGestionController.listaTramites}" />
+                                        <p:ajax event="change" listener="#{citasGestionController.seleccionarTramite}" partialSubmit="true" process="@this" update="" oncomplete=""/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:link target="_blank"  href="/resources/ME_SEL_INTEGRADO_ Poligono_Verificacion_Validacion _V1_Externo.pdf" >
+                                        <p:graphicImage url="/resources/imagenes/btn-manual_reserva_citas.png"/>
+                                    </p:link>
+                                </div>    
+                            </div>
+                        </p:panel>
+                    </h:form>
+
+                    <p:tabView dynamic="true" cache="false" id="tabGestion" widgetVar="wvTabGestion" style="margin-top: 8px!important; margin-bottom: 8px!important; padding: 0px;" >
+                        <p:ajax event="tabChange" listener="#{citasGestionController.onTabChange}" update="" />                
+                        <p:tab id="tab0" title="">
+                        </p:tab>
+                        <p:tab id="tab1" title="Citas para Validación de Armas">
+                            <p:panel class="panelTab">
+                                <ui:include src="validacion/ReservarCita.xhtml" />
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="tab2" title="Cita para Poligono de Tiro"><!-- PER NATURAL-->
+                            <p:panel class="panelTab">
+                                <ui:include src="poligono/ProgramarTurno.xhtml" />
+                            </p:panel>
+                        </p:tab>                    
+                        <p:tab id="tab3" title="Cita para Poligono de Tiro"><!-- PER JURIDICA-->
+                            <p:panel class="panelTab">
+                                <ui:include src="poligonoJur/ProgramarTurnoJur.xhtml" />
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="tab4" title="Citas para Verificación de Armas">
+                            <p:panel class="panelTab">
+                                <ui:include src="verificacion/ReservarCita.xhtml" />
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="tab5" title="Citas para Verificación de Armas">
+                            <p:panel class="panelTab">
+                                <ui:include src="verificacionJur/ReservarCitaJur.xhtml" />
+                            </p:panel>
+                        </p:tab>                        
+                        <p:tab id="tab6" title="Citas para Trámite Documentario"><!-- PER NATURAL-->
+                            <p:panel class="panelTab">
+                                <ui:include src="tramite/ReservarCitaTramite.xhtml" />
+                            </p:panel>
+                        </p:tab>      
+                        <p:tab id="tab7" title="Citas para Empadronamiento y Amnistía">
+                            <p:panel class="panelTab">
+                                <ui:include src="empadronamiento/ReservarCitaEmpadronamiento.xhtml" />
+                            </p:panel>
+                        </p:tab>
+                    </p:tabView>     
+
+                    <!--
+                    <p:tabMenu activeIndex="#{param.i}">
+                        <p:menuitem value="Cancelación Licencia" outcome="/aplicacion/amaGestionDocs/GestionDocs" >
+                            <f:param name="i" value="0" />
+                        </p:menuitem>
+                        <p:menuitem value="Anulación Licencia / Tarjeta" outcome="/aplicacion/amaGestionDocs/GestionDocs" >
+                            <f:param name="i" value="1" />
+                        </p:menuitem>
+                        <p:menuitem value="Armas Robadas / Pérdidas" outcome="/aplicacion/amaGestionDocs/GestionDocs" >
+                            <f:param name="i" value="2" />
+                        </p:menuitem>
+                        <p:menuitem value="NO Titularidad del Arma" outcome="/aplicacion/amaGestionDocs/GestionDocs" >
+                            <f:param name="i" value="3" />
+                        </p:menuitem>
+                    </p:tabMenu>
+                    <p:panel>
+                        <h:outputText value="Contenido... #{param.i}" />
+                    </p:panel>
+                    -->
+                    <h:form id="gestionCitasHelp">
+                    <p:panel id="pnlIndica" header="INDICACIONES GENERALES: " style="margin-bottom: 8px!important;"
+                             rendered="#{citasGestionController.tipoTramite==null}">
+                        <p:outputLabel value="1. VALIDACIÓN DE ARMAS DE FUEGO" style="font-weight: bold; color: #045FB4; font-size: small"/><br />
+                        <div style="padding-left:16px;">
+                            <p style="font-size: small; margin: 0px;">
+                                Requisito previo para tramitar la tarjeta de propiedad bajo el amparo de la Ley N°30299, para personas naturales cuyas 
+                                licencias de posesión y uso otorgadas al amparo de la Ley N°25054 se encuentran vencidas o vigentes.
+                            </p>
+                        </div>                    
+                        <br />       
+
+                        <p:outputLabel value="2. EXAMEN PARA POLIGONO DE TIRO: " style="font-weight:bold; color: #045FB4; font-size: small"/><br />
+                        <div style="padding-left:16px;">
+                            <p style="font-size: small; margin: 0px;">
+                                Proceso de evaluación de conocimiento teórico, práctico y tiro como requisito previo para iniciar el trámite de licencia 
+                                de uso inicial bajo el amparo de la Ley N°30299 en las modalidades de <strong>CAZA, DEFENSA PERSONAL, CAZA, DEPORTE, COLECCIÓN, SEGURIDAD PRIVADA y SISPE</strong>.<br />
+                                Asimismo, para iniciar el trámite de Renovación de licencia de uso en las modalidades de <strong>SEGURIDAD PRIVADA y SISPE</strong>.
+                            </p>
+                        </div>
+                        <br />       
+
+                        <p:outputLabel value="3. VERIFICACIÓN DE ARMAS DE FUEGO: " style="font-weight: bold; color: #045FB4; font-size: small; margin-bottom: 25px"/><br />         
+                        <ui:remove>
+                        <div style="padding-left:16px;">
+                            <p style="font-weight: bold; font-size: small; margin: 0px;">
+                                3.1 TRANSFERENCIA A FAVOR DE PERSONA NATURAL, PERSONA JURÍDICA O MIEMBRO FFAA/PNP:
+                                <div style="padding-left:24px;">
+                                    <p style="font-size: small; margin: 0px;">
+                                        Requisito previo para iniciar el trámite de transferencia del arma de fuego a un tercero, según lo establecido en el artículo 57.3 del Reglamento de la Ley de Armas N° 30299.
+                                    </p>
+                                </div>
+                            </p>
+                        </div>
+                        </ui:remove>
+                        
+                        
+                        <br />
+
+                        <div style="margin-bottom: 10px">
+                            <ul style="font-size: small; margin: 0px;">
+                                <li style="font-weight: bold;">TRANSFERENCIA A FAVOR DE PERSONA NATURAL, PERSONA JURÍDICA O MIEMBRO FFAA/PNP:</li>                                
+                                <li style="list-style: none ">
+                                    Requisito previo para iniciar el trámite de transferencia del arma de fuego a un tercero, según lo establecido en el artículo 57.3 del Reglamento de la Ley de Armas N° 30299.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 10px">
+                            <ul style="font-size: small; margin: 0px;">
+                                <li style="font-weight: bold;">CAMBIO DE MODALIDAD PARA EL USO DEL ARMA DE FUEGO:</li>                                
+                                <li style="list-style: none ">
+                                    Requisito previo para iniciar el trámite de cambio de modalidad en la Tarjeta de Propiedad, bajo el amparo de la Ley de Armas N° 30299.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 10px">
+                            <ul style="font-size: small; margin: 0px;">
+                                <li style="font-weight: bold;">ARMAS DE FUEGO REGISTRADAS Y NO REGISTRADAS EN LA SUCAMEC A FAVOR DE MIEMBRO DE LA FFAA O POLICIA NACIONAL:</li>                                
+                                <li style="list-style: none ">
+                                    Requisito previo para iniciar el trámite de emisión de tarjeta de propiedad bajo el amparo de la Ley de Armas N° 30299.<br />
+                                    <strong>NOTA:</strong> Si el arma de fuego se encuentra registrada en la SUCAMEC a nombre de un tercero, deberá optar por reservar cita para transferencia.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 10px">
+                            <ul style="font-size: small; margin: 0px;">
+                                <li style="font-weight: bold;">RENOVACIÓN DE LICENCIA DE USO DE ARMA DE FUEGO:</li>                                
+                                <li style="list-style: none ">
+                                    Requisito previo para realizar la Renovación de la licencia de uso en las modalidades de <strong>CAZA, DEFENSA PERSONAL, CAZA, DEPORTE, COLECCIÓN y SISPE</strong>.<br />
+                                    <strong>NOTA:</strong> Para iniciar el trámite de la Renovación de licencia de uso, deberá realizar la verificación de la totalidad de sus armas de fuego.
+                                </li>
+                            </ul>
+                        </div>
+                        <ui:remove>  
+                            <br></br>
+                            <p:outputLabel value="4. ATENCIÓN EN TRAMITE DOCUMENTARIO: " style="font-weight:bold; color: #045FB4; font-size: small"/><br />
+                            <div style="padding-left:16px;">
+                                 <p style="font-weight: bold; font-size: small; margin: 0px;">
+                                    4.1 OTROS (ATENCIÓN PRESENCIAL):
+                                    <div style="padding-left:24px;">
+                                        <p style="font-size: small; margin: 0px;">
+                                            Utilice esta opción cuando considere necesario apersonarse a una de las oficinas de la SUCAMEC para realizar algun trámite o consulta que no se encuentra en la Plataforma Virtual - SEL.
+                                        </p>
+                                    </div>                              
+                                </p>
+                                <p style="font-weight: bold; font-size: small; margin: 0px;">
+                                    4.2 PRESENTACIÓN DE REQUISITOS (VENTANILLA PRESENCIAL):
+                                    <div style="padding-left:24px;">
+                                        <p style="font-size: small; margin: 0px;">
+                                            Esta opción permite presentar los requisitos adicionales que se requieren en físico y que previamente hayan presentando un trámite por la "Ventanilla Virtual".
+                                        </p>
+                                    </div>                                
+                                </p>                           
+
+                            </div> 
+                        </ui:remove>
+                        
+                        <p:outputLabel value="4. INTERNAMIENTO POR EMPADRONAMIENTO Y AMNISTIA" style="font-weight: bold; color: #045FB4; font-size: small"/><br />
+                        <div style="padding-left:16px;">
+                            <p style="font-size: small; margin: 0px;">
+                                Permite internar por empadronamiento y amnistía a las personas naturales y jurídicas cuya adquisición o tenencia de armas de fuego o municiones de  
+                                uso civil no esten registradas o no tengan tarjeta de propiedad o que la licencia de uso y porte se encuentren vencidas.
+                            </p>
+                        </div>                    
+                        
+                    </p:panel>
+                    </h:form>
+
+                </div>
+            </div>
+
+        </div>
+        <ui:include src="DlgVoucher.xhtml" />
+
+        <script type="text/javascript">
+            /*$("select[id*='cambioEstado']").on("change", function () {
+             var valorTipo = "";
+             $("select[id*='cambioEstado'] option:selected").each(function() {
+             valorTipo = $( this ).text();
+             if(valorTipo != "OBSERVADO"){
+             setTimeout(function () {$("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");}, 250);
+             }else{
+             setTimeout(function () {$("textarea[id*='observ']").focus();}, 250);
+             }
+             });
+             //console.log("$(tipoComprador).text(): " + valorTipo);
+             });*/
+
+            $(document).ready(function () {
+                $("div[id*='pnlIndica_content']").attr("style", "padding:4px!important;"); /* background-color: #BFEBFF!important; */
+                $("div[id*='pnlIndica_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            });
+
+            function selectTab0() {
+                $(".ui-tabs-panel, .ui-tabs-nav").attr("style", "padding:0px!important;");
+                $(".panelTab").children(".ui-panel-content").attr("style", "padding:2px!important");
+
+                $("a[href*='tab0'], a[href*='tab1'], a[href*='tab2'], a[href*='tab3'], a[href*='tab4'], a[href*='tab5'], a[href*='tab6'], a[href*='tab7']").parent().hide("fast");
+            }
+
+            function completeFind() {
+                $("div[id*='buscarPanel_content']").attr("style", "padding:0!important");
+            }
+
+            function updateDialogInicioHide() {
+                //document.getElementById("evaluarContratoForm").reset();
+                //$('#evaluarContratoForm').trigger("reset");
+            }
+            function updateDialogFin() {
+                $("div[id*='dataExpediente_content'], div[id*='dataCurso_content'], div[id*='dataAlumnos_content']").attr("style", "padding:2px!important");
+                $("#newFinCurso").css('top', 35);
+            }
+
+            $("select[id*='tipoFiltro']").on("change", function () {
+                if ($(this).val() === '') {
+                    $("input[id*='filtroBusqueda']").val("");
+                    setTimeout(function () {
+                        $("button[id*='botonBuscar']").focus();
+                    }, 200);
+                } else {
+                    setTimeout(function () {
+                        $("input[id*='filtroBusqueda']").focus();
+                    }, 200);
+                }
+            });
+
+            $(document).ready(function () {
+                $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+                $(".ui-tabs-panel, .ui-tabs-nav").attr("style", "padding:0px!important;");
+                $(".panelTab").children(".ui-panel-content").attr("style", "padding:2px!important");
+                $("div[id*='panelCita_content']").attr("style", "padding:2px!important");
+                $("div[id*='panelCita_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+                $(".txtLabelGest").attr("style", "line-height: 170%; font-size: medium");
+                $("a[href*='tab0'], a[href*='tab1'], a[href*='tab2'], a[href*='tab3'], a[href*='tab4'], a[href*='tab5'], a[href*='tab6'], a[href*='tab7']").parent().hide("fast");
+
+                //$("a[href*='tab0']").parent().remove();
+                /*
+                 $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+                 $(".txtLabel").parent().attr("style", "padding-top:11px");
+                 $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+                 $("div[id*='buscarPanel_content'], div[id*='cambioEstadoPanel_content'], div[id*='leyendaPanel_content']").attr("style", "padding:0!important");
+                 $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+                 $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+                 $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+                 
+                 $("div[id*='dataObs_content'], div[id*='dataServicio_content'], div[id*='dataPersonal_content'], div[id*='dataArmas_content'], div[id*='dataVehiculos_content']").attr("style", "padding:2px!important");
+                 $("div[id*='dataAdminis_content'], div[id*='dataClie_content'], div[id*='dataRepreLegal_content']").attr("style", "padding:1px!important");
+                 $("#evaluarContrato > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px 6px 2px 6px!important;");
+                 $("#evaluarContrato > .ui-dialog-content").attr("style", "padding:4px!important;");
+                 $("#evaluarContrato_title").attr("style", "font-size:16px !important; padding:0!important;");
+                 
+                 $("div[id*='dataObs_content'], div[id*='dataAdminis_content'], div[id*='dataClie_content'], div[id*='dataRepreLegal_content'], div[id*='dataServicio_content'], div[id*='dataPersonal_content'], div[id*='dataArmas_content'], div[id*='dataVehiculos_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+                 */
+            });
+        </script>
+
+        <style>
+            .ui-state-active {
+                background: #186ba0!important;
+                border: 1px solid #156090!important;                
+                font-weight: bold!important;
+                color: #fff!important;
+            }
+
+            .ui-state-active a {font-weight: bold!important; color: #fff!important;}
+        </style>
+
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.ReporteSolicitudes}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="frmReporte">
+                <h:panelGrid columns="1">    
+                    <p:fieldset style="margin-bottom:20px">
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="Nro. Solicitud: " />
+                            <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" />
+                            <p:commandButton value="Buscar" 
+                                             actionListener="#{eppRegistroGuiaTransitoController.buscarSolicitudesGte()}" 
+                                             update="@form" />
+                        </h:panelGrid>    
+                    </p:fieldset>
+
+                    <p:fieldset style="margin-bottom:20px">
+                        <p:dataTable id="dt" 
+                                     value="#{eppRegistroGuiaTransitoController.resultadosGteReg}" 
+                                     var="item" 
+                                     widgetVar="usrTb"   
+                                     emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                     paginator="true"                                  
+                                     rows="#{bundleGeppGte.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="8" >
+                            <p:column headerText="Nro. Solicitud" style="width:80px;text-align:center">
+                                <h:outputText value="#{item.nroSolicitud}"/>
+                            </p:column>
+                            <p:column headerText="RUC/DNI" style="width:80px;text-align:center">
+                                <h:outputText value="#{item.empresaId.ruc == null? item.empresaId.numDoc : item.empresaId.ruc}"/>
+                            </p:column> 
+                            <p:column headerText="Solicitante" style="width:120px;text-align:center">
+                                <h:outputText value="#{item.empresaId.rznSocial == null? item.empresaId.nombreCompleto:item.empresaId.rznSocial}"/>
+                            </p:column>                                                                    
+                            <p:column headerText="Origen" style="width:150px;text-align:center">
+                                <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenGteBulk(item, false)}"  
+                                              value="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenGteBulk(item, true)}" />
+                            </p:column>
+                            <p:column headerText="Destino" style="width:150px;text-align:center">
+                                <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoGteBulk(item, false)}" 
+                                              value="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoGteBulk(item, true)}" />
+                            </p:column>
+                            <p:column headerText="Nro. RG" style="width:100px;text-align:center">
+                                <h:outputText value="#{item.resolucionId.numero}"/>
+                            </p:column>    
+                            <p:column headerText="¿Requiere Custodio?" style="width:40px;text-align:center">
+                                <h:outputText value="#{item.custodia ==1?'SI':'NO'}" />
+                            </p:column>                                                   
+                            <p:column headerText="Ver" style="width:40px;text-align:center" >  
+                                <p:commandButton  id="botonReporteD" 
+                                                  icon="ui-icon-print" 
+                                                  title="Ver PDF de Solicitud"
+                                                  ajax="false" 
+                                                  rendered="#{eppRegistroGuiaTransitoController.mostrarBtnPdfBulk(item.estado)}"
+                                                  process="@this,dt" 
+                                                  partialSubmit="true"                              
+                                                  onclick="this.form.target = '_blank'" 
+                                                  onblur="this.form.target = '_self'" 
+                                                  immediate="true" >
+                                    <p:fileDownload value="#{eppRegistroGuiaTransitoController.solicitudGte(item)}" contentDisposition="inline"  />
+                                </p:commandButton>
+                            </p:column>                        
+                        </p:dataTable>                    
+                    </p:fieldset>
+                </h:panelGrid>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgBuscarArmaEmpadrona" widgetVar="wvDlgBuscarArmaEmpadrona" closable="true" header="Búsqueda de Arma" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgBuscarArmaEmpadrona()" width="90%">
+        <h:form id="buscarArmaFormEmpadrona">
+            <p:focus context="buscarArmaFormEmpadrona" />
+            <div class="ui-g">
+                <div class="ui-lg-4 ui-md-4 ui-g-12" style="padding-left:0px!important">
+                    <p:panel id="pnlBuscarArma" style="margin-bottom:5px">
+                        <h:panelGrid id="buscPnl" columns="3">
+                            <p:outputLabel value="#{bundleCitas.dlgBuscarArmaLabel_filtro}" for="filtroId"/>
+                            <p:inputText id="filtroId" value="#{citasEmpadronamientoController.filtroArmas}" 
+                                         required="true" requiredMessage="#{bundle.dlgBuscarArmaRequiredMessage_filtro}"
+                                         placeholder="SERIE"/>
+
+                            <p:commandButton id="botonBuscar" icon="ui-icon-search" partialSubmit="true" process="buscPnl"
+                                             update="tabGestion:buscarArmaFormEmpadrona:dtArmasNoTi" actionListener="#{citasEmpadronamientoController.buscarArmas()}" value="#{bundle.Buscar}"/>
+
+                        </h:panelGrid>
+                    </p:panel>                    
+                </div>
+
+                <p:panel id="pnlgPregunta" style="margin-bottom: 5px!important" rendered="#{citasEmpadronamientoController.tipoSubTramite.codProg == 'TP_PROG_VER_TRA' || citasEmpadronamientoController.tipoSubTramite.codProg == 'TP_PROG_VER_TNJ' }">
+                    <div class="ui-g">
+                        <div class="ui-g-10 ui-md-10 ui-lg-10">
+                            <p:outputLabel value="¿tengo oficio que me solicita verificacion de arma de fuego en la evaluacion de un expediente en tramite?" />
+                        </div>
+                        <div class="ui-g-2 ui-md-2 ui-lg-2">
+                            <p:selectOneButton value="#{citasEmpadronamientoController.solicitarRecibo}">
+                                <f:selectItem itemLabel="Si" itemValue="false"/>
+                                <f:selectItem itemLabel="No" itemValue="true"/>
+                                <p:ajax event="change" update="@form" listener="#{citasEmpadronamientoController.validarSolicitarRecibo()}"/>
+                            </p:selectOneButton>
+                        </div>
+                    </div>
+                </p:panel>
+
+                <p:panel id="pnlgExpediente" rendered="#{!citasEmpadronamientoController.solicitarRecibo}" style="margin-bottom: 5px!important">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Por favor, ingrese el nro. de Expediente y nro. de oficio" />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Nro. Expediente: " class="txtLabel"/>
+                            <p:inputText id="nroExpId" value="#{citasEmpadronamientoController.nroExpOficio}"
+                                         required="true" requiredMessage="Ingresar expediente del oficio">
+                                <p:ajax event="blur" update="resoId" listener="#{citasEmpadronamientoController.limpiarOficios()}"/>
+                            </p:inputText>
+
+                            <p:commandButton icon="ui-icon-search" label="Validar Expediente"
+                                             actionListener="#{citasEmpadronamientoController.buscarOficios()}" 
+                                             partialSubmit="true" process="@this, nroExpId" update="resoId"/>
+
+                            <p:outputLabel value="Nro. Oficio: " class="txtLabel"/>
+                            <p:selectOneMenu id="resoId" value="#{citasEmpadronamientoController.nroOficioSelected}" style="width: 200px" 
+                                             required="true" requiredMessage="Seleccionar nro. de oficio">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item.numero}" itemLabel="#{item.numero}" value="#{citasEmpadronamientoController.listDocumentosTramdoc}" />
+                                <p:ajax event="change" update="resoId"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel value="Numero Comprobante: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                            <p:outputLabel value=" / Monto: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.strImporte}" escape="false" class="txtLabel"/>
+                        </div>
+                    </div>
+                </p:panel>
+
+                <div class="ui-lg-8 ui-md-8 ui-g-12" style="padding-right: 0px!important">
+                    <p:panel id="pnlgComprobante" rendered="#{citasEmpadronamientoController.solicitarRecibo}" style="margin-bottom: 5px!important">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <p:outputLabel value="Comprobante: " for="acReciboBn" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-3">
+                                <div class="ui-inputgroup">
+                                    <p:autoComplete id="acReciboBn"
+                                                    value="#{citasEmpadronamientoController.reciboBn}"
+                                                    completeMethod="#{citasEmpadronamientoController.autoCompleteRecibos}"
+                                                    disabled="#{citasEmpadronamientoController.disableReciboBn}"
+                                                    placeholder="NRO. COMPROBANTE"
+                                                    required="true"
+                                                    requiredMessage="Debe ingresar el número del comprobante"
+                                                    var="item"
+                                                    itemLabel="#{item.nroSecuencia}"
+                                                    itemValue="#{item}"
+                                                    minQueryLength="2"
+                                                    cache="true"
+                                                    onchange="buscaRecArm()"
+                                                    onkeypress="return runScript(event)"                                                    
+                                                    forceSelection="true" >
+                                        <p:ajax event="itemSelect" listener="#{citasEmpadronamientoController.lstnrSelectRecibo}" update="pnlgComprobante" oncomplete="buscaRecArm()" />
+                                    </p:autoComplete>
+                                    <p:commandButton id="regDelBusLic" icon="ui-icon-close" class="red-button btnBusqueda" title="Borrar Recibo seleccionado"
+                                                     process="@this" update="pnlgComprobante" actionListener="#{citasEmpadronamientoController.borrarReciboSeleccionado()}"
+                                                     rendered="#{citasEmpadronamientoController.reciboBn != null}" partialSubmit="true" oncomplete="buscaRecArm()"/>
+                                    <pe:tooltip for="acReciboBn"
+                                                rendered="#{citasEmpadronamientoController.reciboBn == null}"
+                                                value="Ingrese el número del recibo del Banco de la Nación"
+                                                showEffect="slideToggle"
+                                                hideEffect="slideToggle"
+                                                showDelay="0"
+                                                myPosition="left center"
+                                                atPosition="right center"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                <p:outputLabel value="Numero Comprobante: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasEmpadronamientoController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasEmpadronamientoController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Monto: " rendered="#{citasEmpadronamientoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasEmpadronamientoController.strImporte}" escape="false" class="txtLabel"/>
+                            </div>
+                        </div>
+                    </p:panel>            
+                </div>
+            </div>
+
+            <p:dataTable id="dtArmasNoTi" value="#{citasEmpadronamientoController.armasMap}"
+                         var="item" widgetVar="progTable" emptyMessage="#{bundleCitas.MensajeNoResultados}"
+                         style="width: 100%" paginator="true" rows="#{bundle.PaginatorFilas}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <p:column headerText="DATOS DEL PROPIETARIO" style="font-size:95%!important" class="ui-lg-3">
+                    <h:outputText value="#{item.personaComprador}"/>
+                </p:column>
+                <p:column headerText="NRO RUA" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.nroRua}"/>
+                </p:column>
+                <p:column headerText="SERIE" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.serie}"/>
+                </p:column>
+                <p:column headerText="TIPO DE ARMA" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.tipoArma}"/>
+                </p:column>
+                <p:column headerText="MARCA / CALIBRE / MODELO" style="font-size:95%!important" class="ui-lg-2">
+                    <h:outputText value="#{item.marca}"/> / 
+                    <h:outputText value="#{item.calibre}"/> /
+                    <h:outputText value="#{item.modelo}"/>
+                </p:column>
+                <p:column headerText="SITUACIÓN" style="font-size:95%!important" class="ui-lg-2">
+                    <h:outputText value="#{item.situacion}"/>
+                </p:column>
+                <p:column headerText="ESTADO" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.estado}"/>
+                </p:column>
+                <p:column headerText="OPCIÓN" style="font-size:95%!important" class="ui-lg-1">
+                    <p:commandButton action="#{citasEmpadronamientoController.seleccionarTarjeta(item)}" value="#{bundle.Seleccionar}"
+                                     partialSubmit="true" process="dtArmasNoTi, @this" 
+
+                                     rendered="#{citasEmpadronamientoController.validaArmaxAdmExp(item)}"
+                                     />
+                </p:column>
+
+            </p:dataTable>
+
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-9 ui-lg-9"></div>
+
+                <div class="ui-g-12 ui-md-3 ui-lg-3" style="text-align: right">
+                    <p:commandButton immediate="true" icon="ui-icon-close" value="Cerrar" update="@this" onclick="PF('wvDlgBuscarArmaEmpadrona').hide();" />
+                </div>
+            </div>
+
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+
+        function showDlgBuscarArmaEmpadrona() {
+            $("div[id*='dlgBuscarArmaEmpadrona']").css('top', 100);
+            //$("div[id*='buscarArmaId_content']").attr("style", "padding:2px!important");
+
+            $("div[id*='dlgBuscarArmaEmpadrona'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgBuscarArmaEmpadrona'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgBuscarArmaEmpadrona'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $("div[id*='pnlBuscarArma_content'], div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+
+            //$("div[id*='pnlDatExp_content'], div[id*='pnlDatArmDis_content'], div[id*='pnlDatArmGam_content']").attr("style", "padding:0!important");
+            //$("div[id*='pnlDatExp_content'], div[id*='pnlDatArmDis_content'], div[id*='pnlDatArmGam_content']").children(".ui-g").children().attr("style", "padding:3px!important;");                
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+        function buscaRecArm() {
+            $("div[id*='pnlBuscarArma_content'], div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+        function runScript(e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        }
+
+    </script>
+
+</ui:composition>
+

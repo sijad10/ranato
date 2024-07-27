@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions" >
+    
+    <p:dialog id="dlgConfirmarEliminar" widgetVar="wvDlgConfirmarEliminar" width="40%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)"
+              header="Confirmación de eliminación de registro" closable="false">
+        <h:form id="frmConfirmarEliminar" >
+            <h:panelGrid columns="4" >
+                
+                <p:outputLabel value="Motivo por el que elimina el registro:" style="font-weight: bold;" />
+                <p:inputTextarea rows="4" cols="80" queryDelay="400" minQueryLength="4" maxlength="400"
+                                 value="#{sspCarteraClienteController.motivoSeguridad}" onblur="this.value = this.value.toUpperCase();" />
+            </h:panelGrid>     
+            
+            <br/>
+            <div align="right">
+                <p:commandButton value="Cancelar"
+                                 process="@this"
+                                 style="float: right"
+                                 update="@form"
+                                 oncomplete="PF('wvDlgConfirmarEliminar').hide()" />
+                
+                <p:commandButton value="Guardar"
+                                     process="@form"
+                                     actionListener="#{sspCarteraClienteController.confirmarEliminar() }"
+                                     style="float: right"
+                                     update="@form" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

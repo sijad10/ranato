@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de Resoluciones y Gu&iacute;as - GEPP</title>
+            </f:facet>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGroup rendered="#{verificadorQRController.tipoMostrar eq 'guia'}">
+                        <h:panelGrid columns="2" style="width: 950px; background: white;" cellpadding="5" >
+                            <h:graphicImage name="imagenes/logo_sucamec_h.png" style="padding-left: 20px;" />
+                            <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGroup>
+                            <ui:repeat value="#{verificadorQRController.visualizador.imagenes}" var="img">
+                                <h:graphicImage value="img/GAMAC_GTRAN?imagen=#{img}&amp;rnd=#{verificadorQRController.visualizador.millis}"/><br/><br/>
+                            </ui:repeat>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" rendered="#{!verificadorQRController.visualizador.verDocumento}" style="color: red; font-size: large; font-weight: bold; width: 950px; background: white;">
+                            <br/><br/><br/><br/><br/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                            <br/><br/><br/><br/><br/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </center>
+
+                <center>
+                    <h:panelGroup rendered="#{verificadorQRController.tipoMostrar eq 'acta'}">
+                        <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 100%; background: white;" cellpadding="5" >
+                            <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                            <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGrid columns="1" columnClasses="celdaCentrada" style="width: 100%; background: white; padding: 20px; font-size: medium;">
+                            <h:outputLabel value="#{verificadorQRController.registroMap.TIPO}" style="font-weight: bold;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                            <h:outputLabel value="DATOS:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_NROACTA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.NRO_GUIA}" title="#{bundleGamac.QrAmaActaTitle_NROACTA}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_TIPO}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.TP_GUIA}" title="#{bundleGamac.QrAmaActaTitle_TIPO}"/>
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{verificadorQRController.registroMap.FLAG eq 1}" columns="2" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                            <h:outputLabel value="#{verificadorQRController.registroMap.FLAG eq 1?'ARMA':(verificadorQRController.registroMap.FLAG eq 2?'MUNICIONES':'ACCESORIOS')}" title="#{bundleGamac.QrAmaActaTitle_ARTICULO}" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_TIPOARMA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.TARMA}" title="#{bundleGamac.QrAmaActaTitle_TIPOARMA}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_MARCA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.MARMA}" title="#{bundleGamac.QrAmaActaTitle_MARCA}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_MODELO}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.MODARMA}" title="#{bundleGamac.QrAmaActaTitle_MODELO}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_CALIBRE}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.CALARMA}" title="#{bundleGamac.QrAmaActaTitle_CALIBRE}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_SERIE}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.SERIE}" title="#{bundleGamac.QrAmaActaTitle_SERIE}"/>
+                        </h:panelGrid>
+                        <h:panelGrid id="panelGrid" columns="2" rendered="#{verificadorQRController.registroMap != null}" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                            <h:panelGrid rendered="#{verificadorQRController.registroMap.FLAG eq 2}">
+                                <h:dataTable id="dsMuniciones" style="width: 120%; align-self: center;align-content: center"
+                                             value="#{verificadorQRController.registroMap.LISTA}" 
+                                             var="itemMuni">
+                                    <h:column>    
+                                        <f:facet name = "header">Munición</f:facet>   
+                                            #{itemMuni.TMUNI} #{itemMuni.MMUNI} #{itemMuni.MODMUNI} #{itemMuni.CALMUNI}
+                                    </h:column>
+                                    <h:column>    		
+                                        <f:facet name = "header">Cantidad</f:facet>   
+                                        #{itemMuni.CMUNI} Unds.
+                                    </h:column>
+                                    <h:column>    	
+                                        <f:facet name = "header">Peso</f:facet>   
+                                            #{itemMuni.PMUNI} #{itemMuni.UMEDIDA}
+                                    </h:column>
+                                </h:dataTable>
+                            </h:panelGrid>
+                            <h:panelGrid rendered="#{verificadorQRController.registroMap.FLAG eq 3}">
+                                <h:dataTable id="dsAccesorios" style="width: 120%; align-self: center"
+                                             value="#{verificadorQRController.registroMap.LISTA}" 
+                                             var="itemAcces">
+                                    <h:column>    				
+                                        <f:facet name = "header">#{bundleGamac.QrAmaActaTitle_TPACC}</f:facet>    				
+                                            #{itemAcces.TACCES}
+                                    </h:column>
+                                    <h:column>    				
+                                        <f:facet name = "header">#{bundleGamac.QrAmaActaTitle_NOMACC}</f:facet>    				
+                                            #{itemAcces.ACCES}
+                                    </h:column>
+                                    <h:column>    				
+                                        <f:facet name = "header">#{bundleGamac.QrAmaActaTitle_CANTACC}</f:facet>    				
+                                        #{itemAcces.CANTIDAD} Unds.
+                                    </h:column>
+                                </h:dataTable>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        <h:panelGroup layout="block" rendered="#{verificadorQRController.registroMap == null}" style="color: red; font-size: large; font-weight: bold; width: 100%; background: white;">
+                            <br/><br/><br/><br/><br/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                            <br/><br/><br/><br/><br/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+            <h:form id="viewForm" rendered="#{sspRegistroCursoController.estado == 'VER'}" >
+                <p:accordionPanel dynamic="true" cache="true" id="accordionPanel" >
+                    <p:tab id="tabDatosAdministrado" title="#{BundleBDIntegrado.sspCursos_editar_datosAdministrado}" rendered="#{sspRegistroCursoController.esInstructor }" >
+                        <h:panelGrid columns="4" rendered="#{sspRegistroCursoController.esInstructor }" style="border: 0px;" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_actualizar_ruc}" style="display: block; width: 95px;"  />
+                                <p:inputText id="rucAdministrado" value="#{sspRegistroCursoController.obtenerRucPersona(sspRegistroCursoController.registro.administradoId) }" readonly="true"   />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_actualizar_rznSocial}" style="margin-left: 20px;" />
+                                <p:inputText id="rznSocialAdministrado" value="#{sspRegistroCursoController.obtenerRznSocialPersona(sspRegistroCursoController.registro.administradoId) }" readonly="true" style="width:300px" />
+                        </h:panelGrid>
+                    </p:tab>
+                    
+                    <p:tab id="tabDatosObservaciones" title="#{BundleBDIntegrado.sspCursos_editar_observaciones}" rendered="#{sspRegistroCursoController.lstObservacionesDetalle.size() > 0 }" >
+                        <h:panelGrid columns="1" rendered="#{sspRegistroCursoController.lstObservacionesDetalle.size() > 0 }" style="border: 0px;" >
+                                <p:dataTable id="datatableObsv"
+                                             currentPageReportTemplate="Total {totalRecords} observación(es)"
+                                             value="#{sspRegistroCursoController.lstObservacionesDetalle }"
+                                             var="item"  
+                                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}">
+                                    <p:column headerText="Tipo" style="text-align: center;" rendered="#{sspRegistroCursoController.esNoPresentado()}" >
+                                        <h:outputText value="#{item.tipo}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha Observación" style="text-align: center;">
+                                        <h:outputText value="#{item.fechaObs}">
+                                            <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Fecha Subsanación" style="text-align: center;">
+                                        <h:outputText value="#{item.fechaSub}">
+                                            <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Observación" style="text-align: center;" >
+                                        <h:outputText value="#{item.descripcion}"/>
+                                    </p:column>
+                                </p:dataTable>
+                        </h:panelGrid>
+                    </p:tab>
+                    
+                    <p:tab id="tabDatosLocal" title="#{BundleBDIntegrado.sspCursos_crear_pnlLocal}">
+                         <p:panel id="pnlRegistroDatosLocal" style="border: 0px;" >                              
+                                <p:fieldset legend="#{BundleBDIntegrado.sspCursos_crear_localesSeleccionados}" >
+                                    <p:dataTable id="dtLocales" value="#{sspRegistroCursoController.lstLocales}" rendered ="#{!sspRegistroCursoController.esVirtual}"
+                                                 var="itemReg"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown}"
+                                                 currentPageReportTemplate="Total {totalRecords} local(es)"
+                                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_nombreLocal}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.nombreLocal}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_direccionLocal}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.direccion} - #{itemReg.distritoId.provinciaId.departamentoId.nombre}/#{itemReg.distritoId.provinciaId.nombre}/#{itemReg.distritoId.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_telefono}" style="text-align: center;" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(itemReg.sspLocalContactoList,'TP_MEDIOC_TEL')}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_correo}" style="text-align: center;" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(itemReg.sspLocalContactoList,'TP_MEDIOC_COR')}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:dataTable id="dtLocales2" value="#{sspRegistroCursoController.lstLocales}" rendered ="#{sspRegistroCursoController.esVirtual}"
+                                                 var="itemReg"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown}"
+                                                 currentPageReportTemplate="Total {totalRecords} local(es)"
+                                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_nombrePlataforma}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.nombreLocal}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_caracteristica}" style="text-align: center; width: 280px;" >
+                                            <h:outputText value="#{itemReg.caracteristicas}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_responsable}" style="text-align: center;">
+                                            <h:outputText value="#{itemReg.referencia}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_telefono}" style="text-align: center; width: 80px;" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(itemReg.sspLocalContactoList,'TP_MEDIOC_TEL')}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_correo}" style="text-align: center;" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(itemReg.sspLocalContactoList,'TP_MEDIOC_COR')}" />
+                                        </p:column>
+                                        <p:column headerText="Aforo" style="text-align: center; width: 30px;" >
+                                            <h:outputText value="#{itemReg.aforo}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:fieldset>
+                         </p:panel>
+                    </p:tab>
+                    
+                    <p:tab id="tabInstructores" title="#{BundleBDIntegrado.sspCursos_crear_pnlInstructores}" >
+                        <p:panel id="pnlInstructores" style="border: 0px;" >
+                            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_list_dtListado_tipoformación}" > 
+                                <h:panelGrid columns="4">
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_tipoCurso}" style="display: block; width: 120px;" />
+                                <p:outputLabel value="#{sspRegistroCursoController.tipoServicio.nombre}" style="display: block; width: 290px;" />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_tipoFormacion} *" style="font-weight: bold;display: block;"  />
+                                <p:outputLabel value="#{sspRegistroCursoController.tipoFormacion.nombre}" style="display: block; width: 120px;" />
+                                
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <p:dataGrid var="modulo" columns="3" layout="grid" value="#{sspRegistroCursoController.lstModulosSinRefrigerio}" >
+                                <f:facet name="header">
+                                    Leyenda
+                                </f:facet>
+                                #{modulo.codModulo}: #{modulo.nombre}
+                            </p:dataGrid>
+                            
+                            <p:dataTable id="dtInstructor" var="message" 
+                                            value="#{sspRegistroCursoController.lstInstructoresTabla}" 
+                                            emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                            paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                                            {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                            currentPageReportTemplate="Total {totalRecords} instructor(es)"
+                                            rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >  
+                                <p:columns value="#{sspRegistroCursoController.dtColumns}" var="column" columnIndexVar="colIndex" exportable="#{column.exportable}" style="text-align: center;#{column.width}"  >  
+                                    <f:facet name="header">  
+                                        <h:outputText value="#{column.header}"/>  
+                                    </f:facet>
+                                    <h:outputText value="#{message[column.property]}" style="text-align: center;" rendered="#{!sspRegistroCursoController.renderBtnMedioContactoInstructor(column.header)}" />
+                                    <p:commandButton icon="ui-icon-search"
+                                                     process="@form"
+                                                     update="@form"
+                                                     title="Ver Medios de Contacto"
+                                                     id="btnMedioContacto"
+                                                     style="width: 50px;"
+                                                     rendered="#{sspRegistroCursoController.renderBtnMedioContactoInstructor(column.header)}"
+                                                     actionListener="#{sspRegistroCursoController.openDlgMediosContacto(message) }" >
+                                    </p:commandButton>
+                                    
+                                </p:columns>
+                            </p:dataTable> 
+                        </p:panel>
+                    </p:tab>
+                    
+                    <p:tab id="tabAgendar" title="#{BundleBDIntegrado.sspCursos_crear_pnlAgendar}" >
+                        <p:panel id="pnlAgendar" style="border: 0px;" >
+                            <p:fieldset legend="Leyenda" rendered="#{sspRegistroCursoController.lstProgramacion.size() > 0}" >
+                                <h:panelGrid columns="3" style="border: 0px;"> 
+                                    <h:panelGrid columns="2" rendered="#{!sspRegistroCursoController.mostrarColumnConfirmo()}"  >
+                                        <h:panelGrid style="width: 20px; height: 20px;" class="datatableCursos-row-cursoPermitidoDictado" />
+                                        <h:outputText value="Cursos Permitidos para dictar" />
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2" >
+                                        <h:panelGrid style="width: 20px; height: 20px;" class="dtHorario-row-teoria" />
+                                        <h:outputText value="Teoría" />
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2" >
+                                        <h:panelGrid style="width: 20px; height: 20px;" class="dtHorario-row-practica" />
+                                        <h:outputText value="Práctica" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            
+                            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_crear_programacion}" >
+                                    <h:outputText id ="fechasHorarioCurso" value="#{sspRegistroCursoController.obtenerFechaCurso()}" /><br/><br/>
+                                
+                                    <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.lstProgramacionSinRefrigerioActivos}"
+                                                 var="itemReg"
+                                                 rowStyleClass="#{sspRegistroCursoController.obtenerColorVer(itemReg)}"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown}"
+                                                 currentPageReportTemplate="Total {totalRecords} módulo(s)"
+                                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_local}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.localId.nombreLocal}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_curso}" style="text-align: center;" >
+                                            <h:outputText value="#{sspRegistroCursoController.mostrarDescModuloRegistro(itemReg.moduloId)}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horario}" style="text-align: center;" >
+                                            <p:dataTable id="dtProgramacionHorario" value="#{sspRegistroCursoController.getSspPrograHoraListActivos(itemReg.sspPrograHoraList)}"
+                                                         rowStyleClass="#{sspRegistroCursoController.obtenerColorHorarioTeoria(itemHorario)}"
+                                                         var="itemHorario" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                                <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_fecha}" style="text-align: center;" >
+                                                    <h:outputText value="#{itemHorario.fecha}" >
+                                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_hora}" style="text-align: center;" >
+                                                    <h:outputText value="#{itemHorario.horaInicio}" >
+                                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                                    </h:outputText> - 
+                                                    <h:outputText value="#{itemHorario.horaFin}" >
+                                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                                    </h:outputText>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_confirmo}" style="text-align: center;width: 100px;" rendered="#{sspRegistroCursoController.mostrarColumnConfirmo()}" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerDescConfirmo(itemReg) }" rendered="#{sspRegistroCursoController.mostrarColumnConfirmoTexto(itemReg)}" />
+                                            <p:commandButton actionListener="#{sspRegistroCursoController.openDlgVerDatosIntructor(itemReg)}"
+                                                             rendered="#{sspRegistroCursoController.mostrarColumnConfirmoBoton(itemReg)}"
+                                                             process="@form"
+                                                             update="@form"
+                                                             icon="ui-icon-person" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_tieneNota}" style="text-align: center;" rendered="#{sspRegistroCursoController.mostrarColumnTieneNota()}" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerDescTieneNota(itemReg) }" rendered="#{sspRegistroCursoController.mostrarColumnTieneNotaDetalle(itemReg)}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_verNota}" style="text-align: center;" rendered="#{sspRegistroCursoController.mostrarColumnNotasCabecera()}" >
+                                            <p:commandButton icon="ui-icon-search"
+                                                             process="@form"
+                                                             update="@form"
+                                                             id="btnVerNota"
+                                                             value="Ver"
+                                                             rendered="#{sspRegistroCursoController.mostrarColumnNotas(itemReg)}"
+                                                             actionListener="#{sspRegistroCursoController.openDlgVerNotas(itemReg) }">
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_actualizar_dt_archivoasistencia}" style="text-align: center;" rendered="#{sspRegistroCursoController.mostrarColumnAsistencia()}" >
+                                            <p:commandButton  icon="ui-icon-document"
+                                                              ajax="false"
+                                                              value="Ver"
+                                                              rendered="#{itemReg.archivoAsistencia ne null and sspRegistroCursoController.mostrarColumnAsistenciaDetalle(itemReg)}"
+                                                              process="@all"
+                                                              onclick="this.form.target = '_blank'"
+                                                              onblur="this.form.target = '_self'"
+                                                              immediate="true" >
+                                                  <p:fileDownload value="#{sspRegistroCursoController.cargarDocumentoVer(itemReg)}" contentDisposition="inline"  />
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_actualizar_dt_archivoNotas}" style="text-align: center;" rendered="#{sspRegistroCursoController.mostrarColumnAsistencia()}" >
+                                            <p:commandButton  icon="ui-icon-document"
+                                                              ajax="false"
+                                                              value="Ver"
+                                                              rendered="#{itemReg.archivoNotas ne null and sspRegistroCursoController.mostrarColumnAsistenciaDetalle(itemReg)}"
+                                                              process="@all"
+                                                              onclick="this.form.target = '_blank'"
+                                                              onblur="this.form.target = '_self'"
+                                                              immediate="true" >
+                                                <p:fileDownload value="#{sspRegistroCursoController.cargarDocumentoNotasVer(itemReg)}" contentDisposition="inline"  />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                            </p:fieldset>
+                            
+                            <p:fieldset id="fsExcepcionmRefrigerio" legend="#{BundleBDIntegrado.sspCursos_crear_refrigerio}" style="margin-top: 15px;" >
+                                <h:panelGrid columns="4" style="border: 0px;">
+                                    <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_HoraInicio}" style="font-weight: bold;margin-left: 15px;" />
+                                    <p:outputLabel value="#{sspRegistroCursoController.horaInicioRefrigerio}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHoraPM}" />
+                                    </p:outputLabel>                                    
+                                    
+                                    <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_HoraFin}" style="font-weight: bold;margin-left: 70px;"  />
+                                    <p:outputLabel value="#{sspRegistroCursoController.horaFinRefrigerio}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHoraPM}" />
+                                    </p:outputLabel>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" style="border: 0px;">
+                                    <h:outputText value="#{BundleBDIntegrado.sspCursos_crear_comentarioRefrigerio}" />                                        
+                                    <p:inputTextarea cols="100" rows="3" maxlength="500"  autoResize="false"  readonly="true" style="text-transform: none;"
+                                                     id="excepcion" value="#{sspRegistroCursoController.registro.excepcion}" >
+                                    </p:inputTextarea>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </p:panel>
+                    </p:tab>
+                    
+                    <p:tab id="tabVigilante" title="#{BundleBDIntegrado.sspCursos_crear_pnlAgregar}" >
+                        <p:panel id="pnlVigilante" style="border: 0px;" >
+                            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_crear_prospectoSeleccionados}" >
+                                <p:dataTable id="dtVigilante" value="#{sspRegistroCursoController.lstAlumnosVigilantesActivos }"
+                                                 var="itemReg"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown}"
+                                                 currentPageReportTemplate="Total {totalRecords} alumno(s)"
+                                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_tipoDoc}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.personaId.tipoDoc.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_numDoc}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.personaId.numDoc}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_apellidos}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.personaId.apePat} #{itemReg.personaId.apeMat}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_nombres}" style="text-align: center;" >
+                                            <h:outputText value="#{itemReg.personaId.nombres}" />
+                                        </p:column>
+                                        <p:column headerText="Estado del curso" style="text-align: center;" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerDescEstadoFinalCurso(itemReg)}" styleClass="#{sspRegistroCursoController.obtenerColorEstadoCurso(itemReg)}"  />
+                                        </p:column>
+                                        <p:column headerText="Foto" style="text-align: center;" >
+                                            <p:commandButton icon="ui-icon-search"
+                                                             process="@form"
+                                                             update="@form"
+                                                             id="btnVerFoto"
+                                                             rendered="#{itemReg.fotoId ne null}"
+                                                             actionListener="#{sspRegistroCursoController.openDlgFoto(itemReg) }">
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_evaluacionPJ}" style="text-align: center;" rendered="#{sspRegistroCursoController.renderColumnEvaluacionPj()}" >
+                                            <h:outputText value="#{sspRegistroCursoController.obtenerOficioMSIAP(itemReg)}" rendered="#{itemReg.oficioMsiap ne null}" escape="false" />
+                                            <p:graphicImage value="#{sspRegistroCursoController.obtenerIconEvaluacion(itemReg) }" width="30" />
+                                            <p:outputLabel value="#{sspRegistroCursoController.obtenerMsjeEvaluacion(itemReg) }" />
+                                        </p:column>
+                                    </p:dataTable>
+                            </p:fieldset>
+                        </p:panel>
+                    </p:tab>
+                </p:accordionPanel>
+                
+                <br/>
+                <br />
+                <h:panelGrid columns="2" >
+                    <p:commandButton icon="ui-icon-arrowthick-1-w"
+                                     action="#{sspRegistroCursoController.prepareListView() }"
+                                     value="Regresar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" update="@all"  />
+                    <br/><br/>
+                </h:panelGrid>
+            </h:form>
+    
+            <script src="#{sspRegistroCursoController.obtenerKeyGoogle()}" type="text/javascript"></script>
+            <script type="text/javascript" src="#{sspRegistroCursoController.obtenerApiGoogle()}"></script>
+</ui:composition>

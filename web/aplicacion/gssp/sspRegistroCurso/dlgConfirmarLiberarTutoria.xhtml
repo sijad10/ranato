@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions" >
+    
+    <p:dialog id="dlgConfirmarTutoria" widgetVar="wvDlgConfirmarTutoria" width="40%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)" closable="false">
+        
+        <h:form id="frmConfirmarTutoria" >
+            <p:outputLabel value="#{sspRegistroCursoController.nombrePopup}" style="font-weight: bold; font-size: large;" /><br/><br/>
+            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_confirmacion_confirmar}" >
+                <h:panelGrid columns="1" >
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCursos_confirmacion_msjeCabecera}" />
+                    <p:outputLabel value="#{sspRegistroCursoController.msjePopUp}" />
+                </h:panelGrid>     
+            </p:fieldset>
+            
+            <br/>
+            <div align="right">
+                <p:commandButton value="Salir"
+                                 process="@this"
+                                 style="float: right"
+                                 update="@form"
+                                 oncomplete="PF('wvDlgConfirmarTutoria').hide()" />
+                
+                <p:commandButton value="Aceptar"
+                                     process="@form"
+                                     actionListener="#{sspRegistroCursoController.confirmarLiberarCurso() }"
+                                     style="float: right"
+                                     update="@form" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

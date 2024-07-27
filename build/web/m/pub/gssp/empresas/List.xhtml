@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage">
+            <pm:header title="#{bundleDisca.BuscarMvDcGsspEmpresasTitulo}" />
+            <pm:content>
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{bundleDisca.Filtro}" />
+                            <p:inputText  value="#{mvDcGsspEmpresasController.filtro}" required="false" requiredMessage="#{bundleCydoc.MensajeRequiereBusqueda}" placeholder="#{bundleDisca.PhMvDcGsspEmpresasBusqueda}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{bundleDisca.Buscar}" icon="ui-icon-search" actionListener="#{mvDcGsspEmpresasController.buscar}"  update="@form" />
+                        <h:panelGroup rendered="#{mvDcGsspEmpresasController.resultados != null}">
+                            <h:outputLabel value="#{bundleDisca.Resultados}" escape="false" />
+                            <p:dataTable id="buscarDatatable" value="#{mvDcGsspEmpresasController.resultados}"
+                                         reflow="true"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleDisca.PaginatorFilas}"  
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleDisca.PaginatorFilasPorPagina}">
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_RUC}" sortBy="#{item.RUC}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_RUC}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.RUC}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_RZN_SOC}" sortBy="#{item.RZN_SOC}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_RZN_SOC}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.RZN_SOC}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_NRO_RD}" sortBy="#{item.NRO_RD}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_NRO_RD}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NRO_RD}/GSSP"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_FEC_VEN}" sortBy="#{item.FEC_VEN}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_FEC_VEN}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.FEC_VEN}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_PRINCIPAL}" sortBy="#{item.PRINCIPAL}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_PRINCIPAL}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.PRINCIPAL}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_DOM_ACT}" sortBy="#{item.DOM_ACT}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_DOM_ACT}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.DOM_ACT}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_NOM_DPTO}" sortBy="#{item.NOM_DPTO}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_NOM_DPTO}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NOM_DPTO}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspEmpresasTitle_MODALIDAD}" sortBy="#{item.MODALIDAD}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspEmpresasTitle_MODALIDAD}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.MODALIDAD}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile">
+    <f:view contentType="text/html" renderKitId="PRIMEFACES_MOBILE">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Sesión Expirada</title>
+            </f:facet>
+        </h:head>
+
+        <h:body style="font-size:110%; text-align: center;">
+            <h:form rendered="#{!facesContext.externalContext.getRequestHeaderMap().get('referer').toString().contains('faces/m/')}">
+                <br/>
+                <center>
+                    <h:graphicImage url="/resources/imagenes/logo_sucamec.png" /><br/><br/>
+                    <p:panel header="Error" style="width:500px">
+                        <br/>
+                        <p:outputLabel value="Su sesión ha expirado" /><br/><br/>
+                        <p:outputLabel value="Por favor vuelva a ingresar al sistema." /><br/><br/>
+                        <p:link href="/faces/login.xhtml?faces-redirect=true" value="Ingresar"/>
+                        <h:panelGroup id="messagePanel" layout="block">
+                            <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                        </h:panelGroup>
+                    </p:panel>
+                </center>
+            </h:form>
+            <pm:page rendered="#{facesContext.externalContext.getRequestHeaderMap().get('referer').toString().contains('faces/m/')}">
+                <pm:header title="ERROR" />
+                <pm:content>
+                    <h:form id="buscarForm" >
+                        <p:outputLabel value="Su sesión con el servidor ha expirado" />
+                        <p:outputLabel value="Por favor regrese al menu y vuelva a seleccionar la opción." />
+                    </h:form>
+                </pm:content>
+            </pm:page>
+        </h:body>
+    </f:view>
+</html>
+

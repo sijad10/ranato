@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="msjeDialog" widgetVar="confirmCese" width="20%" height="20%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Advertencia" closable="true"  >
+            <h:form id="msjeForm" >
+                <p:panel >
+                    <p:outputLabel value="#{sspSolicitudCeseController.msjeCese}"  />
+                </p:panel>
+                <p:spacer/> 
+                <h:panelGroup style="float: right">
+                    <p:commandButton value="No"
+                                   process="@this" 
+                                   actionListener="#"
+                                   style="float: right"
+                                   icon="ui-icon-cancel"
+                                   update="msjeForm" 
+                                   oncomplete="PF('confirmCese').hide()" />
+                     <p:commandButton value="Si" 
+                                   icon="ui-icon-disk"
+                                   process="@this"
+                                   update="@all"
+                                   action="#{sspSolicitudCeseController.crear()}"
+                                   style="float: right"                                  
+                                   oncomplete="PF('confirmCese').hide()" />
+                </h:panelGroup>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

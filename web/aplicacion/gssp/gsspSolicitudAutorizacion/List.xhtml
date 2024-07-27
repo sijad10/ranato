@@ -1,0 +1,321 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions"> 
+
+    <ui:define name="title">
+        <b>
+            <h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_list_title}" rendered="#{gsspSolicitudAutorizacionController.estado == 'BUSCAR'}"/>
+            <h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_editar_title}" rendered="#{gsspSolicitudAutorizacionController.estado == 'EDITARVIGILANCIAPRIVADA'}"/>
+            <h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_ver_title}" rendered="#{gsspSolicitudAutorizacionController.estado == 'VERVIGILANCIAPRIVADA'}"/>
+            <h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_renovar_title}" rendered="#{gsspSolicitudAutorizacionController.estado == 'RENOVAR'}"/>
+        </b>
+    </ui:define>
+
+    <ui:define name="body">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:form id="listForm" rendered="#{gsspSolicitudAutorizacionController.estado == 'BUSCAR'}" >
+
+                        <p:panel id="pnlBusquedaSolicitudAutorizacion" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_tab_title_BandjaBscda}" >                        
+
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_lbl_FindBy} *" style="display: block" />    
+                                </div>
+                                <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                    <p:selectOneMenu widgetVar="cboBuscarPorWidget" id="cboBuscarPor" value="#{gsspSolicitudAutorizacionController.filtroBuscarPor}" class="combo_tipo_100">
+                                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                       <f:selectItem itemLabel="NRO. DE SOLICITUD" itemValue="1"/>
+                                       <f:selectItem itemLabel="NRO. DE EXPEDIENTE" itemValue="2"/>
+                                       <f:selectItem itemLabel="AMBITO DE OPERACIONES" itemValue="3"/>
+                                       <f:selectItem itemLabel="MODALIDADES" itemValue="4"/>
+                                       <p:ajax event="change" update="@this, pnlBusquedaSolicitudAutorizacion" oncomplete="ocultarDivTextoFiltro()" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-12 ui-md-3 ui-lg-2" id="textoFiltro">
+                                    <p:inputText id="txtFiltroNumero" 
+                                                 value="#{gsspSolicitudAutorizacionController.filtroNumero}"  
+                                                 placeholder="Escriba un filtro"
+                                                 rendered="#{gsspSolicitudAutorizacionController.filtroBuscarPor eq '1' or gsspSolicitudAutorizacionController.filtroBuscarPor eq '2' or gsspSolicitudAutorizacionController.filtroBuscarPor eq '3'}" >
+                                    </p:inputText>
+                                </div>
+                                <div class="ui-g-12 ui-md-12 ui-lg-3" id="cboFiltroModalidades" >
+                                    <p:selectOneMenu id="cboModalidades" value="#{gsspSolicitudAutorizacionController.filtroTipoSeguridadSelected }" rendered="#{gsspSolicitudAutorizacionController.filtroBuscarPor eq '4'}"  class="combo_tipo_100">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.filtroTipoSeguridadListado}"/>
+                                    </p:selectOneMenu>
+                                </div>    
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_lbl_TipAutoriz}" />    
+                                </div>
+                                <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                    <p:selectOneMenu id="cboTipoAutorizacion" value="#{gsspSolicitudAutorizacionController.filtroTipoAutSelected}" class="combo_tipo_100">
+                                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.filtroTipoAutListado}"/>
+                                    </p:selectOneMenu>    
+                                </div>
+                                <ui:remove>
+                                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                        <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_lbl_TipOpe}" />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                        <p:selectOneMenu id="cboTipoOperacion" value="#{gsspSolicitudAutorizacionController.filtroTipoOpeSelected}" class="combo_tipo_100">
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.filtroTipoOpeListado}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </ui:remove>    
+                            </div>    
+
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:outputLabel value="Rango de Fechas de Registro:" />
+                                </div>
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:calendar id="txfFechaInicio"
+                                                locale="es"
+                                                showOn="button" 
+                                                value="#{gsspSolicitudAutorizacionController.filtroFechaIniSelected}"
+                                                maxdate="#{gsspSolicitudAutorizacionController.fechaMaximaCalendario}"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}"
+                                                navigator="true">
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:calendar id="txfFechaFinal"
+                                                locale="es"
+                                                showOn="button" 
+                                                value="#{gsspSolicitudAutorizacionController.filtroFechaFinSelected }"
+                                                mindate="#{gsspSolicitudAutorizacionController.fechaMinimaCalendario}"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" 
+                                                navigator="true">
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_lbl_Estado}"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                    <p:selectOneMenu id="cboTipoEstado" value="#{gsspSolicitudAutorizacionController.filtroTipoEstadoSelected }" class="combo_tipo_100">
+                                        <f:selectItem itemLabel="--- Mostrar Todos ---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.filtroTipoEstadoListado}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:commandButton value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_button_Search}" 
+                                                     process="@form"
+                                                     icon="ui-icon-search" 
+                                                     actionListener="#{gsspSolicitudAutorizacionController.buscarBandejaSolicitud()}" 
+                                                     update="@form" oncomplete="ocultarDivTextoFiltro()"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-2 ui-lg-5" style="display:none;"></div>
+                            </div>
+
+                        </p:panel>
+
+
+                        <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_tab_title_Leyenda}" >
+                            <div class="ui-g">  
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-circle-check" style="width:30px;height:30px;background-color: #088A08;" ajax="false" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Transmitir}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-pencil" style="width:30px;height:30px" ajax="false" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Edit}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-trash" style="width:30px;height:30px" ajax="false" styleClass="botonBorrar"/>
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Elim}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-search" style="width:30px;height:30px" ajax="false" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Ver}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-document" style="width:30px;height:30px" ajax="false" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Resolucion}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton icon="ui-icon-arrowreturnthick-1-w" style="width:30px;height:30px;background-color: #72467c;" ajax="false" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Desistim}" style="padding-left: 5px;"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-6" style="display:none;"></div>
+                            </div>
+                        </p:panel>
+                        <br/>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <p:dataTable id="dtResultados" value="#{gsspSolicitudAutorizacionController.resultados}"
+                                             var="itemReg"
+                                             rowKey="#{itemReg.ID}"
+                                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                             paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                             currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                             reflow="true"
+                                             rowStyleClass="#{gsspSolicitudAutorizacionController.estiloPorTiempo(itemReg.OBSERVACION, itemReg.ESTADO_CODPROG)}"
+                                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_id}" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.ID}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_expediente}" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.NRO_EXPEDIENTE}" />
+                                        </p:column>
+                                    <ui:remove>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_administrado}" style="text-align: center" class="ui-lg-2">
+                                            <h:outputText value="#{itemReg.ADMINISTRADO}" />
+                                        </p:column>
+                                    </ui:remove>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_nroSolicitud}" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.NRO_SOLICITUD}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_modalidades}" style="text-align: center" class="ui-lg-2">
+                                            <h:outputText value="#{itemReg.MODALIDAD_NOMBRE}" />
+                                        </p:column>
+                                    <p:column headerText="Ambito" style="text-align: center" class="ui-lg-3">
+                                            <h:outputText value="#{itemReg.DEPARTAMENTO} / #{itemReg.PROVINCIA} / #{itemReg.DISTRITO}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_tipoRegistro}/Local" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.TIP_REG_NOMBRE} #{gsspSolicitudAutorizacionController.mostrarDescripcionTipoLocal(itemReg.ID)}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_estado}" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.ESTADO_NOMBRE}" />
+                                        </p:column>  
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_fecha}" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.FECHA}" >
+                                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                            </h:outputText>
+                                        </p:column>  
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_dtListado_Column_acciones}" style="text-align: center" class="ui-lg-1">
+                                        
+                                            
+                                        <ui:param name="controller_valido" value="#{itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_PP') ? gsspSolicitudAutorizacionSPPController : 
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_VP') ?  gsspSolicitudAutorizacionController  : 
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_SISPE') ?  gsspSolicitudAutorizacionSISPEController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_PCP') ?  gsspSolicitudAutorizacionSPCPController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_TEC') ?  gsspSolicitudAutorizacionSTSController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_CEF') ?  gsspSolicitudAutorizacionCefoespController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_DEP') ?  gsspSolicitudAutorizacionCefoespController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_AUTORIZ_SEL_CLO') ?  gsspSolicitudAutorizacionSPPController :
+                                                                                    itemReg.MODALIDAD_CODPROG.equals('TP_GSSP_MOD_TDV') ?  gsspSolicitudAutorizacionTDVController :
+                                                                                    gsspSolicitudAutorizacionController }" /> 
+
+                                        <p:commandButton update="@form"
+                                                         process="@this" 
+                                                         icon="ui-icon-circle-check"
+                                                         ajax="false"
+                                                         style="background-color: #088A08;"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Transmitir}"
+                                                         rendered="#{gsspSolicitudAutorizacionController.renderBtnTransmitir(itemReg)}"
+                                                         actionListener="#{gsspSolicitudAutorizacionController.openDlgcompletarProceso(itemReg)}" 
+                                                         oncomplete="ocultarDivTextoFiltro()" >
+                                        </p:commandButton>                                           
+
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-pencil"
+                                                         ajax="false"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Edit}"
+                                                         rendered="#{controller_valido.renderBtnEditar(itemReg)}"
+                                                         actionListener="#{controller_valido.mostrarEditarSolicitud(itemReg)}" 
+                                                         >
+                                        </p:commandButton>
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-trash"
+                                                         styleClass="botonBorrar"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Elim}"
+                                                         rendered="#{gsspSolicitudAutorizacionController.renderBtnBorrar(itemReg)}"
+                                                         actionListener="#{gsspSolicitudAutorizacionController.borrarRegistro(itemReg)}" 
+                                                         oncomplete="ocultarDivTextoFiltro()" >
+                                            <p:confirm header="Confirmación" message="#{BundleBDIntegrado.ConfirmarEliminar}" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-search"
+                                                         ajax="false"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Ver}"
+                                                         rendered="#{controller_valido.renderBtnVer()}"
+                                                         actionListener="#{controller_valido.mostrarVerSolicitud(itemReg)}" 
+                                                         >
+                                        </p:commandButton>                                
+                                        <p:commandButton  icon="ui-icon-document"
+                                                          id ="btnImprimir"
+                                                          ajax="false"
+                                                          title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Resolucion}"
+                                                          rendered="#{gsspSolicitudAutorizacionController.renderBtnConstancia(itemReg)}"
+                                                          process="@all"
+                                                          onclick="this.form.target = '_blank'"
+                                                          onblur="this.form.target = '_self'"
+                                                          immediate="true" >
+                                            <p:fileDownload value="#{gsspSolicitudAutorizacionController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                                        </p:commandButton>
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-refresh"
+                                                         ajax="false"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Renovar}"
+                                                         rendered="#{gsspSolicitudAutorizacionController.renderBtnRenovar(itemReg)}"
+                                                         actionListener="#{gsspSolicitudAutorizacionController.mostrarRenovar(itemReg)}"
+                                                         >
+                                        </p:commandButton>
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-copy"
+                                                         ajax="false"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Desistim}"
+                                                         rendered="#{gsspSolicitudAutorizacionController.renderBtnDuplicado(itemReg)}"
+                                                         actionListener="#{gsspSolicitudAutorizacionController.openDlgSolicitudDuplicado(itemReg)}"
+                                                         oncomplete="ocultarDivTextoFiltro()" >
+                                        </p:commandButton>
+
+                                        <p:commandButton update="@form"
+                                                         icon="ui-icon-arrowreturnthick-1-w"
+                                                         style="background-color: #72467c;"
+                                                         title="#{BundleBDIntegrado.gsspSolicitudAutorizacion_leyenda_lbl_Desistim}"
+                                                         rendered="#{gsspSolicitudAutorizacionController.renderBtnFinProcedimiento(itemReg)}"
+                                                         actionListener="#{gsspSolicitudAutorizacionController.openDlgConfirmarDesestimiento(itemReg)}"
+                                                         oncomplete="ocultarDivTextoFiltro()" >
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                        </div>        
+
+                    </h:form>
+                </div>    
+            </div>        
+        </div>            
+        <ui:include src="dlgCompletarProceso.xhtml" />
+        <ui:include src="dlgConfirmarDesestimiento.xhtml" />
+        <ui:include src="vigilancia/EditarAutorizaServicioSeguridad.xhtml" /> 
+        <ui:include src="vigilancia/VerSolicitudAutorizaSeg.xhtml" />  
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("div[id='textoFiltro']").attr("style", "display:none");
+                $("div[id='cboFiltroModalidades']").attr("style", "display:none");
+            });
+
+            function ocultarDivTextoFiltro() {
+                //alert(PF('cboBuscarPorWidget').getSelectedValue());
+                $("div[id='textoFiltro']").attr("style", "display:none");
+                $("div[id='cboFiltroModalidades']").attr("style", "display:none");
+
+                if (PF('cboBuscarPorWidget').getSelectedValue() === "4") { //MODALIDAD
+                    $("div[id='textoFiltro']").attr("style", "display:none");
+                    $("div[id='cboFiltroModalidades']").attr("style", "display:block");
+                } else if (PF('cboBuscarPorWidget').getSelectedValue() === "1" || PF('cboBuscarPorWidget').getSelectedValue() === "2" || PF('cboBuscarPorWidget').getSelectedValue() === "3") { //MODALIDAD
+                    $("div[id='textoFiltro']").attr("style", "display:block");
+                    $("div[id='cboFiltroModalidades']").attr("style", "display:none");
+                }
+            }
+        </script>    
+    </ui:define>
+</ui:composition>
+
+

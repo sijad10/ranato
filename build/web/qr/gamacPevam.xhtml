@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>ACTA DE INTERNAMIENTO - PROGRAMA DE ENTREGA VOLUNTARIA DE ARMAS DE FUEGO Y MUNICIONES -PEVAM</title>
+            </f:facet>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGroup rendered="#{verificadorQRController.tipoMostrar eq 'actaPevam'}">
+                        <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 100%; background: white;" cellpadding="5" >
+                            <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                            <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                        </h:panelGrid>
+                        <br/>
+                         <h:panelGrid columns="1" columnClasses="celdaCentrada" style="width: 100%; background: white; padding: 20px; font-size: medium;">
+                            <h:outputLabel value="ACTA DE INTERNAMIENTO - PROGRAMA DE ENTREGA VOLUNTARIA DE ARMAS DE FUEGO Y MUNICIONES -PEVAM" style="font-weight: bold;"/>
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{verificadorQRController.registroMap != null and verificadorQRController.registroMap.ESTADO eq'ANULADO' }"  columns="1" columnClasses="celdaCentrada" style="width: 100%; background: white; padding: 20px; font-size: medium;">
+                            <h:outputLabel value="EL ACTA DE INTERNAMIENTO ESTÁ ANULADA Y NO ES VÁLIDA PARA LA OTORGACIÓN DE INCENTIVO" style="font-weight: bold;color: red"/>
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{verificadorQRController.registroMap != null and verificadorQRController.registroMap.ESTADO eq'EMITIDO' }"  columns="1" columnClasses="celdaCentrada" style="width: 100%; background: white; padding: 20px; font-size: medium;">
+                            <h:outputLabel value="#{verificadorQRController.registroMap.TIPO}" style="font-weight: bold;color: green"/>
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{verificadorQRController.registroMap != null}" columns="2" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                            <h:outputLabel value="DATOS:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_NROACTA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.NRO_ACTA}" title="#{bundleGamac.QrAmaActaTitle_NROACTA}"/>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="TIPO DE ACTA"/>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="#{verificadorQRController.registroMap.TIPO_ACTA}" title="TIPO DE ACTA"/>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="FECHA DE ACTA"/>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="#{verificadorQRController.registroMap.FECHA_INTERNAMIENTO}" title="FECHA DE INTERNAMIENTO">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputLabel>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="QUIEN ENTREGA"/>
+                            <h:outputLabel rendered="#{verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" value="#{verificadorQRController.registroMap.TP_DOC_ENT} #{verificadorQRController.registroMap.PER_ENT_NUM_DOC}  #{verificadorQRController.registroMap.PERSONA_ENTREGA}" title="PERSONA ENTREGA"/>
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{verificadorQRController.registroMap != null and verificadorQRController.registroMap.ESTADO eq'EMITIDO' }" columns="2" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                            <h:outputLabel value="ARMA:" style="display: block; margin-top: 15px; font-weight: bold;"/>
+                            <h:outputLabel value=""/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_TIPOARMA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.TIPO_ARMA}" title="#{bundleGamac.QrAmaActaTitle_TIPOARMA}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_MARCA}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.MARCA}" title="#{bundleGamac.QrAmaActaTitle_MARCA}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_MODELO}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.MODELO}" title="#{bundleGamac.QrAmaActaTitle_MODELO}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_CALIBRE}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.CALIBRE}" title="#{bundleGamac.QrAmaActaTitle_CALIBRE}"/>
+                            <h:outputLabel value="#{bundleGamac.QrAmaActaLabel_SERIE}"/>
+                            <h:outputLabel value="#{verificadorQRController.registroMap.SERIE}" title="#{bundleGamac.QrAmaActaTitle_SERIE}"/>
+                        </h:panelGrid>
+                        
+                        <h:panelGroup layout="block" rendered="#{verificadorQRController.registroMap == null}" style="color: red; font-size: large; font-weight: bold; width: 100%; background: white;">
+                            <br/><br/><br/><br/><br/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                            <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                            <br/><br/><br/><br/><br/>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

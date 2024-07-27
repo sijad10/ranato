@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    
+    <ui:composition >
+        <h:form id="ViewForm" rendered="#{turTurnoController.estado == 'VER'}" >                     
+            <p:wizard showNavBar="false" step="#{turTurnoController.paso}" >
+
+                <p:tab id="cita" title="#{bundle.turTurno_pasoCita}" >
+                    <p:panel id="pnlRegistro" header="#{bundle.turTurno_ver_registroCita}" >
+                        <h:panelGrid columns="4"  >
+                            <h:outputText value="#{bundle.turTurno_ver_fechaCita}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.fechaTurno}" >
+                                <f:convertDateTime pattern="#{bundle.FormatoFecha}" />                                        
+                            </h:outputText>
+                            <h:outputText value="#{bundle.turTurno_ver_horaCita}" style="font-weight: bold; margin-left: 50px;" />
+                            <h:outputText value="#{turTurnoController.mostrarHora(turTurnoController.turnoSeleccionado)}" >
+                                <f:convertDateTime pattern="#{bundle.FormatoHora}" />
+                            </h:outputText>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel id="pnlDatosGenerales" header="#{bundle.turTurno_ver_datosGenerales}" style="margin-top: 5px; ">
+                        <h:panelGrid columns="4"  >
+                            <h:outputText value="#{bundle.turTurno_ver_tipoDoc}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.perExamenId.tipoDoc.nombre }" />
+                            <h:outputText value="#{bundle.turTurno_ver_numero}" style="font-weight: bold; margin-left: 50px;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.perExamenId.numDoc}" />
+
+                            <h:outputText value="#{bundle.turTurno_ver_nombres}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.perExamenId.nombres }" />
+                            <h:outputText value="#{bundle.turTurno_ver_apellidos}" style="font-weight: bold; margin-left: 50px;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.perExamenId.apePat.concat(' ').concat(turTurnoController.turnoSeleccionado.perExamenId.apeMat) }" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2"  >
+                            <h:outputText value="#{bundle.turTurno_ver_direccion}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.direccionCita.direccion }" />
+                            <h:outputText value="#{bundle.turTurno_ver_referencia}" style="font-weight: bold;" />                                    
+                            <h:outputText value="#{turTurnoController.direccionCita.referencia }" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="6"  >
+                            <h:outputText value="#{bundle.turTurno_ver_departamento}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.direccionCita.distritoId.provinciaId.departamentoId.nombre }" />
+                            <h:outputText value="#{bundle.turTurno_ver_provincia}" style="font-weight: bold;margin-left: 10px;" />                                    
+                            <h:outputText value="#{turTurnoController.direccionCita.distritoId.provinciaId.nombre }" />
+                            <h:outputText value="#{bundle.turTurno_ver_distrito}" style="font-weight: bold;margin-left: 10px;" />                                    
+                            <h:outputText value="#{turTurnoController.direccionCita.distritoId.nombre }" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="4"  >
+                            <h:outputText value="#{bundle.turTurno_ver_telefono}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarDatosContacto(turTurnoController.turnoSeleccionado.perExamenId.turMedioContactoList,2) }" />
+                            <h:outputText value="#{bundle.turTurno_ver_celular}" style="font-weight: bold;margin-left: 30px;" />                                    
+                            <h:outputText value="#{turTurnoController.mostrarDatosContacto(turTurnoController.turnoSeleccionado.perExamenId.turMedioContactoList,3) }" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2"  >
+                            <h:outputText value="#{bundle.turTurno_ver_correo}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarDatosContacto(turTurnoController.turnoSeleccionado.perExamenId.turMedioContactoList,1) }" />
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel id="pnlTramite" header="#{bundle.turTurno_ver_tramite}" style="margin-top: 5px; ">
+                        <h:panelGrid columns="2" >
+                            <h:outputText value="#{bundle.turTurno_ver_tipoTramite}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.turnoSeleccionado.tipoTramiteId.nombre }" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="4" rendered="#{turTurnoController.blnAntecedentes}" >
+                            <h:outputText value="#{bundle.turTurno_ver_antPenales}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarRequisito(turTurnoController.turnoSeleccionado.turRequisitosRegList,'TP_DOCUM_ANT',1) }" />
+                            <h:outputText value="#{bundle.turTurno_ver_fecha}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarRequisito(turTurnoController.turnoSeleccionado.turRequisitosRegList,'TP_DOCUM_ANT',2) }" />
+
+                            <h:outputText value="#{bundle.turTurno_ver_certifSalud}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarRequisito(turTurnoController.turnoSeleccionado.turRequisitosRegList,'TP_DOCUM_SAL',1) }" />
+                            <h:outputText value="#{bundle.turTurno_ver_fecha}" style="font-weight: bold;" />
+                            <h:outputText value="#{turTurnoController.mostrarRequisito(turTurnoController.turnoSeleccionado.turRequisitosRegList,'TP_DOCUM_SAL',2) }" />
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel id="pnlArmas" header="#{bundle.turTurno_ver_datosArmas}" style="margin-top: 5px; ">
+                        <p:dataTable id="dtArmas" value="#{turTurnoController.lstArmas}"
+                                    var="itemReg" 
+                                    emptyMessage="#{bundle.MensajeNoResultados}" >
+                            <p:column headerText="#{bundle.turTurno_ver_dtArmas_nroLic}" style="text-align: center;" >                               
+                               <h:outputText value="#{itemReg.numLic}" />
+                            </p:column>
+                            <p:column headerText="#{bundle.turTurno_ver_dtArmas_modalidad}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.tipoLicId.nombre }"/>
+                            </p:column>
+                            <p:column headerText="#{bundle.turTurno_ver_dtArmas_arma}" style="text-align: center;" >                                
+                                <h:outputText value="#{itemReg.tipoArticulo.nombre}" />
+                            </p:column>                                    
+                       </p:dataTable>
+                    </p:panel>
+
+                    <br/>
+                    <h:panelGrid columns="1">
+                        <p:commandButton icon="ui-icon-seek-prev" update="@all" actionListener="#{turTurnoController.mostrarListadoCitas() }"  value="Atrás" process="@this"/>
+                    </h:panelGrid>
+                </p:tab>
+
+            </p:wizard>
+        </h:form>  
+    </ui:composition>
+
+</html> 
+                
+
+        
+        

@@ -1,0 +1,7 @@
+Scripts para acomodar el código generado por el Wizard:
+FormatoEntidades: Modifica las entidades para que tengan secuencias, customizer y cache.
+FormatoFacades: Modifica los facades para que tengan un selectLike.
+
+Uso: 
+Modificar los paths para que punten al directorio de la aplicación. 
+Ejecutar con clic derecho.

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgHlpVoucher" header="MODELO VOUCHER BANCO DE LA NACIÓN" 
+              widgetVar="wvDlgHlpVoucher" modal="true" showEffect="fade" hideEffect="fade" width="40%" maximizable="false"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="dlgHlpVoucherInit()" onHide="" position="center top"
+              style="padding:0!important" >
+    
+        <h:form id="voucherForm" >
+            <center>
+                <h:graphicImage url="/resources/imagenes/voucher02.png" />                
+            </center>
+        </h:form>
+    
+    </p:dialog>
+    
+    <script type="text/javascript">
+        
+        function dlgHlpVoucherInit() {
+            $("#dlgHlpVoucher > .ui-dialog-titlebar").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;"); 
+            $("#dlgHlpVoucher > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+            $("#dlgHlpVoucher > .ui-dialog-content").attr("style", "padding:4px!important;");
+
+            $("#dlgHlpVoucher").css('top', 35);
+        }
+
+    </script>
+    
+</ui:composition>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="crearForm" rendered="#{neDocumentoController.estado == 'CREAR'}" >
+        <p:focus context="crearForm" />
+        <p:defaultCommand target="botonGuardar"/>
+        <h:panelGrid columns="2">
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_nroExp}" for="nroExp" />
+            <p:inputText id="nroExp" value="#{neDocumentoController.registro.nroExp}" title="#{bundleNotificacion.NeDocumentoTitle_nroExp}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_nroExp}" validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_nroExp}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_anoExp}" for="anoExp" />
+            <p:inputText id="anoExp" value="#{neDocumentoController.registro.anoExp}" title="#{bundleNotificacion.NeDocumentoTitle_anoExp}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_anoExp}" validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_anoExp}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_secExp}" for="secExp" />
+            <p:inputText id="secExp" value="#{neDocumentoController.registro.secExp}" title="#{bundleNotificacion.NeDocumentoTitle_secExp}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_secExp}" validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_secExp}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_nroDoc}" for="nroDoc" />
+            <p:inputText id="nroDoc" value="#{neDocumentoController.registro.nroDoc}" title="#{bundleNotificacion.NeDocumentoTitle_nroDoc}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_nroDoc}" validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_nroDoc}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_fechaDoc}" for="fechaDoc" />
+            <p:calendar placeholder="#{bundleNotificacion.PhFechaHora}" id="fechaDoc" value="#{neDocumentoController.registro.fechaDoc}"  showOn="button" pattern="#{bundleNotificacion.FormatoFechaHora}" title="#{bundleNotificacion.NeDocumentoTitle_fechaDoc}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_fechaDoc}">
+                <f:convertDateTime pattern="#{bundleNotificacion.FormatoFechaHora}" />
+            </p:calendar>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_referencia}" for="referencia" />
+            <p:inputText id="referencia" value="#{neDocumentoController.registro.referencia}" title="#{bundleNotificacion.NeDocumentoTitle_referencia}"  validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_referencia}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_asunto}" for="asunto" />
+            <p:inputText id="asunto" value="#{neDocumentoController.registro.asunto}" title="#{bundleNotificacion.NeDocumentoTitle_asunto}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_asunto}" validatorMessage="#{bundleNotificacion.NeDocumentoValidatorMessage_asunto}" >
+            </p:inputText>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_activo}" for="activo" />
+            <p:selectBooleanCheckbox  id="activo" value="#{neDocumentoController.activo}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_activo}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_personaId}" for="personaId" />
+            <p:selectOneMenu id="personaId" value="#{neDocumentoController.registro.personaId}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_personaId}">
+                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.id}" value="#{sbPersonaController.selectItems}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_tipoId}" for="tipoId" />
+            <p:selectOneMenu id="tipoId" value="#{neDocumentoController.registro.tipoId}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_tipoId}">
+                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.id}" value="#{sbTipoController.selectItems}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_estadoId}" for="estadoId" />
+            <p:selectOneMenu id="estadoId" value="#{neDocumentoController.registro.estadoId}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_estadoId}">
+                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.id}" value="#{sbTipoController.selectItems}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_areaId}" for="areaId" />
+            <p:selectOneMenu id="areaId" value="#{neDocumentoController.registro.areaId}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_areaId}">
+                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.id}" value="#{sbTipoController.selectItems}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_usuarioId}" for="usuarioId" />
+            <p:selectOneMenu id="usuarioId" value="#{neDocumentoController.registro.usuarioId}" required="true" requiredMessage="#{bundleNotificacion.NeDocumentoRequiredMessage_usuarioId}">
+                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.id}" value="#{sbUsuarioController.selectItems}"/>
+            </p:selectOneMenu>
+        </h:panelGrid>
+        <br/>
+        <br/>
+        <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" actionListener="#{neDocumentoController.crear}" value="#{bundleNotificacion.Guardar}"/>
+        <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{neDocumentoController.mostrarBuscar}" value="#{bundleNotificacion.NeDocumentoVolverBusqueda}" immediate="true"/>
+        <br />
+    </h:form>
+</ui:composition>
+

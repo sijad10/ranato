@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog widgetVar="dlgClave" closable="true" header="#{bundleSistemaBase.CambiarClave}" resizable="false" modal="true" appendTo="@(body)" >
+        <h:form id="claveForm">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_clave}" for="cambiar_clave" />
+                <p:password id="cambiar_clave" value="#{sbUsuarioController.cambiarClave}" title="#{bundleSistemaBase.SbUsuarioTitle_clave}" required="true" requiredMessage="#{bundleSistemaBase.SbUsuarioRequiredMessage_clave}" validatorMessage="#{bundleSistemaBase.SbUsuarioValidatorMessage_clave}" size="50" autocomplete="off">
+                </p:password>
+                <p:outputLabel value="#{bundleSistemaBase.SbUsuarioLabel_clave2}" for="cambiar_clave2" />
+                <p:password id="cambiar_clave2" value="#{sbUsuarioController.cambiarClave2}" title="#{bundleSistemaBase.SbUsuarioTitle_clave}" required="true" requiredMessage="#{bundleSistemaBase.SbUsuarioRequiredMessage_clave}" validatorMessage="#{bundleSistemaBase.SbUsuarioValidatorMessage_clave}" size="50" autocomplete="off">
+                </p:password>
+            </h:panelGrid>
+            <br/>
+            <br/>
+            <p:commandButton icon="ui-icon-disk" partialSubmit="true" process=":claveForm, @this" update=":claveForm,:buscarForm" actionListener="#{sbUsuarioController.guardarClave()}" value="#{bundleSistemaBase.Guardar}" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('dlgClave').hide();"/>
+            <br />
+        </h:form>
+    </p:dialog>
+</ui:composition>
+

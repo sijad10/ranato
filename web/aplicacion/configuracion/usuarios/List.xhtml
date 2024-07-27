@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{bundleSistemaBase.BuscarSbUsuarioTitulo}" rendered="#{sbUsuarioController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{bundleSistemaBase.VerSbUsuarioTitulo}" rendered="#{sbUsuarioController.estado == 'VER'}"/>
+        <h:outputText value="#{bundleSistemaBase.EditarSbUsuarioTitulo}" rendered="#{sbUsuarioController.estado == 'EDITAR'}"/>
+        <h:outputText value="#{bundleSistemaBase.CrearSbUsuarioTitulo}" rendered="#{sbUsuarioController.estado == 'CREAR'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{sbUsuarioController.estado == 'BUSCAR'}">
+            <p:focus context="buscarForm" />
+            <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+                <p:panel>
+                    <p:outputLabel id="buscarFiltro" value="#{bundleSistemaBase.Filtro}" />&nbsp;
+                    <p:inputText  value="#{sbUsuarioController.filtro}" 
+                                  placeholder="USUARIO / NOMBRES Ó APELLIDOS"
+                                  size="40" />&nbsp;
+                    <p:commandButton id="botonBuscar" value="#{bundleSistemaBase.Buscar}" icon="ui-icon-search" actionListener="#{sbUsuarioController.buscar}"  update=":buscarForm" />&nbsp;
+                    <p:commandButton style="float: right;" icon="ui-icon-document" actionListener="#{sbUsuarioController.mostrarCrear}" value="#{bundleSistemaBase.Crear}" update="@all" />
+                    <p:commandButton style="float: right;" icon="ui-icon-close" actionListener="#{sbUsuarioController.anularMultiple}" value="#{bundle.Anular}"  update=":buscarForm" >
+                        <p:confirm header="#{bundle.ConfirmarTitulo}"  message="#{bundle.ConfirmarAnularVarios}" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                    <p:commandButton style="float: right;" icon="ui-icon-check" actionListener="#{sbUsuarioController.activarMultiple}" value="#{bundle.Activar}" update=":buscarForm" >
+                        <p:confirm header="#{bundle.ConfirmarTitulo}" message="#{bundle.ConfirmarActivarVarios}" icon="ui-icon-alert" />  
+                    </p:commandButton>                     
+                </p:panel>
+
+                <h:panelGroup rendered="#{sbUsuarioController.resultados != null}" >
+                    <p:dataTable id="buscarDatatable" value="#{sbUsuarioController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 selection="#{sbUsuarioController.registrosSeleccionados}" 
+                                 emptyMessage="#{bundleSistemaBase.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleSistemaBase.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleSistemaBase.PaginatorFilasPorPagina}">
+                        <p:column selectionMode="multiple" width="16" />
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_login}" sortBy="#{item.login}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_login}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.login}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_fechaIni}" sortBy="#{item.fechaIni}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_fechaIni}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.fechaIni}">
+                                <f:convertDateTime pattern="#{bundleSistemaBase.FormatoFecha}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_numDoc}" sortBy="#{item.numDoc}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_numDoc}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.numDoc}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_nombres}" sortBy="#{item.nombres}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_nombres}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.nombres}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_apePat}" sortBy="#{item.apePat}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_apePat}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.apePat}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_apeMat}" sortBy="#{item.apeMat}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_apeMat}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.apeMat}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_correo}" sortBy="#{item.correo}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_correo}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.correo}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.SbUsuarioTitle_activo}" sortBy="#{item.activo}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleSistemaBase.SbUsuarioTitle_activo}" />
+                            </f:facet>
+
+                            <h:outputText value="#{(item.activo == 1)? 'SI': 'NO'}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleSistemaBase.Opciones}" style="text-align: center" exportable="false" width="7%">
+
+                            <p:commandButton ajax="false" 
+                                             actionListener="#{sbUsuarioController.mostrarVer}" 
+                                             title="Ver Registro"
+                                             icon="ui-icon-search"  
+                                             update="@all" >
+                            </p:commandButton> 
+
+                            <p:commandButton ajax="false" 
+                                             actionListener="#{sbUsuarioController.mostrarEditar}" 
+                                             title="Editar Registro"
+                                             icon="ui-icon-wrench" 
+                                             update="@all" >
+                            </p:commandButton> 
+
+                            <p:commandButton actionListener="#{sbUsuarioController.mostrarCambiarClave()}" 
+                                             icon="ui-icon-key"  
+                                             title="Actualizar clave"
+                                             partialSubmit="true" 
+                                             process="@this" 
+                                             update=":claveForm" 
+                                             oncomplete="PF('dlgClave').show();" 
+                                             rendered="#{(item.activo == 1)and item.tipoId.codProg.equals('TP_USR_EXT')}"  >
+                            </p:commandButton> 
+
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+            <div align="center" >
+                <h:panelGrid columns="6" 
+                             cellpadding="2" 
+                             cellspacing="10" 
+                             style="border-style: solid; width: 20%;" 
+                             rendered="#{sbUsuarioController.resultados != null}">
+                    <p:outputLabel value="#{bundle.AdminVer}" escape="false"/>
+                    <p:graphicImage url="/resources/imagenes/admin_view.png" />
+                    <p:outputLabel value="#{bundle.AdminEditar}" escape="false"/>
+                    <p:graphicImage url="/resources/imagenes/admin_edit.png" />
+                    <p:outputLabel value="#{bundle.AdminChngPwd}" escape="false"/>
+                    <p:graphicImage url="/resources/imagenes/admin_chng_pwd.png" />                      
+                </h:panelGrid>
+            </div> 
+        </h:form>
+        <ui:include src="Create.xhtml" />
+        <ui:include src="Edit.xhtml" />
+        <ui:include src="View.xhtml" />
+        <ui:include src="DlgClave.xhtml" />
+    </ui:define>
+</ui:composition>
+

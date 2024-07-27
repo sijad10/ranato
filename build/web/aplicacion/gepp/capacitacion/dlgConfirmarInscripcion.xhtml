@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <p:dialog id="dlgInscripcion" widgetVar="wvDialogInscripcion"
+              modal="true" resizable="false" appendTo="@(body)"  width="800px" height="250px"
+              header="#{BundleBDIntegrado.EppCertificado_declaracionJurada}" closable="true">
+        <h:form id="frmInscripcion">
+            <h:panelGrid columns="1" >
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos }" style="font-weight: bold;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto1 }" style="margin-left: 8px;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto2 }" style="margin-left: 8px;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto3 }" style="margin-left: 8px;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto4 }" style="margin-left: 8px;" />
+            </h:panelGrid>
+            <br/>
+            <h:panelGrid columns="2" >
+                <p:selectBooleanCheckbox value="#{eppCertificadoController.terminos}" >
+                    <p:ajax process="@this" update="@form" />
+                </p:selectBooleanCheckbox>
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_terminosinscripcion }" style="margin-left: 10px;" />
+            </h:panelGrid>
+            <br/><br/>
+            <h:panelGrid columns="2" style="text-align: center;" >
+                    <p:commandButton value="Realizar Inscripción"
+                                     disabled="#{!eppCertificadoController.terminos}"
+                                     actionListener="#{eppCertificadoController.inscribirCertificado()}"
+                                     icon="ui-icon-disk"  />
+
+                    <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                 process="@this"
+                                 update="frmInscripcion"
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogInscripcion').hide()"
+                                 icon="ui-icon-closethick" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

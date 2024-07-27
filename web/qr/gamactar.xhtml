@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de Licencias - GAMAC</title>
+            </f:facet>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+                .celdaCentrada {
+                    text-align: center;
+                }
+            </style>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 100%; background: white;" cellpadding="5" >
+                        <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                        <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGrid columns="1" style="width: 100%; background: white; padding: 20px; font-size: medium;">
+                        <h:outputLabel value="TARJETA DE PROPIEDAD DE ARMAS" style="font-weight: bold;"/>
+                    </h:panelGrid>
+                    <h:panelGrid id="panelGrid" columns="2" rendered="#{verificadorQRController.registro != null}" style="width: 100%; background: white; padding: 10px; font-size: medium;">
+                        <h:outputLabel value="DATOS:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_NRO_RUA}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.NRO_RUA}" title="#{bundleGamac.QrAmaTarjetaTitle_NRO_RUA}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_MODALIDAD}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.MODALIDAD}" title="#{bundleGamac.QrAmaTarjetaTitle_MODALIDAD}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_RESTRICCION}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.RESTRICCION}" title="#{bundleGamac.QrAmaTarjetaTitle_RESTRICCION}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_ESTADO}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ESTADO}" title="#{bundleGamac.QrAmaTarjetaTitle_ESTADO}" style="font-size: large; color: red; font-weight: bold;"/>
+                        <h:outputLabel value="ARMA:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_TIPO}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.TIPO}" title="#{bundleGamac.QrAmaTarjetaTitle_TIPO}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_MARCA}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.MARCA}" title="#{bundleGamac.QrAmaTarjetaTitle_MARCA}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_MODELO}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.MODELO}" title="#{bundleGamac.QrAmaTarjetaTitle_MODELO}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_CALIBRE}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.CALIBRE}" title="#{bundleGamac.QrAmaTarjetaTitle_CALIBRE}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_SERIE}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.SERIE}" title="#{bundleGamac.QrAmaTarjetaTitle_SERIE}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_SIT}"/>   
+                        <h:outputLabel value="#{verificadorQRController.registro.SITUACION}" title="#{bundleGamac.QrAmaTarjetaTitle_SIT}" style="font-size: large; color: red; font-weight: bold;"/>
+
+                        <h:outputLabel value="PROPIETARIO:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                        <h:outputLabel value=""/><h:outputLabel value=""/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_DOC_PROPIETARIO}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.DOC_PROPIETARIO}" title="#{bundleGamac.QrAmaTarjetaTitle_DOC_PROPIETARIO}"/>
+                        <h:outputLabel value="#{bundleGamac.QrAmaTarjetaLabel_NOMBRES}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.NOMBRES}" title="#{bundleGamac.QrAmaTarjetaTitle_NOMBRES}"/>
+                    </h:panelGrid>
+                    <h:panelGroup layout="block" rendered="#{verificadorQRController.registro == null}" style="color: red; font-size: large; font-weight: bold; width: 100%; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                    <h:panelGrid columns="1" style="width: 100%; background: white; font-size: medium;" >
+                        <p:messages id="messages2" showDetail="true" closable="false">
+                        </p:messages>
+                        <p:messages id="messages" showDetail="true" closable="false">
+                        </p:messages>
+                    </h:panelGrid>
+                    <p:remoteCommand name="rcMsj2" actionListener="#{verificadorQRController.mostrarMensajeTransferencia}" update="messages2" />
+                    <p:remoteCommand name="rcMsj" actionListener="#{verificadorQRController.mostrarMensaje}" update="messages" />
+                </center>
+            </h:form>
+            
+            <script type="text/javascript">
+                setTimeout(function(){
+                    rcMsj2([{name: 'mensaje', value: '#{verificadorQRController.registro.ACTIVO}'}]);                    
+                    /*setTimeout(function(){
+                        $(".ui-messages-info-summary").attr("style", "color: #017ee7!important; font-family: Helvetica, 'latoregular', 'Trebuchet MS', Arial!important;");
+                        $(".ui-messages-info").attr("style", "background-color: #c4e0a3!important;");
+                    }, 500);*/
+                }, 1000);
+
+                setTimeout(function(){
+                    rcMsj([{name: 'mensaje', value: '#{verificadorQRController.registro.COD}'}]);                    
+                    setTimeout(function(){
+                        $(".ui-messages-warn-summary").attr("style", "color: #017ee7!important; font-family: Helvetica, 'latoregular', 'Trebuchet MS', Arial!important;");
+                        $(".ui-messages-warn").attr("style", "background-color: #ffd89e!important;");
+                    }, 500);
+                }, 2000);
+            </script>
+            
+        </h:body>
+    </f:view>
+</html>

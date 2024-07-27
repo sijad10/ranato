@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <p:dialog id="dlgConfirmarRegSCVB" widgetVar="wvDialogConfirmarRegSCVB" 
+                  modal="true" resizable="false" appendTo="@(body)" onShow="showDlgConfirmarRegSCVB()"
+                  header="Registro de Solicitud de Certificación"
+                  responsive="true" 
+                  closable="false" >
+            
+        <h:form id="frmConfirmarRegSCVB" >
+            <div class="ui-fluid">        
+                <br/>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;">
+                        <h:outputText value="¿Está seguro que desea registrar esta solicitud?" style="color: #141414; font-size: 16px; font-weight: bold;" />
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <h:outputText value="Por favor no cerrar esta ventana hasta que el proceso finalice." rendered="#{gsspSolicitudCertificacionCVBController.blnProcesoRegSCVB}" />
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;">
+                        <h:outputText value="Se registrará con un Número Interno"  style="color: #e0263b; font-size: 15px; font-weight: bold;" />                        
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div id="pnlProgressMsjeSCVB" class="ui-g-12 ui-md-12 ui-lg-12"  style="width: 100%; display: none; text-align: center;">
+                        <br/>
+                        <h:outputText value="Por favor no abrir o cerrar un ventana mientras se realiza el proceso de registro." style="font-weight: bold; font-size: 18px;" />
+                        <br/>
+                    </div>
+                </div>    
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <div id="pnlProgressBarSCVB" style="width: 100%;display: none;" >
+                            <p:progressBar widgetVar="pbAjaxCVB" 
+                                           ajax="true" 
+                                           value="#{gsspSolicitudCertificacionCVBController.progresoRegistrarSCVB}" 
+                                           labelTemplate="{value}%" 
+                                           styleClass="animated" 
+                                           global="false" />
+                        </div>
+                    </div>        
+                </div>    
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton value="Registrar"
+                                    process="@this, formRegSolicCertVB"
+                                    onclick="setVisibleProgressBarSCVB(); PF('pbAjaxCVB').start(); "     
+                                    icon="ui-icon-circle-check" 
+                                    action="#{gsspSolicitudCertificacionCVBController.registroFinalSCVB()}"
+                                    />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton value="Cancelar"
+                                     process="@this"      
+                                     update="frmConfirmarRegSCVB"
+                                     oncomplete="PF('wvDialogConfirmarRegSCVB').hide()"
+                                     icon="ui-icon-closethick" />
+                    </div>    
+                </div>  
+                
+            </div>    
+        </h:form>
+    </p:dialog>
+    <script type="text/javascript">
+        function showDlgConfirmarRegSCVB() {
+            $("div[id*='dlgConfirmarRegSCVB'] .ui-dialog").attr("style", "width:20% !important;");
+            $("div[id*='dlgConfirmarRegSCVB'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgConfirmarRegSCVB'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgConfirmarRegSCVB'] > .ui-dialog-content").attr("style", "padding:4px!important;");            
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");            
+        }
+        function setVisibleProgressBarSCVB() {
+            document.getElementById("pnlProgressBarSCVB").style.display = 'block';
+            document.getElementById("pnlProgressMsjeSCVB").style.display = 'block';                    
+        }
+    </script> 
+    <style>
+        #dlgConfirmarRegSCVB{
+            width: 20% !important;
+            max-width: 1000px;
+          }
+    </style>
+</ui:composition>

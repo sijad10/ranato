@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgDocumento" widgetVar="CreateViewDialogDocumento" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR DOCUMENTO" closable="false">
+        <h:form id="frmDlgDocumento" >
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="Tipo: " />
+                    <p:selectOneMenu id="cboDlgTipoDoc" 
+                                     value="#{eppRegistroGuiaTransitoController.tipodocumento}"
+                                     style="width: 150px"
+                                     required="true" 
+                                     requiredMessage="Debe seleccionar el tipo de Documento">
+                        <f:selectItem itemLabel="---" itemValue="#{null}" />
+                        <f:selectItems value="#{eppRegistroGuiaTransitoController.lstTipoDocGtExt}"
+                                       itemLabel="#{TP_DOC.nombre}" itemValue="#{TP_DOC}" 
+                                       var="TP_DOC" />
+                        <p:ajax event="change" update="@form" />
+                    </p:selectOneMenu>
+                    <p:commandButton value="#{bundleGeppGte.Buscar}" 
+                                     icon="ui-icon-search" 
+                                     update="@form" 
+                                     actionListener="#{eppRegistroGuiaTransitoController.buscarDlgDocumentoGt}" />
+                    <p:outputLabel value="Filtro: " />
+                    <p:inputText onblur="this.value = this.value.toUpperCase();"  
+                                 value="#{eppRegistroGuiaTransitoController.filtro}" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+                <p:dataTable id="datatable" 
+                             widgetVar="usrTable"
+                             value="#{eppRegistroGuiaTransitoController.lstDlgDocumento}" 
+                             var="item"    
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                             paginator="true" 
+                             rows="5"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}">
+                    <p:column headerText="Tipo" sortBy="#{item.tipoId}">                 
+                        <h:outputText value="#{item.tipoId.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Número" sortBy="#{item.numero}">                  
+                        <h:outputText value="#{item.numero}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Emisión" sortBy="#{item.fechaEmision}">                   
+                        <h:outputText value="#{item.fechaEmision}">
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="#{bundleGeppGte.Opcion}" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogDocumento').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgDocumentoGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgDocumento" 
+                                 actionListener="#"
+                                 oncomplete="PF('CreateViewDialogDocumento').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

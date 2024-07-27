@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition>
+        <p:dialog id="DirViewDialog" widgetVar="CrearDirViewDialog" height="40%"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{bundleGamac.DatosDireccion}">
+            <h:form id="frmDireccion">
+                <h:panelGrid columns="2" id="gridDireccion">
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_paisId}" for="tipoId2" />
+                    <p:selectOneMenu id="paisId" value="#{amaSolicitudRecojoController.direccion.paisId}" converter="sbPaisConverter" panelStyle="width:150px"
+                                     style="width: 230px" autoWidth="false"
+                                     required="true" requiredMessage="#{bundleSistemaBase.SbDireccionValidatorMessage_paisId}"
+                                     effect="fade" var="t" filter="true" filterMatchMode="startsWith">
+                        <f:selectItem itemLabel="#{null}" itemValue="#{null}"/>
+                        <f:selectItems value="#{sbPaisController.selectPaises()}" var="item" itemLabel="#{item.nombre}" itemValue="#{item}" />
+                        <p:column>
+                            <h:outputText value="#{t.nombre}" />
+                        </p:column>
+                        <p:ajax event="change" update="@this, gridDireccion" process="@this"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_tipoDirId}" for="tipoId2" />
+                    <p:selectOneMenu id="tipoId2" value="#{amaSolicitudRecojoController.direccion.tipoId}" 
+                                     style="width: 230px" autoWidth="false"
+                                     required="true" requiredMessage="#{bundleSistemaBase.SbDireccionRequiredMessage_tipoId}">
+                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                        <f:selectItems value="#{tipoBaseController.selectSbTipo('TID', false)}"
+                                       var="item" itemValue="#{item}" 
+                                       itemLabel="#{item.nombre}" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_viaId}" for="viaId2" />
+                    <p:selectOneMenu id="viaId2" value="#{amaSolicitudRecojoController.direccion.viaId}" 
+                                     style="width: 230px" autoWidth="false"
+                                     required="true" requiredMessage="#{bundleSistemaBase.SbDireccionRequiredMessage_viaId}">
+                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                        <f:selectItems value="#{tipoBaseController.selectSbTipo('TVIA', false)}"
+                                       var="item" itemValue="#{item}" 
+                                       itemLabel="#{item.nombre}"/>
+                        <p:ajax event="change" update="@this" process="@this" listener="#{amaSolicitudRecojoController.habilitarNumDir}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_zonaId}" for="zonaId2" />
+                    <p:selectOneMenu id="zonaId2" value="#{amaSolicitudRecojoController.direccion.zonaId}" 
+                                     style="width: 230px" autoWidth="false"
+                                     required="true" requiredMessage="#{bundleSistemaBase.SbDireccionRequiredMessage_zonaId}">
+                        <f:selectItem itemLabel="" itemValue="#{null}"/>
+                        <f:selectItems value="#{tipoBaseController.selectSbTipo('TZNA', false)}"
+                                       var="item" itemValue="#{item}" 
+                                       itemLabel="#{item.nombre}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="#{bundleSistemaBase.InscripcionAcceso_Ubigeo}" for="ubigeo" rendered="#{amaSolicitudRecojoController.direccion.paisId.nombre eq 'PERU'}"/>
+                    <p:autoComplete id="ubigeo" value="#{amaSolicitudRecojoController.direccion.distritoId}"
+                                    rendered="#{amaSolicitudRecojoController.direccion.paisId.nombre eq 'PERU'}"
+                                    size="45" placeholder="Departamento o Provincia o Distrito"
+                                    required="true" requiredMessage="#{bundleSistemaBase.InscripcionAccesoRequiredMessage_Ubigeo}"
+                                    completeMethod="#{amaSolicitudRecojoController.completeUbigeo}"
+                                    var="origenSelected" 
+                                    itemLabel="#{origenSelected.provinciaId.departamentoId.nombre.concat('/').concat(origenSelected.provinciaId.nombre).concat('/').concat(origenSelected.nombre)}"  
+                                    minQueryLength="3" cache="true" itemValue="#{origenSelected}"  forceSelection="true" scrollHeight="200">
+                    </p:autoComplete>
+                    <pe:tooltip for="ubigeo"  value="#{bundleSistemaBase.IngreseTresCaracteres_Slide}" showEffect="slideToggle" 
+                                hideEffect="slideToggle" showDelay="0" myPosition="bottom center" atPosition="top center"/>
+                    <p:outputLabel />
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_direccion}" for="direccion2" />
+                    <p:inputText id="direccion2" size="45"
+                                 onblur="this.value = this.value.toUpperCase();" 
+                                 value="#{amaSolicitudRecojoController.direccion.direccion}" 
+                                 title="#{bundleSistemaBase.SbDireccionTitle_direccion}" 
+                                 required="true" requiredMessage="#{bundleSistemaBase.SbDireccionRequiredMessage_direccion}" 
+                                 validatorMessage="#{bundleSistemaBase.SbDireccionValidatorMessage_direccion}" >
+                        <f:validateRegex pattern="#{bundleSistemaBase.RegexTextoNumeros}" />
+                    </p:inputText>
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_numero}" for="numero2" />
+                    <p:inputText id="numero2" size="45"
+                                 value="#{amaSolicitudRecojoController.direccion.numero}" 
+                                 title="#{bundleSistemaBase.SbDireccionTitle_numero}" 
+                                 required="false" requiredMessage="#{bundleSistemaBase.SbDireccionRequiredMessage_numero}">
+                    </p:inputText>
+                    <p:outputLabel value="#{bundleSistemaBase.SbDireccionLabel_referencia}" for="referencia2" />
+                    <p:inputTextarea value="#{amaSolicitudRecojoController.direccion.referencia}" cols="45" rows="3" 
+                                     id="referencia2"
+                                     onblur="this.value = this.value.toUpperCase();" maxlength="300" 
+                                     counter="display" counterTemplate="{0} caracteres restantes." autoResize="false"/>
+                    <p:outputLabel value="" />
+                    <p:outputLabel id="display" />
+                </h:panelGrid>
+                <br/>
+                <br/>
+                <p:commandButton icon="ui-icon-disk"   
+                                 value="#{bundleSistemaBase.Guardar}" 
+                                 action="#{amaSolicitudRecojoController.agregarDireccion}" update="frmDireccion:gridDireccion" >                         
+                </p:commandButton>
+                <p:outputLabel value="  "/>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>
+

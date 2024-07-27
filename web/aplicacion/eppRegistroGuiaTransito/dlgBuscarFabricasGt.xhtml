@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgFabrica" widgetVar="CreateViewDialogFabrica" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR FABRICA" closable="false">
+        <h:form id="frmDlgFabrica" >
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3">
+                    <p:outputLabel value="#{bundleGeppGte.Filtro}" />
+                    <p:inputText onblur="this.value = this.value.toUpperCase();"  value="#{eppRegistroGuiaTransitoController.filtro}" size="40" placeholder="Ingrese Razón social" />
+                    <p:commandButton value="#{bundleGeppGte.Buscar}" icon="ui-icon-search" update="datatable" action="#{eppRegistroGuiaTransitoController.buscarFabricaGt}" />
+                </h:panelGrid>
+                <p:dataTable id="datatable" value="#{eppRegistroGuiaTransitoController.lstDlgLocalMap}" 
+                             var="item" widgetVar="usrTable"   
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                             paginator="true" rows="5"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}">
+                    <p:column style="width: 5%;text-align: center;" headerText="id" >
+                        <h:outputText value="#{item.ID}"/>
+                    </p:column>
+                    <p:column headerText="Tipo" style="text-align: center;" >                  
+                        <h:outputText value="#{((item.TIPO == '1')?'DUEÑO':'ARRENDATARIO') }"/>
+                    </p:column>
+                    <p:column headerText="Razon Social" >                  
+                        <h:outputText value="#{item.RZN_SOCIAL}"/>
+                    </p:column>
+                    <p:column headerText="Ubigeo" >                  
+                        <h:outputText value="#{item.UBIGEO}"/>
+                    </p:column>
+                    <p:column headerText="Dirección" >                   
+                        <h:outputText value="#{item.DIRECCION}"/>
+                    </p:column>
+
+                    <p:column headerText="Opción" style="text-align: center;" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogFabrica').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgFabricacionGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgFabrica" 
+                                 actionListener="#"
+                                 oncomplete="PF('CreateViewDialogFabrica').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateAmaGuiaTransitoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaGuiaTransitoController.selected.id}" title="#{bundle.CreateAmaGuiaTransitoTitle_id}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_nroExpediente}" for="nroExpediente" />
+                    <h:inputText id="nroExpediente" value="#{amaGuiaTransitoController.selected.nroExpediente}" title="#{bundle.CreateAmaGuiaTransitoTitle_nroExpediente}" />
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_nroGuia}" for="nroGuia" />
+                    <h:inputText id="nroGuia" value="#{amaGuiaTransitoController.selected.nroGuia}" title="#{bundle.CreateAmaGuiaTransitoTitle_nroGuia}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_nroGuia}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_fechaEmision}" for="fechaEmision" />
+                    <h:inputText id="fechaEmision" value="#{amaGuiaTransitoController.selected.fechaEmision}" title="#{bundle.CreateAmaGuiaTransitoTitle_fechaEmision}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_fechaEmision}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_fechaVencimiento}" for="fechaVencimiento" />
+                    <h:inputText id="fechaVencimiento" value="#{amaGuiaTransitoController.selected.fechaVencimiento}" title="#{bundle.CreateAmaGuiaTransitoTitle_fechaVencimiento}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_fechaVencimiento}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaGuiaTransitoController.selected.activo}" title="#{bundle.CreateAmaGuiaTransitoTitle_activo}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaGuiaTransitoController.selected.audLogin}" title="#{bundle.CreateAmaGuiaTransitoTitle_audLogin}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaGuiaTransitoController.selected.audNumIp}" title="#{bundle.CreateAmaGuiaTransitoTitle_audNumIp}" required="true" requiredMessage="#{bundle.CreateAmaGuiaTransitoRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_hashQr}" for="hashQr" />
+                    <h:inputText id="hashQr" value="#{amaGuiaTransitoController.selected.hashQr}" title="#{bundle.CreateAmaGuiaTransitoTitle_hashQr}" />
+                    <h:outputLabel value="#{bundle.CreateAmaGuiaTransitoLabel_solicitudRecojoId}" for="solicitudRecojoId" />
+                    <h:selectOneMenu id="solicitudRecojoId" value="#{amaGuiaTransitoController.selected.solicitudRecojoId}" title="#{bundle.CreateAmaGuiaTransitoTitle_solicitudRecojoId}" >
+                        <f:selectItems value="#{amaSolicitudRecojoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.create}" value="#{bundle.CreateAmaGuiaTransitoSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.prepareList}" value="#{bundle.CreateAmaGuiaTransitoShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateAmaGuiaTransitoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

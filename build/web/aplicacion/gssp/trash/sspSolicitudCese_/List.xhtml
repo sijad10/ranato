@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_listado}" rendered="#{sspSolicitudCeseController.estado == 'BUSCAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_crear}" rendered="#{sspSolicitudCeseController.estado == 'CREAR'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" rendered="#{sspSolicitudCeseController.estado == 'BUSCAR'}" >
+                
+                    <p:fieldset legend="#{BundleBDIntegrado.GsspSolicitudCese_consulta}" id="pnlgBusqueda" >
+                        <br/>
+                        <h:panelGrid columns="1" >
+                                <h:panelGrid columns="8" >
+                                    <p:outputLabel value="#{BundleBDIntegrado.GsspSolicitudCese_desde}"/>                                                                         
+                                    <p:calendar id="fechaInicio"
+                                                locale="es"
+                                                maxdate="#{sspSolicitudCeseController.currentDate}"
+                                                showOn="button" value="#{sspSolicitudCeseController.fechaIni }"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                    <pe:tooltip for="fechaInicio"
+                                        value="Ingrese la fecha de inicio de búsqueda" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>
+                                    
+                                    <p:outputLabel value="#{BundleBDIntegrado.GsspSolicitudCese_hasta}"/>
+                                    <p:calendar id="fechaFin"
+                                                locale="es"
+                                                maxdate="#{sspSolicitudCeseController.currentDate}"
+                                                showOn="button" value="#{sspSolicitudCeseController.fechaFin }"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                    <pe:tooltip for="fechaFin"
+                                        value="Ingrese la fecha fin de búsqueda" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>  
+                                    
+                                    <p:commandButton value="#{BundleBDIntegrado.Buscar}" 
+                                                     process="@this,pnlgBusqueda"
+                                                     icon="ui-icon-search " actionListener="#{sspSolicitudCeseController.buscarBandeja()}" 
+                                                     update="@form"/>
+                                    
+                                    <p:commandButton value="#{BundleBDIntegrado.GsspSolicitudCese_btnSolicitarCese}"
+                                                     icon="ui-icon-newwin"
+                                                     update="@form"
+                                                     ajax="false"
+                                                     style="margin-left: 30px;"
+                                                     actionListener="#{sspSolicitudCeseController.mostrarCrear() }" />
+                                </h:panelGrid>
+                        </h:panelGrid>
+                        <br/>
+                        <p:dataTable id="buscarDatatableRegistro" value="#{sspSolicitudCeseController.resultados}"
+                                     var="itemReg" 
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">                    
+          
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_nroSolicitud}" style="text-align: center;" >                               
+                                <h:outputText value="#{itemReg.nroSolicitud}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_cantidadSolicitados}" style="text-align: center;" >                            
+                                <h:outputText value="#{itemReg.cantidadCese}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_fecha}" style="text-align: center;" >                                                           
+                                <h:outputText value="#{itemReg.fechaSolicitud}">
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_documento}" style="text-align: center;" >
+                                 <p:commandButton  id="botonDocumento" icon="ui-icon-print" 
+                                                  ajax="false" 
+                                                  value="Ver"
+                                                  partialSubmit="true"                              
+                                                  onclick="this.form.target = '_blank'" 
+                                                  onblur="this.form.target = '_self'" 
+                                                  immediate="true" >
+                                     <p:fileDownload value="#{sspSolicitudCeseController.reporte(itemReg)}" contentDisposition="inline"  />
+                                </p:commandButton>    
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_estado}" style="text-align: center;" >
+                                <h:outputText value="#{sspSolicitudCeseController.obtenerEstado(itemReg.sspSolicitudCeseDetList)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_detalle}" style="text-align: center;">
+                               <p:commandButton icon="ui-icon-document" value="Ver" 
+                                                actionListener="#{sspSolicitudCeseController.openDlgListadoDevolucionCarne(itemReg) }" 
+                                                process="@this" update="@this"/>
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+                    </p:fieldset>
+                                
+            </h:form>
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="dlgBuscarComprobante.xhtml"/>
+            <ui:include src="dlgMensajeValidacion.xhtml"/>
+            <ui:include src="dlgListadoDevolucionCarne.xhtml"/>
+            <ui:include src="dlgAyuda.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

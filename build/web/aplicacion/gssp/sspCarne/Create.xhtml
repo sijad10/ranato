@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.sspCarne_crear_title}" rendered="#{sspCarneController.estado == 'CREAR'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="createForm" rendered="#{sspCarneController.estado == 'CREAR'}" >                
+                <p:defaultCommand target="botonGuardar" />
+                
+                <p:panel id="pnlRegistro" style="border: 0px;">
+                    <h:panelGrid columns="2" style="width: 100%;">
+                        <p:panel header="#{BundleBDIntegrado.sspCarne_create_tutorialSistema}" id="pnlLinks" style="border: 0px;">
+                            <h:panelGrid columns="12" >
+                                    <p:link target="_blank"  href="#{BundleBDIntegrado.sspCarne_ayuda_sistema}" >
+                                        <h:graphicImage name="/icons/help_icon.png" width="23" style="cursor: help;" />
+                                        <p:outputLabel value="Ayuda"/>
+                                    </p:link>
+                                    
+                                    <p:link target="_blank"  href="#{BundleBDIntegrado.sspCarne_manual_sistema}" >
+                                        <p:graphicImage name="/icons/book_icon.png" width="23" />
+                                        <p:outputLabel value="Manual" style="margin-left: 5px;" />
+                                    </p:link>
+
+                                    <p:graphicImage name="/icons/youtube_icon.png" width="23" style="margin-left: 20px;" />
+                                    <p:outputLabel value="Video"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel header="#{BundleBDIntegrado.sspCarne_create_formatos}" id="pnlFormatos" style="border: 0px;">
+                            <p:commandButton  id="botonReporteD" 
+                                            icon="imageButtonXls" 
+                                            value="DJ"                                       
+                                            title="Descargar Declaración Jurada"
+                                            ajax="false"                                             
+                                            partialSubmit="true"                              
+                                            onclick="this.form.target = '_blank'" 
+                                            onblur="this.form.target = '_self'" 
+                                            immediate="true" >
+                                <p:fileDownload value="#{sspCarneController.downloadFormatoDJ()}" contentDisposition="inline"  />
+                            </p:commandButton>      
+                        </p:panel>
+                    </h:panelGrid>                        
+                    
+                    <p:panel header="#{BundleBDIntegrado.sspCarne_create_datosAdministrado}" id="pnlAdministrado" >
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_dondeRecoger} *" style="font-weight: bold; display: block; width: 120px;"  />    
+                            <p:selectOneMenu id="dondeRecoger" value="#{sspCarneController.registro.sedeSucamec }" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{sspCarneController.obtenerDescDondeRecoger(item)}" value="#{sspCarneController.lstAreas}"/>
+                                <p:ajax event="change" process="@this,pnlAdministrado" update="@this,pnlAdministrado" listener="#{sspCarneController.validaSede()}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_modalidad} *" style="font-weight: bold;margin-left: 15px;" />
+                            <p:selectOneMenu id="modalidad" value="#{sspCarneController.registro.carneId.modalidadId }" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarneController.lstModalidadesActivas}"/>
+                                <p:ajax event="change" process="@this,pnlAdministrado" update="@this,pnlAdministrado" listener="#{sspCarneController.cambiarModalidad()}" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_tipoReg} *" style="font-weight: bold; display: block; width: 120px;"  />    
+                            <p:selectOneMenu id="tipoRegistro" value="#{sspCarneController.registro.tipoRegId }" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarneController.listadoTipoRegistro}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_tipoOpe} *" style="font-weight: bold;margin-left: 15px;" />
+                            <p:outputLabel value="#{sspCarneController.registro.tipoOpeId.nombre }" />
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel header="#{BundleBDIntegrado.sspCarne_create_datosVigilante}" id="pnlDatosProspecto" >
+                        <h:panelGrid columns="6" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_tipoDoc} *" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:selectOneMenu id="tipoDoc" value="#{sspCarneController.tipoDocSelected }" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarneController.listadoTipoDoc}"/>
+                                <p:ajax event="change" process="@this,pnlDatosProspecto" update="@this,pnlDatosProspecto" listener="#{sspCarneController.cambiarTipoDoc(true)}" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_documento} *" style="font-weight: bold;margin-left: 15px;" />
+                            <p:inputText value="#{sspCarneController.numDoc}" id="numDoc" maxlength="#{sspCarneController.maxLength}" >
+                                <p:keyFilter mask="int" preventPaste="false" />
+                            </p:inputText>
+                            <p:commandButton icon="ui-icon-search"
+                                             id="btnBuscarVigilante"
+                                             style="margin-left: 20px;"
+                                             value="#{BundleBDIntegrado.Buscar}"
+                                             process="@this,pnlAdministrado,pnlDatosProspecto" update="@this,pnlAdministrado,pnlDatosProspecto"
+                                             actionListener="#{sspCarneController.buscarVigilante()}" >
+                            </p:commandButton>
+                            <p:outputLabel value="" />
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_nombres} *" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:inputText value="#{sspCarneController.nombres}" id="nombres" maxlength="200" readonly="#{sspCarneController.disabledNombres}" size="30" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_apePat} *" style="font-weight: bold;margin-left: 15px;" />
+                            <p:inputText value="#{sspCarneController.apePat}" id="apePat" maxlength="200" readonly="#{sspCarneController.disabledNombres}" size="30" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_apeMat} " style="font-weight: bold;margin-left: 15px;" />
+                            <p:inputText value="#{sspCarneController.apeMat}" id="apeMat" maxlength="200" readonly="#{sspCarneController.disabledNombres}" size="30" />
+                            
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_fechaNac} *" style="font-weight: bold;" rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}" />
+                            <p:calendar id="fechaNac"
+                                        rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}"
+                                        navigator = "true"
+                                        locale="es" yearRange="c-80:c+80"
+                                        maxdate="#{sspCarneController.maximaFechaDelDia}"
+                                        showOn="button" value="#{sspCarneController.fechaNac}"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                            <p:outputLabel value="" rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}" />
+                            <p:outputLabel value="" rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}" />
+                            <p:outputLabel value="" rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}" />
+                            <p:outputLabel value="" rendered="#{sspCarneController.tipoDocSelected.codProg eq 'TP_DOCID_CE'}" />
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value="#{sspCarneController.labelCursoVig}" style="font-weight: bold;display: block; width: 350px; color: green;" />
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="#{sspCarneController.labelMsjCurso}" style="font-weight: bold;display: block; width: 350px; color: red;" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="3" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjFoto} *" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.sspCarne_crear_agregarFoto}"
+                                          invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessage}"
+                                          fileUploadListener="#{sspCarneController.handleFileUpload}"
+                                          invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeFoto()}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeFoto').valor}"
+                                          auto="true" process="@form" update="@form"
+                                          allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                                <p:graphicImage value="#{sspCarneController.foto}" cache="false" width="150" height="200">
+                                </p:graphicImage>
+                            </p:fileUpload>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_msjeCaracteristicasFoto}" escape="false" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value=" " style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="#{sspCarneController.obtenerMsjeFoto()}" style="color:red;" />
+                        </h:panelGrid>
+                    </p:panel>
+                    
+                    <p:panel header="#{BundleBDIntegrado.sspCarne_create_requisitos}" id="pnlRequisitos" >
+                    <!--    <h:panelGrid columns="2" rendered="#{sspCarneController.solicitarRecibo}" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_comprobante} " style="font-weight: bold;display: block; width: 120px;" />
+                            <h:panelGrid columns="3" >
+                                <p:inputText id="nroSecuencia"
+                                             value="#{sspCarneController.nroSecuencia}"
+                                             maxlength="12"
+                                             placeholder="NRO. COMPROBANTE" >
+                                    <p:keyFilter mask="int" preventPaste="false" />
+                                </p:inputText>
+                                
+                                <p:commandButton icon="ui-icon-search"
+                                                 id="btnBuscarRecibo"
+                                                 style="margin-left: 20px;"
+                                                 value="#{BundleBDIntegrado.Verificar}"
+                                                 process="@this,pnlRequisitos" update="@this,pnlRequisitos"
+                                                 actionListener="#{sspCarneController.buscarRecibosCarne()}" >
+                                </p:commandButton>                                
+                                
+                                <p:outputLabel value="#{sspCarneController.obtenerComprobanteSeleccionado(sspCarneController.registro.comprobanteId)}" style="font-weight: bold;display: block;" />
+                            </h:panelGrid> 
+                            
+                            <p:outputLabel value="" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_msjeComprobantePago}" style="color:red;" />
+                        </h:panelGrid> -->
+                        
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value=" &nbsp; " style="font-weight: bold;display: block; width: 120px;" escape="false" />
+                            <p:outputLabel value=" " />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjuntarDJ} *" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:fileUpload id="archivoDJ" label="#{BundleBDIntegrado.sspCarne_crear_archivoDJ}"
+                                          invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                          fileUploadListener="#{sspCarneController.handleFileUploadPDF}"
+                                          invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeDJ()}"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeDj').valor}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          auto="true" process="@this,pnlDatosProspecto" update="@this,pnlDatosProspecto"
+                                          allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" >
+                                <h:outputText value="#{sspCarneController.archivo }" />
+                            </p:fileUpload>
+                            
+                            <p:outputLabel value=" " style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="#{sspCarneController.obtenerMsjeSizeFile()}" style="color:red;" />
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel value=" &nbsp; " style="font-weight: bold;display: block; width: 120px;" escape="false" />
+                            <p:outputLabel value=" " />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_adjuntarCertificadoMedico} *" style="font-weight: bold;display: block; width: 120px;" />
+                            <p:fileUpload id="certificadoMedico" label="#{BundleBDIntegrado.sspCarne_crear_archivoDJ}"
+                                          invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                          fileUploadListener="#{sspCarneController.handleFileUploadCM}"
+                                          invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSizeCM()}"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarne_sizeCM').valor}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          auto="true" process="@this,pnlDatosProspecto" update="@this,pnlDatosProspecto"
+                                          allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" >
+                                <h:outputText value="#{sspCarneController.certificado }" />
+                            </p:fileUpload>
+                            
+                            <p:outputLabel value=" " style="font-weight: bold;display: block; width: 120px;" />
+                            <p:outputLabel value="#{sspCarneController.obtenerMsjeSizeCertificado()}" style="color:red;" />
+                        </h:panelGrid>
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarne_create_msjeValidacionCertificado}" escape="false" style="color:red;"/>
+                    </p:panel>
+                 </p:panel>
+
+                <br />
+                <h:panelGrid columns="2" >
+                    <p:commandButton id="botonGuardar" 
+                                     icon="ui-icon-disk" 
+                                     update="@all"
+                                     process="@all"
+                                     action="#{sspCarneController.crear}"
+                                     value="#{BundleBDIntegrado.Guardar}"/>
+                    <p:commandButton icon="ui-icon-closethick"
+                                     action="#{sspCarneController.prepareList() }"
+                                     value="Cancelar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" update="@all"  />
+                    <br/><br/>
+                </h:panelGrid>
+            </h:form>
+            <ui:include src="dlgAyuda.xhtml" />
+        </ui:define>
+    </ui:composition>
+
+</html>

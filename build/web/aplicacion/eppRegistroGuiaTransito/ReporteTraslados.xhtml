@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.ReporteTraslado}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="frmReporte">
+                <h:panelGrid columns="1">    
+                    <p:fieldset legend="Búsqueda" style="margin-bottom:20px">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Nro. Resolución: " />
+                            <p:column>
+                                <p:autoComplete id="acResolucion" 
+                                                size="60"
+                                                maxlength="100"
+                                                value="#{eppRegistroGuiaTransitoController.rgReporte}"
+                                                completeMethod="#{eppRegistroGuiaTransitoController.autoCompleteResoluciones}"
+                                                disabled="#{eppRegistroGuiaTransitoController.disableRgReporte}"
+                                                placeholder="NRO. RESOLUCIÓN"
+                                                required="true"
+                                                requiredMessage="Debe ingresar el número de resolución" 
+                                                var="item" 
+                                                itemLabel="#{item.eppResolucion.numero}" 
+                                                itemValue="#{item}"  
+                                                minQueryLength="3" 
+                                                cache="true" 
+                                                forceSelection="true" >
+                                    <p:ajax event="itemSelect" listener="#{eppRegistroGuiaTransitoController.seleccionarRgReporte}" update="@form" />
+                                </p:autoComplete>
+                                <p:commandButton value="x" 
+                                                 styleClass="botonBorrar" 
+                                                 title="Borrar R.G. seleccionada"
+                                                 rendered="#{eppRegistroGuiaTransitoController.rgReporte != null}"                                                 
+                                                 actionListener="#{eppRegistroGuiaTransitoController.borrarRgSeleccionada}" 
+                                                 update="@form" />
+                            </p:column>
+                        </h:panelGrid>    
+                    </p:fieldset>
+
+                    <p:fieldset legend="Datos de la Resolución" style="margin-bottom:20px">
+                        <p:dataTable id="dtrg" 
+                                     value="#{eppRegistroGuiaTransitoController.lstReporteRg}" 
+                                     var="item" 
+                                     widgetVar="wvdtrg"   
+                                     emptyMessage="#{bundle.MensajeNoResultados}" >
+                            <p:column headerText="Número Rg." style="width:120px;text-align:center"> 
+                                <h:outputText value="#{item.eppResolucion.numero}" />
+                            </p:column>
+                            <p:column headerText="Tipo" style="width:120px;text-align:center"> 
+                                <h:outputText value="#{item.tipoProId.abreviatura}" />
+                            </p:column>
+                            <p:column headerText="Empresa" style="width:120px;text-align:center"> 
+                                <h:outputText value="#{item.empresaId.rznSocial}" />
+                            </p:column>
+                            <p:column headerText="Explosivos Solicitados" style="width:200px; text-align: center;" exportable="false" >
+                                <p:dataTable var="mylist" 
+                                             value="#{eppRegistroGuiaTransitoController.lstActivosDetalleAutUso(item)}" 
+                                             emptyMessage="#{bundle.MensajeNoResultados}" > 
+                                    <p:column headerText="Producto" > 
+                                        <h:outputText value="#{mylist.explosivoId.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Cantidad" > 
+                                        <h:outputText value="#{mylist.cantidad}" />
+                                    </p:column>
+                                    <p:column headerText="Saldo" > 
+                                        <h:outputText value="#{eppRegistroGuiaTransitoController.saldoActualRpt(mylist.registroId.eppResolucion, mylist.explosivoId)}" />
+                                    </p:column>
+                                    <p:column headerText="Unidad de Medida" > 
+                                        <h:outputText value="#{mylist.explosivoId.unidadMedidaList[0].nombre}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+
+                    <p:fieldset legend="Datos de las Guías de Tránsito" style="margin-bottom:20px">
+                        <p:dataTable id="dtgte" 
+                                     value="#{eppRegistroGuiaTransitoController.lstReporteGuias}"                                      
+                                     var="item" 
+                                     widgetVar="wvdtgte"                                        
+                                     emptyMessage="#{bundle.MensajeNoResultados}" >
+                            <p:column headerText="Número Guía" style="width:80px;text-align:center" > 
+                                <h:outputText value="#{item.registroId.eppResolucion.numero}" />
+                            </p:column>
+                            <p:column headerText="Expediente" style="width:80px;text-align:center"> 
+                                <h:outputText value="#{item.registroId.nroExpediente}" />
+                            </p:column>
+                            <p:column headerText="Usuario" style="width:80px;text-align:center"> 
+                                <h:outputText value="#{item.registroId.audLogin}" />
+                            </p:column>
+                            <p:column headerText="Vigencia" style="width:80px;text-align:center"> 
+                                Inicio: <h:outputText value="#{item.registroId.eppResolucion.fechaIni}">
+                                    <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                                </h:outputText><br/>
+                                Fin: <h:outputText value="#{item.registroId.eppResolucion.fechaFin}">
+                                    <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Tipo GT/Estado" style="width:120px;text-align:center"> 
+                                Tipo GT:<h:outputText value="#{item.tipoTramite.nombre}" /><br/><br/>
+                                Estado: <h:outputText value="#{item.registroId.estado.nombre}" />
+                            </p:column>
+                            <p:column headerText="Empresa Transporte" style="width:120px;text-align:center"> 
+                                <h:outputText value="#{item.empresaTranspId.rznSocial}" />
+                            </p:column>
+                            <p:column headerText="Origen" style="width:120px;text-align:center"> 
+                                <h:outputText value="#{eppRegistroGuiaTransitoController.mostrarNombreOrigen(item,false)}"/>
+                            </p:column>
+                            <p:column headerText="Destino" style="width:120px;text-align:center"> 
+                                <h:outputText value="#{eppRegistroGuiaTransitoController.mostrarNombreDestino(item,false)}"/>
+                            </p:column>
+                            <p:column headerText="Explosivos solicitados" style="width:220px; text-align: center;" exportable="false">
+                                <p:dataTable var="mylist" 
+                                             value="#{eppRegistroGuiaTransitoController.lstActivosDetalleGuiaTransito(item)}" 
+                                             emptyMessage="#{bundle.MensajeNoResultados}" > 
+                                    <p:column headerText="PRODUCTO" > 
+                                        <h:outputText value="#{mylist.explosivoId.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="CANTIDAD" > 
+                                        <h:outputText value="#{mylist.cantidad}" />
+                                    </p:column> 
+                                    <p:column headerText="CANTIDAD EXTOR." > 
+                                        <h:outputText value="#{mylist.cantidadExtornada}" />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton  id="botonReporteD" 
+                                          icon="imageButtonXls" 
+                                          rendered="#{eppRegistroGuiaTransitoController.lstReporteGuias!=null}"
+                                          value="Descargar"
+                                          title="Descargar Excel"
+                                          ajax="false" 
+                                          process="@this,datatable" 
+                                          partialSubmit="true"                              
+                                          onclick="this.form.target = '_blank'" 
+                                          onblur="this.form.target = '_self'" 
+                                          immediate="true" >
+                            <p:fileDownload value="#{eppRegistroGuiaTransitoController.downloadExcel(3)}" contentDisposition="inline"  />
+                        </p:commandButton>
+                    </p:fieldset>
+                </h:panelGrid>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+
+</html>

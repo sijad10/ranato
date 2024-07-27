@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="creaCitaPolForm" >
+        <p:wizard showNavBar="false" step="#{citasPoligonoController.paso}" >
+            <p:tab id="paso1" title="1er Paso">
+                <p:panel id="panelPaso1" header="#{bundleCitas.TurnoLabel_fechaHora}" style="color:red">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_sede}" class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu id="sedeId" autoWidth="false" value="#{citasPoligonoController.registro.tipoSedeId}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.CitaArmas_paso2Sede_Msg}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasPoligonoController.listarSedes()}" />
+                                <p:ajax event="change" listener="#{citasPoligonoController.seleccionarSede}" partialSubmit="true" process="sedeId" update="panelPaso1, listaDiasId" oncomplete="selectFecha()"/>
+                            </p:selectOneMenu>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_fecha}" for="listaDiasId" class="txtLabel"
+                                               rendered="#{citasPoligonoController.visibleCalendarCentral or citasPoligonoController.visibleCalendarZonal or citasPoligonoController.visibleCalendarTacna}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                            <p:selectOneMenu id="listaDiasId" autoWidth="false" value="#{citasPoligonoController.fechaTurnoSeleccionada}"
+                                             rendered="#{citasPoligonoController.visibleCalendarCentral or citasPoligonoController.visibleCalendarZonal or citasPoligonoController.visibleCalendarTacna}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}">
+                                <f:selectItem itemLabel="Seleccione Fecha" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.fecha}" value="#{citasPoligonoController.getLstFechasCalendario()}" />
+                                <p:ajax event="change" listener="#{citasPoligonoController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="listaDiasId" oncomplete="selectFecha()"
+                                        update="creaCitaPolForm:pnlDtProg"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-7">
+                            <h:panelGrid id="pnlDtProg" style="margin:0!important">
+                                <p:dataTable id="dtProgramacion" value="#{citasPoligonoController.listaHoras}"
+                                             rendered="#{citasPoligonoController.registro.fechaTurno != null}"
+                                             var="item" widgetVar="progTable"
+                                             emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                             rowKey="#{item.id}">
+                                    <p:ajax event="rowSelectRadio" listener="#{citasPoligonoController.onRowSelectHora}" partialSubmit="true" />
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_hora}" style="" class="ui-lg-5" selectRow="false">
+                                        <h:outputText value="#{item.hora}" />
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_cupos}" style="" class="ui-lg-5" selectRow="false" >
+                                        <h:outputText value="#{item.cantCuposAct}"/>
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_seleccionar}" selectionMode="single" style="width:16px; text-align:center" class="ui-lg-2"  
+                                              rendered="#{citasPoligonoController.mostrarSelectorHora(item)}" />
+                                </p:dataTable>
+                            </h:panelGrid>                                        
+                        </div>
+                    </div>
+
+                </p:panel>
+
+                <h:panelGrid id="pnlFechaId" columns="4" cellspacing="5">
+                </h:panelGrid>
+
+                <div class="ui-g">
+                    <div class="ui-g-10"></div>
+                    <div class="ui-g-2" style="">
+                        <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="paso3" oncomplete="selectPasos()"
+                                         actionListener="#{citasPoligonoController.siguiente('paso12')}" value="Siguiente" process="@this paso1"/>                                    
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <ui:remove>
+                <p:tab id="paso2" title="2do Paso" class="ui-helper-hidden">
+                    <p:panel id="panelPaso2" header="#{bundleCitas.TurnoLabel_tipoDocNum}">
+                        <div class="ui-g" style="margin-bottom: 8px;">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_nota2dni}" style="color:red" class="txtLabel"/>&nbsp;
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:commandButton value="#{bundleCitas.TurnoLabel_ayuda}  " actionListener="#{citasPoligonoController.openDlgDni()}" 
+                                                 icon="ui-icon-help" partialSubmit="true" process="@this"/>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-3 ui-lg-1">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoDoc}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-1">
+                                <p:selectOneMenu value="#{citasPoligonoController.perExamen.tipoDoc}" autoWidth="false" required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_tipoDoc}">
+                                    <f:selectItem itemLabel="---" itemValue=""/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citaTipoBaseControllerST.itemsTipoDocumento}" />
+                                    <p:ajax event="change" listener="#{citasPoligonoController.cargarNroDocVal}" update="pnlDatosId panelPaso2" oncomplete="selectPasos()" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_nro}" class="txtLabel" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}" for="nroDoc"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-1" >
+                                <p:inputText id="nroDoc" value="#{citasPoligonoController.perExamen.numDoc}" maxlength="#{citasPoligonoController.maxNroDoc}"
+                                             required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_numDoc}" placeholder="#{citasPoligonoController.placeholder}"
+                                             validatorMessage="#{bundleCitas.TurnoValidatorMessage_numDoc}">
+                                    <f:validateRegex pattern="#{bundleCitas.RegexTextoNumeros}" />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <h:panelGroup rendered="#{citasPoligonoController.perExamen.tipoDoc != null}">
+                                    <p:inputText id="nroDocVal" value="#{citasPoligonoController.perExamen.numDocVal}" maxlength="1" rendered="#{citasPoligonoController.visibleNroDocVal}"
+                                                 required="#{citasPoligonoController.visibleNroDocVal}" requiredMessage="#{bundleCitas.TurnoReqMsg_numDocVal}" placeholder="B">
+                                    </p:inputText>
+                                </h:panelGroup>
+                            </div>                                    
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_nombres}" class="txtLabel" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}"/>                    
+                            </div>
+                            <div class="ui-g-12 ui-md-10 ui-lg-2">
+                                <p:inputText id="nombres" value="#{citasPoligonoController.perExamen.nombres}"
+                                             required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_nombres}"
+                                             placeholder="Nombres" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}"
+                                             validatorMessage="#{bundleCitas.TurnoValidatorMessage_nombres}">
+                                    <f:validateRegex pattern="#{bundleCitas.RegexTexto}" />
+                                </p:inputText>                            
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_apellidos}" class="txtLabel" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                <p:inputText id="apePat" value="#{citasPoligonoController.perExamen.apePat}"
+                                             required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_apePat}"
+                                             placeholder="Apellido Paterno" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}"
+                                             validatorMessage="#{bundleCitas.TurnoValidatorMessage_apePat}">
+                                    <f:validateRegex pattern="#{bundleCitas.RegexTexto}" />
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-12 ui-md-5 ui-lg-2">
+                                <p:inputText id="apeMat" value="#{citasPoligonoController.perExamen.apeMat}"
+                                             required="false" requiredMessage="#{bundleCitas.TurnoReqMsg_apeMat}"
+                                             placeholder="Apellido Materno" rendered="#{citasPoligonoController.perExamen.tipoDoc != null}"
+                                             validatorMessage="#{bundleCitas.TurnoValidatorMessage_apeMat}">
+                                    <f:validateRegex pattern="#{bundleCitas.RegexTexto}" />
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                    </p:panel>
+
+                    <h:panelGrid id="pnlDatosId" columns="5" cellspacing="5">
+                    </h:panelGrid>
+
+                    <div class="ui-g">
+                        <div class="ui-g-3" style="">
+                            <p:commandButton id="botonAnterior2" icon="ui-icon-seek-prev" iconPos="left" update="creaCitaPolForm" oncomplete="selectPasos()"
+                                             actionListener="#{citasPoligonoController.siguiente('paso1')}" value="Anterior" process="@this" />
+                        </div>
+                        <div class="ui-g-6"></div>
+                        <div class="ui-g-3" style="">
+                            <p:commandButton id="botonSiguiente2" icon="ui-icon-seek-next" iconPos="right" update="creaCitaPolForm" oncomplete="selectPasos()"
+                                             actionListener="#{citasPoligonoController.siguiente('paso23')}" value="Siguiente" process="@this paso2"/>
+                        </div>
+                    </div>
+
+                </p:tab>
+            </ui:remove>                
+
+            <p:tab id="paso3" title="2do Paso">
+                <p:panel id="panelPaso3" header="2.1 Ingrese los datos obligatorios">
+                    <div class="ui-g" style="margin-bottom: 8px">       
+                        <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram2b} " style="font-weight: bold"/>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram2c}" style=""/>
+                        </div>
+                    </div>
+
+                    <ui:remove>
+                        <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram1a}"/><br />
+                    </ui:remove>
+                    <ui:remove>
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram4a}" style="color:red"/>&nbsp;
+                            <p:commandButton value="#{bundleCitas.TurnoLabel_ayuda}" actionListener="#{citasPoligonoController.openDlgVoucher()}" 
+                                             icon="ui-icon-help" partialSubmit="true" process="@this"/>
+                        </h:panelGroup><br/>
+                        <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram5a}"/><br/>
+                        <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram6a}"/><br/><br/>
+                    </ui:remove>
+
+                    <div class="ui-g" style="margin-bottom: 5px;">
+                        <div class="ui-g-12 ui-md-3 ui-lg-1" >
+                            <p:outputLabel for="tipoOpe" value="Tipo de Operación" class="txtLabel" />
+                        </div>                        
+                        <div class="ui-g-12 ui-md-3 ui-lg-2" >
+                            <p:selectOneMenu id="tipoOpe" value="#{citasPoligonoController.registro.subTramiteId}" autoWidth="false" required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_tipoTram}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasPoligonoController.lstTipOpe}" />
+                                <p:ajax event="change" listener="#{citasPoligonoController.selectTipoOperacion}" partialSubmit="true" 
+                                        process="dtTipoLic @this" update="panelPaso3"
+                                        oncomplete="selectPasos()"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <p:panel id="pnlTipoLicencia" style="border: 0px!important; margin: 0px"
+                             rendered="#{citasPoligonoController.opeLicIni or citasPoligonoController.opeLicRen}"
+                             >
+                        <div class="ui-g" style="margin-bottom: 5px;">
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 contTipoLic" >
+                                <p:outputLabel for="tipoTramite" value="#{bundleCitas.TurnoLabel_tipoTramite}" class="txtLabel" rendered="#{citasPoligonoController.opeLicIni}" />
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2 contTipoLic" >
+                                <p:selectOneMenu id="tipoTramite" value="#{citasPoligonoController.registro.tipoTramiteId}" autoWidth="false"
+                                                 required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_tipoTram}"
+                                                 rendered="#{citasPoligonoController.opeLicIni}">
+                                    <f:selectItem itemLabel="---" itemValue=""/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citaTipoGamacController.itemsTipoTramite}" />
+                                    <p:ajax event="change" listener="#{citasPoligonoController.selectTipoLicencia}" partialSubmit="true" 
+                                            process="dtTipoLic @this" update="panelPaso3"
+                                            oncomplete="selectPasos()"/> <!-- combo licencia -->
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 contNroLic" >
+                                <p:outputLabel for="nroLic" value="Nro de Licencia" class="txtLabel" rendered="#{citasPoligonoController.opeLicRen}" />
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 contNroLic" >
+                                <p:selectOneMenu id="nroLic" value="#{citasPoligonoController.licencia}" autoWidth="false"
+                                                 required="true" requiredMessage="Elija el nro de Licencia"
+                                                 rendered="#{citasPoligonoController.opeLicRen}">
+                                    <f:selectItem itemLabel="---" itemValue=""/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nroLicencia}" value="#{citasPoligonoController.listaLicencia}" />
+                                    <p:ajax event="change" listener="#{citasPoligonoController.selectNroLicencia}" partialSubmit="true" 
+                                            process="dtTipoLic @this" update="panelPaso3"
+                                            oncomplete="selectPasos()"/> 
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2 contNroLic" >
+                                <p:outputLabel value="#{citasPoligonoController.licenciaModalidad}" rendered="#{citasPoligonoController.opeLicRen}"
+                                               escape="false" class="txtLabel" />
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1 contRuc ui-helper-hidden" >
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_nroRuc}: " class="txtLabel" rendered="#{citasPoligonoController.visibleNroRuc}"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1 contRuc ui-helper-hidden" >
+                                <p:autoComplete id="nroRuc" value="#{citasPoligonoController.rucRznSocial}" required="#{citasPoligonoController.visibleNroRuc}" requiredMessage="#{bundleCitas.TurnoReqMsg_ruc}"
+                                                completeMethod="#{citasPoligonoController.autcompleteRuc}" rendered="#{citasPoligonoController.visibleNroRuc}"
+                                                var="item" itemLabel="#{citasPoligonoController.obtenerRuc(item)}" itemValue="#{item}" minQueryLength="11" maxResults="10" cache="true" forceSelection="true" 
+                                                scrollHeight="200" widgetVar="" placeholder="NRO. RUC">
+                                    <p:ajax event="itemSelect" listener="#{citasPoligonoController.eligeEmpresaVig}" partialSubmit="true" update="rznSocial" oncomplete="selectPasos();"/>
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4 contRuc ui-helper-hidden" >
+                                <p:outputLabel id="rznSocial" value="#{citasPoligonoController.perPago.rznSocial}" escape="false" class="txtLabel" />
+                                <ui:remove>
+                                    <p:commandButton value="buscar" process="@this, nroRuc" update="" actionListener="#{citasPoligonoController.buscarRuc()}"
+                                                     partialSubmit="true" styleClass="ui-priority-primary" icon="ui-icon-search" />
+                                </ui:remove>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 contSRuc ui-helper-hidden" >
+                                <p:outputLabel value="Modalidades: " class="txtLabel" rendered="#{citasPoligonoController.visibleMultimodal}"/>                            
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4 contSRuc ui-helper-hidden" >
+                                <p:selectManyMenu id="modalidadesId" showCheckbox="false" converter="citaTipoGamacConverter" value="#{citasPoligonoController.modalidadesSelected}"
+                                                  rendered="#{citasPoligonoController.visibleMultimodal}"  >
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel=" #{item.nombre}" value="#{citaTipoGamacController.itemsTipoMultimodal}"/>
+                                    <p:ajax event="click" process="@this" update="modalidadesId dtTipoLic" listener="#{citasPoligonoController.ActionEvent}" />
+                                </p:selectManyMenu>
+                                <p:outputLabel value="Presionar la tecla CTRL + Clic para seleccionar o quitar la selección de más modalidades " rendered="#{citasPoligonoController.visibleMultimodal}" style="font-size: x-small; color: #212121;"/> 
+                            </div>
+
+                        </div>
+                    </p:panel>
+                    
+                    <p:panel id="pnlNroSolicitud" style="border: 0px!important; margin-bottom: 3px"
+                             rendered="#{citasPoligonoController.opeLicIni or citasPoligonoController.opeLicRen}"
+                             >
+                        <div class="ui-g" style="margin-bottom: 5px;">
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 " >
+                                <p:outputLabel for="seleccioneSolicitud" value="#{bundleCitas.TurTurnoLabel_seleccioneSolicitud}" class="txtLabel"  />
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2 " >
+                                <p:selectOneMenu id="seleccioneSolicitud" value="#{citasPoligonoController.eligeSolicitud}" autoWidth="false" disabled="false">
+                                  <!--  --><f:selectItem itemLabel="Seleccione" itemValue="#{null}"/> 
+                                    <f:selectItem itemLabel="SI " itemValue="SI"/> 
+                                 <!--   <f:selectItem itemLabel="NO" itemValue="NO"/> -->
+                                    <p:ajax event="change" partialSubmit="true" listener="#{citasPoligonoController.selectEligeSolicitud}"
+                                            process="@this" update="panelPaso3"
+                                            oncomplete="selectPasos()"/> <!-- combo virtual -->
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="ui-g" style="margin-bottom: 5px;">
+                            <div class="ui-g-12 ui-md-3 ui-lg-1 " >
+                                <p:outputLabel for="nroSolicitud" value="#{bundleCitas.TurTurnoLabel_nroSolicitud}" class="txtLabel" rendered="#{citasPoligonoController.eligeSolicitud eq 'SI'}" />
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-3 " >
+                                <p:selectOneMenu id="nroSolicitud" value="#{citasPoligonoController.registro.expVirtualSolicitudId}" autoWidth="false"  rendered="#{citasPoligonoController.eligeSolicitud eq 'SI'}" >
+                                    <f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" 
+                                                   itemLabel="#{item.procedimientoTupaId.tupaProcedimientoId.abreviatura} - Nro Empoce: #{item.comprobanteId.nroSecuencia} - Fecha registro: #{citasPoligonoController.formatearFecha(item.fechaRegistro)}" 
+                                                   value="#{citasPoligonoController.listarSolicitudes()}" />
+                                    <p:ajax event="change" listener="#{citasPoligonoController.selectNroSolicitud}" partialSubmit="true" 
+                                            process="@this" update="panelPaso3"
+                                            oncomplete="selectPasos()"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="ui-g" style="margin-bottom: 0px">
+                            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                <p:outputLabel value="Numero Comprobante: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Monto: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strImporte}" escape="false" class="txtLabel"/>
+                            </div>
+                        </div>
+                    </p:panel>
+
+                    <p:panel id="pnlgComprobante" style="border: 0px!important; margin-bottom: 3px"
+                             rendered="#{citasPoligonoController.solicitarRecibo and (citasPoligonoController.opeLicIni or citasPoligonoController.opeLicRen) and citasPoligonoController.eligeSolicitud eq 'NO'}"
+                             >
+                        <div class="ui-g" style="margin-bottom: 5px;">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                <p:outputLabel value="SI AL INGRESAR EL NRO. DE DOCUMENTO DEL VIGILANTE NO SE MUESTRA NINGÚN RESULTADO, POR FAVOR GENERE UN NUEVO TICKET EN ATENCIÓN SEL" style="font-size: 90%; color:red"/>
+                            </div>
+                        </div>                        
+                        <div class="ui-g" style="margin-bottom: 0px">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="Comprobante: " for="acReciboBn" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <div class="ui-inputgroup">
+                                    <p:autoComplete id="acReciboBn"
+                                                    value="#{citasPoligonoController.reciboBn}"
+                                                    completeMethod="#{citasPoligonoController.autoCompleteRecibos}"
+                                                    disabled="#{citasPoligonoController.disableReciboBn}"
+                                                    placeholder="NRO. COMPROBANTE"
+                                                    required="true"
+                                                    requiredMessage="Debe ingresar el número del comprobante"
+                                                    var="item"
+                                                    itemLabel="#{item.nroSecuencia}"
+                                                    itemValue="#{item}"
+                                                    minQueryLength="2"
+                                                    cache="true"
+                                                    onchange="buscaRec()"
+                                                    onkeypress="return runScript(event)"                                                    
+                                                    forceSelection="true" >
+                                        <p:ajax event="itemSelect" listener="#{citasPoligonoController.lstnrSelectRecibo}" update="pnlgComprobante" oncomplete="buscaRec()" />
+                                    </p:autoComplete>
+                                    <p:commandButton id="regDelBusLic" icon="ui-icon-close" class="red-button btnBusqueda" title="Borrar Recibo seleccionado"
+                                                     process="@this" update="pnlgComprobante" actionListener="#{citasPoligonoController.borrarReciboSeleccionado()}"
+                                                     rendered="#{citasPoligonoController.reciboBn != null and citasPoligonoController.registro.expVirtualSolicitudId == null}" partialSubmit="true" oncomplete="buscaRec()"/>
+                                    <pe:tooltip for="acReciboBn"
+                                                rendered="#{citasPoligonoController.reciboBn == null}"
+                                                value="Ingrese el número del recibo del Banco de la Nación"
+                                                showEffect="slideToggle"
+                                                hideEffect="slideToggle"
+                                                showDelay="0"
+                                                myPosition="left center"
+                                                atPosition="right center"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                <p:outputLabel value="Numero Comprobante: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Monto: " rendered="#{citasPoligonoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasPoligonoController.strImporte}" escape="false" class="txtLabel"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" style="margin-bottom: 5px;">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                <p:outputLabel value="NOTA: SI TIENES DUDAS PARA INGRESAR EL CÓDIGO DE VOUCHER " style="font-size: 90%; color:red"/>
+                                <p:commandLink process="@this" action="#{citasPoligonoController.openDlgVoucher()}" style="color:red; font-weight: bold">
+                                    <h:outputText value="CLIC AQUÍ: AYUDA" />
+                                </p:commandLink>
+                            </div>                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                <p:outputLabel value="RECUERDE QUE EL NRO DE EMPOCE SERÁ VISUALIZADO DESPUÉS DE 24 HORAS DE HABER REALIZADO EL PAGO (CONSIDERAR DÍAS HÁBILES)." style="font-size: 90%; color:red"/>
+                            </div>
+                        </div>                         
+                    </p:panel>
+
+                    <p:dataTable id="dtTipoLic" value="#{citasPoligonoController.listaTipoLicencia}"
+                                 var="item" widgetVar="teoTable" rowIndexVar="fila"
+                                 emptyMessage="#{bundle.MensajeNoResultados}"
+                                 style="width: 100%;"
+                                 editable="true" editMode="cell"
+                                 rowKey="#{item.id}"
+                                 rendered="#{citasPoligonoController.opeLicIni or citasPoligonoController.opeLicRen}">
+                        <p:column headerText="Tipo de Licencia" width="100px">
+                            <h:outputText value="#{item.turnoId.tipoTramiteId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Modalidad" width="100px">
+                            <h:outputText value="#{item.modalidadId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Tipo de Arma" width="100px" 
+                                  rendered="#{citasPoligonoController.registro.tipoTramiteId.codProg == 'TP_TRA_VP' or citasPoligonoController.registro.tipoTramiteId.codProg == 'TP_TRA_SIS'}">
+                            <h:outputText value="#{item.tipoArmaId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Arma" width="100px"
+                                  rendered="#{citasPoligonoController.registro.tipoTramiteId.codProg == 'TP_TRA_VP' or citasPoligonoController.registro.tipoTramiteId.codProg == 'TP_TRA_SIS'}">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.armaTeoId.nombre}" rendered="#{item.armaTeoId != null}"/></f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{item.armaTeoId}" style="width:100%" required="false">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems value="#{citaAmaCatalogoController.getItemsTipoArmaTeoTipo(item.tipoArmaId)}" var="itemAr" itemLabel="#{itemAr.nombre}" itemValue="#{itemAr}"/>
+                                        <p:ajax event="change" update="" />
+                                    </h:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Arma" width="100px"
+                                  rendered="#{citasPoligonoController.registro.tipoTramiteId.codProg != 'TP_TRA_VP' and citasPoligonoController.registro.tipoTramiteId.codProg != 'TP_TRA_SIS'}">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.armaTeoId.nombre}" rendered="#{item.armaTeoId != null}"/></f:facet>
+                                <f:facet name="input">
+                                    <h:selectOneMenu value="#{item.armaTeoId}" style="width:100%" required="false">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems value="#{citaAmaCatalogoController.itemsTipoArmaTeo}" var="item" itemLabel="#{item.nombre}" itemValue="#{item}"/>
+                                        <p:ajax event="change" update="dtTipoLic" />
+                                    </h:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>                        
+                    </p:dataTable>
+
+                    <p:panel id="pnlVoucherTemp" style="border: 0px!important; margin:8px 0px 3px 0px;" rendered="#{citasPoligonoController.solicitarVoucherTemp}">
+                        <div class="ui-g" style="margin-bottom: 4px;">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                <p:outputLabel value="DATOS DEL COMPROBANTE DE PAGO" style="font-size: 90%; color:red"/><br />
+                                <p:outputLabel value="NOTA: PARA INGRESAR EL VOUCHER DE PAGO SELECCIONE EL BOTÓN DE AYUDA" style="font-size: 90%; color:red"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-2" >
+                                <p:commandButton value="#{bundleCitas.TurnoLabel_ayuda}" actionListener="#{citasPoligonoController.openDlgVoucher()}" 
+                                                 icon="ui-icon-help" partialSubmit="true" process="@this"/>
+                            </div>
+                        </div>
+                        <ui:remove>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram1a}"/><br />
+                        </ui:remove>
+                        <ui:remove>
+                            <h:panelGroup>
+                                <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram4a}" style="color:red"/>&nbsp;
+                                <p:commandButton value="#{bundleCitas.TurnoLabel_ayuda}" actionListener="#{citasPoligonoController.openDlgVoucher()}" 
+                                                 icon="ui-icon-help" partialSubmit="true" process="@this"/>
+                            </h:panelGroup><br/>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram5a}"/><br/>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram6a}"/><br/><br/>
+                        </ui:remove>
+
+                        <div class="ui-g">      
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="Adjuntar vaucher de pago *"/>
+                                <p:fileUpload id="pfileUpload" label="Adjuntar" 
+                                              invalidFileMessage="#{bundleCitas.CitasPol_fileUpload_InvalidFileMessage}"
+                                              invalidSizeMessage="#{bundleCitas.CitasPol_fileUpload_InvalidSizeMessage}"
+                                              fileUploadListener="#{citasPoligonoController.handleFileUploadAdjunto}"
+                                              mode="advanced" dragDropSupport="true"
+                                              multiple="false" sizeLimit="#{bundleCitas.CitasPol_MaxSize}"
+                                              auto="true" process="@this" update="@this"
+                                              allowTypes="/(\.|\/)(png|PNG|jpg|JPG|jpeg|JPEG|pdf|PDF)$/" immediate="true" >
+                                </p:fileUpload>
+                                <h:outputText value="#{bundleCitas.CitasPol_adjunto_formato}" style="color: red;" />                               
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <h:panelGrid id="pnlDatosCId1" columns="6" cellspacing="4" rendered="true">
+                                    <p:outputLabel value="Nro de empoce: "/>
+                                    <p:inputText style="width: 100px" value="#{citasPoligonoController.registro.secuenciaEmpoce}" required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_codVoucher}"
+                                                 placeholder="A">
+                                        <p:keyFilter mask="pint"/>
+                                    </p:inputText>
+
+                                    <p:outputLabel value="Fecha de pago: "/>
+                                    <p:calendar id="fechaEmpoceId" required="true"
+                                                requiredMessage="#{bundleCitas.TurnoReqMsg_fecVoucher}"
+                                                value="#{citasPoligonoController.registro.fechaEmpoce}" locale="es"
+                                                showOn="button" navigator="true"
+                                                readonlyInput="true"
+                                                placeholder="B"
+                                                pattern="#{bundleCitas.FormatoFecha}" class="cal-70px">
+                                        <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                    </p:calendar>
+
+                                    <p:outputLabel value="Monto: "/>
+                                    <p:inputNumber id="montoEmpoce" style="width: 100px" value="#{citasPoligonoController.registro.montoEmpoce}" required="true" requiredMessage="#{bundleCitas.TurnoReqMsg_mtoVoucher}"
+                                                   placeholder="C">
+
+                                    </p:inputNumber>
+                                </h:panelGrid>                            
+                            </div>
+                        </div>                        
+                    </p:panel>
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior3" icon="ui-icon-seek-prev" iconPos="left" update="creaCitaPolForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasPoligonoController.siguiente('paso1')}" value="Anterior" process="@this"/>
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonSiguiente3" icon="ui-icon-seek-next" iconPos="right" update="paso3"
+                                         oncomplete="if(args.validationFailed){updateFalied();} else { updateOk(); } selectPasos();"
+                                         value="Siguiente" process="@this paso3"
+                                         rendered="#{citasPoligonoController.visibleSiguiente3}"/>
+                        <p:remoteCommand name="updateFalied" process="paso3" update="tipoTramite nroRuc modalidadesId mensajesGrowl" /> 
+                        <p:remoteCommand name="updateOk" actionListener="#{citasPoligonoController.siguiente('paso34')}" process="paso3" update="mensajesGrowl paso3" oncomplete="selectPasos();" /> 
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso4" title="3er Paso">
+
+                <p:panel id="panelPaso4" header="RESUMEN DE LA CITA" >
+                    <div class="ui-g" style="margin-bottom: 5px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_nroDocu4}"/>
+                            <p:outputLabel value="#{citasPoligonoController.perExamen.numDoc}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_fechaProgra4}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram4}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.tipoTramiteId.nombre}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} "/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Nro empoce: "/>
+                            <p:outputLabel value="#{citasPoligonoController.reciboBn.nroSecuencia}" rendered="#{citasPoligonoController.reciboBn!=null}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Fecha de pago: "/>
+                            <p:outputLabel value="#{citasPoligonoController.reciboBn.fechaMovimiento}" rendered="#{citasPoligonoController.reciboBn!=null}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>                                
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Monto: "/>
+                            <p:outputLabel value="#{citasPoligonoController.reciboBn.importe}" rendered="#{citasPoligonoController.reciboBn!=null}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Nro Solicitud: " rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.expVirtualSolicitudId.numeroSolicitud}" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Fecha de registro de solicitud: " rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.expVirtualSolicitudId.fechaRegistro}" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>                                
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaPres4} " style="color:red; font-size: x-large"/>
+                            <p:outputLabel value="#{citasPoligonoController.horaPresen}" style="color:red; font-size: x-large; font-weight: bold"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.TurnoLabel_tomeNota4}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <u><p:outputLabel value="#{bundleCitas.TurnoLabel_condiciones}"/></u><br/>
+                            <p:outputLabel value="#{citasPoligonoController.mensajeNota1}"/><br/>
+                            <p:outputLabel value="#{citasPoligonoController.mensajeNota2}"/><br/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.TurnoLabel_decJur}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <h:panelGrid columns="1" width="100%" >
+                        <h:panelGrid id="gridCaptcha" columns="2" >
+                            <p:graphicImage id="imgCaptcha" value="#{citasPoligonoController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                            <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{citasPoligonoController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                            <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                            <p:inputText id="textoCaptcha" value="#{citasPoligonoController.captcha.textoInput}" required="true" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox id="terminos" value="#{citasPoligonoController.terminos}" itemLabel="#{bundleCitas.AceptoTerminos}" required="true" requiredMessage="Debe aceptar los términos y condiciones" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior5" icon="ui-icon-seek-prev" iconPos="left" update="creaCitaPolForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasPoligonoController.siguiente('paso43')}" value="Anterior" process="@this" />
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton icon="ui-icon-check" iconPos="right" update="creaCitaPolForm" oncomplete="selectPasos()" style="height: 50px;font-size: medium;"
+                                         actionListener="#{citasPoligonoController.crear}" value="#{bundleCitas.TurnoButton_generarTurno}" process="@this,gridCaptcha,terminos"
+                                         rendered="#{citasPoligonoController.visibleSiguiente3}"/>
+                    </div>
+                </div>
+
+                <ui:remove>
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="botonAnterior5" icon="ui-icon-seek-prev" iconPos="left" update="@all" actionListener="#{citasPoligonoController.siguiente('paso3')}" value="Anterior" process="@this"/>
+                        <p:commandButton style="height: 50px;width: 200px;font-size: medium;" icon="ui-icon-check" actionListener="#{citasPoligonoController.crear}" value="#{bundleCitas.TurnoButton_generarTurno}" process="@this,gridCaptcha,terminos"  partialSubmit="true" update="@all"/>
+                    </h:panelGrid>
+                </ui:remove>                    
+            </p:tab>
+
+            <p:tab id="paso5" title="4to Paso">
+                <p:panel id="panelPaso5" header="CITA GENERADA" >
+                    <div class="ui-g" style="margin-bottom: 6px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_nroDocu4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.perExamen.numDoc}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_fechaProgra4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_sede4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Nro Solicitud: " rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.expVirtualSolicitudId.numeroSolicitud}" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Fecha de registro de solicitud: " rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.expVirtualSolicitudId.fechaRegistro}" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>                                
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 6px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_tipoTram4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.tipoTramiteId.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} "/>
+                            <p:outputLabel value="#{citasPoligonoController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_claveCons} " style="color:red; font-size: large"/>
+                            <p:outputLabel value="#{citasPoligonoController.registro.claveConsulta}" style="color:red; font-size: large"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 6px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaPres4} " style="color:red; font-size: xx-large"/>
+                            <p:outputLabel value="#{citasPoligonoController.horaPresen}" style="color:red; font-size: xx-large; font-weight: bold"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Deberá apersonarse el día de la cita con todos los requisitos solicitados 
+                                           para la modalidad reservada según lo contemplado en el TUPA aprobado con Decreto Supremo N° 009-2018-IN." style="color:red;  font-size: large; font-weight: bold;" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId==null}"/>
+                            <p:outputLabel value="El día de la cita NO ES NECESARIO llevar los requisitos en físico, dado que los mismos fueron adjuntados en la Solicitud de Ventanilla Virtual vinculada a la presente cita." style="color:red;  font-size: large; font-weight: bold;" rendered="#{citasPoligonoController.registro.expVirtualSolicitudId!=null}"/>
+                        </div>
+                    </div>
+                </p:panel>
+
+            </p:tab>
+
+        </p:wizard>
+
+        <div class="ui-g">
+            <div class="ui-g-2">
+                <p:commandButton id="botonLimpiar" icon="ui-icon-trash" iconPos="left" update="@all" actionListener="#{citasGestionController.restaurarCitasPol()}" value="Limpiar" process="@this"/>
+            </div>
+        </div>
+
+    </h:form>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            //$(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            //$(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+            //$("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            //$("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".contRuc, .contSRuc").hide();
+            optimizaVista();
+        });
+
+        function optimizaVista() {
+            $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content'], div[id*='pnlTipoLicencia_content'], div[id*='pnlNroSolicitud_content']").attr("style", "padding:0px!important");
+            $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content'], div[id*='pnlTipoLicencia_content'], div[id*='pnlNroSolicitud_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+        function selectTab2() {
+            $("div[id*='panelPaso1_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $("a[href*='tab2']").parent().show("fast");
+            optimizaVista();
+        }
+
+        function selectPasos() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function selectFecha() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function buscaRec() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function runScript(e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        }
+
+    </script>
+
+</ui:composition>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="verSuspension" widgetVar="wvVerSuspension" width="35%" height="35%"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_ver_title}" closable="true"  >
+            <h:form id="verSuspensionForm" >
+                
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_tipoSuspension}" style="width: 130px;display:block;font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.tipoSuspension.nombre}" />
+                </h:panelGrid>
+                <h:panelGrid columns="4" id="pnlFechas">
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_fechaInicio}" style="width: 130px;display:block;font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.fechaInicio}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:outputLabel>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_fechaFin}" 
+                                   rendered="#{sbCsEstablecimientoController.esSuspensionTemporal}"
+                                   style="width: 130px;display:block;margin-left: 30px;font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.fechaFin}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:outputLabel>
+                    
+                    <p:outputLabel value=" " rendered="#{!sbCsEstablecimientoController.esSuspensionTemporal}" />
+                    <p:outputLabel value=" " rendered="#{!sbCsEstablecimientoController.esSuspensionTemporal}" />
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_nroExpediente}" style="width: 130px;display:block;font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.expediente.numero}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_docSustento}" style="width: 130px;display:block;font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.obtenerDescDocumentoSustento(sbCsEstablecimientoController.documentoSuspension)}" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_descripcion}" style="width: 130px;display:block;font-weight: bold;" />
+                    <p:inputTextarea id="descripcion" value="#{sbCsEstablecimientoController.descripcion}" maxlength="300"
+                                     readonly="true"
+                                     cols="70" rows="5" >
+                        <f:validateLength maximum="300"  />
+                    </p:inputTextarea>
+                </h:panelGrid>
+                <br/><br/>
+                
+                <div align="center">
+                      <p:commandButton value="#{BundleBDIntegrado.Cerrar}"                                     
+                                     style="margin-left: 20px;"
+                                     process="@this"
+                                     update="verSuspensionForm"
+                                     actionListener="#"
+                                     oncomplete="PF('wvVerSuspension').hide()"
+                                     icon="ui-icon-closethick" />
+                </div>
+                <br/>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

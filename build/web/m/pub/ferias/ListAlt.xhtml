@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">    
+    
+    <ui:define name="body">        
+        <h:form id="buscarForm" style="height: 100%;" >        
+            <h:inputHidden id="lat" value="#{oficinaPubController.lat}" />
+            <h:inputHidden id="lng" value="#{oficinaPubController.lng}" />
+            <p:gmap center="#{oficinaPubController.obtenerMapCenterMovilMap()}" zoom="15" type="ROADMAP" 
+                     streetView="false" id="gmap" 
+                    onPointClick="handlePointClick(event);"
+                    style="width: 100%; text-align: center;vertical-align: top;" widgetVar="gmap" model="#{oficinaPubController.modelMap}" >
+            </p:gmap>
+            <div id="capa" style="display: none; background: rgba(53, 53, 53, 0.52); width: 100%; position:absolute; top:0; left:0; z-index:50"></div>
+            <div id="titulo" style="border: 1px solid gray;  height: 110px;  ">
+                <div id="msje" style="text-align: center; padding: 5px;">
+                    <h:outputText value="Reporta una feria no autorizada" style="font-weight: bold;color:#2399e5; "/> <br /><br />
+                    <h:outputLabel escape="false" value="Ubica el lugar en el mapa y REPORTA" />
+                </div>
+                <div id="reportar" style="display: none;height: 100px; " >
+                    <h:form prependId="false">
+                        <h:panelGrid columns="1" style="width: 100%;">
+                            <h:outputText value="¿Reportar una feria no autorizada aqui?" style="font-weight: bold;font-size: smaller;"/>
+                            <h:panelGrid columns="2" style="width: 100%;">
+                                <p:commandButton value="Si" oncomplete="enviar()" style="border: 1px solid #1f89ce; color: #fff; background: #2399e5;padding: .6em 1em;" />
+                                <p:commandButton value="No" onclick="return cancel()" style="border: 1px solid #1f89ce; color: #fff; background: #2399e5;padding: .6em 1em;" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </div>
+            </div>
+        </h:form>
+        
+
+        <script src="#{oficinaPubController.obtenerKeyGoogle()}" type="text/javascript"></script>
+        <script type="text/javascript" src="#{oficinaPubController.obtenerApiGoogle()}"></script>
+        <script type="text/javascript">            
+            document.getElementById("buscarForm:gmap").style.height = ""+(window.innerHeight - document.getElementById('titulo').style.height.substring(0,3)-4)+"px";
+        </script>
+        <script type="text/javascript">
+            if (navigator.geolocation) {                
+                checkGeolocationByHTML5();
+            } else {
+                checkGeolocationByLoaderAPI(); // HTML5 not supported! Fall back to Loader API.
+            }
+
+            function checkGeolocationByHTML5() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    setMapCenter(position.coords.latitude, position.coords.longitude);
+                }, function() {
+                    checkGeolocationByLoaderAPI(); // Error! Fall back to Loader API.
+                });
+            }
+
+            function checkGeolocationByLoaderAPI() {
+                if (google.loader.ClientLocation) {
+                    setMapCenter(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+                } else {
+                    // Unsupported! Show error/warning?
+                }
+            }
+
+            function setMapCenter(latitude, longitude) {
+                PF('gmap').getMap().setCenter(new google.maps.LatLng(latitude, longitude));                
+            }
+        </script>
+        <script type="text/javascript">
+            var currentMarker = null;
+             
+            function handlePointClick(event) {
+                document.getElementById('buscarForm:lat').value = event.latLng.lat();
+                document.getElementById('buscarForm:lng').value = event.latLng.lng();                
+                if(currentMarker != null){
+                    currentMarker.setMap(null);
+                    currentMarker = null;
+                }
+                currentMarker = new google.maps.Marker({
+                    position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+                });     
+
+                PF('gmap').addOverlay(currentMarker);
+                PF('gmap').getMap().setCenter(new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()));
+                $("#reportar").slideDown();
+                //document.getElementById('reportar').style.display = 'block';
+                document.getElementById('capa').style.height = document.getElementById("buscarForm:gmap").style.height;
+                document.getElementById('capa').style.display = 'block';
+                document.getElementById('msje').style.display = 'none';
+            }
+ 
+            function enviar(){
+                var latitud = document.getElementById('buscarForm:lat').value;
+                var longitud = document.getElementById('buscarForm:lng').value;
+                location.href= 'Reportar.xhtml?latlng='+latitud+','+longitud;
+            }
+ 
+            function markerAddComplete() {                
+                var title = document.getElementById('title');
+                var descripcion = document.getElementById('descripcion');
+                
+                if(title.value === 'undefined'){
+                   title.value = ''; 
+                }
+                if(descripcion.value === 'undefined'){
+                   descripcion.value = ''; 
+                }        
+                
+                if(title.value.trim().length > 0 ){
+                    currentMarker.setTitle(title.value);
+                    document.getElementById('title').value = '';
+                    document.getElementById('descripcion').value = '';
+
+                    currentMarker = null;
+                    PF('dlg').hide();
+                }   
+                
+            }
+ 
+            function cancel() {
+                if(currentMarker != null){
+                    currentMarker.setMap(null);
+                    currentMarker = null; 
+                }
+                document.getElementById('reportar').style.display = 'none';
+                document.getElementById('msje').style.display = 'block';
+                document.getElementById('capa').style.height = '0px';
+                document.getElementById('capa').style.display = 'none';
+                return false;
+            }
+        </script>
+         
+    </ui:define>
+</ui:composition>
+

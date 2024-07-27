@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{BundleBDIntegrado.amaSolicitudTarjeta_listaArmas}" rendered="#{amaSolicitudTarjetaController.estado == 'BUSCAR'}" />
+            <h:outputText value="#{BundleBDIntegrado.amaSolicitudTarjeta_registrar_title}" rendered="#{amaSolicitudTarjetaController.estado == 'CREAR'}" />
+            <h:outputText value="#{BundleBDIntegrado.amaSolicitudTarjeta_editar_title}" rendered="#{amaSolicitudTarjetaController.estado == 'EDITAR'}" />
+            <h:outputText value="#{BundleBDIntegrado.amaSolicitudTarjeta_ver_title}" rendered="#{amaSolicitudTarjetaController.estado == 'VER'}" />
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" rendered="#{amaSolicitudTarjetaController.estado == 'BUSCAR'}" >
+                <p:panel header="Busqueda" id="panBusqueda" >
+                    <h:panelGrid columns="2" id="pnlgBusqueda" style="width: 100%;"  >
+                            <p:fieldset legend="#{BundleBDIntegrado.amaArma_bandeja}" >
+                                <h:panelGrid columns="1" id="pnlFiltro">
+                                    <h:panelGrid columns="5" >
+                                        <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoBusquedaFiltro}" for="tipoFiltroBusqueda" style="width: 145px;display: block;" />
+                                        <p:selectOneRadio id="tipoFiltroBusqueda" value="#{amaSolicitudTarjetaController.tipoFiltro}" >
+                                            <f:selectItem itemLabel="TODOS" itemValue="0" />
+                                            <f:selectItem itemLabel="PENDIENTES DE CREAR" itemValue="1" />
+                                            <f:selectItem itemLabel="CREADOS Y/O TRANSMITIDOS" itemValue="2" />
+                                        </p:selectOneRadio>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="5" >
+                                        <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_filtroLabel}" for="bus" style="width: 145px;display: block;" />
+                                        <p:selectOneMenu id="bus" value="#{amaSolicitudTarjetaController.tipoBusquedaSolicitud}"  >
+                                            <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                            <f:selectItem itemValue="licencia" itemLabel="NRO. DE LICENCIA" />
+                                            <f:selectItem itemValue="serie" itemLabel="SERIE" />
+                                            <f:selectItem itemValue="estado" itemLabel="ESTADO" />
+                                            <p:ajax event="change" update="@this,pnlBusquedaCriterio" listener="#{amaSolicitudTarjetaController.cambiaTipoBusquedaSolicitud()}" />
+                                        </p:selectOneMenu>
+                                        
+                                        <h:panelGrid columns="2" id="pnlBusquedaCriterio">
+                                            <p:inputText value="#{amaSolicitudTarjetaController.filtro}" 
+                                                         rendered="#{amaSolicitudTarjetaController.tipoBusquedaSolicitud == 'licencia' or amaSolicitudTarjetaController.tipoBusquedaSolicitud == 'serie' }"
+                                                         id="filtroBusqueda" >
+                                                <p:keyFilter regEx="/[0-9]/i" preventPaste="false" rendered="#{amaSolicitudTarjetaController.tipoBusquedaSolicitud == 'licencia' }" />
+                                            </p:inputText>
+                                            <p:selectOneMenu id="tipoEstado" value="#{amaSolicitudTarjetaController.tipoEstadoSolicitud}"  rendered="#{amaSolicitudTarjetaController.tipoBusquedaSolicitud == 'estado' }" >
+                                                <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{amaSolicitudTarjetaController.obtenerListadoEstadosArma() }"/>
+                                                <p:ajax event="change" update="@this" process="@this" />
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
+                                       
+                                        <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                                     process="@form"
+                                                     icon="ui-icon-search " actionListener="#{amaSolicitudTarjetaController.buscarBandejaSolicitud()}" 
+                                                     update="@form"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <p:fieldset legend="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda}"  >
+                                    <h:panelGrid columns="10" id="pnlEstados">
+                                        <p:graphicImage name="/imagenes/estadosRegularizacion/estado_verificado.png" 
+                                                        width="40" alt="#{BundleBDIntegrado.amaSolicitudTarjeta_creados}"/>
+                                        <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_creados}" />
+
+                                        <p:graphicImage name="/imagenes/estadosRegularizacion/estado_pendienteRegularizar.png" 
+                                                        width="40" alt="#{BundleBDIntegrado.amaSolicitudTarjeta_pendientesInternar}" style="margin-left: 20px;" />
+                                        <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_pendientesInternar}" />
+
+                                        <p:graphicImage name="/imagenes/estadosRegularizacion/estado_sinverificar.png" 
+                                                        width="40" alt="#{BundleBDIntegrado.amaSolicitudTarjeta_pendientesCrear}" style="margin-left: 20px;" />
+                                        <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_pendientesCrear}" />
+                                    </h:panelGrid>
+                                </p:fieldset>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" width="100%" >
+                        <p:panel id="pnlEnviarSolicitud" header="#{BundleBDIntegrado.amaSolicitudTarjeta_cambiarEstado}" >
+                            <p:commandButton value="#{BundleBDIntegrado.amaSolicitudTarjeta_transmitir}" 
+                                        process="@this, pnlEnviarSolicitud"
+                                        style="margin-left: 20px;"
+                                        disabled="#{amaSolicitudTarjetaController.disabledBtnTransmitir}"
+                                        icon="ui-icon-transferthick-e-w " actionListener="#{amaSolicitudTarjetaController.transmitirSolicitud()}" 
+                                        update="@form" >
+                                <p:confirm header="Confirmación" message="#{BundleBDIntegrado.amaSolicitudTarjeta_confirmarTransmitir}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:panel>
+                        <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda}" >
+                            <h:panelGrid columns="12" >
+                                <p:graphicImage name="/imagenes/admin_view.png" width="25"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_ver}"/>
+
+                                <p:graphicImage name="/imagenes/admin_pencil.png" width="25" style="margin-left: 10px;"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_editar}"/>
+
+                                <p:graphicImage name="/imagenes/admin_trash.png" width="25" style="margin-left: 10px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_borrar}"/>
+                                
+                                <p:graphicImage name="/imagenes/admin_document.png" width="25" style="margin-left: 10px;"/>
+                                <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_constancia}"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                    
+                    <br/>
+                    <p:dataTable id="buscarDatatableRegistro" value="#{amaSolicitudTarjetaController.resultadosSolicitudes }"
+                                 var="itemReg"
+                                 rowKey="#{itemReg.ID_TEMP}"
+                                 selection="#{amaSolicitudTarjetaController.resultadosSeleccionados}"
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                 {RowsPerPageDropdown}"
+                                 rowStyleClass="#{amaSolicitudTarjetaController.estiloPorTipo(itemReg)}"
+                                 currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                        
+                        <p:ajax event="rowSelect" listener="#{amaSolicitudTarjetaController.seleccionarFilaTabla}" update="@form" process="@form" />
+                        <p:ajax event="rowUnselect" listener="#{amaSolicitudTarjetaController.deseleccionarFilaTabla}" update="@form" process="@form" />
+                        <p:ajax event="rowSelectCheckbox" listener="#{amaSolicitudTarjetaController.seleccionarFilaTabla}" update="@form" process="@form" />
+                        <p:ajax event="rowUnselectCheckbox" listener="#{amaSolicitudTarjetaController.deseleccionarFilaTabla}" update="@form" process="@form" />
+                        <p:ajax event="toggleSelect" listener="#{amaSolicitudTarjetaController.toggleEventFila(event)}" update="@form" process="@form" />
+                            
+                       <p:column selectionMode="multiple" style="width:16px;text-align:center"  />
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_nroExp}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.NRO_EXPEDIENTE}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_fecExp}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.FECHA_EXPEDIENTE}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_licencia}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.NRO_LIC}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_serie}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.NRO_SERIE}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_tipoArma}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.DES_ARM}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_marca}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.DES_MARCA}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_modelo}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.DES_MODELO}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_calibre}" style="text-align: center;" >
+                            <h:outputText value="#{amaSolicitudTarjetaController.obtenerCalibreSolicitud(itemReg)}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_situacion}" style="text-align: center;" >
+                            <h:outputText value="#{amaSolicitudTarjetaController.obtenerSituacionSolicitud(itemReg)}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_estado}" style="text-align: center;" >
+                            <h:outputText value="#{amaSolicitudTarjetaController.obtenerEstadoSolicitud(itemReg)}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.amaSolicitudTarjeta_dt_opcion}" style="text-align: center;width: 10%;max-width:165px;">                            
+                             <p:commandButton update="@form"
+                                             icon="ui-icon-plus"
+                                             ajax="false"
+                                             rendered="#{amaSolicitudTarjetaController.renderBtnCrearSolicitud(itemReg)}"
+                                             actionListener="#{amaSolicitudTarjetaController.mostrarCrearSolicitud(itemReg) }"
+                                             value="Crear" >
+                            </p:commandButton>
+                            <p:commandButton update="@form"
+                                             icon="ui-icon-pencil"
+                                             ajax="false"
+                                             rendered="#{amaSolicitudTarjetaController.renderBtnEditarSolicitud(itemReg)}"
+                                             actionListener="#{amaSolicitudTarjetaController.mostrarEditarSolicitud(itemReg) }" >
+                            </p:commandButton>
+                            <p:commandButton update="@form"
+                                             icon="ui-icon-search"
+                                             ajax="false"
+                                             rendered="#{amaSolicitudTarjetaController.renderBtnVerSolicitud(itemReg)}"
+                                             actionListener="#{amaSolicitudTarjetaController.mostrarVerSolicitud(itemReg) }" >
+                            </p:commandButton>
+                            
+                            <p:commandButton update="@form"
+                                             icon="ui-icon-trash"
+                                             styleClass="botonBorrar"
+                                             rendered="#{amaSolicitudTarjetaController.renderBtnBorrarSolicitud(itemReg)}"
+                                             actionListener="#{amaSolicitudTarjetaController.borrarSolicitud(itemReg)}" >
+                                <p:confirm header="Confirmar borrado de registro" message="¿Confirma que desea eliminar el registro seleccionado?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:commandButton  icon="ui-icon-document"
+                                                  id ="btnImprimir"
+                                                  ajax="false"
+                                                  title="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_constancia}"
+                                                  rendered="#{amaSolicitudTarjetaController.renderBtnConstancia(itemReg)}"
+                                                  process="@all"
+                                                  onclick="this.form.target = '_blank'"
+                                                  onblur="this.form.target = '_self'"
+                                                  immediate="true" >
+                                    <p:fileDownload value="#{amaSolicitudTarjetaController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+                    <h:outputText value="#{BundleBDIntegrado.amaSolicitudTarjeta_msjePieListado}" style="color:red;margin-top: 40px;font-size: medium;" />
+                </p:panel>
+            </h:form>
+            <ui:include src="CreateSolicitud.xhtml"/>
+            <ui:include src="EditSolicitud.xhtml"/>
+            <ui:include src="ViewSolicitud.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

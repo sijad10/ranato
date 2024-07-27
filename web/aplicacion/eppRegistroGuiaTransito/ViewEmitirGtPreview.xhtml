@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml"  >
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.VerEmitirGt}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="verForm" >
+                <h:panelGrid columns="1" id="pnlgResolucionPrevia" >
+                    <p:outputLabel value="Visualice los datos ingresados para emitir la Guía de Tránsito Electrónica" />
+                    <p:graphicImage value="#{eppRegistroGuiaTransitoController.headerPreviewImgGTE}" style="width: 60%"/>
+
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewRefRg}" escape="false" rendered="#{!eppRegistroGuiaTransitoController.esSinGTRef}" />
+                    <p:outputLabel value="Se otorga la presente autorización a la empresa: " />
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewEmpresa}" />
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewOrigen}" escape="false" />
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewDestino}" escape="false" />
+                    <p:outputLabel value="A favor de: ELLOS MISMOS." escape="false"/>
+                    <p:outputLabel value="Los siguientes explosivos: " />
+                    <p:dataTable id="dtProductos"
+                                 style="width: 75%"
+                                 value="#{eppRegistroGuiaTransitoController.lstExplosivosActivosBulk}"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 var="item"
+                                 rowKey="#{item.id}" >
+                        <p:column headerText="Explosivo o material relacionado">
+                            <h:outputText value="#{item.explosivoId.nombre}" />
+                        </p:column>
+                        <p:column headerText="Unidad de Medida">
+                            <h:outputText value="#{item.explosivoId.unidadMedidaList[0].nombre}" />
+                        </p:column>
+                        <p:column headerText="Cantidad a transportar">
+                            <h:outputText value="#{item.cantidad}" >
+                                <f:convertNumber locale="en-US" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewEmpTransp}" escape="false"/>
+                    <p:dataTable id="dtConductor"
+                                 style="width: 45%"
+                                 value="#{eppRegistroGuiaTransitoController.selectedBulk.eppLicenciaList1}"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 var="item"
+                                 rowKey="#{item.id}" >
+                        <p:column headerText="Conductor">
+                            <h:outputText value="#{item.personaId.nombreCompleto}" />
+                        </p:column>
+                        <p:column headerText="Nro. Licencia">
+                            <h:outputText value="#{item.nroLicencia}" />
+                        </p:column>
+                    </p:dataTable>
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewCustodia}" escape="false"/>
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewVencimiento}" escape="false"/>
+                    <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewExpediente}" escape="false"/>
+
+
+
+                    <p:column style="float: right; margin-bottom:20px; clear: both;">
+                        <p:commandButton icon="ui-icon-disk"
+                                         style="height: 30px;width: 150px"
+                                         value="Emitir" actionListener="#{eppRegistroGuiaTransitoController.confirmarEmitir()}"/>
+                        <p:commandButton icon="ui-icon-search" 
+                                         action="#{eppRegistroGuiaTransitoController.regresarEmitir()}" 
+                                         style="height: 30px;width: 150px" value="Regresar" />
+                    </p:column>   
+                </h:panelGrid>
+            </h:form>        
+            <ui:include src="dlgConfirmEmitir.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

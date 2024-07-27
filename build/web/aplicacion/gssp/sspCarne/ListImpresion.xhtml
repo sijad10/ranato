@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.sspCarne_impresion_title}" rendered="#{sspCarneController.estado == 'IMPRIMIR'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="impresionForm" rendered="#{sspCarneController.estado == 'IMPRIMIR'}" >
+                <div class="ui-fluid">
+                    <h:panelGroup>
+                        <p:panel id="pnlBusquedaCarne" header="#{BundleBDIntegrado.sspCarne_list_busquedaCarne}" >
+                            <h:panelGrid columns="4" >
+                            
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_list_buscarPor} *" style="display: block; width: 125px;" />
+                                <h:panelGrid columns="2" >
+                                    <p:selectOneMenu id="buscarPor" value="#{sspCarneController.buscarPor}" >
+                                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                       <f:selectItem itemLabel="NRO. DE EXPEDIENTE" itemValue="2"/>
+                                       <f:selectItem itemLabel="NOMBRE PERSONAL DE SEGURIDAD" itemValue="3"/>
+                                       <f:selectItem itemLabel="DNI/CE PERSONAL DE SEGURIDAD" itemValue="4"/>
+                                       <f:selectItem itemLabel="MODALIDAD" itemValue="5"/>
+                                       <p:ajax event="change" process="pnlBusquedaCarne" update="pnlBusquedaCarne" listener="#{sspCarneController.cambiarTipoBuscarPor() }" />
+                                    </p:selectOneMenu>
+                                    <p:inputText value="#{sspCarneController.filtro}" id="filtroBusqueda"
+                                                 rendered="#{sspCarneController.buscarPor ne '5' and sspCarneController.buscarPor ne '6'}"
+                                                 placeholder="Escriba un filtro" style="width: 150px;" >
+                                        <p:keyFilter mask="int" preventPaste="false" rendered="#{sspCarneController.buscarPor ne '3' }" />
+                                    </p:inputText>
+                                    <p:selectOneMenu id="modalidades" value="#{sspCarneController.modalidadSelected }" rendered="#{sspCarneController.buscarPor eq '5'}" >
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarneController.listadoModalidadesBandejaImpresion}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:outputLabel value="" />
+                                <p:commandButton value="#{BundleBDIntegrado.Buscar}" 
+                                                 style="margin-left: 20px;"
+                                                 process="@form"
+                                                 icon="ui-icon-search " actionListener="#{sspCarneController.buscarBandejaImpresion()}" 
+                                                 update="@form"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_impresion_sedeRecojo}" style="display: block; width: 125px;" />
+                                <p:selectOneMenu id="dondeRecoger" value="#{sspCarneController.sedeSelected }" >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{sspCarneController.obtenerDescDondeRecoger(item)}" value="#{sspCarneController.lstAreas}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <h:panelGrid columns="4" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_list_fechaEmision}" style="display: block; width: 125px;"  />
+                                <h:panelGrid columns="4" >
+                                    <p:calendar id="fechaInicio"
+                                                locale="es"
+                                                showOn="button" value="#{sspCarneController.fechaInicio}"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                    <pe:tooltip for="fechaInicio"
+                                                value="Ingrese la fecha de inicio de transmisión"
+                                                showEffect="slideToggle"
+                                                hideEffect="slideToggle"
+                                                showDelay="0"
+                                                myPosition="left center"
+                                                atPosition="right center"/>
+                                    <p:outputLabel value="al"/>
+                                    <p:calendar id="fechaFin"
+                                                locale="es"
+                                                showOn="button" value="#{sspCarneController.fechaFinal }"
+                                                pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                    </p:calendar>
+                                </h:panelGrid>
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_impresion_rangoMaximo}"/>
+                                <p:outputLabel value=" "/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <h:panelGrid columns="1" width="100%" rendered="#{sspCarneController.resultados.size() > 0}">
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <div class="highlight-box">
+                                        <div class="initials" style="background-color:#D8D8D8;color:#00448f">
+                                            #{BundleBDIntegrado.sspCarne_impresion_totalCarnes}
+                                        </div>
+                                        <div class="card">
+                                            <span class="fa fa-eye"></span>
+                                            <span>Total</span>
+                                            <span class="count">
+                                                #{sspCarneController.totalCarnesImpresion}
+                                            </span>                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <div class="highlight-box">
+                                        <div class="initials-inicial" >#{BundleBDIntegrado.sspCarne_impresion_carnesIniciales}</div>
+                                        <div class="card">
+                                            <span class="fa fa-eye"></span>
+                                            <span>Total</span>
+                                            <span class="count">#{sspCarneController.totalCarnesIniciales}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <div class="highlight-box">
+                                        <div class="initials-duplicados" >#{BundleBDIntegrado.sspCarne_impresion_carnesDuplicados}</div>
+                                        <div class="card">
+                                            <span class="fa fa-eye"></span>
+                                            <span>Total</span>
+                                            <span class="count">#{sspCarneController.totalCarnesDuplicados}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <div class="highlight-box">
+                                        <div class="initials-cambioEmpresa" >#{BundleBDIntegrado.sspCarne_impresion_carnesCambioEmpresa}</div>
+                                        <div class="card">
+                                            <span class="fa fa-eye"></span>
+                                            <span>Total</span>
+                                            <span class="count">#{sspCarneController.totalCarnesCambioEmpresa}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <div class="highlight-box">
+                                        <div class="initials-renovados">#{BundleBDIntegrado.sspCarne_impresion_carnesRenovados}</div>
+                                        <div class="card">
+                                            <span class="fa fa-eye"></span>
+                                            <span>Total</span>
+                                            <span class="count">#{sspCarneController.totalCarnesRenovados}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </h:panelGrid>
+                    </h:panelGroup>
+                    <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.sspCarne_list_leyenda}" >
+                            <h:panelGrid columns="12" >
+                                <h:graphicImage url="/resources/icons/pdf.png" width="25" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_impresion_leyenda_pdf}"/>
+
+                                <p:graphicImage name="/imagenes/admin_person.png" width="25" style="margin-left: 10px;"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_impresion_leyenda_ver}"/>
+                                
+                                <p:graphicImage name="/icons/statistics_icon_2.png" width="25" style="margin-left: 10px;"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarne_impresion_leyenda_estadisticas}"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    <p:dataTable id="dtResultados" value="#{sspCarneController.resultados}"
+                                     var="itemReg"
+                                     reflow="true"
+                                     selection="#{sspCarneController.resultadosSeleccionados}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     rowStyleClass="#{sspCarneController.obtenerColorTipoCarne(itemReg)}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown} {Exporters}"
+                                     currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink target="_blank" rendered="#{sspCarneController.resultados.size() > 0}" >
+                                    <h:graphicImage url="/resources/icons/pdf.png" />
+                                    <p:fileDownload value="#{sspCarneController.generarPDFImpresion(null)}" contentDisposition="inline"  />
+                                </h:commandLink> 
+                                <p:commandLink process="@this" rendered="#{sspCarneController.resultados.size() > 0}" 
+                                               action="#{sspCarneController.openDlgEstadisticasImpresion()}" style="margin-left: 20px;" >
+                                    <p:graphicImage name="/icons/statistics_icon_2.png" width="25" />
+                                </p:commandLink>
+                            </f:facet>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_nroExpediente}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.NRO_EXPEDIENTE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_impresion_prospectoVigilante}" style="text-align: center;" >
+                                <h:outputText value="#{sspCarneController.obtenerDocVigilante(itemReg)}" escape="false" /><br/>
+                                <h:outputText value="#{itemReg.VIGILANTE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_vigencia}" style="text-align: center;" >
+                                <h:outputText value="#{sspCarneController.obtenerFechaVigenciaCarne(itemReg)}" escape="false" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_nroCarne}" style="text-align: center;width: 90px;" >
+                                <h:outputText value="#{(itemReg.NRO_CARNE eq '0'?'':itemReg.NRO_CARNE)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_operacion}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.TIPO_OPE_NOMBRE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_tipoRegistro}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.TIPO_REG_NOMBRE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_modalidades}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.MODALIDAD_NOMBRE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarne_list_dtListado_acciones}" style="text-align: center;width:90px;" >
+                                <p:commandButton  id="btnVerPdf"
+                                                  icon="ui-icon-person"
+                                                  ajax="false"
+                                                  process="@this"
+                                                  partialSubmit="true"
+                                                  onclick="this.form.target = '_blank'"
+                                                  onblur="this.form.target = '_self'"
+                                                  immediate="true" >                                          
+                                      <p:fileDownload value="#{sspCarneController.generarPDFImpresion(itemReg)}" contentDisposition="inline"  />
+                                </p:commandButton>
+                            </p:column>
+                    </p:dataTable>
+                    <br/>                    
+                </div>
+            </h:form>
+            <ui:include src="dlgEstadisticasImpresion.xhtml" />
+        </ui:define>
+    </ui:composition>
+</html>

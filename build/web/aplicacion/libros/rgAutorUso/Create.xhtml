@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="crearForm" rendered="#{eppLibroController.estado == 'CREAR'}" >
+        <p:focus context="crearForm" />
+        <p:defaultCommand target="botonGuardar"/>
+        <p:panel header="Datos de Movimiento">
+            <h:panelGrid columns="4" cellspacing="5">
+                <p:outputLabel value="RG Adquisicion de Uso" for="resPL"/>
+                <p:selectOneMenu value="#{eppLibroController.registroPlantaUsoComercio}" 
+                                 filter="true"  id="resPL" autoWidth="false" required="true"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxMostrarResolucion()}" 
+                            process="@form" partialSubmit="true"
+                            update="@form"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Tipo Lugar de Uso" id="tluso" />               
+                <p:inputText value="#{eppLibroController.tipoLugarUso}" size="80" disabled="true" />
+
+                <p:outputLabel value="Lugar de Uso"/>
+                <p:inputTextarea value="#{eppLibroController.labelLugaUso}" 
+                                 id="nroRes" maxlength="500" styleClass="inputTextArea" disabled="true"
+                                  rows="3" cols="80"/>
+
+
+                <p:outputLabel value="Periodo"/>
+                <h:panelGroup>
+                    <p:selectOneMenu value="#{eppLibroController.libroMes.mesId}" disabled="true"
+                                     >
+                        <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                        <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_MES', null)}"                                     
+                                       var="mes" itemLabel="#{mes.abreviatura}" itemValue="#{mes}"/>
+                    </p:selectOneMenu>
+                    <p:inputText value="#{eppLibroController.libroMes.libromAnio}" disabled="true"/>
+                </h:panelGroup>
+
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+        <div align="center">
+            <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" 
+                             actionListener="#{eppLibroController.crearAutoUsoLibro()}" 
+                             value="#{bundle.Guardar}"/>
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroUso()}" process="@this"
+                             value="Listado Autorizacion Uso" />     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

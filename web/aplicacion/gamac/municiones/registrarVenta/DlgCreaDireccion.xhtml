@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="newDireccion" header="#{bundleGamacCVMuni.RegVentaDlgNewDire_Title}" 
+              widgetVar="newDireccionDialog" modal="true" showEffect="fade" hideEffect="fade" width="580px"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="updateDialogNd()" onHide="updateDialogNdHide()" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="newDireccionView" style="text-align:left; padding:0px!important">
+            <h:form id="newDireccionForm">
+                <div class="ui-fluid">
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="ubicacionGeografica" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_Ubi_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:autoComplete id="ubicacionGeografica" 
+                                            dropdown="true" minQueryLength="3" 
+                                            completeMethod="#{gamacMunicionesRegistrarVentaController.autoCompleteUbigeo}" 
+                                            var="ubi" itemLabel="#{ubi.NOMBRE_UBIGEO}" itemValue="#{ubi.ID}" 
+                                            forceSelection="true" required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaDlgNewDire_Ubi_RequiredMessage}" queryDelay="500" cache="false" >
+                                <p:ajax event="itemSelect" listener="#{gamacMunicionesRegistrarVentaController.eligeUbigeo}"
+                                        partialSubmit="true" process="ubicacionGeografica" update="@this" global="false" />
+                            </p:autoComplete>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="tipoZona" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_TipZon_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:selectOneMenu id="tipoZona" value="#{gamacMunicionesRegistrarVentaController.direZona}" 
+                                             required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaDlgNewDire_TipZon_RequiredMessage}" >
+                                <f:selectItem itemLabel="------" itemValue="#{null}" />
+                                <f:selectItems value="#{gamacMunicionesRegistrarVentaController.lstZonas}" 
+                                               var="item"
+                                               itemLabel="#{item.nombre}" 
+                                               itemValue="#{item}"/>
+                                <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="tipoVia" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_TipVia_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:selectOneMenu id="tipoVia" value="#{gamacMunicionesRegistrarVentaController.direVia}"
+                                             required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaDlgNewDire_TipVia_RequiredMessage}" >
+                                <f:selectItem itemLabel="------" itemValue="#{null}" />
+                                <f:selectItems value="#{gamacMunicionesRegistrarVentaController.lstVias}" 
+                                               var="item"
+                                               itemLabel="#{item.nombre}" 
+                                               itemValue="#{item}"/>
+                                <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="direccion" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_Dire_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:inputText id="direccion" size="20" required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaDlgNewDire_Dire_RequiredMessage}" autocomplete="false"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="numero" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_Nro_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:inputText id="numero" size="20" required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaDlgNewDire_Nro_RequiredMessage}" autocomplete="false"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="latitud" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_Lat_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:inputText id="latitud" size="20" autocomplete="false"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel for="longitud" value="#{bundleGamacCVMuni.RegVentaDlgNewDire_Lon_Label}" styleClass="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:inputText id="longitud" size="20" autocomplete="false"/>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:commandButton value="Guardar" actionListener="#{gamacMunicionesRegistrarVentaController.creaDireccion}" id="btnSaveDire" icon="ui-icon-disk"
+                                             process=":newDireccionForm" update="tipoZona, tipoVia, direccion, numero"
+                                             partialSubmit="true" oncomplete="if (args &amp;&amp; !args.validationFailed) { creaDireccionOk(); }" >
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:commandButton value="#{bundleGamacCVMuni.CancelarTitulo}" actionListener="#{gamacMunicionesRegistrarVentaController.cancelCreaDirecion()}" id="btnCancelDire" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div> 
+                    </div>
+                    
+                </div>
+                <p:blockUI block="newDireccionView" trigger="btnSaveDire" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    <script type="text/javascript">
+        $("#layConfirmar").hide("fast");
+        $("#layVerificar").show("fast");
+        $("div[id*='datosUsuPanel_content'], div[id*='reniecDatos_content'], div[id*='reniecFoto_content']").attr("style", "padding:2px!important");
+
+        function confirmaDatos() {
+            PF('newDireccionDialog').hide();
+        }
+
+        function creaDireccionOk(){
+            PF('newDireccionDialog').hide();
+        }
+    </script>
+</ui:composition>

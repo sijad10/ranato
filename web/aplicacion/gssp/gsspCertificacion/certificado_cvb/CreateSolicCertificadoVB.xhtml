@@ -1,0 +1,876 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+<ui:define name="librerias">
+    <!-- Aqu puedes incluir tus librerías específicas de la página --> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script type="text/javascript" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link type="text/css" rel="stylesheet" href="/sel/faces/javax.faces.resource/js/gssp/gsspSolicitudAutorizacion/proteccion_personal/create.css"  />
+</ui:define>    
+    
+<ui:define name="title"> 
+    <div class="ui-fluid"> 
+        <div class="ui-g-12 ui-md-12 ui-lg-12">
+          <b><h:outputText value="Solicitud de Certificación de Vehículos Blindados"/></b>
+        </div>
+    </div>
+</ui:define>
+    
+    
+<ui:define name="body">
+        
+    <div class="ui-fluid"> 
+        
+        <div class="ui-g">
+             <p:panel id="pnl_AdministradoPJ_Title1" header="Buscar N° de Resolución Aprobado de La Solucitud de Servicio de Transporte y Cusodia  de Dinero y Valores"  
+                class="mg-b-10 ui-g-12 ui-sm-12 ui-md-8 ui-lg-6 ui-xl-6">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-sm-12 ui-md-4 ui-lg-2 ui-xl-3">
+                        <p:outputLabel value="Nro. Resolución: " style="font-weight: bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-sm-12 ui-md-8 ui-lg-10 ui-xl-8">
+                        <div class="ui-inputgroup">
+                            <p:autoComplete id="txt_autocomplete_nro_resol"
+                                placeholder="Ingrese el N° de Resolución"
+                                completeMethod="#{gsspSolicitudCertificacionCVBController.autocompleteResolucionAprobados_ServTransYCustDineroValores}"
+                                var="item" 
+                                itemLabel="#{item.RESOL_FORMATEADO}" 
+                                itemValue="#{item.RESOL_FORMATEADO}" 
+                                minQueryLength="1" forceSelection="true" 
+                                scrollHeight="200"  
+                                emptyMessage="No se encontraron resoluciones"
+                                >
+                                <p:ajax event="itemSelect" listener="#{gsspSolicitudCertificacionCVBController.eligeResolAprobado_ServTransYCustDineroValores}" update="hgroup1"/>
+                            </p:autoComplete>
+                            <p:commandButton  type="button" icon="ui-icon-search" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-left" ajax="false" 
+                            />  
+                        </div>
+                    </div> 
+                </div>
+            </p:panel>
+        </div> 
+        <!--FIN BUSCAR RESOLUCION-->
+        
+        <h:panelGroup id="hgroup1" >    
+            <h:form id="formRegSolicCertVB" class="form_name_main" rendered="#{(gsspSolicitudCertificacionCVBController.estado == 'CREARCERTVEHBLIND' or gsspSolicitudCertificacionCVBController.estado == 'EDITARCERTVEHBLIND' or gsspSolicitudCertificacionCVBController.estado == 'VERCERTVEHBLIND') and gsspSolicitudCertificacionCVBController.renderMostrarFormSolicCertVehBlindados}" >
+                <p:focus context="formRegSolicCertVB" />
+                
+                
+                <p:panel id="pnl_DatosAdministrado" header="Datos del Administrado" style="background-color: #f0f2f4;">
+                    <div class="ui-g">    
+                        <div class="ui-g-12 ui-md-3 ui-lg-1">
+                            <p:outputLabel value="Razón Social: "/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-5">
+                            <p:inputText id="txt_RazonSocial" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('RZN_SOC')}" disabled="true"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="RUC: "/>
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-1">
+                            <p:inputText id="txt_Ruc" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('RUC')}" disabled="true"/>
+                        </div>
+                    </div>
+                </p:panel>
+                
+                <br/>
+                
+                <p:panel id="pnl_DatosResolucion" header="Datos de la Resolución" style="background-color: #f0f2f4;">
+                    
+                    
+                    <div class="card">
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-6">
+                                <p:fieldset id="fsResolucion" legend="Resolución" class="mg-b-10" style="background-color: #f0f2f4;">
+                                    <!--PANEL DE RESOLUCION-->
+                                    <div class="ui-g">
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Nro. Resolución:"/>
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_NroResolucion" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('NRO_RD')}" disabled="true"/>
+                                        </div> 
+                                        
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Emisión:"/>
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_RS_FechEmi" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('FEC_EMI')}" disabled="true"/>
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Vencimiento:"/>
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_RS_FechVenc" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('FEC_VEN')}" disabled="true"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ui-g">
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Tipo Trámite: "    />
+                                        </div>
+                                        <div class="ui-g-10">
+                                            <p:inputText id="txt_tipo_tramite_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('DES_TRAM')}" disabled="true" />
+                                        </div> 
+                                    </div>     
+                                    <!--FIN DE PANEL DE RESOLUCION-->
+                                </p:fieldset>
+                            </div>
+                            
+                            <div class="ui-g-6">
+                                <p:fieldset id="fsRsModalidad" legend="Modalidad" class="mg-b-10" style="background-color: #f0f2f4;">
+                                  <!--PANEL DE MODALIDAD-->
+                                    <div class="ui-g">
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Tipo de Servicio:" />
+                                        </div>
+                                        <div class="ui-g-10">
+                                            <p:inputText id="txt_modalidad_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('DES_MOD')}" disabled="true" />
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="ui-g">
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Tipo Registro: " />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_tipo_reg_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('TIPO_REG_RESOL')}" disabled="true" />
+                                        </div>
+                                        <div class="ui-g-2" style="text-align: right !important;">
+                                            <p:outputLabel value="Tipo Operación: "  />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_tipo_ope_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('TIPO_OPE_RESOL')}" disabled="true" />
+                                        </div>
+
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Servicio Prestado: " />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_serv_pre_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('SERV_PRE_RESOL')}" disabled="true" />
+                                        </div>    
+                                    </div> 
+                                  <!--FIN DE PANEL DE MODALIDAD-->
+                                </p:fieldset>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-4">
+                                <p:fieldset id="fsRepresentante" legend="Representante" style="background-color: #f0f2f4;">
+                                    <!--PANEL DE REPRESENTANTE-RESOLUCION-->
+
+                                        <div class="ui-g">
+                                            <div class="ui-g-3">
+                                                <p:outputLabel value="Representante:" />
+                                            </div>
+                                            <div class="ui-g-9">
+                                                <p:inputText id="txt_representante_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('REPRESENTANTE')}" disabled="true" />
+                                            </div>
+                                        </div>
+
+                                        <div class="ui-g">
+                                            <div class="ui-g-3">
+                                                <p:outputLabel value="Nro Documento: " />
+                                            </div>
+                                            <div class="ui-g-3">
+                                                <p:inputText id="txt_nro_documento_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('DOC_REPRESENTANTE')}" disabled="true" />
+                                            </div> 
+                                        </div>
+
+                                    <!--FIN DE PANEL DE REPRESENTANTE-RESOLUCION-->
+                                </p:fieldset>
+                            </div>
+                            
+                            
+                            <div class="ui-g-8">
+                                <p:fieldset id="fsLocal" legend="Local" style="background-color: #f0f2f4;">
+                                    <!--PANEL DE LOCAL RESOLUCION -->
+                                    <div class="ui-g">
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Tipo de Local: " />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_tipo_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('PRINCIPAL')}" disabled="true" />  
+                                        </div> 
+                                        <div class="ui-g-1 texto-izquierda">
+                                            <p:outputLabel value="Dirección: " />
+                                        </div>
+                                        <div class="ui-g-7">
+                                            <p:inputText id="txt_direc_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('DOM_ACT')}" disabled="true" />                                  
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ui-g">                         
+                                        <div class="ui-g-2">
+                                            <p:outputLabel value="Departamento: " />
+                                        </div>
+                                        <div class="ui-g-2 ">
+                                            <p:inputText id="txt_dep_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('NOM_DPTO')}" disabled="true" />
+                                        </div>
+                                        <div class="ui-g-1">
+                                            <p:outputLabel value="Provincia: " />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_prov_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('NOM_PROV')}" disabled="true" />
+                                        </div>
+                                        <div class="ui-g-1">
+                                            <p:outputLabel value="Distrito: " />
+                                        </div>
+                                        <div class="ui-g-2">
+                                            <p:inputText id="txt_dist_local_resol" style="border: 1px solid #404040; opacity: .60;" value="#{gsspSolicitudCertificacionCVBController.emptyModel_vistaDataServTranspCustodiaDineroYValores.get('NOM_DIST')}" disabled="true" />                        
+                                        </div>
+                                    </div>  
+                                    
+                                </p:fieldset>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>                
+                    
+                </p:panel>
+                
+                
+                <BR/>
+                
+                
+                <p:panel id="pnl_DatosSolicitudCertificacion" header="Datos de Solicitud de Certificación" style="background-color: #f0f2f4;">                    
+                    
+                    <div class="card">
+                        
+                        <p:fieldset id="fsRepresentanteNuevo" legend="Nuevo Representante" style="background-color: #f0f2f4;">
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Representante Legal*: " />
+                                        <div class="ui-inputgroup">
+                                            <p:selectOneMenu id="bcoNewRepresentantelegal" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.personaDetalleSelectedString}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}">   
+                                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                <f:selectItems var="itemRepresLegal" itemValue="#{itemRepresLegal.id}" itemLabel="#{itemRepresLegal.nombres}, #{itemRepresLegal.apePat} #{itemRepresLegal.apeMat}" value="#{gsspSolicitudCertificacionCVBController.personaDetalleListado}"/>                                    
+                                                <p:ajax event="change" process="@this" update="@this, fsRepresentanteNuevo" listener="#{gsspSolicitudCertificacionCVBController.mostrarDomicilioRepresentanteLegal()}" />
+                                            </p:selectOneMenu>
+                                            <p:commandButton id="btnNewRL" icon="ui-icon-plusthick" value="Nuevo" process="@this" actionListener="#{gsspSolicitudCertificacionCVBController.fnMostrarModalRepresentanteLegal()}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" />
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Partida Registral(SUNARP): " />
+                                        <p:inputText id="txtRLPartidaReg" value="#{gsspSolicitudCertificacionCVBController.txtRLPartRegistral}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div>
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Asiento Registral(SUNARP): " />
+                                        <p:inputText id="txtRLAsientoReg" value="#{gsspSolicitudCertificacionCVBController.txtRLAsientoRegistral}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Zona Registral: " />
+                                        <p:selectOneMenu id="bcoZonaRegRL" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboZonaRegistralRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRL" itemValue="#{itemRL}" itemLabel="#{itemRL.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboZonaRegistralRLLista}"/>                                    
+                                            <p:ajax event="change" update="@this,cboOficinaRegRL" listener="#{gsspSolicitudCertificacionCVBController.fnListarOficinasRegistralesRL()}" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Oficina Registral: " />
+                                        <p:selectOneMenu id="cboOficinaRegRL" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboOficinaRegistralRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRL" itemValue="#{itemRL}" itemLabel="#{itemRL.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboOficinaRegistralRLLista}"/> 
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="ui-g">
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Tipo de Ubicación*: " />  
+                                        <p:selectOneMenu id="bcoTipoUbicacionRL" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboTipoUbicacionRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRL" itemValue="#{itemRL}" itemLabel="#{itemRL.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboTipoUbicacionRLLista}"/> 
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                
+                                <div class="ui-g-6">
+                                    <div class="field">
+                                        <p:outputLabel value="Domicilio Legal*: " />
+                                        <p:inputText id="txtDomicilioLegalRL" value="#{gsspSolicitudCertificacionCVBController.txtRLDomicilioLegal}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Ubigeo(DPTO/PROV/DIST)*: " />
+                                        <p:selectOneMenu id="cboUbigueoRL" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboDistritoRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRLDistrito" itemValue="#{itemRLDistrito}" itemLabel="#{itemRLDistrito.provinciaId.departamentoId.nombre} / #{itemRLDistrito.provinciaId.nombre} / #{itemRLDistrito.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboDistritoRLLista}"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </p:fieldset>
+                        
+                        <br/>
+                        
+                        
+                        <p:fieldset id="fsMediosContacto" legend="Medios Contacto" style="background-color: #f0f2f4;">
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-10">
+                                </div> 
+                                <div class="ui-g-2" style="text-align: right">
+                                    <p:commandButton id="btnNewContacto" icon="ui-icon-plusthick" value="Nuevo Contacto" process="@this" actionListener="#{gsspSolicitudCertificacionCVBController.fnMostrarModalContacos()}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" />
+                                </div>
+                            </div>
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    
+                                    
+                                    <p:dataTable id="dtResultadosMedioContactos"
+                                        value="#{gsspSolicitudCertificacionCVBController.getContactoListaActivas()}"
+                                        var="itemRegContacto"
+                                        rowKey="#{itemRegContacto.ID}"
+                                        selection="#{gsspSolicitudCertificacionCVBController.contactoSelected}"
+                                        emptyMessage="No se encontraron resultados."
+                                        paginator="false" 
+                                        rows="20"
+                                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                        {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                        {RowsPerPageDropdown}"
+                                        currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                        rowsPerPageTemplate="20,40,100">
+
+                                       <p:column headerText="Prioridad" style="text-align: center;" class="ui-lg-1" >
+                                           <h:outputText value="#{gsspSolicitudCertificacionCVBController.getMostrarDescripcionPrioridad(itemRegContacto.valor)}" />
+                                       </p:column>
+                                        <p:column headerText="Medio de Contacto" style="text-align: center;" class="ui-lg-1" >
+                                            <h:outputText value="#{itemRegContacto.tipoMedioId.nombre}" />
+                                       </p:column>
+                                       <p:column headerText="Contacto" style="text-align: center;" class="ui-lg-2" >
+                                           <h:outputText value="#{itemRegContacto.descripcion}" />
+                                       </p:column>
+                                       <p:column headerText="Acciones" style="text-align: center;" class="ui-lg-1" >
+                                            <p:commandButton id="btnEliminarContacto"
+                                                value="Eliminar" 
+                                                process="@this"
+                                                update="@this, dtResultadosMedioContactos" 
+                                                icon="ui-icon-trash"
+                                                action="#{gsspSolicitudCertificacionCVBController.fnEliminarContacto(itemRegContacto)}"
+                                                disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}"
+                                                >
+                                            </p:commandButton>
+                                       </p:column>
+                               </p:dataTable>
+                                    
+                                </div>
+                            </div>
+                            
+                        </p:fieldset>
+                        
+                        
+                        <br/>
+                        
+                        <p:fieldset id="fsDatosVehiculo" legend="Datos Vehículo" style="background-color: #f0f2f4;">
+                            
+                            <div class="ui-g">
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                       <p:outputLabel value="Categoría del vehículo*: " /> 
+                                       <p:inputText id="txtVeh_Categoria" value="#{gsspSolicitudCertificacionCVBController.vehCategoria}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div> 
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Carrocería del vehículo*: " />
+                                        <p:inputText id="txtVeh_Carroceria" value="#{gsspSolicitudCertificacionCVBController.vehCarroceria}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Placa del vehículo*: " />
+                                        <p:inputText id="txtVeh_Placa" value="#{gsspSolicitudCertificacionCVBController.vehPlaca}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Serie del vehículo*: " />
+                                        <p:inputText id="txtVeh_Serie" value="#{gsspSolicitudCertificacionCVBController.vehSerie}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div>
+                             
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                       <p:outputLabel value="Marca del vehículo*: " />
+                                       <p:inputText id="txtVeh_Marca" value="#{gsspSolicitudCertificacionCVBController.vehMarca}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Modelo del vehículo*: " />
+                                        <p:inputText id="txtVeh_Modelo" value="#{gsspSolicitudCertificacionCVBController.vehModelo}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                            
+                            <div class="ui-g">
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Partida Registral (SUNARP)*: " />
+                                        <p:inputText id="txtVeh_PartReg" value="#{gsspSolicitudCertificacionCVBController.txtVehPartRegistral}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div> 
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Asiento Registral*: " />
+                                        <p:inputText id="txtVeh_AsientoReg" value="#{gsspSolicitudCertificacionCVBController.txtVehAsientoRegistral}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div>
+                                
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Zona Registral*: " />
+                                        <p:selectOneMenu id="CboVeh_ZonaReg" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboVehZonaRegistralRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRL" itemValue="#{itemRL}" itemLabel="#{itemRL.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboVehZonaRegistralRLLista}"/>                                    
+                                            <p:ajax event="change" update="@this, CboVeh_OficReg" listener="#{gsspSolicitudCertificacionCVBController.fnListarOficinasRegistralesVehiculo()}" />
+                                        </p:selectOneMenu> 
+                                    </div>                                    
+                                </div>
+                                
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Oficina Registral (SUNARP)*: " />
+                                        <p:selectOneMenu id="CboVeh_OficReg" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboVehOficinaRegistralRLSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemRL" itemValue="#{itemRL}" itemLabel="#{itemRL.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboVehOficinaRegistralRLLista}"/> 
+                                        </p:selectOneMenu>
+                                    </div>                                    
+                                </div> 
+                                
+                                
+                                
+                            </div>
+                            
+                            
+                            <div class="ui-g">
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Adjuntar Partida Registral*: " />
+                                        <p:fileUpload id="txfVeh_ArchivoPartReg" 
+                                                label="Adjuntar"
+                                                invalidFileMessage="El archivo debe tener formato .pdf"
+                                                fileUploadListener="#{gsspSolicitudCertificacionCVBController.handleFileUploadPDF_VEHPARTREG}"
+                                                invalidSizeMessage="#{gsspSolicitudCertificacionCVBController.obtenerMsjeInvalidSizeFileMaximo('selVehiculoPartidaRegistral_sizeMaximo')}"
+                                                sizeLimit="#{sbParametroController.obtenerParametroXNombre('selVehiculoPartidaRegistral_sizeMaximo').valor}"
+                                                onstart="PF('loadingDialog').show()"
+                                                oncomplete="PF('loadingDialog').hide()"
+                                                mode="advanced" 
+                                                dragDropSupport="false"
+                                                multiple="false"
+                                                auto="true" 
+                                                process="@this, fsDatosVehiculo" 
+                                                update="@this, fsDatosVehiculo"
+                                                allowTypes="/(\.|\/)(pdf|PDF)$/" 
+                                                immediate="true" 
+                                                disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}"
+                                                >
+                                              <h:outputText value="#{gsspSolicitudCertificacionCVBController.vehPartRegNomArchivo }" />
+                                        </p:fileUpload>
+                                        <p:tooltip for="txfVeh_ArchivoPartReg" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                                        <p:commandButton icon="ui-icon-document" style="margin-top: 5px;" rendered="#{gsspSolicitudCertificacionCVBController.vehPartRegNomArchivo != null}"
+                                                         immediate="true" value="Descargar Partida Registral" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" ajax="false">
+                                           <p:fileDownload value="#{gsspSolicitudCertificacionCVBController.fnObtenerArchivoVEHPARTREG()}" contentDisposition="inline" />
+                                        </p:commandButton>
+                                    </div>                                    
+                                </div>
+                                
+                                
+                                <div class="ui-g-4">
+                                    <div class="field">
+                                        <p:outputLabel value="Ubigeo (Dpto/Prov/Dist)*: " />                                        
+                                        <p:selectOneMenu id="CboVeh_UbigeoReg" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboVehSbDistritoGtSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemVehDistrito" itemValue="#{itemVehDistrito}" itemLabel="#{itemVehDistrito.provinciaId.departamentoId.nombre} / #{itemVehDistrito.provinciaId.nombre} / #{itemVehDistrito.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboVehSbDistritoGtLista}"/>
+                                            <p:ajax event="change" process="@this" update="@this" />
+                                        </p:selectOneMenu>
+                                    </div>                                    
+                                </div> 
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Forma Adquirido*:" />
+                                        <p:selectOneRadio id="RadioVeh_FormAdquiridoVeh" value="#{gsspSolicitudCertificacionCVBController.vehArrendado}"  disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" >
+                                            <f:selectItem itemLabel="Arrendado &nbsp;" itemValue="1" />
+                                            <f:selectItem itemLabel="Propio" itemValue="0" />
+                                            <p:ajax event="change" update="@this, fsDatosVehiculo" listener="#{gsspSolicitudCertificacionCVBController.fnMostrarRenderArrendatario()}" />
+                                        </p:selectOneRadio>
+                                    </div>                                    
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <h:panelGroup rendered="#{gsspSolicitudCertificacionCVBController.renderArrendatario}">
+                                            <p:outputLabel  value="Adjuntar Contrato Arrendatario (PDF)*: " />
+                                            <p:fileUpload id="txfVeh_ArchivoContraArend" 
+                                                        label="Adjuntar PDF"
+                                                        invalidFileMessage="El archivo debe tener formato .pdf"
+                                                        fileUploadListener="#{gsspSolicitudCertificacionCVBController.handleFileUploadPDF_VEHCONTRATARRENDA}"
+                                                        invalidSizeMessage="#{gsspSolicitudCertificacionCVBController.obtenerMsjeInvalidSizeFileMaximo('selVehiculoContratoArrenda_sizeMaximo')}"
+                                                        sizeLimit="#{sbParametroController.obtenerParametroXNombre('selVehiculoContratoArrenda_sizeMaximo').valor}"
+                                                        onstart="PF('loadingDialog').show()"
+                                                        oncomplete="PF('loadingDialog').hide()"
+                                                        mode="advanced" 
+                                                        dragDropSupport="false"
+                                                        multiple="false"
+                                                        auto="true" 
+                                                        process="@this, fsDatosVehiculo" 
+                                                        update="@this, fsDatosVehiculo"
+                                                        allowTypes="/(\.|\/)(pdf|PDF)$/" 
+                                                        immediate="true" 
+                                                        disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    >
+                                                  <h:outputText value="#{gsspSolicitudCertificacionCVBController.vehContraArrendaNomArchivo }" />
+                                            </p:fileUpload>
+                                            <p:tooltip for="txfVeh_ArchivoContraArend" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                                            <p:commandButton icon="ui-icon-document" style="margin-top: 5px;" rendered="#{gsspSolicitudCertificacionCVBController.vehContraArrendaNomArchivo != null}"
+                                                         immediate="true" value="Descargar Contrato Arrendatario" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" ajax="false">
+                                                <p:fileDownload value="#{gsspSolicitudCertificacionCVBController.fnObtenerArchivoVEHCONTRATARRENDA()}" contentDisposition="inline" />
+                                            </p:commandButton>
+                                        </h:panelGroup>
+                                    </div>                                    
+                                </div>
+                                
+                                 
+                            </div>
+                            
+                            
+                        </p:fieldset>
+                        
+                        
+                         <br/>
+                        
+                         <p:fieldset id="fsCertificadoProv" legend="Certificados del Proveedor" style="background-color: #f0f2f4;">
+                             
+                             <div class="ui-g">
+                                 
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Pais de Origen*: " />
+                                        <p:selectOneMenu id="CboPaisProveedor" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboCertProvPaisSelectedStringID}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemPais" itemValue="#{itemPais.id}" itemLabel="#{itemPais.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboCertProvPaisLista}"/> 
+                                        </p:selectOneMenu>
+                                    </div>                                    
+                                </div> 
+                                 
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Nro. Documento Empresa Certificadora*: " />
+                                        <p:inputText id="txtCertProv_NumDocEmpCert" value="#{gsspSolicitudCertificacionCVBController.txtCertProvNroDocCertificadora}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div> 
+                                 
+                                <div class="ui-g-8">
+                                    <div class="field">
+                                        <p:outputLabel value="Empresa que Emite Certificado de Caracteristicas*: " />
+                                        <p:inputText id="txtCertProv_NomEmpCert" value="#{gsspSolicitudCertificacionCVBController.txtCertProvNomEmpCertificadora}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                    
+                                </div> 
+                                 
+                            </div>
+                             
+                             <div class="ui-g">
+                                 
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Vigencia Desde*: " />
+                                        <p:calendar id="txtCertProv_FechIni" styleClass="dateTimeStyle" showOn="button" locale="es" pattern="dd/MM/yyyy" navigator="true"
+                                                    disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}"
+                                                    value="#{gsspSolicitudCertificacionCVBController.txtCertProvFechaIni}" >     
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            <p:ajax event="dateSelect" listener="#{gsspSolicitudCertificacionCVBController.fnValidarFechaMinimaHasta_CertProv()}" update="@this, txtCertProv_FechFin" />                                            
+                                        </p:calendar>
+                                    </div>                                    
+                                </div> 
+                                 
+                                 <div class="ui-g-2">
+                                    <div class="field">
+                                        <p:outputLabel value="Vigencia Hasta*: " />
+                                        <p:calendar id="txtCertProv_FechFin" styleClass="dateTimeStyle" showOn="button" locale="es" pattern="dd/MM/yyyy" navigator="true"
+                                                    disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    mindate="#{gsspSolicitudCertificacionCVBController.fechaMinimaCalendario_CertProv}"
+                                                    value="#{gsspSolicitudCertificacionCVBController.txtCertProvFechaFin}" >                                
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:calendar>
+                                    </div>                                    
+                                </div> 
+                                 
+                                 
+                                 <div class="ui-g-3">
+                                    <div class="field">
+                                        <p:outputLabel value="Nro de Certificado*: " />
+                                        <p:inputText id="txtCertProv_NumeroCert" value="#{gsspSolicitudCertificacionCVBController.txtCertNumeroCert}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>                                    
+                                </div> 
+                                 
+                                 <div class="ui-g-3">
+                                    <div class="field">
+                                        <p:outputLabel value="Certificado(PDF)*: " />
+                                        <p:fileUpload id="txtCertProv_ArchivoCertificadoProv" 
+                                                        label="Adjuntar PDF"
+                                                        invalidFileMessage="El archivo debe tener formato .pdf"
+                                                        fileUploadListener="#{gsspSolicitudCertificacionCVBController.handleFileUploadPDF_VEHCERTPROVEEDOR}"
+                                                        invalidSizeMessage="#{gsspSolicitudCertificacionCVBController.obtenerMsjeInvalidSizeFileMaximo('selVehiculoCertificadoProv_sizeMaximo')}"
+                                                        sizeLimit="#{sbParametroController.obtenerParametroXNombre('selVehiculoCertificadoProv_sizeMaximo').valor}"
+                                                        onstart="PF('loadingDialog').show()"
+                                                        oncomplete="PF('loadingDialog').hide()"
+                                                        mode="advanced" 
+                                                        dragDropSupport="false"
+                                                        multiple="false"
+                                                        auto="true" 
+                                                        process="@this, fsCertificadoProv" 
+                                                        update="@this, fsCertificadoProv"
+                                                        allowTypes="/(\.|\/)(pdf|PDF)$/" 
+                                                        immediate="true" 
+                                                        disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    >
+                                                  <h:outputText value="#{gsspSolicitudCertificacionCVBController.vehCertProvNomArchivo }" />
+                                        </p:fileUpload>
+                                        <p:tooltip for="txtCertProv_ArchivoCertificadoProv" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                                        <p:commandButton icon="ui-icon-document" style="margin-top: 5px;" rendered="#{gsspSolicitudCertificacionCVBController.vehCertProvNomArchivo != null}"
+                                                         immediate="true" value="Descargar Certificado del Proveedor" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" ajax="false">
+                                            <p:fileDownload value="#{gsspSolicitudCertificacionCVBController.fnObtenerArchivoVEHCERTPROVEEDOR()}" contentDisposition="inline" />
+                                        </p:commandButton>
+                                    </div>                                    
+                                </div> 
+                                 
+                             </div>
+                             
+                         </p:fieldset>
+                         
+                         
+                         
+                         
+                         <br/>
+                        
+                         <p:fieldset id="fsPolizaSeguros" legend="Póliza de Seguros" style="background-color: #f0f2f4;">
+                             
+                             <div class="ui-g">
+                                 
+                                <div class="ui-g-2">
+                                    <div class="field">
+                                       <p:outputLabel value="RUC de la Empresa Aseguradora*: " />
+                                       <p:inputText id="txtPoliza_NumRucEmpAseguradora" value="#{gsspSolicitudCertificacionCVBController.txtPolizaNumRUCEmpAseguradora}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+
+                                <div class="ui-g-10">
+                                    <div class="field">
+                                       <p:outputLabel value="Nombre de la Empresa Aseguradora*: " />
+                                       <p:inputText id="txtPoliza_NombreEmpAseguradora" value="#{gsspSolicitudCertificacionCVBController.txtPolizaNombreEmpAseguradora}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                    </div>
+                                </div>
+                                 
+                             </div>
+                             
+                             
+                            <div class="ui-g">
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                      <p:outputLabel value="Nro Póliza*: " />
+                                      <p:inputText id="txtPoliza_NroPoliza" value="#{gsspSolicitudCertificacionCVBController.txtPolizaNumPoliza}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" />
+                                   </div>
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                        <p:outputLabel value="Vigencia Desde*: " />
+                                        <p:calendar id="txtPoliza_FechaDesde" styleClass="dateTimeStyle" showOn="button" pattern="dd/MM/yyyy" 
+                                                    disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    value="#{gsspSolicitudCertificacionCVBController.txtPolizaFechaDesde}" >                                
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            <p:ajax event="dateSelect" listener="#{gsspSolicitudCertificacionCVBController.fnValidarFechaMinimaHasta_Poliza()}" update="@this, txtPoliza_FechaHasta" />                                            
+                                        </p:calendar>
+                                   </div>
+                                </div>
+                                 
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                        <p:outputLabel value="Vigencia Hasta*: " />
+                                        <p:calendar id="txtPoliza_FechaHasta" styleClass="dateTimeStyle" showOn="button" pattern="dd/MM/yyyy" 
+                                                    disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    mindate="#{gsspSolicitudCertificacionCVBController.fechaMinimaCalendario_Poliza}"
+                                                    value="#{gsspSolicitudCertificacionCVBController.txtPolizaFechaHasta}" >                 
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:calendar>
+                                   </div>
+                                </div>
+                                
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                        <p:outputLabel value="Tipo de Moneda*: " />
+                                        <p:selectOneMenu id="cboPoliza_TipoMoneda" filter="true" filterMatchMode="contains" value="#{gsspSolicitudCertificacionCVBController.cboPolizaTipoMonedaSelected}" disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60;' : ''}" >   
+                                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                            <f:selectItems var="itemPais" itemValue="#{itemPais}" itemLabel="#{itemPais.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboPolizaTipoMonedaLista}"/> 
+                                        </p:selectOneMenu>
+                                   </div>
+                                </div>
+
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                      <p:outputLabel value="Valor Monto Máximo*: " />
+                                      <p:inputNumber id="txtPoliza_MontoMaximo" decimalPlaces="2" maxValue="100000000" minValue="0" maxlength="11" 
+                                                     disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" inputStyle="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60; text-align: right;' : 'text-align: right;'}"
+                                                     value="#{gsspSolicitudCertificacionCVBController.txtPolizaMontoMaximo}" >
+                                          <p:ajax event="blur" update="@this" />
+                                      </p:inputNumber>
+                                   </div>
+                                </div>
+                                
+                                <div class="ui-g-2">
+                                   <div class="field">
+                                      <p:outputLabel value="Poliza(PDF)*: " />
+                                      <p:fileUpload id="txtPoliza_Archivo" 
+                                                        label="Adjuntar PDF"
+                                                        invalidFileMessage="El archivo debe tener formato .pdf"
+                                                        fileUploadListener="#{gsspSolicitudCertificacionCVBController.handleFileUploadPDF_VEHPOLIZASEG}"
+                                                        invalidSizeMessage="#{gsspSolicitudCertificacionCVBController.obtenerMsjeInvalidSizeFileMaximo('selVehiculoPolizaSeguro_sizeMaximo')}"
+                                                        sizeLimit="#{sbParametroController.obtenerParametroXNombre('selVehiculoPolizaSeguro_sizeMaximo').valor}"
+                                                        onstart="PF('loadingDialog').show()"
+                                                        oncomplete="PF('loadingDialog').hide()"
+                                                        mode="advanced" 
+                                                        dragDropSupport="false"
+                                                        multiple="false"
+                                                        auto="true" 
+                                                        process="@this, fsPolizaSeguros" 
+                                                        update="@this, fsPolizaSeguros"
+                                                        allowTypes="/(\.|\/)(pdf|PDF)$/" 
+                                                        immediate="true" 
+                                                        disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" 
+                                                    >
+                                                  <h:outputText value="#{gsspSolicitudCertificacionCVBController.vehPolizaNomArchivo}" />
+                                        </p:fileUpload>
+                                        <p:tooltip for="txtPoliza_Archivo" value="Adjuntar PDF" showEffect="clip" hideEffect="fold" />
+                                        <p:commandButton icon="ui-icon-document" style="margin-top: 5px;" rendered="#{gsspSolicitudCertificacionCVBController.vehPolizaNomArchivo != null}"
+                                                         immediate="true" value="Descargar Poliza de Seguros" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" ajax="false">
+                                            <p:fileDownload value="#{gsspSolicitudCertificacionCVBController.fnObtenerArchivoVEHPOLIZASEG()}" contentDisposition="inline" />
+                                        </p:commandButton>
+                                   </div>
+                                </div>
+                                
+
+                            </div>
+                             
+                             
+                             
+                             
+                             
+                             <div class="ui-g">
+                                
+                                <div class="ui-g-12">
+                                   <div class="field">
+                                      <p:outputLabel value="Bienes a transportar y custodiar*: " />
+                                      <p:inputTextarea id="txtPoliza_BienesCustodia"
+                                                rows="6"  maxlength="500" 
+                                                value="#{gsspSolicitudCertificacionCVBController.vehPolizaBienesCustodia}" 
+                                                counter="displayRecTools"
+                                                counterTemplate="{0} caracteres restantes." 
+                                                disabled="#{gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura}" style="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? 'border: 1px solid #404040; opacity: .60; width: 99%;' : 'width: 99%;'}"                                                
+                                                onkeyup="$(this).val($(this).val().replace(/[^a-z0-9A-ZÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñ°,()_\-\. ]/g, ''));" />
+                                        <br/>
+                                        <h:outputText style="color: #419541; font-weight: bold;" id="displayRecTools" />
+                                   </div>
+                                </div>
+                                 
+                             </div>
+                             
+                             
+                         </p:fieldset>
+                         
+                        
+                      
+                    </div>
+                     
+                </p:panel>
+                
+                
+                <br />
+                <!--GRABAR o CANCELAR-->
+                <div class="ui-g">
+                    <div class="ui-g-8"></div>
+                    <div class="ui-g-2">
+                        <p:commandButton id="botonGuardarSolicitudCertificacion" icon="ui-icon-disk" value="GUARDAR" process="@form, formRegSolicCertVB" update="@form, formRegSolicCertVB"
+                                         rendered="#{(gsspSolicitudCertificacionCVBController.formHabilitarSoloLectura) ? false : true}"
+                                         actionListener="#{gsspSolicitudCertificacionCVBController.openDlgConfirmRegistrarSolic()}" /> 
+                    </div>
+                    <div class="ui-g-2">
+                        <p:commandButton icon="ui-icon-closethick" value="Cancelar" update="@all" immediate="true" style="margin-left: 20px;"
+                            action="#{gsspSolicitudCertificacionCVBController.fnCancelarSolicitud()}"/>
+                    </div>
+                    
+                </div>                
+                
+            </h:form>
+            
+            
+            
+        </h:panelGroup>
+        
+    
+    </div>  
+    
+    <ui:include src="dlgRepresentanteLegal.xhtml" />
+    <ui:include src="dlgContactos.xhtml" />
+    <ui:include src="dlgConfirmarRegistroSolicitud.xhtml" />
+     
+    
+</ui:define>
+    
+    
+    
+</ui:composition>
+

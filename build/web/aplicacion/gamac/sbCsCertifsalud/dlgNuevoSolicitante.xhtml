@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"      
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition>
+        <p:dialog id="registrarSolicitante" widgetVar="wvRegistrarSolicitante" width="30%" height="35%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Nuevo Solicitante" closable="true"  >
+            <h:form id="solicitanteForm" >
+                <p:defaultCommand target="btnGuardarSolicitante"/>
+                
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_tipoDocumento}" style="display: block; width: 110px;" />
+                    <p:selectOneMenu id="tipoDocumento"
+                                     value="#{sbCsCertifsaludController.solicitanteRegistro.tipoDoc }" >
+                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                       value="#{sbCsCertifsaludController.tipoDocumentosSolicitante }"/>
+                        <p:ajax event="change" process="solicitanteForm" update="solicitanteForm" listener="#{sbCsCertifsaludController.cambiaTipoDocumento()}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroDocumento}" style="display: block; width: 110px;" />
+                    <h:panelGrid columns="2" id="pnlDatos" >
+                        <p:inputText id="numDocNuevoSolicitante" value="#{sbCsCertifsaludController.solicitanteRegistro.numDoc}" style="width: 200px;" maxlength="#{sbCsCertifsaludController.maxLengthDoc}" >
+                            <p:keyFilter regEx="/[0-9]/i" preventPaste="false" />
+                        </p:inputText>
+                        <p:commandButton value="Buscar"
+                                         icon="imageReniec"
+                                         id="btnBuscarSolicitanteDni"
+                                         process="pnlDatos,btnGuardarSolicitante"
+                                         rendered="#{sbCsCertifsaludController.solicitanteRegistro.tipoDoc.codProg == 'TP_DOCID_DNI'}"
+                                         actionListener="#{sbCsCertifsaludController.buscarDlgPersonaReniec()}"
+                                         update="@form"/>
+                        
+                        <p:commandButton value="Buscar"
+                                         icon="imageMigraciones"
+                                         id="btnBuscarSolicitanteMigraciones"
+                                         process="pnlDatos,btnGuardarSolicitante"
+                                         rendered="#{sbCsCertifsaludController.solicitanteRegistro.tipoDoc.codProg == 'TP_DOCID_CE'}"
+                                         actionListener="#{sbCsCertifsaludController.buscarDlgPersonaMigraciones()}"
+                                         update="@form"/>
+                    </h:panelGrid>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_apellidoPaterno}"
+                                   style="display: block; width: 110px;" />
+                    <p:inputText id="apePat" value="#{sbCsCertifsaludController.solicitanteRegistro.apePat}" 
+                                 disabled="true"
+                                 style="width: 280px;" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_apellidoMaterno}" 
+                                   style="display: block; width: 110px;" />
+                    <p:inputText id="apeMat" value="#{sbCsCertifsaludController.solicitanteRegistro.apeMat}" 
+                                 disabled="true"
+                                 style="width: 280px;"  />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nombres}"
+                                   style="display: block; width: 110px;" />
+                    <p:inputText id="nombres" value="#{sbCsCertifsaludController.solicitanteRegistro.nombres}" 
+                                 disabled="true"
+                                 style="width: 280px;" />
+                    
+                </h:panelGrid>
+                <br/><br/>
+                
+                <div align="center">
+                    <p:commandButton value="Guardar"                                       
+                                     icon="ui-icon-disk"
+                                     id="btnGuardarSolicitante"
+                                     rendered="#{sbCsCertifsaludController.solicitanteRegistro.apePat ne null and sbCsCertifsaludController.solicitanteRegistro.apePat.length() > 0 }"
+                                     actionListener="#{sbCsCertifsaludController.registrarNuevoSolicitante()}" />
+                    
+                      <p:commandButton value="#{BundleBDIntegrado.Cancelar}"                                     
+                                     process="@this"
+                                     update="solicitanteForm"
+                                     actionListener="#"
+                                     oncomplete="PF('wvRegistrarSolicitante').hide()"
+                                     icon="ui-icon-closethick" />
+                </div>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

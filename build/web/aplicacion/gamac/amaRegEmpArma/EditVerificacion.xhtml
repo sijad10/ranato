@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui" >
+    
+    <h:form id="editVerificacionForm" rendered="#{amaRegEmpArmaController.estado == 'EDITARVERIF'}" >
+            <div>
+                <h:outputText value="#{BundleBDIntegrado.amaArma_NotaVerificacion}" style="color: red;font-weight: bold;" /> 
+                <h:commandLink target="_blank" action="/resources/homologacionCalibres.pdf" >
+                    <p:outputLabel value="Click aquí"  />                    
+                </h:commandLink> <br/><br/>
+            </div>
+        
+            <p:panel id = "pnlDatosAnteriores" header="#{BundleBDIntegrado.amaArma_registrar_datosAnteriores_title}"  >
+                <h:panelGrid columns="6"  >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_licencia}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.NRO_LIC}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_serie}" style="font-weight: bold;margin-left: 20px;"/>
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.NRO_SERIE}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_tipoArma}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_ARM}" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_marca}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_MARCA}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_modelo}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_MODELO}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_calibre}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.CALIBRE}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_Estado}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.ESTADO}" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel id = "pnlDatosInternamiento" header="#{BundleBDIntegrado.amaSolicitudTarjeta_datosInternamiento_title}" rendered="#{amaRegEmpArmaController.tieneInternamiento}" >
+                <h:panelGrid columns="6" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_codigActa}" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.NRO_ACTA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_fechaActa}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.FECHA_ACTA}" style="font-weight: bold;" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:outputLabel>
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoInternamiento}" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.TIPO_INTERNAMIENTO}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoDeposito}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.TIPO_DEPOSITO}" style="font-weight: bold;" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_serie}" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.NRO_SERIE}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoArma}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.TIPO_ARMA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_datosActa_estadoFuncional}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.ESTADO_FUNCIONAL}" style="font-weight: bold;" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_marca}" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.MARCA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_modelo}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.MODELO}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_calibre}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosActaInt.CALIBRE}" style="font-weight: bold;" />
+                </h:panelGrid>
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_almacen}" style="width: 110px; display:block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.obtenerAlmacenActaInternamiento()}" style="font-weight: bold;" />
+                </h:panelGrid>
+            </p:panel>
+            <br/>
+
+            <p:selectOneRadio id="rdbOpcion1" value="#{amaRegEmpArmaController.opcionPanel1}" style="background-color: #E6E6E6" >
+                <f:selectItem itemLabel="#{BundleBDIntegrado.amaArma_registrar_situacuion_title}" itemValue="1" />
+                <p:ajax update="@form" event="valueChange" listener="#{amaRegEmpArmaController.cambiaPanel1}" />
+            </p:selectOneRadio>
+            <p:panel id = "pnlSituacionArma" collapsed="#{amaRegEmpArmaController.disabledPanel1}" toggleSpeed="700" >
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_situacuion}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="situacionArmaNoPosee"
+                                     value="#{amaRegEmpArmaController.registro.situacionArma }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.obtenerSituacionArmaNoPosee() }"/>
+                       <p:ajax event="change" update="@this,pnlSituacionArma" process="@this,pnlSituacionArma" listener="#{amaRegEmpArmaController.cambiaSituacion()}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_EstadoArma}"
+                                   rendered="#{amaRegEmpArmaController.renderEstadoArma}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="lugarFecha"
+                                     rendered="#{amaRegEmpArmaController.renderEstadoArma}"
+                                     value="#{amaRegEmpArmaController.registro.estadoArmaId }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.obtenerListadoEstados() }"/>
+                       <p:ajax event="change" update="@this,pnlSituacionArma" process="@this,pnlSituacionArma" />
+                   </p:selectOneMenu>
+                </h:panelGrid>
+                
+                <h:panelGrid id="pnlPosiblePropietarioInpe" columns="5" rendered="#{amaRegEmpArmaController.esPerfilInpe() and amaRegEmpArmaController.registro.situacionArma.codProg eq 'TP_SITU_VEN' }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_posiblePropietario}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="tipoDocPosiblePropietarioInpe"
+                                     value="#{amaRegEmpArmaController.tipoDocPosiblePropietario }" >
+                       <f:selectItem itemLabel="DNI" itemValue="DNI"/>
+                       <f:selectItem itemLabel="CE" itemValue="CE"/>
+                       <f:selectItem itemLabel="RUC" itemValue="RUC"/>
+                       <p:ajax event="change" update="@this,pnlPosiblePropietarioInpe" process="@this,pnlPosiblePropietarioInpe" listener="#{amaRegEmpArmaController.cambiaTipoDocPosiblePropietario()}" />
+                    </p:selectOneMenu>
+                    <p:inputText id="numDocPosiblePropietarioInpe"
+                                 value="#{amaRegEmpArmaController.numDocPosiblePropietario}"                                 
+                                 style="width:100px;"
+                                 maxlength="#{amaRegEmpArmaController.maxLengthPosiblePropietario}" >
+                        <p:keyFilter mask="pnum" preventPaste="false" />
+                    </p:inputText>
+                    <p:commandButton icon="imageReniec" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'DNI'}"  actionListener="#{amaRegEmpArmaController.buscarReniec()}" update="@this,pnlPosiblePropietarioInpe" process="@this,pnlPosiblePropietarioInpe" />
+                    <p:commandButton icon="imageMigraciones" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'CE'}" actionListener="#{amaRegEmpArmaController.buscarMigraciones()}" update="@this,pnlPosiblePropietarioInpe" process="@this,pnlPosiblePropietarioInpe" />
+                    <p:commandButton icon="imageSunat" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'RUC'}" actionListener="#{amaRegEmpArmaController.buscarSunat()}" update="@this,pnlPosiblePropietarioInpe" process="@this,pnlPosiblePropietarioInpe" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosPosiblePropietario}" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid id="pnlPosiblePropietario" columns="5" rendered="#{!amaRegEmpArmaController.esPerfilInpe() and amaRegEmpArmaController.registro.situacionArma.codProg eq 'TP_SITU_TIT' }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_posiblePropietario}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="tipoDocPosiblePropietario"
+                                     value="#{amaRegEmpArmaController.tipoDocPosiblePropietario }" >
+                       <f:selectItem itemLabel="DNI" itemValue="DNI"/>
+                       <f:selectItem itemLabel="CE" itemValue="CE"/>
+                       <f:selectItem itemLabel="RUC" itemValue="RUC"/>
+                       <p:ajax event="change" update="@this,pnlPosiblePropietario" process="@this,pnlPosiblePropietario" listener="#{amaRegEmpArmaController.cambiaTipoDocPosiblePropietario()}" />
+                    </p:selectOneMenu>
+                    <p:inputText id="numDocPosiblePropietario"
+                                 value="#{amaRegEmpArmaController.numDocPosiblePropietario}"                                 
+                                 style="width:100px;"
+                                 maxlength="#{amaRegEmpArmaController.maxLengthPosiblePropietario}" >
+                        <p:keyFilter mask="pnum" preventPaste="false" />
+                    </p:inputText>
+                    <p:commandButton icon="imageReniec" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'DNI'}"  actionListener="#{amaRegEmpArmaController.buscarReniec()}" update="@this,pnlPosiblePropietario" process="@this,pnlPosiblePropietario" />
+                    <p:commandButton icon="imageMigraciones" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'CE'}" actionListener="#{amaRegEmpArmaController.buscarMigraciones()}" update="@this,pnlPosiblePropietario" process="@this,pnlPosiblePropietario" />
+                    <p:commandButton icon="imageSunat" rendered="#{amaRegEmpArmaController.tipoDocPosiblePropietario eq 'RUC'}" actionListener="#{amaRegEmpArmaController.buscarSunat()}" update="@this,pnlPosiblePropietario" process="@this,pnlPosiblePropietario" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.datosPosiblePropietario}" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" rendered="#{amaRegEmpArmaController.esPerfilInpe() }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_region}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="regionInpeNoPertenece"
+                                     value="#{amaRegEmpArmaController.regionInpeNoPropiedad }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.listarRegionesInpe() }"/>
+                       <p:ajax event="change" update="@this,pnlSituacionArma" process="@this,pnlSituacionArma" listener="#{amaRegEmpArmaController.cambiarRegionInpe()}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_DireccionRegion}" rendered="#{amaRegEmpArmaController.regionInpeNoPropiedad ne null}" style="font-weight: bold;width: 120px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.obtenerDireccionRegionInpe(amaRegEmpArmaController.regionInpeNoPropiedad)}" rendered="#{amaRegEmpArmaController.regionInpeNoPropiedad ne null}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_penal}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="penalNoPertenece"
+                                     value="#{amaRegEmpArmaController.penalInpeNoPropiedad }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.listarPenalesInpe() }"/>                       
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" rendered="#{amaRegEmpArmaController.registro.situacionArma.codProg == 'TP_SITU_INC' }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_fechaIncautacion}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                     <p:calendar id="fechaIncautacion"
+                                locale="es"
+                                maxdate="#{amaRegEmpArmaController.currentDate}"
+                                showOn="button" value="#{amaRegEmpArmaController.registro.fechaIncauta}"
+                                pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:calendar>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_descMotivo}" style="font-weight: bold;width: 120px; display: block;" />
+                    <p:inputTextarea rows="4" cols="200" queryDelay="750" minQueryLength="4" 
+                                     value="#{amaRegEmpArmaController.registro.descMotivo}" 
+                                     maxlength="400"
+                                     onblur="this.value = this.value.toUpperCase();" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="1" rendered="#{amaRegEmpArmaController.renderArchivoAdjuntoNoPosee()}" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_adjuntar}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_formato}" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="1" rendered="#{amaRegEmpArmaController.renderArchivoAdjuntoNoPosee()}" >
+                    <h:outputText value="#{BundleBDIntegrado.amaRegEmpArma_msjeObservadoNoTitularidad }" style="color: red;" rendered="#{amaRegEmpArmaController.renderMensajObsNoTitularidad()}" />
+                    <p:fileUpload id="pfileUpload" label="#{BundleBDIntegrado.amaArma_registrar_dt_adjuntar}" 
+                                                    invalidFileMessage="#{BundleBDIntegrado.amaArma_fileUpload_InvalidFileMessage}"
+                                                    invalidSizeMessage="#{BundleBDIntegrado.amaArma_fileUpload_InvalidSizeMessageAdjunto}"
+                                                    fileUploadListener="#{amaRegEmpArmaController.handleFileUploadAdjunto1}"
+                                                    mode="advanced" dragDropSupport="true"
+                                                    multiple="false" sizeLimit="#{BundleBDIntegrado.amaArma_MaxSizeAdjunto}"
+                                                    auto="true" process="@this,pnlSituacionArma" update="@this,pnlSituacionArma"
+                                                    allowTypes="/(\.|\/)(pdf|jpg|PDF|JPG)$/" immediate="false" >
+                        <p:commandButton  icon="ui-icon-disk"
+                                      ajax="false"
+                                      rendered="#{amaRegEmpArmaController.archivo ne null}"
+                                      value="#{amaRegEmpArmaController.archivo }"
+                                      process="@all"
+                                      onclick="this.form.target = '_blank'"
+                                      onblur="this.form.target = '_self'"
+                                      immediate="true" >
+                            <p:fileDownload value="#{amaRegEmpArmaController.cargarDocumento()}" contentDisposition="inline"  />
+                        </p:commandButton>
+                    </p:fileUpload>
+                </h:panelGrid>
+            </p:panel>
+            <br/><br/>
+            
+            <p:selectOneRadio id="rdbOpcion2" value="#{amaRegEmpArmaController.opcionPanel2}" style="background-color: #E6E6E6" disabled="#{amaRegEmpArmaController.disabledRadioSiPoseeArma()}" >
+                <f:selectItem itemLabel="#{BundleBDIntegrado.amaArma_registrar_datosActualizados_title}" itemValue="2" />
+                <p:ajax update="@form" event="valueChange" listener="#{amaRegEmpArmaController.cambiaPanel2(true)}" />
+            </p:selectOneRadio>
+            <p:panel id = "pnlDatosActualizadosRaess" collapsed="#{amaRegEmpArmaController.disabledPanel2}" toggleSpeed="700" rendered="#{!amaRegEmpArmaController.esPerfilInpe() }" >
+                <br/>
+                <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_msjeNuevoRaess}" style="font-weight: bold;" escape="false" rendered="#{!amaRegEmpArmaController.disabledBtnGuardar}" />
+                <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_msjeNoProcesadas}" style="font-weight: bold;" escape="false" rendered="#{amaRegEmpArmaController.disabledBtnGuardar}" />
+            </p:panel>
+            <p:panel id = "pnlDatosActualizados" collapsed="#{amaRegEmpArmaController.disabledPanel2}" toggleSpeed="700"  >
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_serie}" style="font-weight: bold; width: 110px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registro.serie}" style="width: 110px; " />
+                    <p:selectBooleanCheckbox id="serieDifiere" value="#{amaRegEmpArmaController.serieDifiere}"  rendered="#{amaRegEmpArmaController.esPerfilInpe() }"
+                                             itemLabel="Serie del arma difiere de la registrada en la licencia anterior" style="margin-left: 20px;"  >
+                        <p:ajax update="pnlDatosActualizados" process="pnlDatosActualizados" listener="#{amaRegEmpArmaController.actualizarSeriePropuesta()}" />
+                    </p:selectBooleanCheckbox>
+                </h:panelGrid>
+                <h:panelGrid columns="3" rendered="#{amaRegEmpArmaController.esPerfilInpe() }">                
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_seriePropuesta}" style="font-weight: bold;width: 110px; display: block;" rendered="#{amaRegEmpArmaController.serieDifiere}" />
+                    <p:inputText value="#{amaRegEmpArmaController.registro.seriePropuesta}" rendered="#{amaRegEmpArmaController.serieDifiere}" />
+                    <p:outputLabel value="" rendered="#{amaRegEmpArmaController.serieDifiere}" />
+                </h:panelGrid>
+
+                
+                <h:panelGrid columns="6" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_arma}" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:autoComplete id="AuComArma" value="#{amaRegEmpArmaController.selectedArmaString}" 
+                                    size="100"
+                                    queryDelay="2000"
+                                    placeholder="Ingrese Tipo de arma y/o Marca y/o Modelo y/o Calibre"
+                                    onblur="this.value = this.value.toUpperCase();"
+                                    completeMethod="#{amaRegEmpArmaController.completeArma}"
+                                    var="ArmaSelected" itemLabel="#{amaRegEmpArmaController.obtenerDescripArmaListadoString(ArmaSelected)}"
+                                    minQueryLength="3" cache="true" itemValue="#{ArmaSelected}"  forceSelection="true" scrollHeight="200" >
+                        <p:ajax event="itemSelect" process="@this,pnlDatosActualizados" update="@this,pnlDatosActualizados" listener="#{amaRegEmpArmaController.seleccionaArma()}" global="false" />
+                    </p:autoComplete>
+                    <pe:tooltip for="AuComArma"  value="Para buscar las armas de fuego puede utilizar el símbolo (/) entre las características" showEffect="slideToggle"  
+                                    hideEffect="slideToggle" showDelay="0" hideDelay="1500" myPosition="left center" atPosition="right center"/>  
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_peso}" style="font-weight: bold;margin-left: 20px;" for="pesoArma" />
+                    <p:inputText id="pesoArma"
+                                 value="#{amaRegEmpArmaController.registro.pesoArma}" 
+                                 style="width:60px;" 
+                                 validatorMessage="#{BundleBDIntegrado.amaArma_ValidatorMessage_peso}" >
+                        <p:keyFilter mask="pnum"/>
+                        <f:validateDoubleRange minimum="0.0" maximum="99999999999999.9999" />
+                    </p:inputText>
+                    <p:outputLabel value="Kg" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_EstadoArma}" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:selectOneMenu id="estado"
+                                     style="margin-left: -10px;"
+                                     value="#{amaRegEmpArmaController.estadoSituacion }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.obtenerEstadoOperativo() }"/>
+                       <p:ajax event="change" update="@this,pnlSituacionArma" process="@this,pnlSituacionArma" />
+                   </p:selectOneMenu>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_situacuion}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="situacionArmaPosee"
+                                     style="margin-left: -10px;"
+                                     value="#{amaRegEmpArmaController.situacionArma}" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.obtenerSituacionArmaEnPosesion() }"/>
+                       <p:ajax event="change" update="@this,pnlSituacionArma" process="@this,pnlSituacionArma" />
+                   </p:selectOneMenu>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" rendered="#{amaRegEmpArmaController.registro.situacionArma.codProg == 'TP_SITU_INC' }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_fechaIncautacion}"
+                                   style="font-weight: bold;" />
+                    <p:calendar id="fechaIncautacion2"
+                                locale="es"
+                                showOn="button" value="#{amaRegEmpArmaController.fechaIncautacion}"
+                                pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:calendar>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" rendered="#{amaRegEmpArmaController.esPerfilInpe() }" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_region}"
+                                   style="font-weight: bold;width: 110px; display: block;" />
+                    <p:selectOneMenu id="regionInpe"
+                                     style="margin-left: -10px;"
+                                     value="#{amaRegEmpArmaController.regionInpe}" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.listarRegionesInpe() }"/>
+                       <p:ajax event="change" update="@this,pnlDatosActualizados" process="@this,pnlDatosActualizados" listener="#{amaRegEmpArmaController.cambiarRegionInpe()}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_DireccionRegion}" rendered="#{amaRegEmpArmaController.regionInpe ne null}" style="font-weight: bold;width: 120px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.obtenerDireccionRegionInpe(amaRegEmpArmaController.regionInpe)}" rendered="#{amaRegEmpArmaController.regionInpe ne null}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_registrar_penal}"
+                                   style="font-weight: bold;width: 120px; display: block;" />
+                    <p:selectOneMenu id="penal"
+                                     style="margin-left: -10px;"
+                                     value="#{amaRegEmpArmaController.penalInpe }" >
+                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                      value="#{amaRegEmpArmaController.listarPenalesInpe() }"/>                       
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="Observación #{(amaRegEmpArmaController.estadoSituacion.codProg eq 'TP_ESTA_INO'? ':' : '(opcional):' ) }" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:inputTextarea rows="4" cols="200" queryDelay="750" minQueryLength="4" 
+                                     value="#{amaRegEmpArmaController.observacion}" 
+                                     maxlength="400"
+                                     onblur="this.value = this.value.toUpperCase();" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="1" >
+                    <br/>
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_agregarFoto}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_dimensiones}" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2"  style="text-align: left ;width: 70%;">
+                    <p:dataTable id="tblFotos"
+                                style="width: 100%;"
+                                value="#{amaRegEmpArmaController.lstFotos}"
+                                emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="itemComp" >
+
+                       <p:column headerText="#{BundleBDIntegrado.amaArma_registrar_dt_Nro}" style="text-align:center">
+                           <f:facet name="header">
+                               <h:outputText value="#{BundleBDIntegrado.amaArma_registrar_dt_Nro}" />
+                           </f:facet>
+                           <h:outputText value="#{itemComp.nro}"/>
+                       </p:column>
+                       <p:column headerText="#{BundleBDIntegrado.amaArma_registrar_dt_foto}" style="text-align:center">
+                           <f:facet name="header">
+                               <h:outputText value="#{BundleBDIntegrado.amaArma_registrar_dt_foto}" />
+                           </f:facet>
+                           <p:commandLink id="foto" actionListener="#{amaRegEmpArmaController.openDlgFoto(itemComp) }">
+                                <h:outputText value="#{itemComp.nombre}"/>
+                           </p:commandLink>
+                       </p:column>
+                       <p:column headerText="#{BundleBDIntegrado.amaArma_registrar_dt_opcion}" style="text-align:center">
+                           <f:facet name="header">
+                               <h:outputText value="#{BundleBDIntegrado.amaArma_registrar_dt_opcion}" />
+                           </f:facet>
+                           <p:commandButton value="Eliminar"
+                                                icon="ui-icon-closethick"
+                                                process="@this,:editVerificacionForm:pnlDatosActualizados" 
+                                                update="@this,:editVerificacionForm:pnlDatosActualizados" 
+                                                actionListener="#{amaRegEmpArmaController.eliminarFotoVerificacion(itemComp)}">
+                                        <p:confirm header="Confirmación" message="#{BundleBDIntegrado.ConfirmarEliminar}" ></p:confirm>
+                           </p:commandButton>
+                       </p:column>
+                    </p:dataTable>
+                    
+                    <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.amaArma_foto}"
+                                  invalidFileMessage="#{BundleBDIntegrado.amaArma_fileUpload_foto_InvalidFileMessage}"
+                                  invalidSizeMessage="#{BundleBDIntegrado.amaArma_fileUpload_InvalidSizeMessageFoto}"
+                                  fileUploadListener="#{amaRegEmpArmaController.handleFileUploadFoto}"
+                                  disabled="#{amaRegEmpArmaController.disabledBtnFoto }"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  style="float:left;width: 100%;"
+                                  process="@this,pnlDatosActualizados"
+                                  auto="true" update="@this,pnlDatosActualizados" 
+                                  sizeLimit="#{BundleBDIntegrado.amaArma_MaxSizeFoto}"
+                                  allowTypes="/(\.|\/)(jpg|JPG)$/" immediate="true" >
+                    </p:fileUpload>
+                </h:panelGrid>                    
+            </p:panel>
+            <br/><br/>
+ 
+            <div align="center">
+                <p:commandButton id="botonGuardar"
+                                 rendered="#{!amaRegEmpArmaController.blnSubsanar}" 
+                                 icon="ui-icon-disk"
+                                 update="@all"
+                                 process="@all"
+                                 action="#{amaRegEmpArmaController.editar()}" 
+                                 value="#{bundle.Guardar}" >
+                </p:commandButton>
+                
+                <p:commandButton id="botonGuardarSubsanar"
+                                 rendered="#{amaRegEmpArmaController.blnSubsanar}" 
+                                 icon="ui-icon-disk"
+                                 update="@all"
+                                 process="@all"
+                                 disabled="#{amaRegEmpArmaController.disabledBtnGuardar}"
+                                 action="#{amaRegEmpArmaController.editar()}" 
+                                 value="#{bundle.Guardar}" >
+                </p:commandButton>
+            </div>
+            <br/>
+        </h:form>
+</ui:composition>
+
+                
+
+        
+        

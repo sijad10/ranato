@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage">
+            <pm:header title="#{bundleReportes.CentroSalud_buscarTitulo}" />
+            <pm:content>
+                <h:form id="buscarForm" style="font-size:90%!important;" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{bundleReportes.Filtro}" />
+                            <p:inputText  value="#{sbCsEstablecimientoController.filtro}" required="false" placeholder="#{bundleReportes.PhRucEstablecimiento}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{bundleReportes.Buscar}" icon="ui-icon-search" actionListener="#{sbCsEstablecimientoController.buscarMovil}"  update="@form" />
+                        <h:panelGroup rendered="#{sbCsEstablecimientoController.resultadosFull != null}">
+                            <h:outputLabel value="Se encontraron #{sbCsEstablecimientoController.resultados.rowCount} resultados." escape="false" />
+                            <p:dataTable id="buscarDatatable" value="#{sbCsEstablecimientoController.resultados}"
+                                         reflow="true"
+                                         var="item"
+                                         style="font-size:84%!important;"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleReportes.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleReportes.PaginatorFilas}"  
+                                         rowIndexVar="index"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleReportes.PaginatorFilasPorPagina}">
+                                <p:column rendered="false">
+                                    <f:facet name="header">
+                                        <h:outputText value="Nro" />
+                                    </f:facet>
+                                    <h:outputText 
+                                        value="#{index + 1}" />
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_nombre}" sortBy="#{item.nombre}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_nombre}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.nombre}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_ruc}" sortBy="#{item.propietarioId.ruc}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_ruc}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.propietarioId.ruc}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_direccion}" sortBy="#{item.direccionId.direccion}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_direccion}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.direccionId.direccion.concat(' ').concat(item.direccionId.numero)
+                                                           .concat(' - ').concat(item.direccionId.distritoId.nombre)
+                                                           .concat(' / ').concat(item.direccionId.distritoId.provinciaId.nombre)}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_fechaInicio}" sortBy="#{item.fechaIni}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_fechaInicio}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.fechaIni}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_fecha_Vencimiento}" sortBy="#{item.fechaFin}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_fecha_Vencimiento}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.fechaFin}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleReportes.CentroSalud_departamento}" sortBy="#{item.direccionId.distritoId.provinciaId.departamentoId.nombre}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleReportes.CentroSalud_departamento}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.direccionId.distritoId.provinciaId.departamentoId.nombre}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="AvisoViewDialog" widgetVar="AvisoEntregaViewDialog" width="25%" height="25%"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{bundleGamac.MensajeAviso}">
+            <h:form id="formMensajeAviso">
+                <h:panelGroup>
+                    <p:panel style="margin-bottom:20px" id="panelConfirmacion">
+                        <h:panelGrid >
+                            <p:outputLabel value="#{bundleGamac.ContenidoMensajeAviso}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <h:panelGrid>
+                        <p:commandButton value="#{bundleGamac.Aceptar}" actionListener="#{amaSolicitudRecojoController.openDlgConfRecojo(true)}" rendered="#{amaSolicitudRecojoController.opcion eq 1}"/>
+                        <p:commandButton value="#{bundleGamac.Aceptar}" actionListener="#{amaSolicitudRecojoController.openDlgConfReingreso(true)}" rendered="#{amaSolicitudRecojoController.opcion eq 2}"/>
+                    </h:panelGrid>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

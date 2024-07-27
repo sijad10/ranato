@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="dlgFrmCeseMasivo" widgetVar="wvDlgFrmCeseMasivo" width="35%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CARGA MASIVA DE CESES DE CARNÉ" closable="false">
+        <h:form id="frmCeseMasivo" enctype="multipart/form-data">
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="1" >
+                    <p:outputLabel value="Para cargar masivamente el Cese de Carnés, seleccione un archivo de texto mediante el siguiente botón: " />
+                    <p:fileUpload fileUploadListener="#{sspCarneController.lstnrFile}"
+                                  invalidFileMessage="#{bundle.CeseMasivo_fileUpload_InvalidFileMessage}"
+                                  invalidSizeMessage="#{sspCarneController.obtenerMsjeInvalidSize()}"
+                                  label="Seleccionar archivo ..."
+                                  mode="advanced" 
+                                  required="true"                                           
+                                  dragDropSupport="false" 
+                                  multiple="false" 
+                                  sizeLimit="#{sspCarneController.obtenerParametroXNombre('amaRegEmpArma_sizeLimite_txtCeseMasivo').valor}"
+                                  auto="true" 
+                                  update="frmCeseMasivo" />  
+                    <h:outputText value="#{sspCarneController.nombreArchivoCargaCese }" />
+                    <h:panelGrid columns="2">                        
+                        <p:commandButton value="Enviar" 
+                                         actionListener="#{sspCarneController.cargarDlgVigilantesArchivo()}" 
+                                         update="@form"/>
+                        <p:commandButton value="Cancelar" 
+                                         style="float: right"
+                                         process="@this"
+                                         update="frmCeseMasivo" 
+                                         actionListener="#"
+                                         oncomplete="PF('wvDlgFrmCeseMasivo').hide()" />
+                    </h:panelGrid>
+                </h:panelGrid >
+
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

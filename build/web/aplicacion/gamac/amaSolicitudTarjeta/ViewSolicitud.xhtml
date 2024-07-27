@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui" >
+    
+    <h:form id="verSolicitudForm" rendered="#{amaSolicitudTarjetaController.estado == 'VER'}" >
+            <p:panel id = "pnlDatosAnteriores" header="#{BundleBDIntegrado.amaSolicitudTarjeta_datosAnteriores_title}"  >
+                <h:panelGrid columns="6"  >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_licencia}"  />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registroSelected.NRO_LIC}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_serie}" style="margin-left: 20px;"/>
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registroSelected.NRO_SERIE}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoArma}" style="margin-left: 20px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registroSelected.DES_ARM}" style="font-weight: bold;" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_marca}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registroSelected.DES_MARCA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_modelo}" style="margin-left: 20px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registroSelected.DES_MODELO}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_calibre}" style="margin-left: 20px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.obtenerCalibreSolicitud(amaSolicitudTarjetaController.registroSelected)}" style="font-weight: bold;" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_Estado}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.obtenerSituacionSolicitud(amaSolicitudTarjetaController.registroSelected)}" style="font-weight: bold;" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+            </p:panel>
+            <br/>
+            
+            <p:panel id = "pnlDatosInternamiento" header="#{BundleBDIntegrado.amaSolicitudTarjeta_datosInternamiento_title}"  >        
+                <h:panelGrid columns="6" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_codigActa}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.NRO_ACTA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_fechaActa}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.FECHA_ACTA}" style="font-weight: bold;" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </p:outputLabel>
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoInternamiento}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.TIPO_INTERNAMIENTO}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoDeposito}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.TIPO_DEPOSITO}" style="font-weight: bold;" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_serie}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.NRO_SERIE}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoArma}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.TIPO_ARMA}" style="font-weight: bold;" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_marca}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.MARCA}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_modelo}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.MODELO}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_calibre}" style="margin-left: 10px;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.datosActaInt.CALIBRE}" style="font-weight: bold;" />
+                </h:panelGrid>
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_almacen}" style="width: 110px; display:block;" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.obtenerAlmacenActaInternamiento()}" style="font-weight: bold;" />
+                </h:panelGrid>
+            </p:panel>
+            
+            <p:panel id = "pnlDatosTramite" header="#{BundleBDIntegrado.amaSolicitudTarjeta_datosTramite_title}"  >
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_tipoTramite}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.parametrizacionTupa.procesoIntegradoId.nombre}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_administrado}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registro.personaId.rznSocial}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_representanteLegal}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.registro.representanteLegalId.nombreCompleto} / #{amaSolicitudTarjetaController.registro.representanteLegalId.numDoc}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_comprobante}" />
+                    <p:outputLabel value="#{amaSolicitudTarjetaController.obtenerDatosRecibo()}" rendered="#{amaSolicitudTarjetaController.recibo != null}" style="font-weight: bold;" />
+                </h:panelGrid>
+            </p:panel>
+            <br/><br/>
+ 
+             <div align="center">
+                 <p:commandButton id="botonRegresar"
+                                 icon="ui-icon-arrowthick-1-w"
+                                 update="@all"
+                                 process="@all"
+                                 action="#{amaSolicitudTarjetaController.direccionarBandeja()}" 
+                                 value="#{BundleBDIntegrado.Regresar}" />
+            </div>
+            <br/>
+        </h:form>
+</ui:composition>
+
+                
+
+        
+        

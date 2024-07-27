@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">    
+    
+    <ui:define name="body">
+        <style>
+            .txtContenido {
+                font-size:80%!important; 
+                vertical-align: middle;                
+            }
+        </style>
+        <pm:page id="buscarPage">
+            <pm:header title="Consulta de carnés pirotécnicos" />
+            <pm:content style="width:95%;padding-top: 0; margin-top: 10px;" styleClass="txtContenido" >
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="DNI/CE: " />
+                            <p:inputText  value="#{eppCarneController.filtro}" required="false" placeholder="#{BundleBDIntegrado.EppCarne_PhFiltro}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{BundleBDIntegrado.Buscar}" icon="ui-icon-search" 
+                                         oncomplete="completeFind();" style="margin-top: 10px;"
+                                         actionListener="#{eppCarneController.buscarCarnesMovil()}" process="@form" update="@form" />
+                    </h:panelGroup>
+                    
+                    <h:panelGroup rendered="#{eppCarneController.registro == null and eppCarneController.accionEjecutada }" style="padding-right: 5px;">
+                        <p:outputLabel value="No se encontró un carné con el documento ingresado" style="color:red;" />
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{eppCarneController.registro != null}" style="padding-right: 5px;">
+                            <p:panelGrid style="text-align: center;margin:0;padding: 0;">
+                                <p:outputLabel value="Datos del Carné" style="font-weight: bold;margin-top: 10px;" />
+                            </p:panelGrid>
+                            <p:tabView>
+                                <p:tab title="Carné">
+                                    <p:panelGrid style="text-align: center;margin-top: 10px;">
+                                        <p:graphicImage value="#{eppCarneController.generarPDFCarneFront()}" cache="false" width="95%" style="max-width: 500px;">
+                                        </p:graphicImage>
+                                    </p:panelGrid>
+                                </p:tab>
+                                <p:tab title="Sección posterior de carné" >
+                                    <p:panelGrid style="text-align: center;">
+                                        <p:graphicImage value="#{eppCarneController.generarPDFCarneBack()}" cache="false" width="95%" style="max-width: 500px;">
+                                        </p:graphicImage>
+                                    </p:panelGrid>
+                                </p:tab>
+                            </p:tabView>
+
+                            <p:panelGrid style="text-align: center;margin:0;padding: 0;">
+                                <pm:field>
+                                    <p:outputLabel id="nroCarne" value="Nro. de Carné:" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{eppCarneController.obtenerNroCarne()}" />                        
+                                </pm:field>
+                                <pm:field rendered="#{eppCarneController.carne.registroId.tipoOpeId.codProg ne 'TP_OPE_CAN'}">                        
+                                    <p:outputLabel id="vigencia" value="Situación" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{eppCarneController.obtenerVigenciaCarne()}" style="#{eppCarneController.obtenerEstiloCarneCancelado()}" />                        
+                                </pm:field>
+                                <pm:field>
+                                    <p:outputLabel id="tipoOpe" value="Tipo de operación:" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{eppCarneController.registro.tipoOpeId.nombre}" />
+                                </pm:field>
+                                <pm:field>
+                                    <p:outputLabel id="fechaEmision" value="Fecha de Emisión:" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{eppCarneController.carne.fechaEmision}" >
+                                        <f:converter converterId="fechaConverter" />
+                                    </p:outputLabel>
+                                </pm:field>
+                                <pm:field>
+                                    <p:outputLabel id="fechaVcto" value="Fecha de Vencimiento" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{eppCarneController.carne.fechaVencimiento}" >
+                                        <f:converter converterId="fechaConverter" />
+                                    </p:outputLabel>
+                                </pm:field>
+                            </p:panelGrid>
+                    </h:panelGroup>
+                </h:form>
+                <script type="text/javascript">
+                    function completeFind(){
+                        $(".ui-field-contain").attr("style", "margin:0;");
+                        $("button[id*='botonBuscar']").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;text-shadow:None");
+                    }                    
+                    
+                    $(document).ready(function() {                         
+                        $(".ui-field-contain").attr("style", "margin:0;");
+                        $("button[id*='botonBuscar']").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;text-shadow:None");
+                    });
+                </script>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateAmaCatalogoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaCatalogoController.selected.id}" title="#{bundle.CreateAmaCatalogoTitle_id}" required="true" requiredMessage="#{bundle.CreateAmaCatalogoRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_nombre}" for="nombre" />
+                    <h:inputText id="nombre" value="#{amaCatalogoController.selected.nombre}" title="#{bundle.CreateAmaCatalogoTitle_nombre}" required="true" requiredMessage="#{bundle.CreateAmaCatalogoRequiredMessage_nombre}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_abreviatura}" for="abreviatura" />
+                    <h:inputText id="abreviatura" value="#{amaCatalogoController.selected.abreviatura}" title="#{bundle.CreateAmaCatalogoTitle_abreviatura}" />
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_descripcion}" for="descripcion" />
+                    <h:inputText id="descripcion" value="#{amaCatalogoController.selected.descripcion}" title="#{bundle.CreateAmaCatalogoTitle_descripcion}" />
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_codProg}" for="codProg" />
+                    <h:inputText id="codProg" value="#{amaCatalogoController.selected.codProg}" title="#{bundle.CreateAmaCatalogoTitle_codProg}" />
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_orden}" for="orden" />
+                    <h:inputText id="orden" value="#{amaCatalogoController.selected.orden}" title="#{bundle.CreateAmaCatalogoTitle_orden}" />
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaCatalogoController.selected.activo}" title="#{bundle.CreateAmaCatalogoTitle_activo}" required="true" requiredMessage="#{bundle.CreateAmaCatalogoRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaCatalogoController.selected.audLogin}" title="#{bundle.CreateAmaCatalogoTitle_audLogin}" required="true" requiredMessage="#{bundle.CreateAmaCatalogoRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaCatalogoController.selected.audNumIp}" title="#{bundle.CreateAmaCatalogoTitle_audNumIp}" required="true" requiredMessage="#{bundle.CreateAmaCatalogoRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaCatalogoLabel_tipoId}" for="tipoId" />
+                    <h:selectOneMenu id="tipoId" value="#{amaCatalogoController.selected.tipoId}" title="#{bundle.CreateAmaCatalogoTitle_tipoId}" >
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaCatalogoController.create}" value="#{bundle.CreateAmaCatalogoSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{amaCatalogoController.prepareList}" value="#{bundle.CreateAmaCatalogoShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateAmaCatalogoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

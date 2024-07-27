@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">
+        <b><h:outputText value="SERVICIO INDIVIDUAL DE SEGURIDAD PERSONAL - SISPE (VER)"/></b>
+    </ui:define>
+
+    <ui:define name="body"> 
+        <div class="ui-g">                        
+            <div class="ui-g-12 ui-md-12 ui-lg-12">
+
+                <h:form id="FormSISPEVer"  >    
+
+                    <div class="ui-g">  
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-4">
+                            <p:panel  id="pnl_DatosSolicitud" header="Datos de la Solicitud" rendered="#{gsspSolicitudAutorizacionSISPEController.registro != null}" >
+
+                                <div class="ui-g">
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                        <p:outputLabel value="Fecha Solicitud:"  />
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-8">
+                                        <p:inputText id="txtFechaSolicitud" value="#{gsspSolicitudAutorizacionSISPEController.registro.fecha}" style="font-weight: bold; width: 100%;" disabled="true">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:inputText>
+                                    </div>    
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                        <p:outputLabel value="Nro. Solicitud:"  />
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-8">
+                                        <p:inputText id="txtNroSolicitud" value="#{gsspSolicitudAutorizacionSISPEController.registro.nroSolicitiud}" style="font-weight: bold; width: 100%;" disabled="true" />
+                                    </div>                                                
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                        <p:outputLabel value="Nro. Expediente"  />
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-8">
+                                        <p:inputText id="txtNroExpediente" value="#{gsspSolicitudAutorizacionSISPEController.registro.nroExpediente}" style="font-weight: bold; width: 100%;" disabled="true" />
+                                    </div>
+
+                                </div>
+
+                            </p:panel>
+
+                        </div>
+                        
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-4">
+                            <p:panel  id="pnl_DatosCarneWeb" header="Datos del Carné" rendered="#{gsspSolicitudAutorizacionSISPEController.registro.carneSolicitudId != null}" >
+
+                                <div class="ui-g">                                  
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                        <p:outputLabel value="Nro. Solicitud Carné:"  />
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-8">
+                                        <p:inputText id="txtNroSolicitudCarne" value="#{gsspSolicitudAutorizacionSISPEController.registro.carneSolicitudId.nroSolicitiud}" style="font-weight: bold; width: 100%;" disabled="true" />
+                                    </div>                                                
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                        <p:outputLabel value="Nro. Expediente Carné"  />
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-12 ui-lg-8">
+                                        <p:inputText id="txtNroExpedienteCarne" value="#{gsspSolicitudAutorizacionSISPEController.registro.carneSolicitudId.nroExpediente}" style="font-weight: bold; width: 100%;" disabled="true" />
+                                    </div>
+
+                                </div>
+
+                            </p:panel>
+
+                        </div>
+                        
+                    </div>
+
+
+
+
+
+                    <div class="ui-fluid">                    
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+                        <p:panel id="pnl_AdministradoPN" header="Datos del Administrado - Persona Natural" rendered="#{gsspSolicitudAutorizacionSISPEController.tipoAdministradoUsuario eq 'PersonaNatural'}" >
+
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_Nombre}"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                    <p:inputText id="txtPNNombres" value="#{gsspSolicitudAutorizacionSISPEController.administNombres}" style="font-weight: bold;" disabled="true"  />
+                                </div>                                                
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_TipDoc}"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:inputText id="txtPNTipDoc" value="#{gsspSolicitudAutorizacionSISPEController.administTipDoc}" style="font-weight: bold;" disabled="true" />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_NumDoc}" />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:inputText id="txtPNNumDoc" value="#{gsspSolicitudAutorizacionSISPEController.administNumDoc}" style="font-weight: bold;" disabled="true"  />
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+
+                        <p:panel id="pnlDatosModalidad" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_title_DatModalidad}" >
+
+                            <div class="ui-g">
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_TipServ} *"  />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                    <p:selectOneMenu id="bcoTipServicio"  value="#{gsspSolicitudAutorizacionSISPEController.regTipoSeguridadSelected }" disabled="true" >   
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPEController.regTipoSeguridadList}"/>                                    
+                                    </p:selectOneMenu>
+                                </div>
+
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_ServPrestaod} *"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                    <p:selectOneMenu id="cboServPrestado"  value="#{gsspSolicitudAutorizacionSISPEController.regServicioPrestadoSelected }" disabled="true" >   
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPEController.regServicioPrestadoList}"/>
+                                    </p:selectOneMenu>
+                                </div>
+
+
+
+
+                            </div>
+
+                        </p:panel>
+
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+                        <p:panel id="pnl_MediosContacto" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Titulo_03}" >
+
+                            <div class="ui-g">   
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:dataTable id="dtResultadosMedioContactos"
+                                                 value="#{gsspSolicitudAutorizacionSISPEController.lstContactos}"
+                                                 var="itemRegContacto"
+                                                 rowKey="#{itemRegContacto.ID}"
+                                                 selection="#{gsspSolicitudAutorizacionSISPEController.selectedContacto}"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                                 paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                 {RowsPerPageDropdown}"
+                                                 currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Prioridad}" style="text-align: center;" >
+                                            <h:outputText value="#{(itemRegContacto.valor eq '290'?'PRINCIPAL':'SECUNDARIO')}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Contacto}" style="text-align: center;" >
+                                            <h:outputText value="#{itemRegContacto.tipoMedioId.nombre}" />
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Descripcion}" style="text-align: center;" >
+                                            <h:outputText value="#{itemRegContacto.descripcion}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+
+                        <p:panel id="pnl_Fotografia" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelFotografia_LBL_Titulo}"  >
+
+                            <div class="ui-g">   
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelFotografia_LBL_AdjFoto} " />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                    <p:graphicImage value="#{gsspSolicitudAutorizacionSISPEController.archivoFOTO}" cache="false" width="150" height="200"></p:graphicImage>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_msjeCaracteristicasFoto}" escape="false" />
+                                </div>
+
+                            </div>
+
+                            <div class="ui-g">   
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    &nbsp;
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                    <p:outputLabel value="#{gsspSolicitudAutorizacionSISPEController.obtenerMsjeFoto()}" style="color:red;" />
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+                        <p:panel id="pnl_CertFisicoMental" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCertFiscoMntal_LBL_Titulo}"  >                    
+
+                            <div class="ui-g">  
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCertFiscoMntal_lbl_Text_CertFiscoMntal} *" />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:commandButton  icon="ui-icon-circle-arrow-s"
+                                                      ajax="false"
+                                                      value="Descargar"
+                                                      rendered="#{gsspSolicitudAutorizacionSISPEController.renderBtnArchivoCertFiscoMntal()}"
+                                                      process="@all"
+                                                      onclick="this.form.target = '_blank'"
+                                                      onblur="this.form.target = '_self'"
+                                                      immediate="true" >
+                                        <p:fileDownload value="#{gsspSolicitudAutorizacionSISPEController.cargarDocumentoCertFiscoMntal()}" contentDisposition="inline"  />
+                                    </p:commandButton>
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+
+                        <p:panel id="pnl_CopiaContrato" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCopyContrato_LBL_Titulo}"  >                    
+
+                            <div class="ui-g">  
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCopyContrato_lbl_Text_Contrato} *" />
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                    <p:commandButton  icon="ui-icon-circle-arrow-s"
+                                                      ajax="false"
+                                                      value="Descargar"
+                                                      rendered="#{gsspSolicitudAutorizacionSISPEController.renderBtnArchivoCopyContrato()}"
+                                                      process="@all"
+                                                      onclick="this.form.target = '_blank'"
+                                                      onblur="this.form.target = '_self'"
+                                                      immediate="true" >
+                                        <p:fileDownload value="#{gsspSolicitudAutorizacionSISPEController.cargarDocumentoCopyContrato()}" contentDisposition="inline"  />
+                                    </p:commandButton>
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                &nbsp;
+                            </div>
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:commandButton id="btnCancelarSISPE" value="REGRESAR" 
+                                                 action="#{gsspSolicitudAutorizacionSISPEController.btnRegresarBandejaSISPE()}"
+                                                 icon="ui-icon-closethick"  update="@all" process="@all" iconPos="left" styleClass="botonBorrar"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                &nbsp;
+                            </div>
+                        </div>
+
+
+                        <div class="ui-g">                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/><BR/>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </h:form>
+
+            </div>          
+        </div>
+    </ui:define>
+</ui:composition>

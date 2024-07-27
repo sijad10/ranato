@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <style>
+        /*.colorPopup{
+            border: 10px;border-style: outset;background-color: #f1f1f1; border-color:gray;
+        }*/
+        .txtMensaje{font-size: 120%!important; color:#ed1c24; font-weight: bold;}
+        .txtConfirmar{font-size: 125%!important; color:#156090; font-weight: bold;}        
+        .txtAlerta{font-size: larger!important; color:#ed1c24; font-weight: bold;}
+        .txtComen{font-size: larger!important; color:#363636; font-weight: bold;}        
+    </style>
+
+    <p:dialog id="dlgViewArmDisca" widgetVar="wvDlgViewArmDisca" closable="true" width="95%" onShow="updateDlgViewArmDis();"
+              header="DETALLE DEL ARMA DE FUEGO" resizable="false" modal="true" appendTo="@(body)" 
+              position="center top">
+        <div class="ui-fluid">
+
+            <h:form id="dlgViewArmDiscaForm">
+                <p:focus context="dlgViewArmDiscaForm" />
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <p:outputLabel value="Arma de fuego con licencia de posesión otorgada al amparo de la Ley N° 25054, debe ser regularizada bajo el amparo de la Ley N° 30299" class="txtMensaje"/>                        
+                    </div>                    
+                </div>
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3 ui-lg-2" style="text-align: center;">
+                        <p:graphicImage value="#{dcGamacLicenciasRenagiController.foto}" width="180" height="240" cache="false" 
+                                        style="border-color: #000; border-width: 2px; border-style: solid;"/>                        
+                    </div>
+
+                    <div class="ui-g-12 ui-md-9 ui-lg-10">
+                        <p:panel id="pnl1" header="Datos de la Licencia en Posesión" style="margin-bottom:8px;" rendered="#{dcGamacLicenciasRenagiController.registro!=null}" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Nro de Licencia: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.NRO_LIC}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                    <p:outputLabel value="Tipo de Licencia: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_LICENCIA}" class="txtContenido"/>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:outputLabel value="Propietario: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.DOC_PROPIETARIO} - #{dcGamacLicenciasRenagiController.registro.PROPIETARIO}" class="txtContenido"/>                                    
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Fecha de Emisión: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.FEC_EMISION}" class="txtContenido">
+                                        <f:convertDateTime pattern="#{bundleRenagi.FormatoFecha}" />
+                                    </p:outputLabel>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                    <p:outputLabel value="Fecha de Vencimiento: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.FEC_VENCIMIENTO}" class="txtContenido">
+                                        <f:convertDateTime pattern="#{bundleRenagi.FormatoFecha}" />
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:outputLabel value="Estado: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.ESTADO}" class="txtMensaje"/>
+                                </div>
+                            </div>
+                        </p:panel>
+                        
+                        <p:panel id="pnl2" header="Datos del Arma" style="margin-bottom:8px;" rendered="#{dcGamacLicenciasRenagiController.registro!=null}">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Nro de Serie: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.NRO_SERIE}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                    <p:outputLabel value="Tipo de Arma: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_ARMA}" class="txtContenido"/>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Marca: " />
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.MARCA}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Modelo: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.MODELO}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Calibre: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.CALIBRE}" class="txtContenido"/>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:outputLabel value="Situación: "/>
+                                    <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.SITUACION} #{dcGamacLicenciasRenagiController.interDisca}" class="txtMensaje"/>                                    
+                                </div>
+                            </div> 
+                        </p:panel>
+                        
+                    </div>
+                    
+                </div>
+                    
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <p:panel id="pnl3" header="Datos del Internamiento" style="margin-bottom:8px;" rendered="#{dcGamacLicenciasRenagiController.guiaT!=null}" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Nro de Acta: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.guiaT.nroGuia}" class="txtContenido"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-8">
+                            <p:outputLabel value="Fecha: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.guiaT.fechaEmision}" class="txtContenido">
+                                <f:convertDateTime pattern="#{bundleRenagi.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Tipo de Internamiento: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.inventarioArma.tipoInternamientoId.nombre}" class="txtContenido"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-8">
+                            <p:outputLabel value="Tipo de Depósito: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.guiaT.tipoGuiaId.nombre}" class="txtContenido" />
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Nro de Serie: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.inventarioArma.serie}" class="txtContenido" rendered="#{dcGamacLicenciasRenagiController.inventarioArma!=null}"/>
+
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-8">
+                            <p:outputLabel value="Tipo de Arma: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.inventarioArma.modeloId.tipoArmaId.nombre}" class="txtContenido" rendered="#{dcGamacLicenciasRenagiController.inventarioArma!=null}"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Marca: " />
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.inventarioArma.modeloId.marcaId.nombre}" class="txtContenido" rendered="#{dcGamacLicenciasRenagiController.inventarioArma!=null}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Modelo: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.inventarioArma.modeloId.modelo}" class="txtContenido" rendered="#{dcGamacLicenciasRenagiController.inventarioArma!=null}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-4">
+                            <p:outputLabel value="Calibre: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.obtenerCalibres(dcGamacLicenciasRenagiController.inventarioArma.modeloId)}" class="txtContenido" rendered="#{dcGamacLicenciasRenagiController.inventarioArma!=null}"/>
+                        </div>
+                    </div>                            
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Almacén: "/>
+                            <p:outputLabel value="#{dcGamacLicenciasRenagiController.direInternamiento}" class="txtContenido"/>
+                        </div>
+                    </div>
+                </p:panel>
+                    </div>
+                </div>
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+
+                    <div class="ui-g-12 ui-md-5 ui-lg-3">
+                        <ui:remove>
+                        <p:commandButton id="btnImprimir" icon="ui-icon-print" partialSubmit="true"
+                                         process="@this" update="@none" 
+                                         action="#{dcGsspVigilantesController.imprimirConstancia()}" value="IMPRIMIR" 
+                                         />
+                        </ui:remove>
+                    </div>
+                    <div class="ui-g-12 ui-md-5 ui-lg-3">
+                        <p:commandButton immediate="true" icon="ui-icon-close" value="Cerrar" update="@this" onclick="PF('wvDlgViewArmDisca').hide();" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+                </div>
+            </h:form>
+
+        </div>
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("#dlgViewArmDisca > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+        $("#dlgViewArmDisca > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+        $("#dlgViewArmDisca > .ui-dialog-content").attr("style", "padding:4px!important;");
+
+        function updateDlgViewArmDis() {
+            $("#dlgViewArmDisca").css('top', 50);
+            $("div[id*='pnl1_content'], div[id*='pnl2_content']").attr("style", "padding:0!important");
+            $("div[id*='pnl1_content'], div[id*='pnl2_content'], div[id*='pnl3_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $("div[id*='pnl3_content']").attr("style", "padding:0px!important; background:#caebfb!important;border:1px solid #41ade7;");
+            $("div[id*='pnl3_header']").attr("style", "background:#a9dcf3!important;border:1px solid #64a9ce;");
+            $('<span class="txtAlerta">(PARA REGULARIZAR)</span>').appendTo( "div[id*='pnl1_header']" );
+            $('<span class="txtAlerta">(PARA VERIFICAR)</span>').appendTo( "div[id*='pnl2_header']" );
+            $('<span class="txtComen">(Según directiva N° 06-2017-SUCAMEC)</span>').appendTo( "div[id*='pnl3_header']" );
+        }
+    </script>
+
+</ui:composition>
+

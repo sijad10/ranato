@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+         <h:form id="verForm" rendered="#{armasPosesionController.estado == 'VER'}">
+                <p:panel header="Datos del arma de fuego en posesión">
+                   
+                    <h:panelGrid  cellpadding="4">
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Datos del arma"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.selectedArmaString}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="2"><p:selectBooleanCheckbox value="#{armasPosesionController.activarCheck}" itemLabel="No encuentra las caracteristicas de mi arma"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Tipo de arma" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.nuevoTipoArmaId.nombre}" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Marca" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.nuevoMarca}" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Modelo" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.nuevoModelo}" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Calibre" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.nuevoCalibre}" rendered="#{armasPosesionController.ocultarDatos}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Número de Serie"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.numeroSerie}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Estado Fisico del arma"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.estadoFisicoId.nombre}"/></p:column>                      
+                        </p:row>
+                        <p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Situación del arma"/></p:column>
+                            <p:column> <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.situacionId.nombre}"/></p:column>                      
+                        </p:row><p:row>
+                            <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Descripción física del arma"/></p:column>
+                            <p:column>  <p:outputLabel style="font-weight: bold;" value="#{armasPosesionController.registro.descripcion}"/></p:column>                      
+                        </p:row>
+                    </h:panelGrid>
+                </p:panel>
+                <p:panel header="Fotos del arma de fuego">
+                    <p:outputLabel style="font-weight: bold;" value="Foto del arma(Nro. de serie y panorámica)"/>
+                    <p:panelGrid columns="2">
+                       <p:dataTable value="#{armasPosesionController.lstFotos}" var="item" id="dtFotos">
+                                    <p:column headerText="Nombre Foto">
+                                        <p:outputLabel value="#{item.nombre}"/>
+                                    </p:column>
+                       </p:dataTable>
+                    </p:panelGrid>
+                </p:panel>
+                         <p:commandButton update="@all" immediate="true" action="#{armasPosesionController.prepareListMios()}" icon="ui-icon-closethick" value="Cancelar"/>
+                
+            </h:form>
+       
+    </ui:composition>
+

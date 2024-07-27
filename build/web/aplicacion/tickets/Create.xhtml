@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      >
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+             <b><h:outputText value="#{BundleBDIntegrado.CrearTicketsTitulo}"></h:outputText></b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="createForm" enctype="multipart/form-data">
+                <p:panel style="width: 75%;" header="#{BundleBDIntegrado.FormularioVirtual}">
+                    <p:outputLabel value=""/><br/>
+                    <p:outputLabel value="#{BundleBDIntegrado.MsjPanelFormularioVirtual}"/>
+                    
+                    <h:panelGroup id="messagePanel" layout="block">
+                        <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                    </h:panelGroup>
+                    <p:outputLabel style="font-size: x-large;color: red;font-weight: bold;" value="#{ticketsController.nuevoNumero}" id="nuevoNumero"></p:outputLabel>
+                    <br/>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value=""/>
+                        <p:outputLabel value=""/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_incidencia}" for="tipo" />
+                        <p:selectOneMenu id="tipo" value="#{ticketsController.selected.tipo}" required="true" requiredMessage="#{BundleBDIntegrado.TicketsRequiredMessage_incidencia}">
+                            <f:selectItems value="#{tipoIntegradoController.itemsTipoPorTipo('TKSEL', false)}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_tramite}" for="tramite" />
+                        <p:selectOneMenu id="tramite" value="#{ticketsController.selected.tramite}" required="true" requiredMessage="#{BundleBDIntegrado.TicketsRequiredMessage_tramite}">
+                            <f:selectItems value="#{tipoIntegradoController.itemsTipoPorTipo('TKTRM', false)}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_email}" for="email" />
+                        <p:inputText id="email" onblur="this.value = this.value.toUpperCase();" size="60" maxlength="100" value="#{ticketsController.selected.email}" title="#{BundleBDIntegrado.TicketsTitle_email}" required="false" requiredMessage="#{BundleBDIntegrado.TicketsRequiredMessage_email}" validatorMessage="#{BundleBDIntegrado.TicketsValidatorMessage_email}">
+                            <f:validateRegex pattern="^$|^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_celular}" for="celular" />
+                        <p:inputText  id="celular" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.celular}" size="20" maxlength="20"
+                                      title="#{BundleBDIntegrado.TicketsTitle_celular}" validatorMessage="#{BundleBDIntegrado.TicketsValidatorMessage_celular}" >
+                        </p:inputText>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_telefono}" for="telefono" />
+                        <p:inputText  id="telefono" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.telefono}" size="20" maxlength="20"
+                                      title="#{BundleBDIntegrado.TicketsTitle_telefono}" validatorMessage="#{BundleBDIntegrado.TicketsValidatorMessage_telefono}">
+                        </p:inputText>
+
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_nroSolicitud}" for="oficioRef" />
+                        <p:inputText id="oficioRef" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.oficioRef}" title="#{BundleBDIntegrado.TicketsTitle_nroSolicitud}" size="60"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_expediente}" for="expediente" />
+                        <p:inputText id="expediente" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.expediente}" title="#{BundleBDIntegrado.TicketsTitle_expediente}" />
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_asunto}" for="asunto" />
+                        <p:inputText id="asunto" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.asunto}" maxlength="200"
+                                     title="#{BundleBDIntegrado.TicketsTitle_asunto}" required="true" requiredMessage="#{BundleBDIntegrado.TicketsRequiredMessage_asunto}" validatorMessage="#{BundleBDIntegrado.TicketsValidatorMessage_asunto}" size="60">
+                            <f:validateLength minimum="5" />
+                        </p:inputText>
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_descripcion}" for="descripcion" />
+                        <p:inputTextarea cols="60" rows="6" maxlength="1000" counter="contador" counterTemplate="#{BundleBDIntegrado.CounterTemplate}" id="descripcion" onblur="this.value = this.value.toUpperCase();" value="#{ticketsController.selected.descripcion}" title="#{BundleBDIntegrado.TicketsTitle_descripcion}" required="true" requiredMessage="#{BundleBDIntegrado.TicketsRequiredMessage_descripcion}" validatorMessage="#{BundleBDIntegrado.TicketsValidatorMessage_descripcion}">
+                            <f:validateLength minimum="5" />
+                        </p:inputTextarea>
+                        <p:outputLabel value="" />
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <h:outputText id="contador" />
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                    </h:panelGrid>
+                    <br/>
+                    <br/>
+                    <h:panelGrid columns="2" >
+                        <p:outputLabel value="#{BundleBDIntegrado.Ticket_create_adjFoto}" style="display: block; width: 120px;" />
+                        <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.Ticket_crear_agregarFoto}"
+                                      invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessage}"
+                                      fileUploadListener="#{ticketsController.handleFileUpload}"
+                                      invalidSizeMessage="#{ticketsController.obtenerMsjeInvalidSizeFoto()}"
+                                      onstart="PF('loadingDialog').show()"
+                                      oncomplete="PF('loadingDialog').hide()"
+                                      mode="advanced" dragDropSupport="false"
+                                      multiple="false"  style="width:80%;"
+                                      sizeLimit="#{sbParametroController.obtenerParametroXNombre('selTicket_sizeArchivo').valor}"
+                                      fileLimit="#{sbParametroController.obtenerParametroXNombre('selTicket_countArchivo').valor}" 
+                                      auto="true" process="@form" update="@form" 
+                                      allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                            <p:growl id="msjfile" showDetail="true"/> 
+                            <!--Tabla Imagenes -->
+                            <p:dataTable id="dtArchivos" value="#{ticketsController.lsNombreTemporal}"
+                                         rendered ="#{ticketsController.lsNombreTemporal != null}" 
+                                        var="item" widgetVar="usrTable"   
+                                        emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}">
+                               <p:column headerText="#{BundleBDIntegrado.TicketsTitle_nombre}" style="width:90%;">
+                                   <h:outputText value="#{item}"/>
+                               </p:column>
+                               <p:column headerText="#{BundleBDIntegrado.Opciones}" style="width:10%;">
+                                   <p:commandLink actionListener="#{ticketsController.borrarFotoTemporal(item)}" update="createForm" value="#{BundleBDIntegrado.Borrar}" >
+                                   </p:commandLink>
+                               </p:column>
+                           </p:dataTable>
+                           <p:outputLabel value="#{BundleBDIntegrado.Ticket_msjeMaximoFoto} #{sbParametroController.obtenerParametroXNombre('selTicket_countArchivo').valor}" escape="false" />
+                           <br/><p:outputLabel value="#{ticketsController.obtenerMsjeInvalidSizeFoto()}" escape="false" />
+                        </p:fileUpload>
+                    </h:panelGrid>
+                    <br/>
+                    <br/>
+                    <p:commandButton update=":createForm" action="#{ticketsController.create}" value="#{BundleBDIntegrado.Guardar}"/>
+                    <p:outputLabel value="  "/>
+                    <p:commandButton ajax="false" action="List" value="#{BundleBDIntegrado.TicketsVolverBusqueda}" immediate="true"/>
+                    <br />
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

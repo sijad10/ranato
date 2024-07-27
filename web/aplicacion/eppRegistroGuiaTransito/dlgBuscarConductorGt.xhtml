@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgConductor" widgetVar="CreateViewDialogConductor" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR CONDUCTOR" closable="false">
+        <h:form id="frmDlgConductor" >
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="Nombre: " />
+                    <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" />
+                    <p:commandButton value="Buscar" action="#{eppRegistroGuiaTransitoController.buscarConductor()}" update="@form"/>
+                    <p:outputLabel value="Nro. Documento: " />
+                    <p:inputText value="#{eppRegistroGuiaTransitoController.filtroDni}" />
+                    <p:outputLabel value="" />                    
+                </h:panelGrid >
+                <p:dataTable id="dataTable" var="item" widgetVar="dt"  
+                             value="#{eppRegistroGuiaTransitoController.lstDlgConductor}"
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                             paginator="true" rows="4"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5">                    
+                    <p:column headerText="dni" >
+                        <h:outputText value="#{item.personaId.numDoc}"/>
+                    </p:column>
+                    <p:column headerText="Nombres y Apellidos" >
+                        <h:outputText value="#{item.personaId.nombreCompleto}"/>
+                    </p:column>                                        
+                    <p:column headerText="Licencia Manipulador" >
+                        <h:outputText value="#{item.nroLicencia}"/>
+                    </p:column>                                        
+                    <p:column headerText="fecha vencimiento" >
+                        <h:outputText value="#{item.fecVenc}" >
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>                   
+                    <p:column headerText="#{bundleGeppGte.Opcion}" style="text-align: center;" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogConductor').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgConductorGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgConductor" 
+                                 actionListener="#"
+                                 oncomplete="PF('CreateViewDialogConductor').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

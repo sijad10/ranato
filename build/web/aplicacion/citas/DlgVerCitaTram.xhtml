@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgVerCitaTram" header="#{bundleCitas.CitaDlgVer_Title} " 
+              widgetVar="wvDlgVerCitaTram" modal="true" showEffect="fade" hideEffect="fade" width="90%" maximizable="false"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="dlgVerCitaTramDialogInit()" onHide="" position="center top"
+              style="padding:0!important" >
+        <p:outputPanel id="dlgVerCitaTramPanel" style="text-align:left; padding:0px!important">
+                
+            <h:form id="dlgVerCitaTramForm">
+                <div class="ui-fluid">
+
+                    <p:panel id="panelVerResumen" header="#{bundleCitas.CitaDlgVer_Resumen_Title}" style="margin-bottom: 8px" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Tram_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                <p:outputLabel value="Sub Trámite: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.subTramiteId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Sede_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Fecha_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.fechaTurno}" style="font-weight: bold;">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Hora_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.horaProgra}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                    </p:panel>
+                    
+                    <p:panel id="panelVerDatGen" header="#{bundleCitas.CitaDlgVer_General_Title}" style="margin-bottom: 8px" rendered="#{citasReservadasController.turnoSeleccionado.perExamenId.tipoId.codProg eq 'TP_PER_NAT'}">
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_TipDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.tipoDoc.abreviatura}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_NumDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.numDoc}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Nom_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.nombres}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Ape_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.apePat} #{citasReservadasController.turnoSeleccionado.perExamenId.apeMat}" style="font-weight: bold;"/>
+                            </div>
+                        </div>                    
+                    </p:panel>
+                    <p:panel id="panelVerDatGenJur" header="#{bundleCitas.CitaDlgVer_General_Title}" style="margin-bottom: 8px" rendered="#{citasReservadasController.turnoSeleccionado.perExamenId.tipoId.codProg eq 'TP_PER_JUR'}">
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_TipDoc_Label} "/>
+                                <p:outputLabel value="RUC: " style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_NumDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.ruc}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="Razón Social: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.rznSocial}" style="font-weight: bold;"/>
+                            </div>
+                            
+                        </div>                    
+                    </p:panel>
+                    <p:panel id="panelVerDatMotivo" header="Motivo de la visita a SUCAMEC" style="margin-bottom: 8px" rendered="#{citasReservadasController.turnoSeleccionado.subTramiteId.codProg=='TP_TRAM_OTR'}">
+                        <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.motivoTurno}" style="font-weight: bold;"/>
+                    </p:panel>
+                    <p:panel id="panelVerDatSolicitudes" header="Lista de Solicitudes" style="margin-bottom: 8px" rendered="#{citasReservadasController.turnoSeleccionado.subTramiteId.codProg=='TP_TRAM_REQ'}">
+                        <p:dataTable id="dtExpe" value="#{citasReservadasController.turnoSeleccionado.sbTurnoExpedienteList}"
+                                 var="item" widgetVar="teoTable" rowIndexVar="fila"
+                                 emptyMessage="#{bundle.MensajeNoResultados}"
+                                 style="width: 100%;"
+                                 editable="true" editMode="cell"
+                                 rowKey="#{item.id}">
+                            <p:column headerText="Procedimiento" width="100px">
+                                <h:outputText value="#{item.expVirtualSolicitudId.procedimientoTupaId.tupaProcedimientoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Solicitud" width="100px">
+                                <h:outputText value="#{item.expVirtualSolicitudId.numeroSolicitud}"/>
+                            </p:column>
+                            <p:column headerText="Expediente" width="100px" >
+                                <h:outputText value="#{item.expVirtualSolicitudId.nroExpediente}"/>
+                            </p:column>
+                            <p:column headerText="Estado" width="100px">
+                                <h:outputText value="#{item.expVirtualSolicitudId.estadoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Área" width="100px">
+                                <h:outputText value="#{item.expVirtualSolicitudId.procedimientoTupaId.areaId.nombre}"/>
+                            </p:column>                        
+                        </p:dataTable>
+                    </p:panel>
+
+                    
+                    
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:commandButton value="Atrás" actionListener="#{citasReservadasController.cerrarVerCita('TRAM')}" id="btnCancelView" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                    </div>
+
+                </div>
+                <p:blockUI block="dlgVerCitaTramPanel" trigger="btnCancelView" />
+            </h:form>
+
+        </p:outputPanel>
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("#dlgVerCitaTram > .ui-dialog-titlebar").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;"); 
+        $("#dlgVerCitaTram > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+        $("#dlgVerCitaTram > .ui-dialog-content").attr("style", "padding:4px!important;");
+        
+        function dlgVerCitaTramDialogInit() {
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").attr("style", "padding:0!important");
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("#dlgVerCitaTram").css('top', 35);
+        }
+
+    </script>
+    
+</ui:composition>

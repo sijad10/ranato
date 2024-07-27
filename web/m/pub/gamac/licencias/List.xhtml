@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage">            
+            <pm:header title="#{bundleDisca.MvDcGamacLicenciasTitulo}" />
+            <pm:content>                         
+                <h:form id="buscarForm" >                   
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{bundleDisca.Filtro}" />
+                            <p:inputText  value="#{mvDcGamacLienciaController.filtro}" required="true" requiredMessage="#{bundleCydoc.MensajeRequiereBusqueda}" placeholder="#{bundleDisca.MvDcGamacLicenciasPlaceHolderFiltro}" >
+                                <p:keyFilter mask="pint"/>
+                            </p:inputText>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{bundleDisca.Buscar}" icon="ui-icon-search" actionListener="#{mvDcGamacLienciaController.buscar}"  update="@form" />
+                        
+                        <pm:field rendered="#{mvDcGamacLienciaController.resultados.rowCount > 0}" >
+                            <p:outputLabel id="estado" value="#{bundleDisca.MvDcGamacLicenciasEstado}" style="font-weight: bold;" />
+                            <p:outputLabel id="estadoDesc" value="#{mvDcGamacLienciaController.obtenerEstadoLicencia()}" style="color: red;" />                        
+                        </pm:field>
+                        
+                        <pm:field rendered="#{mvDcGamacLienciaController.resultados.rowCount > 0}" >
+                            <p:outputLabel id="msje1" value="Si su licencia está #{mvDcGamacLienciaController.estado}" style="font-weight: bold;" escape="false" rendered="#{mvDcGamacLienciaController.msjeEstado.length() > 0}" />
+                            <p:outputLabel id="msje2" value="#{mvDcGamacLienciaController.msjeEstado}" escape="false" />                        
+                        </pm:field>
+                        
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

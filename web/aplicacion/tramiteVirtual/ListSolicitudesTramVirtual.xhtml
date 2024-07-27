@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <h:outputText value="Listado de Solicitudes de Tramite Virtual" />
+        </ui:define>
+        <ui:define name="body">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+
+                        <h:form id="listForm">
+
+                            <p:panel id="buscarPanel" header="Listado de Solicitudes de Tramite Virtual" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel" >
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-2 ui-lg-1"><p:outputLabel value="Estado: "/></div>
+                                    <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                        <p:selectOneMenu id="tipoEstado" value="#{tramiteVirtualController.tipoEstadoSolicitud}" autoWidth="false" >
+                                            <f:selectItem itemValue="#{null}" itemLabel=" [  TODOS  ] "/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{tramiteVirtualController.listarTipoEstado() }"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                        <p:outputLabel value="Buscar por: "/>
+                                    </div>
+                                    <div class="ui-g-5 ui-md-3 ui-lg-3">
+                                        <p:selectOneMenu value="#{tramiteVirtualController.tipoFiltro}" id="tipoFiltro" autoWidth="false">
+                                            <f:selectItem itemLabel=" [ SELECCIONE ] " itemValue=""/>
+                                            <f:selectItem itemValue="procedTupa" itemLabel="PROCEDIMIENTO TUPA" />
+                                            <f:selectItem itemValue="nroExpediente" itemLabel="NRO. EXPEDIENTE" />
+                                            <f:selectItem itemValue="nroSolicitud" itemLabel="NRO. SOLICITUD" />
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-7 ui-md-5 ui-lg-5">
+                                        <p:inputText value="#{tramiteVirtualController.filtroLbl}" id="filtroBusqueda" placeholder="Escriba un texto" >
+                                            <p:keyFilter regEx="/[0-9]/i" preventPaste="false" rendered="#{tramiteVirtualController.tipoFiltro == 'nroExpediente' or tramiteVirtualController.tipoFiltro == 'nroSolicitud' }" />    
+                                        </p:inputText>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                        <p:commandButton value="Buscar" id="botonBuscar"
+                                                         process="@this, buscarPanel"
+                                                         icon="ui-icon-search " actionListener="#{tramiteVirtualController.buscarSolicitudes()}" oncomplete="completeFind();"
+                                                         update="buscarDatatableRegistro"/>
+                                    </div>
+                                </div>
+                                <p:blockUI block="buscarPanel" trigger="botonBuscar" />
+                            </p:panel>
+                            <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda}" >
+                                <h:panelGrid columns="12" >
+                                    <p:graphicImage name="/imagenes/admin_view.png" width="25"  />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_ver}"/>
+
+                                    <p:graphicImage name="/imagenes/admin_pencil.png" width="25" style="margin-left: 10px;"  />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_editar}"/>
+
+                                    <p:graphicImage name="/imagenes/admin_trash.png" width="25" style="margin-left: 10px;" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_borrar}"/>
+
+                                    <p:graphicImage name="/imagenes/admin_document.png" width="25" style="margin-left: 10px;"/>
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_constancia}"/>
+                                    
+                                    <p:graphicImage name="/imagenes/admin_check.png" width="25" style="margin-left: 10px;"/>
+                                    <p:outputLabel value="Presentar ante SUCAMEC"/>
+                                </h:panelGrid>
+                                <div>
+                                    <p:outputLabel value="Puede consultar el estado del expediente en CONSULTAS > MIS EXPEDIENTES" style="font-weight: bold;"/>
+                                </div>
+                            </p:panel>
+
+                            <p:dataTable id="buscarDatatableRegistro" value="#{tramiteVirtualController.expVirtualSolicitudLst}"
+                                         var="itemReg" 
+                                         emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleCitas.PaginatorFilas}"  
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleCitas.PaginatorFilasPorPagina}"
+                                         rowIndexVar="idExp"
+                                         reflow="true"
+                                         rowStyleClass="#{tramiteVirtualController.estiloPorTiempo(itemReg)}"
+                                         >
+
+                                <p:column headerText="Procedimiento TUPA" style="font-size:95%!important" class="ui-lg-3" >
+                                    <h:outputText value="#{itemReg.procedimientoTupaId.tupaProcedimientoId.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Nro. Solicitud" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{itemReg.numeroSolicitud}"/>
+                                </p:column>
+                                <p:column headerText="Expediente" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{itemReg.nroExpediente}" />
+                                </p:column>
+                                <p:column headerText="Fecha Registro" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{itemReg.fechaRegistro}">
+                                        <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Fecha Expediente" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{itemReg.fechaExpediente}">
+                                        <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                    </h:outputText>                            
+                                </p:column>
+                                <p:column headerText="Estado Solicitud" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{itemReg.estadoId.nombre} #{itemReg.estadoId.codProg.equals('TP_EXVIEST_OBSREQ') ? '  (máximo en 48 Horas)' : ''}" title="Puede consultar el estado del expediente en CONSULTAS > MIS EXPEDIENTES"/>
+                                </p:column>
+                                <p:column headerText="Responsable" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{itemReg.usuarioCreacionId.numDoc}"/>                            
+                                </p:column>
+                                <p:column headerText="Acciones" style="font-size:95%!important;text-align: center;width: 10%;max-width:165px;" class="ui-lg-1" >
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-circle-check"
+                                                     value="Presentar ante SUCAMEC"
+                                                     style="background-color: #088A08;"
+                                                     rendered="#{tramiteVirtualController.renderBtnTransmitirSolicitud(itemReg)}"
+                                                     actionListener="#{tramiteVirtualController.transmitirSolicitud(itemReg) }" >                                        
+                                        <p:confirm header="Confirmación" message="¿Está seguro de enviar la solicitud a SUCAMEC? al presionar ACEPTAR se generará el número de Solicitud y ya no podrá modificar sus datos. " icon="pi pi-exclamation-triangle" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                                        <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                                    </p:confirmDialog>
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-search"
+                                                     value="Ver solicitud"
+                                                     ajax="false"
+                                                     rendered="#{tramiteVirtualController.renderBtnVerSolicitud(itemReg)}"
+                                                     action="#{tramiteVirtualController.mostrarVerSolicitud(itemReg) }" >
+                                    </p:commandButton>
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-pencil"
+                                                     value="Editar solicitud"
+                                                     ajax="false"
+                                                     rendered="#{tramiteVirtualController.renderBtnEditarSolicitud(itemReg)}"
+                                                     action="#{tramiteVirtualController.mostrarEditarSolicitud(itemReg) }" >
+                                    </p:commandButton>
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-pencil" style="background-color: #DBA901;"
+                                                     value="Subsanar solicitud"
+                                                     ajax="false"
+                                                     rendered="#{tramiteVirtualController.renderBtnSubsanarSolicitud(itemReg)}"
+                                                     action="#{tramiteVirtualController.mostrarSubsanarSolicitud(itemReg) }" >
+                                    </p:commandButton>
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-trash"
+                                                     value="Borrar solicitud"
+                                                     styleClass="botonBorrar"
+                                                     rendered="#{tramiteVirtualController.renderBtnBorrarSolicitud(itemReg)}"
+                                                     actionListener="#{tramiteVirtualController.borrarSolicitud(itemReg)}" >
+                                        <p:confirm header="Confirmar borrado de registro" message="¿Confirma que desea eliminar el registro seleccionado?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    
+                                    <p:commandButton update="@form"
+                                                     icon="ui-icon-trash"
+                                                     value="Cambiar a No Presentado"
+                                                     styleClass="botonBorrar"
+                                                     rendered="#{tramiteVirtualController.renderBtnNoPresentadoSolicitud(itemReg)}"
+                                                     actionListener="#{tramiteVirtualController.cambiarNoPresentadoSolicitud(itemReg)}" >
+                                        <p:confirm header="Confirmar cambio a NO Presentado" message="¿Confirma que desea cambiar a NO PRESENTADO el registro seleccionado?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    
+                                    <p:commandButton  icon="ui-icon-document"
+                                                      id ="btnImprimir"
+                                                      value="Imprimir solicitud"
+                                                      ajax="false"
+                                                      title="#{BundleBDIntegrado.amaSolicitudTarjeta_leyenda_constancia}"
+                                                      rendered="#{tramiteVirtualController.renderBtnConstancia(itemReg)}"
+                                                      process="@all"
+                                                      onclick="this.form.target = '_blank'"
+                                                      onblur="this.form.target = '_self'"
+                                                      immediate="true" >
+                                        <p:fileDownload value="#{tramiteVirtualController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+
+                        </h:form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- ui include -->
+
+            <script type="text/javascript">
+                function completeFind() {
+                    $("div[id*='buscarPanel_content']").attr("style", "padding:0!important");
+                }
+
+                $(document).ready(function () {
+                    //$(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+                    $(".txtLabel").parent().attr("style", "padding-top:11px");
+                    $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+                    $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+                    $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+                    $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+
+                    $("div[id*='buscarPanel_content']").attr("style", "padding:2px!important");
+
+                    //$("#evaluarContratoForm").children().children().children().children(".ui-g").children().attr("style", "padding:3px!important;");
+                    $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").attr("style", "padding:0!important");
+                    $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='panelVerDatArm_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+                });
+
+            </script>
+
+        </ui:define>        
+    </ui:composition>
+</html>

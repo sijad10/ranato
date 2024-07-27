@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions"> 
+
+    <ui:define name="title">
+        <b>
+            <h:outputText value="CRUD - TIPO BASE"/>
+        </b>
+    </ui:define>
+
+    <ui:define name="body">
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:form id="listForm">
+                        
+                        <p:panel id="pnlFiltro" header="Criterio de Busqueda" >                        
+
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:outputLabel value="Tipo:" style="display: block" />    
+                                </div>  
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:selectOneMenu id="filtroCboTipo" value="#{tipoBaseRestController.filtroTipoBaseSelectedString }" filter="true" filterMatchMode="contains" class="combo_tipo_100">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItem itemLabel="(Tipo Base = 0)" itemValue="0L"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.get('nombre')}" value="#{tipoBaseRestController.filtroTipoBaseListaObject}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:commandButton value="Buscar"  process="@form" update="@form" icon="ui-icon-search"  actionListener="#{tipoBaseRestController.buscarBandeja()}" />
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                    <p:link href="#{tipoBaseRestController.redireccionarCRUDLaravel()}" target="_blank">CRUD ANGULAR</p:link>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-6"></div>
+                            </div>    
+                            
+                            
+
+                        </p:panel>
+                        
+                    <BR/>
+                        
+                        <p:panel id="pnlTabla" header="Resultado de Busqueda" >  
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-11 ui-lg-11"></div>
+                                <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                     <p:commandButton id="btnModalFormTipoBase" value="Nuevo"  process="@this" icon="ui-icon-plus" actionListener="#{tipoBaseRestController.FormularioTipoBase('')}" />
+                                </div>
+                            </div>
+                            
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:dataTable id="dtResultados" value="#{tipoBaseRestController.tablaTipoBaseLista}" 
+                                             var="itemReg" 
+                                             rowKey="#{itemReg.get('id')}"
+                                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                             paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                             currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                             reflow="true"
+                                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                        
+                                        <p:column headerText="ID" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.get('id')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="TIPO" style="text-align: center" class="ui-lg-2">
+                                            <h:outputText value="#{itemReg.get('tipoId').get('nombre')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="NOMBRE" style="text-align: center" class="ui-lg-2">
+                                            <h:outputText value="#{itemReg.get('nombre')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="ABREVIATURA" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.get('abreviatura')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="DESCRIPCIÓN" style="text-align: center" class="ui-lg-3">
+                                            <h:outputText value="#{itemReg.get('descripcion')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="COD_PROG" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.get('codProg')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="ORDEN" style="text-align: center" class="ui-lg-1">
+                                            <h:outputText value="#{itemReg.get('orden')}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="ACCIONES" style="text-align: center" class="ui-lg-1">                                        
+                                            <p:commandButton update="@form"
+                                                         icon="ui-icon-pencil"
+                                                         ajax="false"
+                                                         title="EDITAR"
+                                                         actionListener="#{tipoBaseRestController.FormularioTipoBase(itemReg.get('id'))}" 
+                                                         >
+                                            </p:commandButton>
+                                            
+                                            <p:commandButton update="@form"
+                                                            icon="ui-icon-trash"
+                                                            styleClass="botonBorrar"
+                                                            title="ANULAR"
+                                                            actionListener="#{tipoBaseRestController.borrarRegistro(itemReg.get('id'))}" 
+                                                            >
+                                               <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
+                                           </p:commandButton>
+                                        </p:column>
+                                        
+                                    </p:dataTable>
+                                    
+                                </div>                                    
+                            </div>
+                            
+                        </p:panel>
+                            
+      
+
+                    </h:form>
+                </div>    
+            </div>        
+        </div>    
+
+        <ui:include src="dlgFormulario.xhtml" />        
+
+
+    </ui:define>
+</ui:composition>
+
+

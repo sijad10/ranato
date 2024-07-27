@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditAmaArmaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaArmaController.selected.id}" title="#{bundle.EditAmaArmaTitle_id}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_nroRua}" for="nroRua" />
+                    <h:inputText id="nroRua" value="#{amaArmaController.selected.nroRua}" title="#{bundle.EditAmaArmaTitle_nroRua}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_nroRua}"/>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_serie}" for="serie" />
+                    <h:inputText id="serie" value="#{amaArmaController.selected.serie}" title="#{bundle.EditAmaArmaTitle_serie}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_serie}"/>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_pesoInicial}" for="pesoInicial" />
+                    <h:inputText id="pesoInicial" value="#{amaArmaController.selected.pesoInicial}" title="#{bundle.EditAmaArmaTitle_pesoInicial}" />
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_descripcion}" for="descripcion" />
+                    <h:inputText id="descripcion" value="#{amaArmaController.selected.descripcion}" title="#{bundle.EditAmaArmaTitle_descripcion}" />
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaArmaController.selected.activo}" title="#{bundle.EditAmaArmaTitle_activo}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaArmaController.selected.audLogin}" title="#{bundle.EditAmaArmaTitle_audLogin}" />
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaArmaController.selected.audNumIp}" title="#{bundle.EditAmaArmaTitle_audNumIp}" />
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_marcaId}" for="marcaId" />
+                    <h:selectOneMenu id="marcaId" value="#{amaArmaController.selected.marcaId}" title="#{bundle.EditAmaArmaTitle_marcaId}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_marcaId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_tipoArmaId}" for="tipoArmaId" />
+                    <h:selectOneMenu id="tipoArmaId" value="#{amaArmaController.selected.tipoArmaId}" title="#{bundle.EditAmaArmaTitle_tipoArmaId}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_tipoArmaId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_calibreId}" for="calibreId" />
+                    <h:selectOneMenu id="calibreId" value="#{amaArmaController.selected.calibreId}" title="#{bundle.EditAmaArmaTitle_calibreId}" required="true" requiredMessage="#{bundle.EditAmaArmaRequiredMessage_calibreId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.EditAmaArmaLabel_modeloId}" for="modeloId" />
+                    <h:selectOneMenu id="modeloId" value="#{amaArmaController.selected.modeloId}" title="#{bundle.EditAmaArmaTitle_modeloId}" >
+                        <f:selectItems value="#{amaModelosController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{amaArmaController.update}" value="#{bundle.EditAmaArmaSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditAmaArmaViewLink}"/>
+                <br />
+                <h:commandLink action="#{amaArmaController.prepareList}" value="#{bundle.EditAmaArmaShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditAmaArmaIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

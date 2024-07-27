@@ -1,0 +1,464 @@
+/* 
+    Document   : estilos
+    Created on : 04/10/2013, 11:54:06 AM
+    Author     : Renato
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-widget {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-widget .ui-widget {
+    font-family: Arial;
+    font-size: 12px;
+}
+
+.ui-panelmenu .ui-menuitem-link {
+    font-size: 10px;
+    text-decoration: none;
+}
+
+.ui-dialog.ui-widget-content .ui-dialog-title {
+    font-size: 14px;
+}
+
+.ui-dialog.ui-widget-content .ui-dialog-content {
+    font-size: 12px;
+}
+
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea, .ui-inputfield, .ui-inputtext {
+    text-transform: uppercase;
+}
+
+.ui-widget button {
+    font-size: 12px;
+}
+
+
+.colored {
+    background-color: #FF0000;
+    color: #FFFFFF;
+}
+
+.ui-button.botonBorrar { 
+    color: #ffffff !important;
+    background: #ed1c24 !important;
+}
+
+datatable-row-white
+{
+    background-color: #FFFFFF;
+}
+
+.datatable-row-sinverificar
+{
+    background-color: #BDBDBD;
+}
+
+.datatable-row-emitidos
+{
+    background-color: #FAAC58;
+}
+
+.datatable-row-nuevo
+{
+    background-color: #F3F781;
+}
+
+.datatable-row-nopertenece
+{
+    background-color: #FA5858;
+}
+
+.datatable-row-verificado
+{
+    background-color: #58FA82;
+}
+
+.datatable-row-azul
+{
+    background-color: #5DADE2;
+}
+
+.datatable-row-verde
+{
+    background-color: #58D68D;
+}
+
+.datatable-row-amarillo
+{
+    background-color: #FFEE58;
+}
+
+.datatable-row-rojo
+{
+    background-color: #F5B7B1;
+}
+
+
+.imageButtonXls {
+    background-image: url("#{resource['icons/xls16x16.png']}") !important;
+}
+
+.imageButtonCreado {
+    background-image: url("#{resource['icons/creado.gif']}") !important;
+}
+
+.coloredgt {
+    background-color: #FFB446;
+    /*color: #FFFFFF;*/
+  }  
+.botonSuspender { 
+    color: #ffffff !important;
+    background: #DBA901 !important;
+}
+
+.botonActivar { 
+    color: #ffffff !important;
+    background: #04B431 !important;
+}
+
+.botonFaltaDoc { 
+    color: #ffffff !important;
+    background: #ea1212 !important;
+}
+
+/* class compra/venta municiones */
+.text-bold{
+    font-weight: bold !important;
+}
+
+.ui-datatable-rowView {
+    background-color: #A9F5F2; /*#CEF6F5; #F7D358;*/
+    background-image: none !important;
+    color: #000000; /*!important;*/
+}
+/* */
+
+.datatable-row-guia1
+{    background-color: #FFFFFF;  }
+.datatable-row-guia2
+{    background-color: #81BEF7;  }
+.datatable-row-guia3
+{    background-color: #F5F6CE;  }
+.datatable-row-guia5
+{    background-color: #A9F5F2;  }
+.datatable-row-guia6
+{    background-color: #F6E3CE;  }
+
+.celdaCentrada
+{
+    text-align: center
+}
+
+
+.datatableCursos-row-apto
+{
+    background-color: #BEF781;
+}
+.datatableCursos-row-noApto
+{
+    background-color: #F78181;
+}
+
+.background-color-InputText {
+    background-color: #A9F5F2  ; 
+}
+.datatableCursos-row-cursoPermitidoDictado
+{
+    background-color: #CEF6EC;
+}
+.CursoDesaprobado { 
+    color: #FF0000 !important;
+}
+
+.CursoAprobado { 
+    color: #088A08 !important;
+}
+
+.cursoValidate
+{
+    background-color: #FB4A4A;
+}
+
+.dtHorario-row-teoria
+{
+    background-color: #CEECF5;
+}
+.dtHorario-row-practica
+{
+    background-color: #F6E3CE;
+}
+
+/* class listCitas */
+.ui-datatable-NoList {
+    background-color: #EEEEEE !important; 
+    background-image: none !important;
+    color: #989393 !important; /*!important;*/
+    opacity: .80;    
+}
+/* */
+
+.dtSuspension-activa
+{
+    background-color: #CEECF5;
+}
+
+.ui-inputgroup{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex}.ui-inputgroup .ui-inputgroup-addon,.ui-inputgroup .ui-inputgroup-addon-checkbox{display:inline-block;text-align:center;min-width:1.5em;border-width:1px;border-style:solid}.ui-inputgroup .ui-inputgroup-addon{padding:4px}.ui-inputgroup .ui-inputgroup-addon-checkbox{padding:1px}.ui-inputgroup .ui-inputgroup-addon+.ui-inputgroup-addon{border-left:0 none}.ui-inputgroup .ui-inputtext,.ui-inputgroup .ui-password{padding-left:.5em}.ui-inputgroup>.ui-inputtext:not(:first-child),.ui-inputgroup>.ui-password:not(:first-child),.ui-inputgroup>.ui-inputnumber:not(:first-child)>.ui-inputtext,.ui-inputgroup>.ui-inputmask:not(:first-child),.ui-inputgroup>.ui-calendar:not(:first-child)>.ui-inputfield,.ui-inputgroup>.ui-selectonemenu:not(:first-child),.ui-inputgroup>.ui-selectonebutton:not(:first-child)>.ui-button{border-top-left-radius:0;border-bottom-left-radius:0;border-left:0 none}.ui-inputgroup>.ui-inputtext:not(:last-child),.ui-inputgroup>.ui-password:not(:last-child),.ui-inputgroup>.ui-inputnumber:not(:last-child)>.ui-inputtext,.ui-inputgroup>.ui-inputmask:not(:last-child),.ui-inputgroup>.ui-selectonemenu:not(:last-child),.ui-inputgroup>.ui-calendar:not(:last-child)>.ui-inputfield,.ui-inputgroup>.ui-selectonebutton:not(:last-child)>.ui-button{border-top-right-radius:0;border-bottom-right-radius:0;border-right:0 none}.ui-inputgroup .ui-button{margin-right:0;border-radius:0}.ui-inputgroup .ui-inputgroup-addon-checkbox .ui-chkbox{margin-right:0;vertical-align:bottom;position:relative;top:2px}.ui-inputgroup .ui-button .ui-button-text{padding-bottom:4px;padding-top:4px}.ui-fluid .ui-inputgroup .ui-button{width:auto}.ui-fluid .ui-inputgroup .ui-button-icon-only{min-width:2.2em}
+.btnBusqueda {border-bottom-right-radius: 3px!important; border-top-right-radius: 3px!important}
+
+.white-button.ui-button.ui-state-default {
+    background-color: #ffffff;
+    color: #222222;
+    border-color: #d6d6d6;
+}
+
+.white-button.ui-button.ui-state-default:enabled:hover, 
+.white-button.ui-button.ui-state-default:focus {
+    background-color: #f2f2f2;
+    border-color: #ccc;
+    color: #373a3c;
+}
+
+.green-button.ui-button.ui-state-default {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+    color: #fff;
+}
+
+.green-button.ui-button.ui-state-default:enabled:hover, 
+.green-button.ui-button.ui-state-default:focus {
+    background-color: #4cae4c;
+    border-color: #5cb85c;
+}
+
+.red-button.ui-button.ui-state-default {
+    background-color: #d9534f;
+    border-color: #d9534f;
+    color: #fff;
+}
+
+.red-button.ui-button.ui-state-default:enabled:hover, 
+.red-button.ui-button.ui-state-default:focus {
+    background-color: #d43f3a;
+    border-color: #d9534f;
+}        
+
+.dtSuspension-activa
+{
+    background-color: #CEECF5;
+}
+
+.dtSolicitudtarjeta-row-sinverificar
+{
+    background-color: #BDBDBD;
+}
+.dtSolicitudtarjeta-row-creada
+{
+    background-color: #58D68D;
+}
+
+.imageReniec {
+    background-image: url("#{resource['icons/reniec.png']}") !important;
+}
+.imageMigraciones {
+    background-image: url("#{resource['icons/migraciones.png']}") !important;
+}
+.imageSunat {
+    background-image: url("#{resource['icons/sunat.png']}") !important;
+}
+
+.headerSelected{border: 1px solid #1f89ce; }
+
+
+.TextRojo { 
+    color: #FF0000 !important;
+}
+.TextAzul { 
+    color: #2196F3 !important;
+}
+
+.highlight-box {
+    height: 100px;
+}
+
+.highlight-box-small {
+    height: 70px;
+}
+
+.highlight-box .initials, .highlight-box-small .initials{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 14px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.highlight-box .initials-big, .highlight-box-small .initials-big{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 25px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.card {
+    margin-top: 0px;
+}
+.card {
+    background-color: #F2F2F2;
+    padding: 1em;
+    margin-top: 0px;
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.highlight-box .card .count, .highlight-box-small .card .count {
+    font-size: 36px;
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.highlight-box .card .countSmall, .highlight-box-small .card .countSmall {
+    font-size: 12px;
+    display: block;
+    margin-top: 15px;
+}
+
+.highlight-box .card .countSmallHeight, .highlight-box-small .card .countSmallHeight {
+    font-size: 30px;
+    display: block;
+    margin-top: 5px;
+}
+
+.highlight-box .card, .highlight-box-small .card {
+    color: #a4a4a4;
+    float: left;
+    width: 44%;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.highlight-box .initials-inicial, .highlight-box-small .initials-inicial{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 14px;
+    padding-top: 20px;
+    text-align: center;
+    background-color: #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+    color:#00448f
+}
+
+.highlight-box .initials-duplicados, .highlight-box-small .initials-duplicados{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 14px;
+    padding-top: 20px;
+    text-align: center;
+    background-color: #CEECF5;
+    color:#00448f
+}
+
+.highlight-box .initials-renovados, .highlight-box-small .initials-renovados{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 14px;
+    padding-top: 20px;
+    text-align: center;
+    background-color: #F5F6CE;
+    color:#00448f
+}
+
+.highlight-box .initials-cambioEmpresa, .highlight-box-small .initials-cambioEmpresa{
+    float: left;
+    width: 42%;
+    box-sizing: border-box;
+    height: 100%;
+    font-size: 14px;
+    padding-top: 20px;
+    text-align: center;
+    background-color: #D8F6CE;
+    color:#00448f
+}
+
+
+.carne-inicial
+{
+    background-color: #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+}
+.carne-duplicado
+{
+    background-color: #CEECF5;
+}
+.carne-renovado
+{
+    background-color: #F5F6CE;
+}
+.carne-cambioEmpresa
+{
+    background-color: #D8F6CE;
+}
+
+.datatable-row-normal
+{
+}
+
+.datatable-row-emitido
+{
+    color: black;
+    background-color: white;
+}
+
+.datatable-row-alerta
+{
+    color: red;
+    background-color: yellow;
+}
+
+.datatable-row-derivado
+{
+    background-color: lightskyblue;
+}
+
+.datatable-row-cerrado
+{
+    color: black;
+    background-color: palegreen;
+}
+
+.combo_tipo_100{
+    width: 100% ;
+    min-width: auto !important;
+} 

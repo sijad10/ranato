@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <b><h:outputText value="#{BundleBDIntegrado.VerTicketsTitulo}"></h:outputText></b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="viewForm">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <p:outputLabel  style="font-size: x-large;color: red;font-weight: bold;" value="#{BundleBDIntegrado.TicketNumero} #{ticketsController.selected.numero}" title="#{BundleBDIntegrado.TicketsTitle_numero}"/>
+                <br/><br/>
+                <p:panel style="width: 75%;" header="#{BundleBDIntegrado.TicketsDatos}">
+                    <h:panelGrid id="panelGrid" columns="4">
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_usuario}"/>
+                        <p:outputLabel value="#{ticketsController.selected.usuario.login}" title="#{BundleBDIntegrado.TicketsTitle_usuario}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_fechaIni}"/>
+                        <p:outputLabel value="#{ticketsController.selected.fechaIni}" title="#{BundleBDIntegrado.TicketsTitle_fechaIni}">
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFechaHora}" />
+                        </p:outputLabel>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_nombre}"/>
+                        <p:outputLabel value="#{ticketsController.selected.nombre}" title="#{BundleBDIntegrado.TicketsTitle_nombre}"/>
+                        <p:outputLabel value=""/><p:outputLabel value=""/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_email}"/>
+                        <p:outputLabel value="#{ticketsController.selected.email}" title="#{BundleBDIntegrado.TicketsTitle_email}"/>
+                        <p:outputLabel value=""/><p:outputLabel value=""/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_celular}"/>
+                        <p:outputLabel value="#{ticketsController.selected.celular}" title="#{BundleBDIntegrado.TicketsTitle_celular}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_telefono}"/>
+                        <p:outputLabel value="#{ticketsController.selected.telefono}" title="#{BundleBDIntegrado.TicketsTitle_telefono}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_incidencia}"/>
+                        <p:outputLabel value="#{ticketsController.selected.tipo.nombre}" title="#{BundleBDIntegrado.TicketsTitle_tipo}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_tramite}"/>
+                        <p:outputLabel value="#{ticketsController.selected.tramite.nombre}" title="#{BundleBDIntegrado.TicketsTitle_tramite}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_canal}"/>
+                        <p:outputLabel value="#{ticketsController.selected.canal.nombre}" title="#{BundleBDIntegrado.TicketsTitle_canal}"/>
+                        <p:outputLabel value=""/><p:outputLabel value=""/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_ruc}"/>
+                        <p:outputLabel value="#{ticketsController.selected.ruc}" title="#{BundleBDIntegrado.TicketsTitle_ruc}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_oficioRef}"/>
+                        <p:outputLabel value="#{ticketsController.selected.oficioRef}" title="#{BundleBDIntegrado.TicketsTitle_oficioRef}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_expediente}"/>
+                        <p:outputLabel value="#{ticketsController.selected.expediente}" title="#{BundleBDIntegrado.TicketsTitle_expediente}"/>
+                        <p:outputLabel value=""/><p:outputLabel value=""/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_cerrado}"/>
+                        <p:outputLabel value="#{(ticketsController.selected.cerrado == 1)? 'SI': 'NO'}" title="#{BundleBDIntegrado.TicketsTitle_activo}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_fechaFin}" rendered="#{ticketsController.selected.cerrado == 1}"/>
+                        <p:outputLabel value="#{ticketsController.selected.fechaFin}" title="#{BundleBDIntegrado.TicketsTitle_fechaFin}" rendered="#{ticketsController.selected.cerrado == 1}">
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFechaHora}" />
+                        </p:outputLabel>
+                        <p:outputLabel value="" rendered="#{ticketsController.selected.cerrado == 0}"/><p:outputLabel value="" rendered="#{ticketsController.selected.cerrado == 0}"/>
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_asunto}"/>
+                        <p:outputLabel value="#{ticketsController.selected.asunto}" title="#{BundleBDIntegrado.TicketsTitle_asunto}"/>
+                        <p:outputLabel value="" /><p:outputLabel value="" />
+                        <p:outputLabel value="#{BundleBDIntegrado.TicketsLabel_descripcion}"/>
+                        <p:inputTextarea cols="45" rows="10" maxlength="1000"  autoResize="false" 
+                                         id="descripcion" readonly="true" value="#{ticketsController.selected.descripcion}" >
+                            <f:validateLength minimum="5" />
+                        </p:inputTextarea>
+                        <p:outputLabel value="Respuesta"/>
+                        <p:inputTextarea cols="45" rows="10" maxlength="1000"  autoResize="false" 
+                                         id="respuesta" readonly="true" value="#{ticketsController.respuesta}" >
+                            <f:validateLength minimum="5" />
+                        </p:inputTextarea>
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton id="btnAdjuntos" process="@form" ajax="false" icon="ui-icon-image" 
+                                     value="#{BundleBDIntegrado.TicketLabel_VerFotosAdjuntas}" rendered ="#{ticketsController.tieneFotos(ticketsController.selected.ticketArchivoList)}"
+                                     actionListener="#{ticketsController.openDlgGaleriaFotos(ticketsController.selected.ticketArchivoList, true)}" 
+                                update="@form"/>
+                    <br/><br/><br/>
+                    <p:commandButton ajax="false" action="#{ticketsController.prepareCreate}" value="#{BundleBDIntegrado.Crear}" />
+                    <p:outputLabel value="  "/>
+                    <p:commandButton ajax="false"  action="#{ticketsController.getRegreso}" value="#{BundleBDIntegrado.TicketsVolverBusqueda}"/>
+                    <p:outputLabel value="  "/>
+                    <p:commandButton id="btnCerrar" ajax="true" value="#{BundleBDIntegrado.TicketsCerrar}"  rendered="#{loginController.permisosComponente(ticketsController.selected, 'cerrar')}" actionListener="#{ticketsController.cerrarTicket()}" 
+                                     partialSubmit="true" process=":viewForm:messagePanel, @this" update=":viewForm">
+                        <p:confirm header="#{BundleBDIntegrado.ConfirmarTitulo}" message="#{BundleBDIntegrado.ConfirmarCerrarTicket}" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                </p:panel>
+                <br/>
+            </h:form>        
+            <p:dialog id="dlgGaleriaFoto" widgetVar="wvGaleriaFoto" width="700" header="Galería de fotos capturadas" position="center top" 
+                    responsive="true" modal="true" resizable="false" appendTo="@(body)"  closable="true">
+              <h:form id="frmGaleriaFoto">
+                  <h:panelGrid columns="1" style="text-align: center;">
+                      <p:galleria value="#{ticketsController.lstGaleriaFotos}" var="image" panelWidth="640" panelHeight="480" showCaption="true" effect="fade" autoPlay="false" showFilmstrip="true">
+                          <p:graphicImage value="#{ticketsController.streamedContentGaleriaFoto(image)}" stream="false" alt="Foto(s) adjunta(s)" title="#{image.nombre}" cache="false" width="640" height="480" />
+                      </p:galleria> 
+                  </h:panelGrid>
+              </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+
+</html>

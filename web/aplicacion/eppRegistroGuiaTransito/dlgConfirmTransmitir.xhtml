@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="dlgConfirmTransmitir" widgetVar="wvDlgConfirmTransmitir" width="30%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="Confirmación de Transmisión de Guía de Tránsito" closable="false">
+        <h:form id="frmConfirmTransmitir" >
+            <h:panelGrid columns="1" >                
+                <h:outputText value="#{bundleGeppGte.TransferirFabricante}" escape="false" />
+                <p:column>                    
+                    <p:selectBooleanCheckbox value="#{eppRegistroGuiaTransitoController.flgAceptoTransmitir}" >
+                        <p:ajax update="@form" event="change" />
+                    </p:selectBooleanCheckbox>     
+                    <p:outputLabel value="Acepto los términos establecidos" />
+                </p:column>
+
+
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">                
+                    <p:commandButton value="Transmitir" 
+                                     process="@this" 
+                                     actionListener="#{eppRegistroGuiaTransitoController.transferirFabricante()}"
+                                     style="float: right" 
+                                     update="@form" />
+                    <p:commandButton value="Cancelar" 
+                                     process="@this" 
+                                     style="float: right" 
+                                     update="@form"  
+                                     oncomplete="PF('wvDlgConfirmTransmitir').hide()" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

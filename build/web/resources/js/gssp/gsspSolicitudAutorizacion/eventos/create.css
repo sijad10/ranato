@@ -1,0 +1,42 @@
+/* 
+    Document   : estilos
+    Created on : 30/05/2023, 10:00 AM
+    Author     : Alex Mendoza
+    Description:
+        Hoja de estilos para el módulo de Solicitud de Autorización Servicio de Protección Personal
+*/
+
+
+/*MODAL*/ 
+.ui-dialog{
+    width: 75% !important;
+    max-width:1000px;
+}
+.ui-dialog-map{
+    width: auto !important;
+    max-width:1000px;
+}
+.texto-izquierda{
+    text-align: left !important;
+}
+#map,#map_local,#mapa_ver { height: 300px; width: 600px;margin: 0 auto; }
+
+
+/*modal cargando*/
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#overlay img {
+  width: 50px;
+  height: 50px;
+}

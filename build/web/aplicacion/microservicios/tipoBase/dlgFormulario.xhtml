@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgFormulario" widgetVar="wvDlgFormulario" closable="true" header="FORMULARIO DE REGISTRO"
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogFormulario()" width="60%">
+        
+        <h:form id="frmCuerpoFormulario" prependId="false">
+            <div class="ui-fluid">
+              
+                <!-- PANEL DE DATOS DEL LOCAL -->
+                <p:panel id="pnl_Title_TipoBase" header="TIPO BASE" >
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Tipo " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-5">
+                            <p:selectOneMenu id="cbo_Tipo" filter="true" filterMatchMode="contains" value="#{tipoBaseRestController.regTB_TipoIdSelectedString}" class="combo_tipo_100">   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="itemTipoPadre" itemValue="#{itemTipoPadre}" itemLabel="#{itemTipoPadre.get('nombre')}" value="#{tipoBaseRestController.regTB_TipoIdListaObject}"/>                                
+                            </p:selectOneMenu>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Nombre: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-5">
+                            <p:inputText id="txt_Nombre" value="#{(tipoBaseRestController.regTB_Nombre)}" maxlength="25"/>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Descripcion: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-7">
+                            <p:inputText id="txt_Descripcion" value="#{(tipoBaseRestController.regTB_Descripcion)}" maxlength="25"/>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Abreviatura: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-3">
+                            <p:inputText id="txt_Abreviatura" value="#{(tipoBaseRestController.regTB_Abreviatura)}" maxlength="25"/>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <div class="ui-g">
+                                                
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Cod_Prog: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-5">
+                            <p:inputText id="txt_CodProg" value="#{(tipoBaseRestController.regTB_CodProg)}" maxlength="25"/>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:outputLabel value="Orden: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-1">
+                            <p:inputText id="txt_Orden" value="#{(tipoBaseRestController.regTB_Orden)}" maxlength="25"/>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-4"></div>
+                        
+                    </div>
+              
+                </p:panel>
+                
+                <div class="ui-g">            
+                    <div class="ui-g-12 ui-md-4 ui-lg-4"></div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:commandButton id="registrar"  actionListener="#{tipoBaseRestController.btnRegistrarTipoBase()}" 
+                                     value="Registrar" icon="ui-icon-disk" update="@form"  process="@form"  />
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-2 ui-lg-2">
+                        <p:commandButton id="btnCancelar"  actionListener="#{tipoBaseRestController.cancelarFormTipoBase()}"
+                                     icon="ui-icon-closethick" value="Cancelar" update="@none" iconPos="left" process="@this"/>
+                    </div>                    
+                    
+                    <div class="ui-g-12 ui-md-4 ui-lg-4"></div>
+                    
+                </div>
+         
+                
+            </div>    
+        </h:form>
+    </p:dialog>
+
+
+    <script type="text/javascript">
+        function showDlgMarcoDialogFormulario() {
+            $("div[id*='dlgFormulario'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgFormulario'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgFormulario'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+
+</ui:composition>
+
+

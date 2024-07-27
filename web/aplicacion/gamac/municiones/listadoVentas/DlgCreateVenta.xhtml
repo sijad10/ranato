@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="newVenta" header="#{bundleGamacCVMuni.listVentasFrmCre_Title}" 
+              widgetVar="newVentaDialog" modal="true" showEffect="fade" hideEffect="fade" width="95%" responsive="true"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="updateDialogInicio()" onHide="updateDialogInicioHide()" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="panelRegVenta" style="text-align:left; padding:0px!important">
+            <h:form id="newVentaForm">
+                <div class="ui-fluid">
+
+                    <p:panel id="datosVentaPanel" header="#{bundleGamacCVMuni.listVentasFrmCrePanelVenta_title}" style="margin-bottom:10px;" widgetVar="panel" >
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                <p:outputLabel for="rgTrasnfMuni" value="#{bundleGamacCVMuni.listVentasFrmCre_RGTransf_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                <p:inputText id="rgTrasnfMuni" size="30" value="#{gamacMunicionesListadoVentasController.rgTrasnfMuni}" autocomplete="false"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel for="local" value="#{bundleGamacCVMuni.listVentasFrmCre_Local_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-10 ui-lg-5">
+                                <p:selectOneMenu id="local" value="#{gamacMunicionesListadoVentasController.direccion}" autoWidth="false"
+                                                 required="true" requiredMessage="#{bundleGamacCVMuni.listVentasFrmCre_Local_RequiredMessage}">
+                                    <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                    <f:selectItems value="#{gamacMunicionesListadoVentasController.listDire()}" var="item" itemValue="#{item}"
+                                                   itemLabel="#{item.direccion} #{item.numero}, #{item.distritoId.nombre} - #{item.distritoId.provinciaId.nombre} - #{item.distritoId.provinciaId.departamentoId.nombre}" /> 
+                                    <p:ajax event="change" update="local" process="@this" partialSubmit="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel for="rucComprador" value="#{bundleGamacCVMuni.listVentasFrmCre_RucComp_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:autoComplete id="rucComprador" required="true" requiredMessage="El comprador es obligatorio"
+                                                completeMethod="#{gamacMunicionesListadoVentasController.autcompletePerJur}"
+                                                var="item" itemLabel="#{item.RUC}" itemValue="#{item.ID}" minQueryLength="8" maxResults="10" cache="true" forceSelection="true" 
+                                                scrollHeight="200" widgetVar="" >
+                                    <p:ajax event="itemSelect" listener="#{gamacMunicionesListadoVentasController.eligePerJur}" partialSubmit="true" update="@none" />
+                                </p:autoComplete>
+                            </div>
+                            <div class="ui-g-12 ui-md-8 ui-lg-6">
+                                <p:outputLabel for="razonSocial" value="#{bundleGamacCVMuni.listVentasFrmCre_RznSocial_Label} " class="txtLabel"/>
+                                <h:outputText id="razonSocial" value="#{gamacMunicionesListadoVentasController.cliente.rznSocial}" class="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:outputLabel for="clienteNroRD" value="#{bundleGamacCVMuni.listVentasFrmCre_NroResolu_Label}" styleClass="txtLabel"/>
+                                <p:selectOneMenu id="clienteNroRD" value="#{gamacMunicionesListadoVentasController.selectedRD}"
+                                                 required="true" requiredMessage="Seleccione resolución">
+                                    <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                    <f:selectItems value="#{gamacMunicionesListadoVentasController.resoList}" 
+                                                   var="item"
+                                                   itemLabel="#{item.nroRd}" 
+                                                   itemValue="#{item}"/>
+                                    <p:ajax event="change" listener="#{gamacMunicionesListadoVentasController.eligeResolucion}" partialSubmit="true" update="@none" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:outputLabel for="clienteFecVen" value="#{bundleGamacCVMuni.listVentasFrmCre_FechaCad_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="clienteFecVen" value="#{gamacMunicionesListadoVentasController.clienteFecVen}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g" style="padding-bottom: 0!important" >
+                            <div class="ui-g-12 ui-md-2 ui-lg-1" style="padding-bottom: 0!important" >
+                                <p:outputLabel for="dniRepresentante" value="#{bundleGamacCVMuni.listVentasFrmCre_Representante_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-3" style="padding-bottom: 0!important" >
+                                <p:selectOneMenu id="dniRepresentante" >
+                                    <f:selectItem itemLabel="--Elige Representante--" itemValue="#{null}" />
+                                    <f:selectItems var="item" itemLabel="#{item.numDoc} #{item.nombres} #{item.apePat} #{item.apeMat}" itemValue="#{item.id}" value="#{gamacMunicionesListadoVentasController.lstRepresentantes}" />
+                                    <p:ajax event="itemSelect" listener="#{gamacMunicionesListadoVentasController.eligeRepresentante}"
+                                            partialSubmit="true" process="@this" update="@none" />
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel for="fechaVenta" value="#{bundleGamacCVMuni.listVentasFrmCre_FechaVen_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:calendar id="fechaVenta" value="#{gamacMunicionesListadoVentasController.fechaVenta}" required="true" size="10"
+                                            autocomplete="false" requiredMessage="Ingresa la fecha de venta"
+                                            pattern="#{bundleGamacCVMuni.FormatoFecha}" navigator="true" locale="es" showOn="button">
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel for="tipoDocumento" value="#{bundleGamacCVMuni.listVentasFrmCre_TipoDoc_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                <p:selectOneMenu id="tipoDocumento" value="#{gamacMunicionesListadoVentasController.tipoComprobante}"
+                                        required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaTipoDoc_RequiredMessage}" >
+                                    <f:selectItem itemLabel="------" itemValue="#{null}" />
+                                    <f:selectItems value="#{gamacMunicionesListadoVentasController.lstTipoDoc}" 
+                                                   var="item"
+                                                   itemLabel="#{item.nombre}" 
+                                                   itemValue="#{item}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel for="nroDoc" value="#{bundleGamacCVMuni.listVentasFrmCre_NroDoc_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-1 ui-lg-2">
+                                <p:inputText id="nroDoc" value="${gamacMunicionesListadoVentasController.numDocVenta}" 
+                                             required="true" requiredMessage="#{bundleGamacCVMuni.RegVentaNroDoc_RequiredMessage}"
+                                             maxlength="20"/>
+                            </div> 
+                        </div>
+
+                    </p:panel>
+
+                    <p:panel id="datosMunicPanel" header="#{bundleGamacCVMuni.listVentasFrmCrePanelMuniciones_title}" style="margin-bottom:10px;" widgetVar="panel" >
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:outputLabel for="articulo" value="#{bundleGamacCVMuni.listVentasFrmCre_Articulo_Label}" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                                <p:autoComplete id="articulo" value="#{gamacMunicionesListadoVentasController.municion}"
+                                                placeholder="MARCA o CALIBRE o TIPO MUNICION"
+                                                completeMethod="#{gamacMunicionesListadoVentasController.autcompleteMunicionxMarcaCalibre}"
+                                                var="muniSelected" 
+                                                itemLabel="#{muniSelected.calibrearmaId.nombre.concat(' ').concat(muniSelected.marcaId.nombre)}" 
+                                                minQueryLength="3" cache="true" itemValue="#{muniSelected}" forceSelection="true" scrollHeight="200">  
+                                    <p:ajax event="itemSelect" listener="#{gamacMunicionesListadoVentasController.eligeMunicionxPerJurCom}" process="@this, articulo" update="@none"/>
+                                </p:autoComplete> 
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:outputLabel for="codFab" value="Código de fabricante(SKU):" styleClass="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:inputText id="codFab" autocomplete="false" maxlength="15"/>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:outputLabel for="loteFab" value="Lote de fabricación:" styleClass="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:inputText id="loteFab" autocomplete="false" maxlength="14"/>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:outputLabel for="cantEmp" value="Cantidad de empaques:" styleClass="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:inputText id="cantEmp" autocomplete="false" maxlength="6">
+                                    <p:keyFilter mask="pint"/>
+                                </p:inputText>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                <p:outputLabel for="munXEmp" value="Municiones por empaque:" styleClass="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                <p:inputText id="munXEmp" autocomplete="false" maxlength="3">
+                                    <p:keyFilter mask="pint"/>
+                                </p:inputText>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-4 ui-lg-2">
+                                <p:commandButton value="#{bundleGamacCVMuni.listVentasFrmCreBtn_Agregar_Label}" id="addArticulo"
+                                                 actionListener="#{gamacMunicionesListadoVentasController.addMunicionGrilla}"
+                                                 partialSubmit="true" icon="ui-icon-plus" 
+                                                 process="@this, codFab, loteFab, munXEmp, cantEmp"
+                                                 update=":newVentaForm:detalleDatatable2, :newVentaForm:articulo, :newVentaForm:codFab, :newVentaForm:loteFab, :newVentaForm:cantEmp, :newVentaForm:munXEmp"
+                                                 oncomplete="addMunicion();"
+                                                 />
+                            </div>                            
+                        </div>
+
+                        <p:dataTable id="detalleDatatable2" value="#{gamacMunicionesListadoVentasController.lstDetalleVenta2}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     selection="#{gamacMunicionesListadoVentasController.lstDetalleVenta2Selected}" 
+                                     emptyMessage="#{bundleSiciv.MensajeNoResultados}" 
+                                     paginator="true" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="10, 20"
+                                     reflow="true">
+
+                            <p:column selectionMode="multiple" style="width:12px;text-align:center"/>                               
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_CalibreArm_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CalibreArm_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.calibreArma}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.municion}"/>
+                                <h:inputHidden id="itemId" value="#{item.id}"/>                                
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantidadVendida}"/>
+                            </p:column>
+                            
+                            <f:facet name="footer">
+                                <div class="ui-g" style="padding: 0!important">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-2" style="padding:0!important">
+                                        <p:commandButton value="Eliminar Seleccionados" icon="ui-icon-circle-close" 
+                                                         process="@this, detalleDatatable2" update=":newVentaForm:detalleDatatable2" 
+                                                         actionListener="#{gamacMunicionesListadoVentasController.eliminarDetalleSeleccionados()}"
+                                                         oncomplete="delMunicion();">
+                                            <p:confirm header="Confirmación" message="#{bundleGamacCVMuni.ConfirmarEliminarMunicion}" ></p:confirm>
+                                        </p:commandButton>                                            
+                                    </div>                                        
+                                </div>  
+                            </f:facet> 
+                           
+                        </p:dataTable>
+                        
+                    </p:panel>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-3">
+                            <p:commandButton value="Guardar" id="btnGuardarRV" icon="ui-icon-disk" 
+                                             actionListener="#{gamacMunicionesListadoVentasController.guardarRV}" 
+                                             process="@this, rgTrasnfMuni, local, fechaVenta, tipoDocumento, nroDoc" update="@all"
+                                             partialSubmit="true" oncomplete="confirmaRegistro()" onstart="" >
+                                <p:confirm header="#{bundleGamacCVMuni.ConfirmarTitulo}" message="#{bundleGamacCVMuni.ConfirmarGuardarRegVenta}" icon="ui-icon-alert" />                                    
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-3">
+                            <p:commandButton value="#{bundleGamacCVMuni.CancelarTitulo}" actionListener="#{gamacMunicionesListadoVentasController.cancelCreaVenta()}" id="btnCancelCompra" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">&nbsp;</div> 
+                    </div>
+                    
+                </div>
+                <p:blockUI block="panelRegVenta" trigger="btnGuardarRV" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    <script type="text/javascript">
+        $(".ui-datatable-footer").attr("style", "padding:2px!important");   
+        
+        function addMunicion(){
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+        }
+        
+        function delMunicion(){
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+        }
+        
+        function confirmaRegistro(){
+            
+        }
+
+        function confirmaVentaBio(msg){
+            $("#divMsgBio").show();
+            $("#textVentaMsgBio").html(msg);
+        }
+    
+    </script>
+
+</ui:composition>

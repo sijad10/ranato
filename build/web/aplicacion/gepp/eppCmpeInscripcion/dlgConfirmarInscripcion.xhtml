@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <p:dialog id="dlgInscripcion" widgetVar="wvDialogInscripcion"
+              modal="true" resizable="false" appendTo="@(body)"  width="700px" height="250px"
+              header="#{BundleBDIntegrado.EppCertificado_declaracionJurada}" closable="true">
+        <h:form id="frmInscripcion">
+            <h:panelGrid columns="1" >
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos }" style="font-weight: bold;" />
+            </h:panelGrid>
+            <h:panelGrid columns="2" >
+                <p:outputLabel value="1." style="margin-left: 8px; width: 20px;text-align : justify; vertical-align: top; display: block;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto1 }"  />
+                <p:outputLabel value="2." style="margin-left: 8px; width: 20px;text-align : justify; vertical-align: top; display: block;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto2 }" />
+                <p:outputLabel value="3." style="margin-left: 8px; width: 20px;text-align : justify; vertical-align: top; display: block;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto3 }" />
+                <p:outputLabel value="4." style="margin-left: 8px; width: 20px;text-align : justify; vertical-align: top; display: block;" />
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso3_terminos_texto4 }" />
+            </h:panelGrid>
+            <br/>
+            <h:panelGrid columns="2" >
+                <p:selectBooleanCheckbox value="#{eppCmpeInscripcionController.terminos}" >
+                    <p:ajax process="@this" update="@form" />
+                </p:selectBooleanCheckbox>
+                <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_terminosinscripcion }" />
+            </h:panelGrid>
+            <br/><br/>
+            <div align="center">
+                    <p:commandButton value="Realizar Inscripción"
+                                     disabled="#{!eppCmpeInscripcionController.terminos}"
+                                     update="@all"
+                                     actionListener="#{eppCmpeInscripcionController.inscribirCertificado()}"
+                                     icon="ui-icon-disk"  />
+
+                    <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                 process="@this"
+                                 update="frmInscripcion"
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogInscripcion').hide()"
+                                 icon="ui-icon-closethick" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

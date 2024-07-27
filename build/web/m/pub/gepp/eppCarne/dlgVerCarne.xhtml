@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <pm:page id="dlgVerCarne"  >
+        <pm:header title="Visualización de carné" />
+        <pm:content>
+            <h:form id="verCarneForm">
+                <p:focus context="verCarneForm"/>
+                <p:tabView>
+                    <p:tab title="Carné">
+                        <p:panelGrid style="text-align: center;margin-top: 10px;">
+                            <p:graphicImage value="#{eppCarneController.generarPDFCarneFront()}" cache="false" >
+                            </p:graphicImage>
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Sección posterior de carné" >
+                        <p:panelGrid style="text-align: center;">
+                            <p:graphicImage value="#{eppCarneController.generarPDFCarneBack()}" cache="false" >
+                            </p:graphicImage>
+                        </p:panelGrid>
+                    </p:tab>
+                </p:tabView>
+                
+                <p:panelGrid style="text-align: center;">
+                    <pm:field>
+                        <p:outputLabel id="nroCarne" value="Nro. de Carné:" style="font-weight: bold;" />
+                        <p:outputLabel value="#{eppCarneController.obtenerNroCarne()}" />                        
+                    </pm:field>
+                    <pm:field>                        
+                        <p:outputLabel id="estadoReg" value="Estado del registro:" style="font-weight: bold;" />
+                        <p:outputLabel value="#{eppCarneController.obtenerEstadoCarne()}" />                        
+                    </pm:field>
+                    <pm:field rendered="#{eppCarneController.carne.registroId.tipoOpeId.codProg ne 'TP_OPE_CAN'}">                        
+                        <p:outputLabel id="vigencia" value="Vigencia" style="font-weight: bold;" />
+                        <p:outputLabel value="#{eppCarneController.obtenerVigenciaCarne()}" />                        
+                    </pm:field>
+                    <pm:field>
+                        <p:outputLabel id="tipoReg" value="Tipo de registro:" style="font-weight: bold;" />
+                        <p:outputLabel value="#{eppCarneController.carne.registroId.tipoRegId.nombre}" />                        
+                    </pm:field>
+                    <pm:field>
+                        <p:outputLabel id="tipoOpe" value="Tipo de operación:" style="font-weight: bold;" />
+                        <p:outputLabel value="#{eppCarneController.carne.registroId.tipoOpeId.nombre}" />
+                    </pm:field>
+                </p:panelGrid>
+
+                <p:panelGrid style="text-align: center;">
+                    <p:button icon="ui-icon-closethick" outcome="pm:buscarPage" value="Cerrar" />
+                </p:panelGrid>
+            </h:form>
+            <script type="text/javascript">
+                    $(document).ready(function() {                         
+                        $(".ui-field-contain").attr("style", "margin:0;");
+                    });
+            </script>
+        </pm:content>    
+    </pm:page>
+
+</ui:composition>
+

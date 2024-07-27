@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions" 
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="ReingresoViewDialog" widgetVar="ConfSolReingresoViewDialog" width="70%" maximizable="true"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{bundleGamac.TituloConfirmacionReingreso}">
+            <h:form id="formSolReingreso">
+                <div class="ui-fluid">
+                    <h:panelGroup rendered="#{amaSolicitudRecojoController.verificarSolicitudesPendientes()}">
+                        <p:outputLabel value="#{bundleGamac.MensajeSolicitudesPorProcesar1} #{amaSolicitudRecojoController.cantidadMaximaArmasSolicitar()} #{bundleGamac.MensajeSolicitudesPorProcesar2}" style="font-weight: bold; color: red;"/>
+                        <br/><br/>
+                    </h:panelGroup>                
+                    <p:outputLabel value="#{bundleGamac.SeleccionDatosReingresoArmas1} #{amaSolicitudRecojoController.lstArmasReingresoFinal.size()} #{bundleGamac.SeleccionDatosReingresoArmas2}"/>
+                    <br/>
+                    <h:panelGrid columns="2" id="gridEntrega">
+                        <p:outputLabel value="#{bundleGamac.SedeSeleccion}"/>
+                        <p:selectOneMenu id="cboDestino" autoWidth="true"
+                                         value="#{amaSolicitudRecojoController.sedeSucamecSelect}" >
+                            <f:selectItem itemLabel="#{bundleSistemaBase.SeleccioneItem_lb}" itemValue="#{null}"/>
+                            <f:selectItems var="item" itemValue="#{item}" 
+                                           itemLabel="#{item.referencia}" 
+                                           value="#{amaSolicitudRecojoController.listaDireccionSucamec() }"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleGamac.ResponsableReingreso}"/>
+                        <p:selectOneMenu id="cboPersona" autoWidth="true"
+                                         value="#{amaSolicitudRecojoController.objPersonaRecojo}" >
+                            <f:selectItem itemLabel="#{bundleSistemaBase.SeleccioneItem_lb}" itemValue="#{null}"/>
+                            <f:selectItems var="item" itemValue="#{item}" 
+                                           itemLabel="#{item.rznSocial==null?item.nombres.concat(' ').concat(item.apePat).concat(' ').concat(item.apeMat):item.rznSocial}" 
+                                           value="#{amaSolicitudRecojoController.listaPersonaRecojo}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+                    <p:panel id="pnlgComprobante" rendered="#{amaSolicitudRecojoController.solicitarRecibo}" style="border: 0px!important; margin-bottom: 3px">
+                        <div class="ui-g" style="margin-bottom: 8px">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="Comprobante: " for="acReciboBn" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <div class="ui-inputgroup">
+                                    <p:autoComplete id="acReciboBn"
+                                                    value="#{amaSolicitudRecojoController.reciboBn}"
+                                                    completeMethod="#{amaSolicitudRecojoController.autoCompleteRecibos}"
+                                                    disabled="#{amaSolicitudRecojoController.disableReciboBn}"
+                                                    placeholder="NRO. COMPROBANTE"
+                                                    required="true"
+                                                    requiredMessage="Debe ingresar el número del comprobante"
+                                                    var="item"
+                                                    itemLabel="#{item.nroSecuencia}"
+                                                    itemValue="#{item}"
+                                                    minQueryLength="2"
+                                                    cache="true"
+                                                    onchange="buscaRec()"
+                                                    onkeypress="return runScript(event)"                                                    
+                                                    forceSelection="true" >
+                                        <p:ajax event="itemSelect" listener="#{amaSolicitudRecojoController.lstnrSelectRecibo}" update="pnlgComprobante" oncomplete="buscaRec()" />
+                                    </p:autoComplete>
+                                    <p:commandButton id="regDelBusLic" icon="ui-icon-close" class="red-button btnBusqueda" title="Borrar Recibo seleccionado"
+                                                     process="@this" update="pnlgComprobante" actionListener="#{amaSolicitudRecojoController.borrarReciboSeleccionado()}"
+                                                     rendered="#{amaSolicitudRecojoController.reciboBn != null}" partialSubmit="true" oncomplete="buscaRec()"/>
+                                    <pe:tooltip for="acReciboBn"
+                                                rendered="#{amaSolicitudRecojoController.reciboBn == null}"
+                                                value="Ingrese el número del recibo del Banco de la Nación"
+                                                showEffect="slideToggle"
+                                                hideEffect="slideToggle"
+                                                showDelay="0"
+                                                myPosition="left center"
+                                                atPosition="right center"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                <p:outputLabel value="Numero Comprobante: " rendered="#{amaSolicitudRecojoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{amaSolicitudRecojoController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Fecha Comprobante: " rendered="#{amaSolicitudRecojoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{amaSolicitudRecojoController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Monto: " rendered="#{amaSolicitudRecojoController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{amaSolicitudRecojoController.strImporte}" escape="false" class="txtLabel"/>
+                            </div>
+                        </div>
+
+                    </p:panel>
+
+                    <h:panelGrid>
+                        <p:outputLabel value="Listado de armas que se incluirán en la solicitud:" style="font-weight: bold"/>
+                        <p:dataTable id="dtArmas" value="#{amaSolicitudRecojoController.lstArmasReingresoFinal}" 
+                                     reflow="true"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                                     paginator="true" rows="#{bundleGamac.PaginatorFilas_busqueda}"  
+                                     currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}">
+                            <p:column headerText="Código" style="text-align: center;">
+                                <h:outputText value="#{item.nroRua eq null?item.codigo:item.nroRua}"/>
+                            </p:column>
+                            <p:column headerText="Serie" style="text-align: center;" > 
+                                <h:outputText value="#{item.serie}" />
+                            </p:column>
+                            <p:column headerText="Arma" style="text-align: center;" > 
+                                <h:outputText value="#{item.modeloId.tipoArmaId.nombre} #{item.modeloId.modelo} #{item.modeloId.modelo} #{amaSolicitudRecojoController.obtenerCalibres(item.modeloId)}" />
+                            </p:column>
+                            <p:column headerText="Opción" style="text-align: center;width: 7%">
+                                <p:commandButton icon="ui-icon-close" style="background-color: #E53935;color: #E53935;border-color: #E53935;" actionListener="#{amaSolicitudRecojoController.removerArmaReingreso(item)}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="#{bundleGamac.ConfirmarTitulo}" 
+                                         actionListener="#{amaSolicitudRecojoController.crear(2)}" 
+                                         update="gridEntrega"/>
+                        <p:commandButton value="#{bundleGamac.CancelarTitulo}" style="align-self: center" oncomplete="PF('ConfSolReingresoViewDialog').hide()"/>
+                    </h:panelGrid>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+                //$(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+                //$(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+                //$("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+                //$("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+
+                $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+
+                $(".txtLabel").attr("style", "line-height: 190%");
+                $(".ui-datatable-footer").attr("style", "padding:2px!important");
+                $(".contRuc, .contSRuc").hide();
+                $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+            });
+
+            function buscaRec() {
+                $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+                $(".txtLabel").attr("style", "line-height: 190%");
+                $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+            }
+
+            function runScript(e) {
+                if (e.keyCode == 13) {
+                    return false;
+                }
+            }
+
+        </script>
+    </ui:composition>
+</html>

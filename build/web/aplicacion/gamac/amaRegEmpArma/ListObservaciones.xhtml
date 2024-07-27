@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.amaRegEmpArma_observaciones_list_title}" rendered="#{amaRegEmpArmaController.estado == 'BUSCAROBS'}"/>
+                <h:outputText value="#{BundleBDIntegrado.amaRegEmpArma_observaciones_modificacionArma}" rendered="#{amaRegEmpArmaController.estado == 'CREAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.amaArma_editar_title}" rendered="#{amaRegEmpArmaController.estado == 'EDITARVERIF'}" />
+                <h:outputText value="#{BundleBDIntegrado.amaArma_editar_nuevaArma_title}" rendered="#{amaRegEmpArmaController.estado == 'EDITARARMA'}" />
+                <h:outputText value="#{BundleBDIntegrado.amaArma_editar_title}" rendered="#{amaRegEmpArmaController.estado == 'EDITAREMITIDO'}" />
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" rendered="#{amaRegEmpArmaController.estado == 'BUSCAROBS'}" >
+                    <p:defaultCommand target="btnBuscarBandeja"/>
+                  
+                    <p:fieldset legend="Bandeja">
+                        <h:panelGrid columns="3" id="pnlBusquedaBandeja" >
+                            <h:outputText value="#{BundleBDIntegrado.amaRegEmpArma_observaciones_nroExpediente}" />
+                            <p:inputText value="#{amaRegEmpArmaController.filtro}"
+                                         id="filtroBusqueda"
+                                         style="width: 280px;" />
+                            <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                             id="btnBuscarBandeja"
+                                             process="@form"
+                                             style="margin-left: 20px;"
+                                             icon="ui-icon-search"
+                                             actionListener="#{amaRegEmpArmaController.buscarBandejaObservaciones()}"
+                                             update="@form"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    
+                    <h:panelGrid rendered="#{amaRegEmpArmaController.resultadosBandeja == null}" style="margin-left: 10px;">
+                        <br/>
+                        <h:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_instrucciones}" style="font-weight: bold"/>
+                        <h:outputLabel value="#{BundleBDIntegrado.amaRegEmpArma_InstruccionesTexto}" escape="false"/>
+                    </h:panelGrid>
+                
+                    <h:panelGrid columns="1" rendered="#{amaRegEmpArmaController.resultadosBandeja != null }" >
+                        <p:dataTable id="buscarDatatableRegistro" value="#{amaRegEmpArmaController.resultadosBandeja}"
+                                     var="itemReg"
+                                     selection="#{amaRegEmpArmaController.resultadosBandejaSeleccionados}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                     {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                            
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_nroExp}" style="text-align: center; width: 12%; " >
+                                <h:outputText value="#{itemReg.NUMERO}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_fecExp}" style="text-align: center; width: 12%;" >
+                                <h:outputText value="#{itemReg.FECHA_CREACION}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_asunto}" style="text-align: center; width: 33%;" >
+                                <h:outputText value="#{itemReg.ASUNTO_OBS_SIS}" />
+                            </p:column>
+                            <p:column headerText="#{(amaRegEmpArmaController.esPerfilInpe()) ? 'Fecha Notificación de Observación' : BundleBDIntegrado.amaRegEmpArma_dtObservaciones_fechaObservacion}" style="text-align: center; width:14%;" >
+                                <h:outputText value="#{ (itemReg.EVALUACION_CODPROG == 'TP_EVA_SIS' or itemReg.EVALUACION_CODPROG == 'TP_EVA_S48H' or itemReg.EVALUACION_CODPROG == 'TP_EVA_S10D' )?itemReg.FECHA_OBS_SIS:itemReg.FECHA_OFICIO }" rendered="#{!amaRegEmpArmaController.esPerfilInpe()}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                                <h:outputText value="#{ itemReg.FECHA_OFICIO }" rendered="#{amaRegEmpArmaController.esPerfilInpe()}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_tipoObservacion}" style="text-align: center; width: 33%;" >
+                                <h:outputText value="#{itemReg.EVALUACION}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_fechaSubsanacion}" style="text-align: center; width: 33%;" >
+                                <h:outputText value="#{itemReg.FECHA_SUB}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_descripcion}" style="text-align: center; width: 14%;" >
+                                <p:commandButton value="#{BundleBDIntegrado.Ver}"
+                                                 rendered="#{itemReg.EVALUACION_CODPROG == 'TP_EVA_SIS' or itemReg.EVALUACION_CODPROG == 'TP_EVA_S48H' or itemReg.EVALUACION_CODPROG == 'TP_EVA_S10D' or itemReg.EVALUACION_CODPROG == 'TP_EVA_OFI' }"
+                                                 actionListener="#{amaRegEmpArmaController.openDlgObservacion(itemReg)}"
+                                                 process="@this" />
+                                <p:commandButton  id="botonVistaPrevia" icon="ui-icon-print"
+                                                    ajax="false"
+                                                    process="@form"
+                                                    partialSubmit="true"
+                                                    rendered="#{itemReg.EVALUACION_CODPROG == 'TP_EVA_OFI' and !amaRegEmpArmaController.esPerfilInpe()}"
+                                                    onclick="this.form.target = '_blank'"
+                                                    onblur="this.form.target = '_self'"
+                                                    immediate="true" >
+                                    <p:fileDownload value="#{amaRegEmpArmaController.reporte(itemReg)}" contentDisposition="inline"  />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.amaRegEmpArma_dtObservaciones_opcion}" style="text-align: center; width: 14%;" >
+                                <p:commandButton value="#{BundleBDIntegrado.Modificar}"
+                                                rendered="#{amaRegEmpArmaController.renderBtnSubsanar(itemReg)}"
+                                                actionListener="#{amaRegEmpArmaController.mostrarEditarObservaciones(itemReg)}"
+                                                ajax="false"
+                                                update="@form"
+                                                process="@this" />
+                                <h:outputText value="#{BundleBDIntegrado.amaRegEmpArma_msjeFueraPlazoRaess}" 
+                                              rendered="#{amaRegEmpArmaController.renderTextFueraPlazoRaess(itemReg)}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                    <br/>
+            </h:form>            
+            <ui:include src="dlgObservacion.xhtml"/>
+            <ui:include src="EditNuevaArma.xhtml"/>
+            <ui:include src="EditVerificacion.xhtml"/>
+            <ui:include src="EditEmitidos.xhtml"/>
+            <ui:include src="dlgFoto.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{BundleGeppLmpp.BuscarGeppLmppDigitalTitulo}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                    <h:form id="listForm" >
+                        <div class="ui-g">
+                            <p:outputLabel style="font-weight: bold;">Carné Digital de manipulador de productos pirotécnicos - Carné Digital MPP</p:outputLabel>
+                        </div>
+                        <div class="ui-g">
+                            <p:outputLabel>El sistema permite descargar el Carné Digital MPP en formato PDF, incluyendo todos los mecanimos de seguridad, como:</p:outputLabel>
+                        </div>
+                        <div class="ui-g">
+                            <p:outputLabel>la firma digital y el código QR, los cuales garantizan la integridad de la información.</p:outputLabel>
+                        </div>
+                        <p:panel style="width: 50%">
+                            <div class="ui-g">
+                                <p:outputLabel style="font-weight: bold;">TIPO DE BUSQUEDA:</p:outputLabel>
+                            </div>
+                            <div class="ui-g">
+                                <p:outputLabel style="font-weight: bold;">Múltiple: </p:outputLabel>
+                                <p:outputLabel >Búsqueda de muchos carnés digitales de manipulador de productos pirotécnicos</p:outputLabel>
+                            </div>
+                            <div class="ui-g">
+                                <p:outputLabel style="font-weight: bold;">Simple:  </p:outputLabel>
+                                <p:outputLabel > Búsqueda de un carné digital de manipulador de productos pirotécnicos específico</p:outputLabel>
+                            </div>                          
+                            
+                        </p:panel>
+                        <p:tabView >
+                            <p:ajax event="tabChange" listener="#{geepLmppController.tabChanged}"  update="@form" />
+                            <p:tab title="MULTIPLE" id="multiple">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                        <p:outputLabel value="#{BundleGeppLmpp.Categoria}"/>
+                                        <p:selectOneMenu value="#{geepLmppController.tipoCategoria}" autoWidth="false">
+                                            <f:selectItem itemLabel="---" itemValue=""/>
+                                            <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.abreviatura == 'X'?item.nombre:item.abreviatura }" value="#{geepLmppController.listaCategoria }"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                        <p:outputLabel value="#{BundleGeppLmpp.FechaDesde}" />
+                                        <p:calendar value="#{geepLmppController.fechaIni}" locale="es"
+                                                    showOn="button"
+                                                    readonlyInput="true"
+                                                    navigator="true"
+                                                    pattern="#{BundleGeppLmpp.FormatoFecha}">
+                                            <f:convertDateTime pattern="#{BundleGeppLmpp.FormatoFecha}" />
+                                        </p:calendar>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                        <p:outputLabel value="#{BundleGeppLmpp.FechaHasta}" />
+                                        <p:calendar value="#{geepLmppController.fechaFin}" locale="es"
+                                                    showOn="button"
+                                                    readonlyInput="true"
+                                                    navigator="true"
+                                                    pattern="#{BundleGeppLmpp.FormatoFecha}">
+                                            <f:convertDateTime pattern="#{BundleGeppLmpp.FormatoFecha}" />
+                                        </p:calendar>                                
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                        <p:outputLabel value="&nbsp;" />
+                                        <p:commandButton value="#{BundleGeppLmpp.Buscar}"                                                         
+                                                         icon="ui-icon-search " 
+                                                         actionListener="#{geepLmppController.buscarLME()}"
+                                                         update="listForm:buscarDatatableRegistro"/>
+                                    </div>
+                                </div>
+
+                            </p:tab>
+                            <p:tab title="SIMPLE" id="simple">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                        <p:outputLabel value="#{BundleGeppLmpp.GeppLmppLabel_Busqueda}"/>
+                                        <p:selectOneMenu value="#{geepLmppController.tipoBusqueda}">
+                                            <f:selectItem itemLabel="---" itemValue="N"/>
+                                            <f:selectItem itemValue="E" itemLabel="NRO. EXPEDIENTE"/>
+                                            <f:selectItem itemValue="P" itemLabel="NOMBRE DEL PORTADO"/>
+                                            <f:selectItem itemValue="D" itemLabel="DNI/CE PORTADOR"/>
+                                            <f:selectItem itemValue="L" itemLabel="NRO. CARNE"/>
+                                        </p:selectOneMenu>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                        <p:outputLabel value="&nbsp;" />
+                                        <p:inputText  value="#{geepLmppController.textoBuscar}">
+                                            <p:keyFilter regEx="/[0-9]/i" preventPaste="false" rendered="#{geepLmppController.tipoBusqueda == 'E' or geepLmppController.tipoBusqueda == 'L' }" /> 
+                                        </p:inputText>    
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                        <p:outputLabel value="&nbsp;" />
+                                        <p:commandButton value="#{BundleGeppLmpp.Buscar}"
+                                                         
+                                                         icon="ui-icon-search "
+                                                         actionListener="#{geepLmppController.buscarLME()}"
+                                                         update="listForm:buscarDatatableRegistro"/>
+                                    </div>
+                                </div>
+                            </p:tab>                    
+                        </p:tabView>
+                        <p:dataTable id="buscarDatatableRegistro" value="#{geepLmppController.lstRegLicManip}"
+                                    var="item" 
+                                    emptyMessage="#{BundleGeppLmpp.MensajeNoResultados}" 
+                                    paginator="true" rows="#{BundleGeppLmpp.PaginatorFilas}"  
+                                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                    rowsPerPageTemplate="#{BundleGeppLmpp.PaginatorFilasPorPagina}"
+                                    rowIndexVar="idExp"
+                                    reflow="true"
+                                >
+                                <p:column headerText="NRO LICENCIA" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{item.CARNE}" />
+                                </p:column>
+                                <p:column headerText="DNI/CE. PORTADOR" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{item.DNI}"/>
+                                </p:column>                            
+                                <p:column headerText="NOMBRE PORTADOR" style="font-size:95%!important" class="ui-lg-3" >
+                                    <h:outputText value="#{item.NOMBRE}"/>
+                                </p:column>                                
+                                <p:column headerText="CATEGORIA" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{item.CATEGORIA}"/>
+                                </p:column>                            
+                                <p:column headerText="FECHA EMISION" style="font-size:95%!important" class="ui-lg-1" >
+                                    <h:outputText value="#{item.FEC_EMI}">
+                                        <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="FECHA VENCIMIENTO" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.FEC_VENC}">
+                                        <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                    </h:outputText>
+                                </p:column>                            
+                                <p:column headerText="OPERACION" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.tipoOpe}"/>
+                                </p:column>
+                                <p:column headerText="EVALUADOR QUE PROCESA" style="font-size:95%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.EVALUADOR}"/>
+                                </p:column>
+                                <p:column headerText="OPCIONES" style="font-size:95%!important" class="ui-lg-1" >  
+                                    <p:commandButton value="DESCARGAR"
+                                                     icon="ui-icon-print"
+                                                     ajax="false"
+                                                     partialSubmit="true"
+                                                     onclick="this.form.target = '_blank'"
+                                                     onblur="this.form.target = '_self'" 
+                                                     immediate="true">
+                                    <p:fileDownload value="#{geepLmppController.reportePDF(item.ID)}" contentDisposition="inline"  />    
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        <div style="float: right;clear: both">
+                            <p:commandButton 
+                                update="@form"                                                                  
+                                action="#{geepLmppController.descargarLicenciasCMEDigital()}"
+                                value="DESCARGAR TODO" 
+                                ajax="false"/>
+                        </div>
+                    </h:form>
+                    </div>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+
+</html>

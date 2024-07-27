@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                >
+            <h:form id="createForm" rendered="#{armasPosesionController.estado == 'CREAR'}">
+                <p:panel header="Datos del arma de fuego en posesión" id="pnlDatosArma">
+                        <h:panelGrid>
+                            <p:row>
+                                <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Datos del arma"/></p:column>
+                                <p:column>
+                                    <p:autoComplete id="AuComArma" value="#{armasPosesionController.selectedArmaString}" 
+                                    size="100"
+                                    queryDelay="2000"
+                                    placeholder="Ingrese Tipo de arma y/o Marca y/o Modelo y/o Calibre"
+                                    onblur="this.value = this.value.toUpperCase();"
+                                    completeMethod="#{armasPosesionController.completeArma}"
+                                    var="ArmaSelected" itemLabel="#{armasPosesionController.obtenerDescripArmaListadoString(ArmaSelected)}"
+                                    minQueryLength="3" cache="true" itemValue="#{ArmaSelected}"  forceSelection="true" scrollHeight="200" >
+                        <p:ajax event="itemSelect" process="@this,pnlDatosArma" update="@this,pnlDatosArma" listener="#{armasPosesionController.seleccionaArma()}" global="false" />
+                    </p:autoComplete>
+                    
+                                </p:column>            
+                               
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:selectBooleanCheckbox value="#{armasPosesionController.activarCheck}" itemLabel="No encuentra las caracteristicas de mi arma">
+                                        <p:ajax listener="#{armasPosesionController.cambiarCheck()}" update="pnlDatosArma" process="@this,pnlDatosArma"/>
+                                    </p:selectBooleanCheckbox>
+                                </p:column>     
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel rendered="#{armasPosesionController.ocultarDatos}" style="width: 150px;display: inline-block" value="Tipo de arma"/></p:column>
+                                <p:column> 
+                                    <p:selectOneMenu value="#{armasPosesionController.registro.nuevoTipoArmaId}" rendered="#{armasPosesionController.ocultarDatos}">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                                       value="#{armasPosesionController.obtenerTipoArmas()}"/>
+                                       </p:selectOneMenu>
+                                </p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel rendered="#{armasPosesionController.ocultarDatos}" style="width: 150px;display: inline-block" value="Marca"/></p:column>
+                                <p:column><p:inputText value="#{armasPosesionController.registro.nuevoMarca}" rendered="#{armasPosesionController.ocultarDatos}" size="40"/></p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel rendered="#{armasPosesionController.ocultarDatos}" style="width: 150px;display: inline-block" value="Modelo"/></p:column>
+                                <p:column><p:inputText value="#{armasPosesionController.registro.nuevoModelo}" rendered="#{armasPosesionController.ocultarDatos}" size="40"/></p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel rendered="#{armasPosesionController.ocultarDatos}" style="width: 150px;display: inline-block" value="Calibre"/></p:column>
+                                <p:column><p:inputText value="#{armasPosesionController.registro.nuevoCalibre}" rendered="#{armasPosesionController.ocultarDatos}" size="40"/></p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Número de Serie"/></p:column>
+                                <p:column><p:inputText value="#{armasPosesionController.registro.numeroSerie}" size="40"/></p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Estado Fisico del arma"/></p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{armasPosesionController.registro.estadoFisicoId}">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                                       value="#{armasPosesionController.obtenerEstadoArma()}"/>
+                                    </p:selectOneMenu>
+                                </p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Situación del arma"/></p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{armasPosesionController.registro.situacionId}">
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                                       value="#{armasPosesionController.obtenerListadoSituacionArma() }"/>
+                                    </p:selectOneMenu>
+                                </p:column>                      
+                            </p:row>
+                            <p:row>
+                                <p:column ><p:outputLabel style="width: 150px;display: inline-block" value="Descripción física del arma"/></p:column>
+                                <p:column>
+                                    <p:inputTextarea value="#{armasPosesionController.registro.descripcion}" cols="60" rows="5">
+                                      </p:inputTextarea>
+                                </p:column>                      
+                            </p:row>
+                        </h:panelGrid>
+                </p:panel>
+                <p:panel header="Fotos del arma de fuego">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="Foto"/>
+                        <h:panelGrid columns="1">
+                          <p:fileUpload id="idFoto" label="Adjuntar"
+                                  invalidFileMessage="#{BundleBDIntegrado.amaArma_fileUpload_foto_InvalidFileMessage}"
+                                  invalidSizeMessage="#{BundleBDIntegrado.amaArma_fileUpload_InvalidSizeMessageFoto}"
+                                  fileUploadListener="#{armasPosesionController.handleFileUploadFoto}"
+                                  disabled="#{armasPosesionController.disabledBtnFoto }"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  style="float:left;width: 100%;"
+                                  process="@this,pnlDatosArma"
+                                  sizeLimit="#{BundleBDIntegrado.amaArma_MaxSizeFoto}"
+                                  auto="true" update="@this,pnlDatosArma" 
+                                  allowTypes="/(\.|\/)(jpg|JPG)$/" immediate="true" >
+                              <p:dataTable value="#{armasPosesionController.lstFotos}" var="item" id="dtFotos">
+                                    <p:column headerText="Nombre Foto">
+                                        <p:outputLabel value="#{item.nombre}"/>
+                                    </p:column>
+                                    <p:column headerText="Opción">
+                                        <p:commandButton icon="ui-icon-trash" actionListener="#{armasPosesionController.quitarFoto(item.nro)}" update="dtFotos"/>
+                                    </p:column>    
+                                </p:dataTable>
+                    </p:fileUpload>
+                            <p:outputLabel style="color: red; font-weight: bold;" value="El formato debe estar en formato.jpg con un  máxomo de tamaño de #{BundleBDIntegrado.amaArma_MaxSizeFoto}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                    
+                <p:commandButton value="Guardar" icon="ui-icon-disk" process="@all" update="@all" action="#{armasPosesionController.registrar()}"/>
+                
+                <p:commandButton update="@all" immediate="true" action="#{armasPosesionController.prepareListMios()}" style="margin-left:10px" icon="ui-icon-closethick" value="Cancelar"/>
+                
+            </h:form>
+         
+    </ui:composition>

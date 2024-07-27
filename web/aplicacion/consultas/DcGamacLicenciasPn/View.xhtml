@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{dcGamacLicenciasController.estado == 'VER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid columns="2">
+            <p:graphicImage  value="#{dcGamacLicenciasController.foto}" width="180" height="240" cache="false" style="border-color: #000; border-width: 2px; border-style: solid; margin: 10px;"/>
+            <h:panelGrid id="panelGrid" columns="4">
+                <h:outputLabel value="LICENCIA:" style="display: block; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_TIPO_LICENCIA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.TIPO_LICENCIA}" title="#{bundleDisca.DcGamacLicenciasTitle_TIPO_LICENCIA}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_NRO_LIC}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.NRO_LIC}" title="#{bundleDisca.DcGamacLicenciasTitle_NRO_LIC}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_FEC_EMISION}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.FEC_EMISION}" title="#{bundleDisca.DcGamacLicenciasTitle_FEC_EMISION}">
+                    <f:converter converterId="fechaConverter" />
+                </p:outputLabel>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_FEC_VENCIMIENTO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.FEC_VENCIMIENTO}" title="#{bundleDisca.DcGamacLicenciasTitle_FEC_VENCIMIENTO}">
+                    <f:converter converterId="fechaConverter" />
+                </p:outputLabel>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_SITUACION}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.SITUACION}" title="#{bundleDisca.DcGamacLicenciasTitle_SITUACION}" style="font-size: large; color: red; font-weight: bold;"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_ESTADO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.ESTADO}" title="#{bundleDisca.DcGamacLicenciasTitle_ESTADO}" style="font-size: large; color: red; font-weight: bold;"/>
+                <h:outputLabel value="PORTADOR:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.PORTADOR}" title="#{bundleDisca.DcGamacLicenciasTitle_PORTADOR}"/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_TIPO_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.TIPO_PORTADOR}" title="#{bundleDisca.DcGamacLicenciasTitle_TIPO_PORTADOR}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_DOC_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.DOC_PORTADOR}" title="#{bundleDisca.DcGamacLicenciasTitle_DOC_PORTADOR}"/>
+                <h:outputLabel value="ARMA:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_NRO_SERIE}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.NRO_SERIE}" title="#{bundleDisca.DcGamacLicenciasTitle_NRO_SERIE}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_TIPO_ARMA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.TIPO_ARMA}" title="#{bundleDisca.DcGamacLicenciasTitle_TIPO_ARMA}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_MARCA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.MARCA}" title="#{bundleDisca.DcGamacLicenciasTitle_MARCA}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_MODELO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.MODELO}" title="#{bundleDisca.DcGamacLicenciasTitle_MODELO}"/>
+                <p:outputLabel value="#{bundleDisca.DcGamacLicenciasLabel_CALIBRE}"/>
+                <p:outputLabel value="#{dcGamacLicenciasController.registro.CALIBRE}" title="#{bundleDisca.DcGamacLicenciasTitle_CALIBRE}"/>
+            </h:panelGrid>
+        </h:panelGrid>
+        <br />
+        <p:commandButton icon="ui-icon-search" actionListener="#{dcGamacLicenciasController.mostrarBuscar}" value="#{bundleDisca.DcGamacLicenciasVolverBusqueda}" immediate="true" update="@all"/>
+    </h:form>
+</ui:composition>
+

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaLicenciaDeUsoEmpty}" rendered="#{amaLicenciaDeUsoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaLicenciaDeUsoController.items.rowCount > 0}">
+                    <h:outputText value="#{amaLicenciaDeUsoController.pagination.pageFirstItem + 1}..#{amaLicenciaDeUsoController.pagination.pageLastItem + 1}/#{amaLicenciaDeUsoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaLicenciaDeUsoController.previous}" value="#{bundle.Previous} #{amaLicenciaDeUsoController.pagination.pageSize}" rendered="#{amaLicenciaDeUsoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaLicenciaDeUsoController.next}" value="#{bundle.Next} #{amaLicenciaDeUsoController.pagination.pageSize}" rendered="#{amaLicenciaDeUsoController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaLicenciaDeUsoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_nroLicencia}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroLicencia}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_fechaInscripcion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaInscripcion}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_fechaEmision}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaEmision}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_fechaVencimietnto}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaVencimietnto}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_descripcion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_nroExpedienteAnula}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroExpedienteAnula}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_fechaAnula}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaAnula}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_motivoAnula}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.motivoAnula}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_emitido}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.emitido}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_hashQr}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.hashQr}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaLicenciaDeUsoTitle_fotoId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fotoId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaLicenciaDeUsoController.prepareView}" value="#{bundle.ListAmaLicenciaDeUsoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaLicenciaDeUsoController.prepareEdit}" value="#{bundle.ListAmaLicenciaDeUsoEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaLicenciaDeUsoController.destroy}" value="#{bundle.ListAmaLicenciaDeUsoDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaLicenciaDeUsoController.prepareCreate}" value="#{bundle.ListAmaLicenciaDeUsoCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaLicenciaDeUsoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

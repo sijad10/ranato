@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgMapa" widgetVar="wvDlgMapa" closable="true" header="Local de Prestación de Servicio"
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogMapa()" width="60%">
+        <p:inputText id="ruta_real" value="#{gsspSolicitudCertificacionRMEFController.obtnerRutaServer('')}" style="display: none;" />
+        <h:form id="frmCuerpoMapa" prependId="false">
+            <div class="ui-fluid">
+                <div id="overlay" style="display: none;"><p:graphicImage library="icons" name="ajax-loader.gif"/></div>
+                <div id="map_local_container">
+                    <div id="map_local"></div>
+                </div> 
+                                
+                <!-- PANEL DE DATOS DEL LOCAL -->
+                <p:panel id="pnl_RegLocal_Title" header="Datos de la Oficina" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_TipUbica} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                            <p:selectOneMenu id="bcoLPE_TipUbica_Form"  value="#{gsspSolicitudCertificacionRMEFController.regTipoViasLPSSelected_Form }" >   
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudCertificacionRMEFController.regTipoViasLPSList_Form}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                    </div> 
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="Dirección *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-5 ui-lg-5"> 
+                            <p:inputTextarea id="txtLPE_DomiciLegal_Form" value="#{gsspSolicitudCertificacionRMEFController.regDireccionLPS_Form }" 
+                                             maxlength="30" rows="3" style="font-size: 0.8em; height: 50px !important;max-height: 50px !important;" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Referencia} *" />
+                        </div>
+                        <div class="ui-g-12 ui-md-7 ui-lg-4">                                                                          
+                            <p:inputTextarea id="txtLPE_Refencia_Form" value="#{gsspSolicitudCertificacionRMEFController.regReferenciaLPS_Form }"
+                                             maxlength="30" rows="3" style="font-size: 0.8em; height: 50px !important;max-height: 50px !important;"  />
+                        </div>
+                    </div> 
+
+                    <div class="ui-g">
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:commandButton id="btnAgregarLocalAuto"
+                                             update="pnl_RegLocal_Title"
+                                             action="#{gsspSolicitudCertificacionRMEFController.btnAgregarLocalAutorizacionMapa()}" 
+                                             value="Agregar Oficina" />
+                        </div>             
+                        <div class="ui-g-12 ui-md-3 ui-lg-3" style="display:none;"></div>
+                    </div>    
+                </p:panel>
+                <!-- FIN DE PANEL DE DATOS DEL LOCAL -->
+
+                <!-- PANEL DE LAS COORDENADAS -->
+                <p:panel id="pnl_Coordenadas_Title" header="Datos de las coordenadas" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="Latitud" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:inputText id="txtLatitud" value="#{gsspSolicitudCertificacionRMEFController.regGeoLatitudLPS_Form}" style="font-weight: bold;" >
+                                <p:keyFilter mask="num"/>
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:outputLabel value="Longitud" />
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:inputText id="txtLongitud" value="#{gsspSolicitudCertificacionRMEFController.regGeoLongitudPS_Form}" style="font-weight: bold;" >
+                                <p:keyFilter mask="num"/>
+                            </p:inputText>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="display:none;"></div>
+                </p:panel>
+                <!--FIN DE PANEL DE LAS COORDENADAS -->
+                <br/>
+                
+                <ui:remove>
+                <p:gmap id="gmap" center="-12.096059312898058, -77.05885673035358" zoom="17" type="ROADMAP" model="#{gsspSolicitudCertificacionRMEFController.emptyModel}" style="width:1300px; height:600px;">
+                    <p:ajax event="stateChange" listener="#{gsspSolicitudCertificacionRMEFController.onStateChange}" />
+                    <p:ajax event="pointSelect" listener="#{gsspSolicitudCertificacionRMEFController.onPointSelect}" />
+                </p:gmap>
+                </ui:remove>
+                
+            </div>    
+        </h:form>
+    </p:dialog>
+
+    <p:dialog id="mapDialog" class="ui-dialog-map" header="Mapa" widgetVar="mapDialogVar" modal="true" resizable="false" appendTo="@(body)" onShow="updateMap()">
+        <div id="mapa_ver"  ></div>
+    </p:dialog>
+    <script type="text/javascript">
+        function showDlgMarcoDialogMapa() {
+            $("div[id*='dlgMapa'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgMapa'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgMapa'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+
+</ui:composition>
+
+
+

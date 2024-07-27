@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"      
+      xmlns:h="http://xmlns.jcp.org/jsf/html"      
+      xmlns:p="http://primefaces.org/ui" >
+    
+    <p:dialog id="dlgBuscarMapa" widgetVar="wvDlgBuscarMapa" width="50%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)"
+              header="Mapa" closable="false">
+        
+        <h:form id="frmMapa" >
+            <h:panelGrid columns="1" style="width: 100%;" >
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_mapaMsje}" />
+                <h:panelGrid columns="4" id="pnlLatitudLongitud" >
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_latitud}" />
+                    <h:inputText id="latitud" value="#{sbCsEstablecimientoController.latitudSelected}" readonly="true" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_longitud}" style="margin-left: 20px;" />
+                    <h:inputText id="longitud" value="#{sbCsEstablecimientoController.longitudSelected}" readonly="true"  />
+                </h:panelGrid>
+            </h:panelGrid>
+            <br/>
+            <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="address" value="Buscar a:" />
+                <p:inputText id="address" placeholder="INGRESE DISTRITO PROVINCIA DEPARTAMENTO" style="width: 350px;" />
+                <p:commandButton value="Buscar" icon="ui-icon-search" onclick="geocode()" type="button" />
+            </h:panelGrid>
+            <p:gmap center="#{sbCsEstablecimientoController.obtenerMapCenter()}" zoom="15" type="ROADMAP" style="width:100%;height:400px" widgetVar="gmap" model="#{sbCsEstablecimientoController.modelMap}" >
+                <p:ajax event="pointSelect" listener="#{sbCsEstablecimientoController.onPointSelect}" update="@this,frmMapa:pnlLatitudLongitud"  />
+                 <p:ajax event="geocode" listener="#{sbCsEstablecimientoController.onGeocode}" update="@this,frmMapa:pnlLatitudLongitud" />
+            </p:gmap>
+            
+            <h:panelGrid columns="1" style="width: 100%;" >
+                <br/>    
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                    <p:commandButton value="Confirmar"
+                                     process="@form"
+                                     actionListener="#{sbCsEstablecimientoController.confirmarMapa() }"
+                                     style="float: right"
+                                     update="@form" />
+                    <p:commandButton value="Cancelar"
+                                     process="@this"
+                                     style="float: right"
+                                     update="@form"
+                                     actionListener="#{sbCsEstablecimientoController.cancelarMapa() }" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+            </h:panelGrid>
+            
+            <script type="text/javascript">
+                 navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var map = PF('gmap').getMap();
+                        var latlng;
+                        var latTemp = document.getElementById('frmMapa:latitud').value;
+                        var lntTemp = document.getElementById('frmMapa:longitud').value;
+                        
+                        if(latTemp === null || latTemp.length === 0){
+                            latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        }else{
+                            latlng = new google.maps.LatLng(latTemp, lntTemp);
+                        }
+                        
+                        if(map !== null){
+                            map.setCenter(latlng);
+                            var marker = new google.maps.Marker({
+                                position: latlng
+                            });
+                            marker.setMap(map);
+                        }                            
+                        
+                    },
+                    function(error) {
+                        alert(error.message);
+                    },
+                    {
+                       enableHighAccuracy: true
+                    });
+            </script>
+            <script type="text/javascript">            
+                function handlePointClick(event) {
+                    if(currentMarker === null) {
+                        currentMarker = new google.maps.Marker({
+                            position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+                        });
+                        currentMarker.setTitle('Punto seleccionado');
+                        PF('gmap').addOverlay(currentMarker);
+                        currentMarker = null;                    
+                    }   
+                }
+            </script>
+            <script type="text/javascript">
+                function geocode() {
+                    PF('gmap').geocode(document.getElementById('frmMapa:address').value);
+                }
+            </script>
+        </h:form>
+    </p:dialog>
+</html>

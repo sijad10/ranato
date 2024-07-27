@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="crearForm" rendered="#{eppLibroController.estado == 'CREAR'}" >
+        <p:focus context="crearForm" />
+        <p:defaultCommand target="botonGuardar"/>
+        <p:panel header="Aperturar Fabricación">
+            <h:panelGrid columns="4" cellspacing="5">
+                <p:outputLabel value="Nro Resolución" for="resPL"/>
+                <p:selectOneMenu id="resPL" value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 filter="true" required="true"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxMostrarResolucionFabrica()}" 
+                            process="@this,resPL" 
+                            update="crearForm"/>
+                    
+
+                </p:selectOneMenu> 
+                
+                <p:outputLabel value="Fábrica (direccion de local)"/>
+                <p:inputTextarea value="#{eppLibroController.dirLocal}"  readonly="true"
+                                 id="nroRes" maxlength="500" styleClass="inputTextArea" disabled="true"
+                                 rows="3" cols="80"/>
+                
+               
+  
+
+            </h:panelGrid>
+
+        </p:panel><br/>
+       
+     
+        <div align="center">
+            <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" 
+                             actionListener="#{eppLibroController.aperturarTiposDeFabrica()}" 
+                             value="#{bundle.Guardar}"/>
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroFabrica()}" 
+                             value="Listado Fabricacion" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

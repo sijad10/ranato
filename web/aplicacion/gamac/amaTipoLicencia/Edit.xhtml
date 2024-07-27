@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditAmaTipoLicenciaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaTipoLicenciaController.selected.id}" title="#{bundle.EditAmaTipoLicenciaTitle_id}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_nroExpediente}" for="nroExpediente" />
+                    <h:inputText id="nroExpediente" value="#{amaTipoLicenciaController.selected.nroExpediente}" title="#{bundle.EditAmaTipoLicenciaTitle_nroExpediente}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_nroExpediente}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaTipoLicenciaController.selected.activo}" title="#{bundle.EditAmaTipoLicenciaTitle_activo}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaTipoLicenciaController.selected.audLogin}" title="#{bundle.EditAmaTipoLicenciaTitle_audLogin}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaTipoLicenciaController.selected.audNumIp}" title="#{bundle.EditAmaTipoLicenciaTitle_audNumIp}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.EditAmaTipoLicenciaLabel_licenciaId}" for="licenciaId" />
+                    <h:selectOneMenu id="licenciaId" value="#{amaTipoLicenciaController.selected.licenciaId}" title="#{bundle.EditAmaTipoLicenciaTitle_licenciaId}" required="true" requiredMessage="#{bundle.EditAmaTipoLicenciaRequiredMessage_licenciaId}">
+                        <f:selectItems value="#{amaLicenciaDeUsoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{amaTipoLicenciaController.update}" value="#{bundle.EditAmaTipoLicenciaSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditAmaTipoLicenciaViewLink}"/>
+                <br />
+                <h:commandLink action="#{amaTipoLicenciaController.prepareList}" value="#{bundle.EditAmaTipoLicenciaShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditAmaTipoLicenciaIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

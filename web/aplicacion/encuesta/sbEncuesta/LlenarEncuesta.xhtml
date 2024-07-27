@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">
+        <h:outputText value=""></h:outputText>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="formEncuesta">
+            <h:panelGrid columns="1" rendered="#{sbEncuestaController.encuestaPend.limiteEnMinutos ne null}" style="text-align: center;width: 100%;" >
+                <p:growl autoUpdate="true"/>  
+                <pe:timer  
+                    timeout="#{sbEncuestaController.encuestaPend.limiteEnMinutos*60}"  
+                    singleRun="false"  
+                    format="HH:mm:ss"
+                    listener="#{sbEncuestaController.onTimeout}"/>
+            </h:panelGrid>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-3" />
+                    <div class="ui-g-12 ui-md-12 ui-lg-6" >
+                        <p:panel rendered="#{(sbEncuestaController.listRespuesta ne null and sbEncuestaController.listRespuesta.size()>0)
+                                             and (!sbEncuestaController.finalizado 
+                                             and (sbEncuestaController.encuestaPend ne null 
+                                             and sbEncuestaController.encuestaPend.sbPreguntaList.size()>0))}" 
+                                 style="border-width: 5px">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align:center;font-weight: bold; size: A5;text-decoration: underline;">
+                                    <p:outputLabel value="#{sbEncuestaController.encuestaPend.nombre}" rendered="#{!sbEncuestaController.finalizado}"/>
+                                </div>        
+                                <br/>
+                                <br/>
+                                <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align:justify;">
+                                    <p:outputLabel value="#{sbEncuestaController.encuestaPend.mensajeAdministrado}" escape="false" />
+                                </div>
+                                <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                    <p:outputLabel value="#{bundle.MensajeBienvenida6}" escape="false"/>
+                                </div>
+                            </div>
+                            <br/>
+                            <p:repeat value="#{sbEncuestaController.encuestaPend.sbPreguntaList}" var="pregunta" 
+                                      size="#{sbEncuestaController.encuestaPend.sbPreguntaList.size()}" step="1" offset="0" varStatus="estado">
+                                <div class="ui-g">
+                                    <h:panelGroup rendered="#{pregunta.grupoId ne null and sbEncuestaController.encuestaPend.sbPreguntaList.get(estado.index-1).grupoId ne pregunta.grupoId}">
+                                        <div style="padding:10px;background-color: gray;font-weight: bold; color:white;width:100%;">
+                                            <p:outputLabel value="#{pregunta.grupoId.nombre} - #{pregunta.grupoId.descripcion}" />
+                                        </div>
+                                    </h:panelGroup>
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                        <p:outputLabel value="#{estado.index+1}. #{pregunta.descripcion}" style="font-weight: bold"/>
+                                        <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="2" rendered="#{pregunta.tipoId.codProg eq 'TP_PREG_ABI'}">
+                                            <p:inputTextarea value="#{sbEncuestaController.listRespuesta.get(estado.index).respuesta.respuesta}" rows="2" cols="80" maxlength="400"
+                                                             required="false"
+                                                             requiredMessage="Debe responder a la pregunta N° #{estado.index+1}."/>
+                                        </h:panelGrid>
+                                    </div>
+                                </div>
+                                <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="2" 
+                                             rendered="#{pregunta.tipoId.codProg eq 'TP_EUNI_DIC' 
+                                                         or pregunta.tipoId.codProg eq 'TP_EUNI_POLI' 
+                                                         or pregunta.tipoId.codProg eq 'TP_ESC_NOM'}">
+                                    <p:selectOneRadio id="rbCerrado1" value="#{sbEncuestaController.listRespuesta.get(estado.index).respuesta.alternativaId}"
+                                                      required="false" columns="1" layout="grid"
+                                                      requiredMessage="Debe responder a la pregunta N° #{estado.index+1}.">
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.descripcion}" 
+                                                       value="#{pregunta.sbAlternativaList}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGrid>
+                                <h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="2" rendered="#{pregunta.tipoId.codProg eq 'TP_PREG_MIX'}">
+                                    <p:selectOneRadio id="rbCerrado2" value="#{sbEncuestaController.listRespuesta.get(estado.index).respuesta.alternativaId}"
+                                                      required="false" columns="1" layout="grid"
+                                                      requiredMessage="Debe responder a la pregunta N° #{estado.index+1}.">
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.descripcion}" 
+                                                       value="#{pregunta.sbAlternativaList}"/>
+                                    </p:selectOneRadio>
+                                    <p:inputTextarea value="#{sbEncuestaController.listRespuesta.get(estado.index).respuesta.respuesta}" rows="2" cols="80" maxlength="400"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="2" rendered="#{pregunta.tipoId.codProg eq 'TP_CER_EMUL'}">
+                                    <p:outputLabel value="*Selección múltiple" style="font-weight: bold;color: crimson"/>
+                                    <p:selectManyCheckbox  id="rbMultiple" value="#{sbEncuestaController.listRespuesta.get(estado.index).alternativas}" converter="sbAlternativaConverter"
+                                                           required="false" columns="1" layout="grid"
+                                                           requiredMessage="Debe responder a la pregunta N° #{estado.index+1}.">
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.descripcion}" 
+                                                       value="#{pregunta.sbAlternativaList}"/>
+                                    </p:selectManyCheckbox >
+                                </h:panelGrid>
+                            </p:repeat>
+                        </p:panel>
+                        <p:panel rendered="#{sbEncuestaController.finalizado and sbEncuestaController.encuestaPend ne null}">
+                            <center>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                        <p:outputLabel value="#{sbEncuestaController.codTipo eq 'TP_ENCT'?bundle.MensajeFinalizacionEncuesta:bundle.MensajeFinalizacionEvaluacion}" style="font-weight: bold; color: darkgoldenrod; font-size: xx-large"/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                        <p:outputLabel value="#{sbEncuestaController.codTipo eq 'TP_ENCT'?bundle.MensajeCerrarVentana:bundle.MensajeCerrarVentana2}" style="font-weight: bold; color: darkorange; font-size: x-large"/>
+                                    </div>
+                                </div>
+                                <br/><br/><br/><br/>
+                                <h:graphicImage url="/resources/imagenes/logo_sucamec.png" />
+                            </center>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-5" />
+                                <div class="ui-g-12 ui-md-4 ui-lg-2" >
+                                    <p:commandButton ajax="false" action="#{loginController.direccionarLogin}" value="Volver a Inicio" immediate="true"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-5" />
+                            </div>
+                        </p:panel>
+                    </div>
+                    <div class="ui-g-12 ui-md-12 ui-lg-3" />
+                </div>
+                <h:panelGroup rendered="#{!sbEncuestaController.finalizado 
+                                          and sbEncuestaController.listRespuesta ne null
+                                          and sbEncuestaController.listRespuesta.size()>0
+                                          and sbEncuestaController.encuestaPend ne null 
+                                          and sbEncuestaController.encuestaPend.sbPreguntaList.size()>0}">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-5"/>
+                        <div class="ui-g-12 ui-md-12 ui-lg-1" >
+                            <p:commandButton value="Guardar" 
+                                             process="@form"
+                                             update="@this"
+                                             actionListener="#{sbEncuestaController.guardarRpta()}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-1" >
+                            <p:commandButton ajax="false" action="#{loginController.direccionarLogin}" value="Cancelar" icon="ui-icon-close" immediate="true"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-5"/>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </h:form>
+        <ui:include src="dlgSeleccionEncuesta.xhtml" />
+    </ui:define>
+</ui:composition>

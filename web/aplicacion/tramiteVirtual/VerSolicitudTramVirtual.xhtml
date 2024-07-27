@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <h:outputText value="Ver Solicitud de Trámite Virtual" />
+        </ui:define>
+        <ui:define name="body">
+            <style>
+                body .ui-accordion .ui-accordion-header.ui-state-active {
+                    border: 1px solid #1F89CE;
+                    background-color: #1F89CE;
+                    color: #fff;
+                }
+            </style>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+
+                        <h:form id="viewForm">
+
+                            <p:panel id="solicitantePanel" header="Datos del Solicitante" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel1" >
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Administrado: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                        <p:outputLabel value="#{tramiteVirtualController.getDocumentoRznSocApeNombresCompleto()}" style="font-weight: bold;"/>
+                                    </div>
+                                </div>
+                                <p:outputPanel rendered="#{tramiteVirtualController.personaLogeada.tipoId.codProg eq 'TP_PER_JUR'}">
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                            <p:outputLabel value="Representante Legal: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-9 ui-lg-6">
+                                            <p:outputLabel value="#{tramiteVirtualController.registro.representanteLegalId.tipoDoc.nombre} : #{tramiteVirtualController.registro.representanteLegalId.numDoc} - #{tramiteVirtualController.registro.representanteLegalId.apellidosyNombres}" style="font-weight: bold;" rendered="#{tramiteVirtualController.registro.representanteLegalId != null}" />
+                                            <p:outputLabel value="#{tramiteVirtualController.registro.tipoDocNuevoRepLegalId.nombre} : #{tramiteVirtualController.registro.documentoNuevoRepLegal}" style="font-weight: bold;" rendered="#{tramiteVirtualController.registro.representanteLegalId == null}" />
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Dirección: " />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.direccion}" style="font-weight: bold;"/>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Departamento / Provincia / Distrito: " />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-7">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.ubigeoDireccionId.nombreCompleto}" style="font-weight: bold;"/>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Medio de Contacto: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-7">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.tipoMedioContactoId.nombre} : #{tramiteVirtualController.registro.telefonoContacto}" style="font-weight: bold;"/>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Correo Electrónico: " />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.correo}" style="font-weight: bold;"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                            <p:panel id="procTupaPanel" header="Procedimiento o Servicio prestado en exclusividad del TUPA" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel2" >
+                                <p:outputPanel rendered="#{tramiteVirtualController.tupaSelected != null}" class="ui-panel ui-widget-content ui-corner-all">
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="Procedimiento o Servicio TUPA: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-9 ui-lg-9" >
+                                            <p:outputLabel value="#{tramiteVirtualController.tupaSelected.tupaProcedimientoId.nombre}" style="font-weight: bold; font-size:1.2em!important;"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="Derecho Trámite (S/.): "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.tupaSelected.importe}" style="font-weight: bold; font-size:1.2em!important;" rendered="#{tramiteVirtualController.visiblePanelEmpoce}"/>
+                                            <p:outputLabel value="GRATUITO" style="font-weight: bold; font-size:1.2em!important;" rendered="#{!tramiteVirtualController.visiblePanelEmpoce}"/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="Canal: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.tupaSelected.canalAtencionId.nombre}" style="font-weight: bold; font-size:1.2em!important;"/>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="Área: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.tupaSelected.areaId.nombre}" style="font-weight: bold; "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="Plazo: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3" >
+                                            <p:outputLabel value="LIMA: #{tramiteVirtualController.tupaSelected.plazoLimaDias} DIAS y PROVINCIA: #{tramiteVirtualController.tupaSelected.plazoProvinciaDias} DIAS" style="font-weight: bold; "/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </p:panel>
+                            <p:panel id="personaRefPanel" header="Persona Natural a la que se solicita el trámite" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panelPersonaRef" rendered="#{tramiteVirtualController.visiblePanelPersonaRef}">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Tipo y Nro. Documento: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                            <p:outputLabel value="#{tramiteVirtualController.registro.tipoDocRefPersonaId.nombre} : #{tramiteVirtualController.registro.documentoRefPersona}" style="font-weight: bold;" />
+                                        </div>
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Apellido Paterno: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.apePatRefPersona}" style="font-weight: bold;" />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Apellido Materno: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                            <p:outputLabel value="#{tramiteVirtualController.registro.apeMatRefPersona}" style="font-weight: bold;" />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                        <p:outputLabel value="Nombres: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-9 ui-lg-9">
+                                        <p:outputLabel value="#{tramiteVirtualController.registro.nombresRefPersona}" style="font-weight: bold;" />
+                                    </div>
+                                </div>
+                            </p:panel>
+                            <p:panel id="empocePanel" header="Empoce Bancario" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel3" rendered="#{tramiteVirtualController.visiblePanelEmpoce}">
+                                <p:outputPanel rendered="#{tramiteVirtualController.reciboSelected != null}" class="ui-panel ui-widget-content ui-corner-all">
+                                    <div class="ui-g">
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="Nro. Empoce: "/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.reciboSelected.nroSecuencia}" style="font-weight: bold;font-size:1.2em!important;"/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="Monto Pagado: "/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.reciboSelected.importe}" style="font-weight: bold;"/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="RUC / DNI / CE: "/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.reciboSelected.nroDocumento}" style="font-weight: bold;"/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="Fecha: "/>
+                                        </div>
+                                        <div class="ui-g-3" >
+                                            <p:outputLabel value="#{tramiteVirtualController.reciboSelected.fechaMovimiento}" style="font-weight: bold;">
+                                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                            </p:outputLabel>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </p:panel>
+                            
+                            <p:panel id="sedePanel" header="Sede SUCAMEC" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panelSede" rendered="#{tramiteVirtualController.tupaSelected != null}">
+                                <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                            <p:outputLabel value="Sede a realizar trámite: "/>
+                                        </div>
+                                        <div class="ui-g-12 ui-md-9 ui-lg-7">
+                                            <p:outputLabel value="#{tramiteVirtualController.registro.sedeSucamecId.nombre}" style="font-weight: bold;"/>
+                                        </div>
+                                    </div>
+                            </p:panel>
+
+                            <p:panel id="requisitosPanel" header="Requisitos" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel4" rendered="#{tramiteVirtualController.visiblePanelRequisitos}">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-5">
+                                        <p:outputLabel value="Para consultar la información de los requisitos, consulte el siguiente botón: " style="font-weight: bold;" rendered="#{tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 1}" />
+                                        <p:outputLabel value="Para consultar la información de los requisitos, consulte el siguiente enlace: " style="font-weight: bold;" rendered="#{tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 0}" />
+                                    </div>
+                                    <div class="ui-g-12 ui-md-4 ui-lg-2">
+                                        <p:commandButton icon="ui-icon-print" value="REQUISITOS"
+                                                        ajax="false"
+                                                        process="@this" 
+                                                        partialSubmit="true"                              
+                                                        onclick="this.form.target = '_blank'" 
+                                                        onblur="this.form.target = '_self'"
+                                                        rendered="#{tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 1}"
+                                                        immediate="true" >
+                                          <p:fileDownload value="#{tramiteVirtualController.descargarFormato(tramiteVirtualController.tupaSelected.tupaProcedimientoId.codProg.substring(8).concat('.pdf'))}" contentDisposition="inline" />
+                                        </p:commandButton> 
+                                        <p:link target="_blank" href="https://www.sucamec.gob.pe/web/IMAGENES/2019/pdfs/tupa2018.pdf" style="font-weight: bold;" rendered="#{tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 0}" >TUPA 2018</p:link>
+                                    </div>
+                                    <div class="ui-g-12">   
+                                        <p:accordionPanel value="#{tramiteVirtualController.expVirtualRequisitoLst}" var="req">
+                                            <p:tab title="REQUISITO : #{req.tupaRequisitoId.descripcion}" >
+                                                <h:panelGrid columns="2" cellpadding="5" style="border:1px solid #aaa;">                
+                                                    <h:outputText value="Descripción: "/>
+                                                    <h:outputText value="#{req.tupaRequisitoId.descripcion}" style="font-weight: bold;" />
+                                                    <h:outputText value="" rendered="#{req.tupaRequisitoId.condicionVisibleEnlace eq 1 and tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 1}"/>
+                                                    <p:commandButton icon="ui-icon-print" value="VER DETALLE DE REQUISITOS"
+                                                                    ajax="false"
+                                                                    process="@this" 
+                                                                    partialSubmit="true"                              
+                                                                    onclick="this.form.target = '_blank'" 
+                                                                    onblur="this.form.target = '_self'"
+                                                                    rendered="#{req.tupaRequisitoId.condicionVisibleEnlace eq 1 and tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 1}"
+                                                                    style="width: 220px;"
+                                                                    immediate="true" >
+                                                      <p:fileDownload value="#{tramiteVirtualController.descargarFormato(tramiteVirtualController.tupaSelected.tupaProcedimientoId.codProg.substring(8).concat('.pdf'))}" contentDisposition="inline" />
+                                                    </p:commandButton>
+                                                    <p:link target="_blank" href="https://www.sucamec.gob.pe/web/IMAGENES/2019/pdfs/tupa2018.pdf" style="font-weight: bold;" rendered="#{req.tupaRequisitoId.condicionVisibleEnlace eq 1 and tramiteVirtualController.tupaSelected.visibleEnlacePropio eq 0}">VER DETALLE DE REQUISITOS</p:link>
+
+                                                    <h:outputText value="Condición: "/>
+                                                    <h:outputText value="#{tramiteVirtualController.condicionStr(req.tupaRequisitoId.condicionPresentacion)}" />
+
+                                                    <h:outputText value="Formatos: " rendered="#{req.tupaRequisitoId.condicionFormatoDescarga == 1}"/>
+                                                    <h:panelGrid columns="2" cellpadding="5" rendered="#{req.tupaRequisitoId.condicionFormatoDescarga == 1}">                                                      
+                                                        <h:outputText value="Pulse para descargar: " rendered="#{req.tupaRequisitoId.condicionFormatoDescarga == 1}"/>
+                                                        <p:repeat value="#{req.tupaRequisitoId.tipoBaseList}" var="formato"
+                                                                  size="#{req.tupaRequisitoId.tipoBaseList.size()}" step="1" offset="0" varStatus="estado"
+                                                                  rendered="#{req.tupaRequisitoId.condicionFormatoDescarga == 1}">
+                                                            <p:link target="_blank" href="#{formato.descripcion}" >#{formato.nombre}</p:link>
+                                                            &nbsp;&nbsp;
+                                                        </p:repeat>
+                                                    </h:panelGrid>
+
+                                                    <h:outputText value="Sustento del requisito: "/>
+                                                    <h:outputText value="#{req.respuestaRequisito}" style="font-weight: bold;" />
+
+                                                    <h:outputText value="Adjuntos: "/>
+                                                    <h:panelGrid columns="1" cellpadding="5">  
+                                                        <p:dataTable id="tblAdjuntos"
+                                                                     style="width: 100%;"
+                                                                     value="#{req.sbExpVirtualAdjuntoList}"
+                                                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="itemComp" >
+
+                                                            <p:column headerText="Archivos Adjuntos" style="text-align:center">                                                                
+                                                                <p:outputLabel value="#{itemComp.nombre}"/>
+                                                            </p:column>
+                                                            <p:column headerText="Ver" style="text-align:center">
+                                                                <p:commandButton icon="ui-icon-print" 
+                                                                                ajax="false"
+                                                                                process="@this" 
+                                                                                partialSubmit="true"                              
+                                                                                onclick="this.form.target = '_blank'" 
+                                                                                onblur="this.form.target = '_self'"
+                                                                                immediate="true" >
+                                                                  <p:fileDownload value="#{tramiteVirtualController.verAdjunto(itemComp.nombre)}" contentDisposition="inline"  />
+                                                              </p:commandButton>
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </h:panelGrid>
+                                                </h:panelGrid>
+                                            </p:tab>
+                                        </p:accordionPanel>
+                                    </div>    
+                                </div>
+                            </p:panel>
+
+                            <p:panel id="notificacionesPanel" header="Notificaciones y Alertas" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel5" rendered="#{tramiteVirtualController.visiblePanelNotificaciones}">
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:selectBooleanCheckbox value="#{tramiteVirtualController.notificacionViaSelBoolean}" 
+                                                                 itemLabel="Acepto recibir en mi Buzón Electrónico de la plataforma virtual SEL las notificaciones que se realicen como producto de la presente solicitud"/>
+                                        <p:selectBooleanCheckbox value="#{tramiteVirtualController.notificacionAlertaCelularBoolean}"
+                                                                 itemLabel="Acepto que se envíen avisos/alertas referidos al trámite solicitado al número de celular registrado en el presente formulario"/>
+                                    </div>   
+                                </div>
+                            </p:panel>
+
+                            <div class="ui-g">
+                                <div class="ui-g-2">
+                                    <p:commandButton actionListener="#{tramiteVirtualController.regresarLista(true)}" update="@all,solicitantePanel" process="@all" immediate="true" icon="ui-icon-arrowreturn-1-w" value="Regresar"/>
+                                </div>                                  
+                            </div>
+
+                        </h:form>
+                    </div>
+                </div>
+
+            </div>
+            <!-- ui include -->
+
+
+        </ui:define>        
+    </ui:composition>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"       
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de carnés - GSSP</title>
+            </f:facet>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+                .celdaCentrada {
+                    text-align: center;
+                }
+            </style>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 100%; background: white;" cellpadding="5" >
+                        <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                        <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGrid columns="1" style="width: 100%; background: white;text-align: center; padding: 20px; font-size: medium;background-image: url('../resources/imagenes/gifcarne.gif')">
+                        <h:outputLabel value="CARNÉ DE VIGILANTE" style="font-weight: bold;color: white"/>
+                        <p:clock id="relojTurno" pattern="HH:mm:ss" mode="server" />
+                    </h:panelGrid>
+                    <h:panelGrid id="panelGrid" rendered="#{verificadorQRController.registro != null}" style="width: 100%; background: white; text-align: center;">
+                        <h:outputLabel value="#{bundleDisca.DcGsspVigilantesLabel_ESTADO}"/>
+                        <h:outputLabel value="#{verificadorQRController.registro.ESTADO}" title="#{bundleDisca.DcGsspVigilantesTitle_ESTADO}" style="font-size: large; font-weight: bold;#{verificadorQRController.getColorCarneGssp(verificadorQRController.registro.ESTADO)}"/>
+                        <ui:repeat value="#{verificadorQRController.visualizador.imagenes}" var="img">
+                            <h:graphicImage value="img/GSSP_CRNDIG?imagen=#{img}&amp;rnd=#{verificadorQRController.visualizador.millis}" width="95%" style="max-width: 500px;" /><br/>
+                        </ui:repeat>
+                    </h:panelGrid>
+                    <h:panelGroup layout="block" rendered="#{verificadorQRController.registro == null and !verificadorQRController.isHis}" style="color: red; font-size: large; font-weight: bold; width: 100%; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" rendered="#{verificadorQRController.registro == null and verificadorQRController.isHis}" style="color: blue; font-size: large; font-weight: bold; width: 100%; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}" style="font-weight:bold;color: #FF0000"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRCodigoHistorico}" rendered="#{!verificadorQRController.error}" style="font-weight:bold;color: #FF0000"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

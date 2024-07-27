@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">    
+    
+    <ui:define name="body">
+        <style>
+            .txtContenido {
+                font-size:80%!important; 
+                vertical-align: middle;                
+            }
+            .headerSelected{border: 1px solid #1f89ce; width: 99%; }
+            .text{padding-left: 10px; padding-right: 10px;}
+        </style>        
+            <h:form id="buscarForm" >                
+                <div class="ui-fluid">
+                    <p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-2,ui-g-12 ui-md-10" layout="grid" styleClass="ui-panelgrid-blank ui-fluid text">
+                        <h:panelGrid columns="1" styleClass="text" >
+                            <h:graphicImage url="#{oficinaPubController.obtenerImagenOficina()}" width="98%" />
+
+                            <h:panelGrid columns="1" styleClass="headerSelected">
+                                <h:panelGrid columns="2" >
+                                    <h:graphicImage url="/resources/imagenes/s_2.png" width="22" />
+                                    <p:outputLabel value="#{oficinaPubController.obtenerTituloOficina()}" style="font-weight: bold;" />    
+                                </h:panelGrid>
+                                <p:outputLabel value="#{oficinaPubController.obtenerDireccionOficina()}" escape="false" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                        <p:gmap center="#{oficinaPubController.obtenerMapCenterBuscarMap()}" zoom="6" type="ROADMAP" scrollWheel="false" disableDoubleClickZoom="true"
+                                draggable="false" streetView="false" navigationControl="false" mapTypeControl="false" id="gmap" 
+                                style="width: 600px; height: 850px;text-align: center;vertical-align: top;" widgetVar="gmap" model="#{oficinaPubController.modelMap}" >
+                            <p:ajax event="overlaySelect" listener="#{oficinaPubController.onMarkerSelect}" update="@form" />
+                        </p:gmap>
+                    </p:panelGrid>
+                </div>
+            </h:form>
+            
+        <script src="#{oficinaPubController.obtenerKeyGoogle()}" type="text/javascript"></script>
+        <script type="text/javascript" src="#{oficinaPubController.obtenerApiGoogle()}"></script>
+       
+    </ui:define>
+</ui:composition>
+

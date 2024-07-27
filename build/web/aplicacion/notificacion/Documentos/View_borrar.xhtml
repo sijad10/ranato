@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{neDocumentoController.estado == 'VER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid id="panelGrid" columns="2">
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_id}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.id}" title="#{bundleNotificacion.NeDocumentoTitle_id}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_nroExp}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.nroExp}" title="#{bundleNotificacion.NeDocumentoTitle_nroExp}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_anoExp}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.anoExp}" title="#{bundleNotificacion.NeDocumentoTitle_anoExp}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_secExp}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.secExp}" title="#{bundleNotificacion.NeDocumentoTitle_secExp}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_nroDoc}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.nroDoc}" title="#{bundleNotificacion.NeDocumentoTitle_nroDoc}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_fechaDoc}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.fechaDoc}" title="#{bundleNotificacion.NeDocumentoTitle_fechaDoc}">
+                <f:convertDateTime pattern="#{bundleNotificacion.FormatoFechaHora}" />
+            </p:outputLabel>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_referencia}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.referencia}" title="#{bundleNotificacion.NeDocumentoTitle_referencia}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_asunto}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.asunto}" title="#{bundleNotificacion.NeDocumentoTitle_asunto}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_activo}"/>
+            <p:outputLabel value="#{(neDocumentoController.registro.activo == 1)? 'SI': 'NO'}" title="#{bundleNotificacion.NeDocumentoTitle_activo}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_audLogin}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.audLogin}" title="#{bundleNotificacion.NeDocumentoTitle_audLogin}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_audNumIp}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.audNumIp}" title="#{bundleNotificacion.NeDocumentoTitle_audNumIp}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_personaId}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.personaId}" title="#{bundleNotificacion.NeDocumentoTitle_personaId}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_tipoId}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.tipoId}" title="#{bundleNotificacion.NeDocumentoTitle_tipoId}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_estadoId}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.estadoId}" title="#{bundleNotificacion.NeDocumentoTitle_estadoId}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_areaId}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.areaId}" title="#{bundleNotificacion.NeDocumentoTitle_areaId}"/>
+            <p:outputLabel value="#{bundleNotificacion.NeDocumentoLabel_usuarioId}"/>
+            <p:outputLabel value="#{neDocumentoController.registro.usuarioId}" title="#{bundleNotificacion.NeDocumentoTitle_usuarioId}"/>
+        </h:panelGrid>
+        <br />
+        <p:commandButton icon="ui-icon-search" actionListener="#{neDocumentoController.mostrarBuscar}" value="#{bundleNotificacion.NeDocumentoVolverBusqueda}" immediate="true" update="@all"/>
+    </h:form>
+</ui:composition>
+

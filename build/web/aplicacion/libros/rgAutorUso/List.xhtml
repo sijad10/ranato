@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="Saldo de Libro de Adquisicion y Uso de Explosivos o Material Relacionado" rendered="#{eppLibroController.estado == 'SALDOS'}"/>
+        <h:outputText value="Listado de Registro de Libro de Adquisicion y Uso de Explosivos o Material Relacionado" rendered="#{eppLibroController.estado == 'BUSCAR'}"/>
+        <h:outputText value="Registro de Libro de Adquisicion y Uso de Explosivos o Material Relacionado " rendered="#{eppLibroController.estado == 'CREAR'}"/>
+        <h:outputText value="Declarar Registro de Libro de Adquisicion y Uso de Explosivos o Material Relacionado" rendered="#{eppLibroController.estado == 'EDITAR'}"/>
+        <h:outputText value="Ver Registro de Libro de Adquisicion y Uso de Explosivos o Material Relacionado" rendered="#{eppLibroController.estado == 'VER'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{eppLibroController.estado == 'BUSCAR'}">
+            <p:focus context="buscarForm" />
+            <h:panelGroup id="buscarPanel">
+                <p:panel header="Listado de Registro de Libro Uso">
+                    <h:panelGroup style="float: right;margin-top: -0%">
+                        <p:commandButton value="Aperturar Libro Uso" update="@all" icon="ui-icon-plus"
+                                         actionListener="#{eppLibroController.mostrarCrearUso()}"
+                                         disabled="#{eppLibroController.disabledButtonRegFabri}"
+                                         process="@this"
+                                         >                          
+                        </p:commandButton><br/>
+                        <p:commandButton value="Ver saldos" update="@all" icon="ui-icon-search" process="@this"
+                                         actionListener="#{eppLibroController.verSaldos()}"
+                                         >
+
+                        </p:commandButton><br/>    
+                    </h:panelGroup>
+                    <h:panelGrid columns="9" cellspacing="5" id="pngJ">
+                        <p:outputLabel value="RG Adquisicion de Uso"/>
+                        <p:selectOneMenu id="resPL" value="#{eppLibroController.eppLibro}" autoWidth="false"
+                                         >
+                            <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                            <f:selectItems value="#{eppLibroController.listResolucionUso}" 
+                                           var="luso" itemLabel="#{luso.registroId.eppResolucion.numero}"
+                                           itemValue="#{luso}"
+                                           />
+
+                        </p:selectOneMenu> 
+
+
+
+                        <p:outputLabel value="Año" for="an"/>
+                        <p:selectOneMenu value="#{eppLibroController.anio}" required="true" id="an">
+                            <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                            <f:selectItems value="#{eppLibroController.listAnios}"
+                                           var="anio" itemLabel="#{anio}" itemValue="#{anio}"/>
+
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Periodo"/>
+                        <p:selectOneMenu value="#{eppLibroController.mes}" 
+                                         >
+                            <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                            <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_MES', null)}"                                     
+                                           var="mes" itemLabel="#{mes.abreviatura}" itemValue="#{mes}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="estado"/>
+                        <p:selectOneMenu value="#{eppLibroController.tipoEstado}">
+                            <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                            <f:selectItems var="esta" value="#{eppLibroController.listTipoExplosivoGtEstados}"
+                                           itemLabel="#{esta.nombre}" itemValue="#{esta}"/>
+                        </p:selectOneMenu>
+
+                        <p:commandButton value="Buscar" update="@form" icon="ui-icon-earch" 
+                                         actionListener="#{eppLibroController.buscarLibros()}"/>
+
+                    </h:panelGrid><br/>
+                    <p:commandButton value="PRESENTAR REGISTROS DE USO" update="expeForm,:buscarForm:dtAutGE"
+                                     process="@this,dtAutGE" icon="ui-icon-circle-plus"                          
+                                     actionListener="#{eppLibroController.textoConfirmacion()}" partialSubmit="true"
+                                     style="margin-left:50%"/>
+                </p:panel><br/>
+
+                <p:dataTable id="dtAutGE" value="#{eppLibroController.resultados}"
+                             selection="#{eppLibroController.selectLibroMes}"                              
+                             var="item" widgetVar="lmes"                                  
+                             rowKey="#{item}" style="margin-bottom:0"
+                             emptyMessage="#{bundle.MensajeNoResultados}"
+                             paginator="true" 
+                             rows="#{bundle.PaginatorFilas}"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                             {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                    <f:facet name="header">
+                        Lista de Libros a Procesar
+                    </f:facet>
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                    <p:column headerText="Id" 
+                              sortBy="#{item.id}" width="2%">
+                        <f:facet name="header">
+                            <h:outputText value="Id" />
+                        </f:facet>
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="RG libro"> 
+                        <f:facet name="header">
+                            <h:outputText value="RG libro" />
+                        </f:facet>
+                        <h:outputText value="#{item.libroId.registroId.eppResolucion.numero}"/>
+                    </p:column>
+                    <p:column headerText="Periodo" 
+                              >
+                        <f:facet name="header">
+                            <h:outputText value="Periodo" />
+                        </f:facet>
+                        <h:outputText value="#{item.mesId.nombre} / #{item.libromAnio}"/>
+                    </p:column>
+                    <p:column headerText="Tipo Registro" 
+                              >
+                        <f:facet name="header">
+                            <h:outputText value="Tipo Registro" />
+                        </f:facet>
+                        <h:outputText value="#{item.tipoRegistroId.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Estado">
+                        <f:facet name="header">
+                            <h:outputText value="Estado" />
+                        </f:facet>
+                        <h:outputText value="#{item.tipoEstado.nombre}" rendered="#{item.tipoEstado.codProg eq 'TP_REGEV_CRE' 
+                                               or item.tipoEstado.codProg eq  'TP_REGEV_OBS' ? false : true}"/> &emsp;&emsp;
+                        <h:graphicImage url="/resources/imagenes/creado3.gif"  rendered="#{item.tipoEstado.codProg eq 'TP_REGEV_CRE'}" />
+                        <h:graphicImage url="/resources/imagenes/observado3.gif"  rendered="#{item.tipoEstado.codProg eq 'TP_REGEV_OBS'}" /><br/>
+                        <p:outputLabel value="se corrigio la observación" rendered="#{item.tipoEstado.codProg eq 'TP_REGEV_CRE' and item.subsanado eq 1}" style="color: #0085ca;font-family: cursive"/>
+                    </p:column>
+                    <p:column headerText="Expediente">
+                        <f:facet name="header">
+                            <h:outputText value="Expediente" />
+                        </f:facet>
+                        <h:outputText value="#{item.nroExpediente}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Presentacion">
+                        <f:facet name="header">
+                            <h:outputText value="Fecha Presentacion" />
+                        </f:facet>
+                        <h:outputText value="#{item.fechaCierre}">
+                            <f:convertDateTime pattern="#{bundle.FormatoFecha}"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{bundle.Opciones}" >  
+                        <p:commandButton value="Declarar" icon="ui-icon-pencil" process="dtAutGE"
+                                         update="@all" rendered="#{eppLibroController.verButtonEditar(item)}"
+                                         actionListener="#{eppLibroController.mostrarEditarUso()}">
+                            <f:param name="action" value="Edit"/>
+                        </p:commandButton> &emsp;&emsp;
+                        <p:commandButton value="Ver" icon="ui-icon-search" 
+                                         update="@all" process="dtAutGE"
+                                         actionListener="#{eppLibroController.mostrarEditarUso()}">
+                            <f:param name="action" value="View"/>
+                        </p:commandButton> &emsp;&emsp;                         
+                        <p:commandButton value="ver obs" icon="ui-icon-search" update="obsForm" process="dtAutGE"
+                                         actionListener="#{eppLibroController.verObservaciones(item.nroExpediente)}" 
+                                         rendered="#{item.subsanado == 0 or item.subsanado == 2 ? false : true}"/>
+
+                    </p:column> 
+
+
+                </p:dataTable>    
+
+
+
+            </h:panelGroup>
+        </h:form>
+
+        <ui:include src="Create.xhtml" />
+        <ui:include src="Edit.xhtml" />
+        <ui:include src="View.xhtml" />
+        <ui:include src="saldoExplo.xhtml"/>
+        <ui:include src="dlgConfirmacion.xhtml"/>
+        <ui:include src="dlgEditExplo.xhtml"/>
+        <ui:include src="dlgVerObs.xhtml"/>
+    </ui:define>
+</ui:composition>
+

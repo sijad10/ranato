@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">
+        <f:facet name="header" >
+            SUCAMEC EN LÍNEA - SEL
+        </f:facet>
+
+        <h:outputText value="#{bundleGamacCVMuni.InventMuniTitle}"/>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p>#{bundleGamacCVMuni.InventMuniIntro}</p>
+                    <h:form id="buscarForm">                   
+                        <p:focus context="buscarForm" />
+                        <p:defaultCommand target="botonBuscar"/>
+
+                        <p:panel id="buscarPanel" header="Búsqueda en inventario" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:outputLabel for="tipoFiltro" value="#{bundleGamacCVMuni.InventMuniBusTipoFiltro_Label}" styleClass="txtLabel"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <p:selectOneMenu id="tipoFiltro" value="#{gamacMunicionesMiInventarioController.tipoFiltro}"  >
+                                        <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                        <f:selectItem itemValue="1" itemLabel="LOCAL" />                                        
+                                        <f:selectItem itemValue="2" itemLabel="MARCA" />
+                                        <f:selectItem itemValue="3" itemLabel="CALIBRE ARMA" />
+                                        <f:selectItem itemValue="4" itemLabel="DENOMINACIÓN" />
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-4 ui-helper-hidden tipo1" >
+                                    <p:selectOneMenu id="findLocal" value="#{gamacMunicionesMiInventarioController.findLocal}" >
+                                        <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                        <f:selectItems value="#{gamacMunicionesListadoVentasController.listDire()}" var="item" itemValue="#{item}"
+                                                       itemLabel="#{item.direccion} #{item.numero}, #{item.distritoId.nombre} - #{item.distritoId.provinciaId.nombre} - #{item.distritoId.provinciaId.departamentoId.nombre}" /> 
+                                        <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo2">
+                                    <p:autoComplete id="findMarca" value="#{gamacMunicionesMiInventarioController.findMarca}"
+                                                    completeMethod="#{gamacMunicionesMiInventarioController.autcompleteMarcaMunicion}"
+                                                    var="item" itemLabel="#{item.nombre}" itemValue="#{item}" minQueryLength="3" cache="true" forceSelection="true" 
+                                                    scrollHeight="200" >  
+                                        <p:ajax event="itemSelect" listener="#{gamacMunicionesMiInventarioController.eligeMarcaMunicion}" update="@none"/>
+                                    </p:autoComplete>                                    
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo3">
+                                    <p:autoComplete id="findCalibre" value="#{gamacMunicionesMiInventarioController.findCalibreArma}"
+                                                    completeMethod="#{gamacMunicionesMiInventarioController.autcompleteCalibreArma}"
+                                                    var="item" itemLabel="#{item.nombre}" itemValue="#{item}" minQueryLength="3" cache="true" forceSelection="true" 
+                                                    scrollHeight="200" >  
+                                        <p:ajax event="itemSelect" listener="#{gamacMunicionesMiInventarioController.eligeCalibreArma}" update="@none"/>
+                                    </p:autoComplete>                                    
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo4">
+                                    <p:autoComplete id="findDenominacion" value="#{gamacMunicionesMiInventarioController.findDenominacion}"
+                                                    completeMethod="#{gamacMunicionesMiInventarioController.autcompleteDenominacion}"
+                                                    var="item" itemLabel="#{item.nombre}" itemValue="#{item}" minQueryLength="3" cache="true" forceSelection="true" 
+                                                    scrollHeight="200" >  
+                                        <p:ajax event="itemSelect" listener="#{gamacMunicionesMiInventarioController.eligeDenominacion}" update="@none"/>
+                                    </p:autoComplete>                                    
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                    <p:commandButton value="Buscar" id="botonBuscar"
+                                                     process="@this,tipoFiltro"
+                                                     icon="ui-icon-search " actionListener="#{gamacMunicionesMiInventarioController.buscar}" 
+                                                     update=":buscarForm:buscarDatatable"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <p:commandButton type="button" value="Registro de Munición" actionListener="#{gamacMunicionesMiInventarioController.reiniciarCreate}" id="btnCrate" icon="ui-icon-plus"
+                                                     process="@none" update=":newMunicionForm"
+                                                     partialSubmit="true" onclick="createMunicion();" >
+                                    </p:commandButton>
+                                </div>
+
+                            </div>
+
+                            <p:blockUI block="buscarPanel" trigger="botonBuscar" />
+                        </p:panel>
+
+                        <p:dataTable id="buscarDatatable" value="#{gamacMunicionesMiInventarioController.lstInventario}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleGamacCVMuni.MensajeNoResultados}" 
+                                     paginator="true" rows="#{bundleGamacCVMuni.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{bundleGamacCVMuni.PaginatorFilasPorPagina}"
+                                     rowIndexVar="idExp"
+                                     reflow="true">
+
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTLocal_Title}" style="font-size:92%!important;" class="ui-lg-3">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTLocal_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.localComercial}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTMarca_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTMarca_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.marca}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTCalibreArm_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTCalibreArm_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.calibreaArma}"/>                                
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTDenominacion_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTDenominacion_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.denominacion}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTTipoMuni_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTTipoMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoMunicion}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTTipoProy_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTTipoProy_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoProyectil}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTIngresoMuni_Title}" style="font-size:92%!important; text-align: right!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTIngresoMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantCompraMuniciones}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTSalidaMuni_Title}" style="font-size:92%!important; text-align: right!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTSalidaMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantVentaMuniciones}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.InventMuniDTStockMuni_Title}" style="font-size:92%!important; text-align: right!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.InventMuniDTStockMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.stockMuniciones}"/>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        <p:blockUI block="buscarDatatable" trigger="buscarDatatable" >
+                            CARGANDO<br />
+                            <p:graphicImage url="/resources/imagenes/ajaxloadingbar.gif"/>
+                        </p:blockUI>                            
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <ui:include src="DlgCreateMunicion.xhtml" />
+        
+        <script type="text/javascript">
+            $(".txtLabel").parent().attr("style", "padding-top:12px");
+            $(".tipoc1, .tipoc2, .tipoc3, .tipoc4").hide();
+            //$(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            $("div[id*='buscarPanel_content']").attr("style", "padding:0!important");
+
+            $("select[id*='tipoFiltro']").on("change", function () {
+                $(".tipo1, .tipo2, .tipo3, .tipo4").hide();
+                valorTipo = $(this).val();
+                console.log("$(tipoFiltro).val(): " + $(this).val());
+                switch (valorTipo) {
+                    case '1':
+                        $(".tipo1").show();
+                        break;
+                    case '2':
+                        $(".tipo2").show();
+                        break;
+                    case '3':
+                        $(".tipo3").show();
+                        break;
+                    case '4':
+                        $(".tipo4").show();
+                        break;                        
+                }
+            });
+            
+            
+            
+            function createMunicion() {
+                PF('newMunicionDialog').show();
+                $("#newMunicion > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;");
+                $("#newMunicion_title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+                $("#newMunicion > .ui-dialog-content").attr("style", "padding:2px!important; border-width:0 5px 5px 5px!important; border-style:solid!important; border-color: #2399e5!important;");                                
+            }
+            
+            function updateDialogInicio() {
+                $("#newMunicion").css('top', 30);
+            }
+
+            function updateDialogInicioHide() {
+                document.getElementById("newMunicionForm").reset();
+                $('#newMunicionForm').trigger("reset");
+            }    
+        </script>
+
+    </ui:define>
+</ui:composition>

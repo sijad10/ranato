@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{BundleBDIntegrado.BuscarSbCsEstablecimientoTitulo}" rendered="#{sbCsEstablecimientoController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.VerSbCsEstablecimientoTitulo}" rendered="#{sbCsEstablecimientoController.estado == 'VER'}"/>
+        <h:outputText value="#{BundleBDIntegrado.EditarSbCsEstablecimientoTitulo}" rendered="#{sbCsEstablecimientoController.estado == 'EDITAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.CrearSbCsEstablecimientoTitulo}" rendered="#{sbCsEstablecimientoController.estado == 'CREAR'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="listForm" rendered="#{sbCsEstablecimientoController.estado == 'BUSCAR'}">
+            <p:defaultCommand target="btnBuscarBandeja"/>
+            <h:outputText value="#{BundleBDIntegrado.sbCsEstablecimiento_listado_msje}" /> <br/><br/>
+            <h:panelGrid columns="2" width="100%" >
+                <p:fieldset>
+                    <h:panelGrid columns="5" >
+                        <h:outputText value="#{BundleBDIntegrado.sbCsEstablecimiento_buscarPor}" style="display: block; width: 80px;" />
+                        <h:panelGrid columns="3" >
+                            <p:selectOneMenu id="buscarPor"
+                                             value="#{sbCsEstablecimientoController.tipoBusqueda}"
+                                             autoWidth="false"
+                                             style="width: 130px;">
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItem itemLabel="NOMBRE DE ESTABLECIMIENTO" itemValue="1"/>
+                               <f:selectItem itemLabel="ESTADO" itemValue="4"/>
+                               <f:selectItem itemLabel="RESOLUCIÓN" itemValue="5"/>
+                               <f:selectItem itemLabel="TIPO DE SUSPENSIÓN" itemValue="6"/>
+                               <p:ajax event="change" process="@this,pnlBusquedaCriterio" update="@this,pnlBusquedaCriterio" 
+                                        listener="#{sbCsEstablecimientoController.cambiaTipoBusqueda()}" />
+                            </p:selectOneMenu>
+
+                            <h:panelGrid columns="2" id="pnlBusquedaCriterio">
+                                <p:inputText value="#{sbCsEstablecimientoController.filtro}"
+                                             rendered="#{!sbCsEstablecimientoController.renderComboEstado and !sbCsEstablecimientoController.renderComboSuspension}"
+                                             id="filtroBusqueda"
+                                             placeholder="Escriba un texto"
+                                             style="width: 280px;" />
+                                <p:selectOneMenu id="estadoCentroSalud"
+                                                 rendered="#{sbCsEstablecimientoController.renderComboEstado}"
+                                                 value="#{sbCsEstablecimientoController.estadoCentroSalud}"
+                                                 autoWidth="false"
+                                                 style="width: 130px;">
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItem itemLabel="ACTIVO" itemValue="1"/>
+                                    <f:selectItem itemLabel="SUSPENDIDO" itemValue="0"/>
+                               </p:selectOneMenu>
+                                <p:selectOneMenu id="busquedaSuspension"
+                                                 rendered="#{sbCsEstablecimientoController.renderComboSuspension}"
+                                                 value="#{sbCsEstablecimientoController.busquedaSuspension}"
+                                                 autoWidth="false"
+                                                 style="width: 130px;">
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItem itemLabel="TEMPORAL" itemValue="1"/>
+                                    <f:selectItem itemLabel="DEFINITIVA" itemValue="2"/>
+                                    <f:selectItem itemLabel="SIN SUSPENSIÓN" itemValue="3"/>
+                               </p:selectOneMenu>
+                             </h:panelGrid>
+
+                            <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                             id="btnBuscarBandeja"
+                                             process="@form"
+                                             style="margin-left: 20px;"
+                                             icon="ui-icon-search "
+                                             actionListener="#{sbCsEstablecimientoController.buscarBandeja()}"
+                                             update="@form"/>
+                        </h:panelGrid>
+                        
+                    </h:panelGrid>
+                </p:fieldset>                
+            </h:panelGrid>
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="2" style="float: right;" rendered="#{sbCsEstablecimientoController.resultados.rowCount > 0}" >
+                    <h:commandLink >
+                        <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleBDIntegrado.ExportarExcel}"/>
+                        <p:dataExporter type="xls" target="buscarDatatableRegistro" fileName="ListadoCentrosDeSalud"  />
+                    </h:commandLink>
+                </h:panelGrid>
+                
+                <p:dataTable id="buscarDatatableRegistro" value="#{sbCsEstablecimientoController.resultados}"
+                                     var="itemReg"
+                                     currentPageReportTemplate="Total {totalRecords} elementos"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                     {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_tipo}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.tipoId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_nombreEstablecimiento}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_direccion}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsEstablecimientoController.obtenerDescripcionDireccion(itemReg.direccionId)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_propietario}" style="text-align: center;" exportable="false" >
+                                <h:outputText value="#{itemReg.propietarioId.ruc}" /><br/>
+                                <h:outputText value="#{(itemReg.propietarioId.rznSocial eq null?(itemReg.propietarioId.nombreCompleto):itemReg.propietarioId.rznSocial)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_ruc}" style="text-align: center;" visible="false" >
+                                <h:outputText value="#{itemReg.propietarioId.ruc}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_rznSocial}" style="text-align: center;" visible="false" >
+                                <h:outputText value="#{(itemReg.propietarioId.rznSocial eq null?(itemReg.propietarioId.nombreCompleto):itemReg.propietarioId.rznSocial)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_resolucion}" style="text-align: center;"  >
+                                <h:outputText value="#{itemReg.nroResFuncionamiento}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_fechaInicio}" style="text-align: center;width: 70px;" sortBy="#{itemReg.fechaIni}">
+                                <h:outputText value="#{itemReg.fechaIni}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_fechaVencimiento}" style="text-align: center;width: 70px;" sortBy="#{itemReg.fechaFin}" >
+                                <h:outputText value="#{itemReg.fechaFin}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>             
+                            <p:column headerText="Resolución MINSA" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nroResMinsa}" /><br/>
+                                <h:outputText value="Vigencia: " rendered="#{itemReg.fechaIniRgMinsa ne null}" />
+                                <h:outputText value="#{itemReg.fechaIniRgMinsa}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText><br/>
+                                <h:outputText value="Hasta: " rendered="#{itemReg.fechaFinRgMinsa ne null}" />
+                                <h:outputText value="#{itemReg.fechaFinRgMinsa}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_estado}" style="text-align: center; width: 80px;" >
+                                <h:outputText value="#{sbCsEstablecimientoController.obtenerDescripcionCentroSalud(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_responsable}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.usuarioId.login}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtListado_acciones}" style="text-align: center;width: 290px;" exportable="false" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 ajax="false"
+                                                 value="Ver"
+                                                 actionListener="#{sbCsEstablecimientoController.mostrarVer() }" />
+                                <p:commandButton icon="ui-icon-pencil"
+                                                 ajax="false"
+                                                 value="Editar"
+                                                 actionListener="#{sbCsEstablecimientoController.mostrarEditar() }" />
+                            </p:column>
+                        </p:dataTable>
+            </h:panelGrid>
+        </h:form>
+        
+        <script src="#{sbCsEstablecimientoController.obtenerKeyGoogle()}" type="text/javascript"></script>
+        <script type="text/javascript" src="#{sbCsEstablecimientoController.obtenerApiGoogle()}"></script>
+        
+        <ui:include src="Edit.xhtml" />
+        <ui:include src="View.xhtml" />
+        <ui:include src="dlgBuscarMapa.xhtml" />
+        <ui:include src="dlgVerMapa.xhtml" />
+        <ui:include src="dlgVerSuspension.xhtml" />        
+    </ui:define>
+</ui:composition>
+

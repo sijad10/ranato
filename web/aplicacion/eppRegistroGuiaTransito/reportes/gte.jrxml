@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2023-03-20T15:09:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="27" bottomMargin="34" uuid="20c8d4dc-b7db-4c0d-ba0c-680688c1d565">
+	<property name="ireport.zoom" value="1.3310000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="131"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#8F8FCC">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#CFCFE6">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 6_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 8">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 8_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 8_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 8_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dsConductores" uuid="5956bae7-cbd1-4843-9b73-7a6199a18928">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nroLicencia" class="java.lang.Long">
+			<fieldDescription><![CDATA[nroLicencia]]></fieldDescription>
+		</field>
+		<field name="personaId" class="pe.gob.sucamec.sistemabase.data.SbPersona">
+			<fieldDescription><![CDATA[personaId]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dsProductos" uuid="6c198a5b-cf56-44d0-9673-9b4ae43c3b2d">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="cantidad" class="java.lang.Double">
+			<fieldDescription><![CDATA[cantidad]]></fieldDescription>
+		</field>
+		<field name="explosivoId" class="pe.gob.sucamec.bdintegrado.data.EppExplosivo">
+			<fieldDescription><![CDATA[explosivoId]]></fieldDescription>
+		</field>
+		<field name="activo" class="java.lang.Short">
+			<fieldDescription><![CDATA[activo]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="P_IMG_DIR" class="java.lang.String"/>
+	<parameter name="P_IMG_FIRMA" class="java.lang.String"/>
+	<parameter name="P_TIPO_GT" class="java.lang.String"/>
+	<parameter name="PARRAFO2" class="java.lang.String"/>
+	<parameter name="PARRAFO3" class="java.lang.String"/>
+	<parameter name="FECHAACTUAL" class="java.lang.String"/>
+	<parameter name="productos" class="java.util.List"/>
+	<parameter name="P_NRO_GT" class="java.lang.String"/>
+	<parameter name="P_RG_REF_GT" class="java.lang.String"/>
+	<parameter name="P_EMPRESA_STR" class="java.lang.String"/>
+	<parameter name="P_EMPRESA_TRANSP_STR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="custodia" class="java.lang.Short">
+		<fieldDescription><![CDATA[custodia]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="275" y="53" width="255" height="20" uuid="c917c03a-9be6-45c1-9f9f-2eb258fc5251"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( ($P{P_NRO_GT} != null)? ("N° "+$P{P_NRO_GT}):"")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement isPrintRepeatedValues="false" x="25" y="53" width="240" height="20" isRemoveLineWhenBlank="true" uuid="61e1e283-1cb1-4bd9-a07b-acfc437a7de4"/>
+				<textElement verticalAlignment="Middle" markup="html"/>
+				<textFieldExpression><![CDATA[$P{P_RG_REF_GT}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="24" y="1" width="507" height="52" uuid="906788b8-a331-490f-bf9c-7f18e9a5174f"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="26" y="7" width="126" height="40" uuid="f401d0bd-adae-4911-923f-5a0efefad491"/>
+				<imageExpression><![CDATA[$P{P_IMG_DIR}+"logo_bn.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="152" y="3" width="378" height="27" uuid="8a0b0d60-e5e0-470b-83c2-89e0753365d5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE GUÍA DE TRÁNSITO ELECTRÓNICA DE EXPLOSIVOS Y MATERIALES RELACIONADOS]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="152" y="30" width="370" height="21" uuid="8d90f6dc-d1ce-4ea1-b7ae-424f339d628b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_TIPO_GT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="400">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="25" y="6" width="503" height="20" uuid="734eee39-570a-4a0a-afaa-644f65747738"/>
+				<textElement markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["El presente documento acredita que la empresa:<br/>"+
+$P{P_EMPRESA_STR} + 
+" ha solicitado Guía de Tránsito Electrónica de explosivos y materiales relacionados."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="25" y="29" width="503" height="20" uuid="8da3bda0-5634-4ba9-97b1-2b9299416467"/>
+				<textElement markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PARRAFO2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="25" y="52" width="503" height="20" uuid="2e137f1e-b223-485a-8f93-814f8dd7ed77"/>
+				<textElement markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PARRAFO3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="25" y="75" width="503" height="20" uuid="86cf47db-f9d7-4a88-84dd-bb035a080e20"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["A favor de: <b>ELLOS MISMOS.</b><br/>"+
+"Los siguientes explosivos:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="25" y="187" width="195" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="491f317a-e7bc-46fe-846d-590e1e88e07d"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{custodia}==1?"REQUIERE CUSTODIA":"NO REQUIERE CUSTODIA"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="299" y="222" width="231" height="20" uuid="62644fa0-30e3-48e2-981b-da5339cb8c66"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FECHAACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="25" y="159" width="503" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6c13186b-a7e1-48fd-92b8-c90ad2dd67ea"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_EMPRESA_TRANSP_STR}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 8" style="table 8" positionType="Float" isPrintRepeatedValues="false" x="25" y="102" width="404" height="50" isRemoveLineWhenBlank="true" uuid="53624eb8-8c9f-455d-b7bd-284328b83232"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsProductos" uuid="9a43c883-41b6-474d-b523-71bf9ecb0b73">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{productos})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="200" uuid="7c61af06-a7ab-489d-b172-e9446bc773d4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:tableHeader style="table 8_TH" height="18" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="200" height="18" forecolor="#FFFFFF" uuid="9fb8a19c-4009-4706-add7-9c36e8ff4485"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[NOMBRE]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 8_TD" height="16" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="200" height="16" isRemoveLineWhenBlank="true" uuid="021cfd3c-df7e-4cd5-8e60-49700acaf706">
+									<printWhenExpression><![CDATA[$F{activo} == 1]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{explosivoId}.getNombre()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="105" uuid="5a6a32c1-7074-43f1-99da-77900c0e9eb9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableHeader style="table 8_TH" height="18" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="105" height="18" forecolor="#FFFFFF" uuid="87967693-b18e-4207-8505-29a5139ca081"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[CANT.  TRANSPORTAR]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 8_TD" height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="105" height="16" isRemoveLineWhenBlank="true" uuid="5b2fabf3-3adc-4395-8739-1661e69c5dfc">
+									<printWhenExpression><![CDATA[$F{activo} == 1]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{cantidad}<0?"---":String.valueOf(new DecimalFormat("###,###,###,##0.00").getInstance(Locale.ENGLISH).format($F{cantidad}))]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="677004ba-8fd6-4c66-bbed-9f2008ae0b25">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:tableHeader style="table 8_TH" height="18" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="18" forecolor="#FFFFFF" uuid="a01e3163-b093-4581-9cb5-9ec2e2eb67ec"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
+								<text><![CDATA[UNIDAD]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:detailCell style="table 8_TD" height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="16" isRemoveLineWhenBlank="true" uuid="f0e74332-1ae5-424e-b08c-421a48ffa476">
+									<printWhenExpression><![CDATA[$F{activo} == 1]]></printWhenExpression>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{explosivoId}.getUnidadMedidaList().get(0).getNombre()]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="94">
+			<rectangle>
+				<reportElement x="24" y="4" width="507" height="86" uuid="370b9bff-c2cc-436b-8f9f-f9788e13f1b6"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="26" y="4" width="502" height="86" uuid="a4ada2f5-fe1c-40ba-9db1-2ece7aad1bc6"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[<b>PRESCRIPCIONES Y OBLIGACIONES QUE DEBEN CUMPLIRSE:</b><br/>
+1. No deberá transportar otro producto diferente al indicado en la presente Guía, ni hacerlo junto con carga peligrosa (combustible, material inflamable, etc.).<br/>
+2. Debe presentarse en todos los puestos de control donde sea requerida y devolverse dentro de los 10 dias hábiles siguientes a la <b>SUCAMEC</b> con los sellos al reverso del formato.<br/>
+3. El no remitir la GTe luego de su utilización en el plazo establecido, constituye una infracción de acuerdo a lo señalado en la Tabla G del cuadro de infracciones y sanciones del reglamento de la Ley 30299.<br/>
+4. Todo traslado de EMR debe realizarze durante la vigencia de la GTe y de autorización vinculada a esta.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

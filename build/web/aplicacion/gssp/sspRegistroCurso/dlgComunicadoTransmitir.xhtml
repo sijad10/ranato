@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgVerComunicado" widgetVar="wvDlgVerComunicado" width="50%" height="50%"
+              modal="true" resizable="false" appendTo="@(body)" closable="false">
+        <h:form id="frmVerComunicado">
+            <div align="center">
+                <p:outputLabel value="COMUNICADO" style="font-size: large"/>
+            </div>
+            <br></br> 
+            <h:panelGrid columns="1" >
+                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_comunicado_1}" style="margin-left: 20px;" escape = "false"/>
+                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_comunicado_2}" style="margin-left: 20px;" escape = "false"/>
+                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_comunicado_3}" style="margin-left: 20px;" escape = "false"/>
+                <br></br> 
+                <p:commandButton value="ACEPTAR" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmVerLocales" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgVerComunicado').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

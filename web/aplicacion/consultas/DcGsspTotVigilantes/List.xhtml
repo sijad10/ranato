@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{bundleDisca.BuscarDcGsspTotVigilantesTitulo}" rendered="#{dcGsspTotVigilantesController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{bundleDisca.VerDcGsspVigilantesTitulo}" rendered="#{dcGsspTotVigilantesController.registro.TIPO == 1 and dcGsspTotVigilantesController.estado == 'VER'}" />
+        <h:outputText value="#{bundleDisca.VerDcGsspCapacitacionTitulo}" rendered="#{dcGsspTotVigilantesController.registro.TIPO == 2 and dcGsspTotVigilantesController.estado == 'VER'}" />
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{dcGsspTotVigilantesController.estado == 'BUSCAR'}">
+            <p:focus context="buscarForm" />
+            <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+
+                <h:panelGrid columns="7">
+                    <p:outputLabel id="buscarFiltro" value="#{bundleDisca.Filtro}" />
+                    <p:selectOneMenu id="tipoId" value="#{dcGsspTotVigilantesController.tipo}" style="width: 120px;" >
+                        <f:selectItem itemValue='#{null}' itemLabel="---"/>
+                        <f:selectItem itemValue="dni" itemLabel="NRO DNI"/>
+                        <f:selectItem itemValue="ce" itemLabel="NRO C.E."/>
+                        <p:ajax event="change" update="@form" process="@this" listener="#{dcGsspTotVigilantesController.obtenerNumCaract}" />
+                    </p:selectOneMenu>
+                    <p:inputText  value="#{dcGsspTotVigilantesController.filtro}" size="40" 
+                                  maxlength="#{dcGsspTotVigilantesController.cantNumeros}" 
+                                  required="true" requiredMessage="#{bundleDisca.ErrorDatoBusquedaRequerido}" placeholder="#{bundleDisca.PhCriterio}">
+                        <p:keyFilter mask="num" preventPaste="false" />
+                    </p:inputText>
+                    <p:commandButton id="botonBuscar" value="#{bundleDisca.Buscar}" icon="ui-icon-search" actionListener="#{dcGsspTotVigilantesController.buscar}"  update=":buscarForm" />
+                </h:panelGrid>
+                <h:panelGroup rendered="#{dcGsspTotVigilantesController.resultados == null}">
+                    <br/><br/>
+                    <h:outputLabel value="#{bundleDisca.Instrucciones}" style="font-weight: bold"/><br/><br/>
+                    <h:outputLabel value="#{bundleDisca.InstruccionesGsspTotVigilantes}" escape="false"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{dcGsspTotVigilantesController.resultados != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{bundleDisca.Resultados}" escape="false" />
+                        <h:commandLink style="float: right; clear: both;">
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{bundleDisca.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatable" fileName="BusquedaVigilantes" />
+                        </h:commandLink>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{dcGsspTotVigilantesController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleDisca.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleDisca.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_NRO_CRN_VIG}" sortBy="#{item.NRO_CRN_VIG}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_NRO_CRN_VIG}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NRO_CRN_VIG eq null?'-':item.NRO_CRN_VIG}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_NOMBRE}" sortBy="#{item.NOMBRE}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_NOMBRE}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NOMBRE}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_FEC_EMI}" sortBy="#{item.FEC_EMI}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_FEC_EMI}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FEC_EMI}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_FEC_VENC}" />
+                            </f:facet>
+                            <ui:remove>
+                                rfv - quitar remove y el outputlabel de arriba
+                                <h:outputText value="#{dcGsspTotVigilantesController.obtenerFechaFinCarne(item.FEC_VENC)}" />
+                            </ui:remove>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_COD_USR}" sortBy="#{item.COD_USR}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_COD_USR}" />
+                            </f:facet>
+
+                            <h:outputText value="#{dcGsspTotVigilantesController.obtenerCodUsr(item)}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_ESTADO}" sortBy="#{item.ESTADO}" style="text-align: center;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_ESTADO}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.ESTADO eq null ? '-':dcGsspTotVigilantesController.obtenerEstadoVigilante(item) }"/>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.DcGsspVigilantesTitle_DES_MOD}" sortBy="#{item.DES_MOD}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleDisca.DcGsspVigilantesTitle_DES_MOD}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.DES_MOD}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleDisca.Ver}" exportable="false" width="5%">
+                            <p:commandLink actionListener="#{dcGsspTotVigilantesController.mostrarVer}" value="#{bundleDisca.Ver}" process="@this" partialSubmit="true" update="@all"/>
+                            <h:outputText value=" "/>
+                        </p:column>                                 
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

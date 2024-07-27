@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{BundleGeppLme.BuscarGeppLmeTitulo}" rendered="#{geppLmeController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{BundleGeppLme.VerGeppLmeTitulo}" rendered="#{geppLmeController.estado == 'VER'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{geppLmeController.estado == 'BUSCAR'}">
+	    <p:focus context="buscarForm" />
+	    <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+                <h:panelGrid columns="7">
+                    <p:outputLabel id="buscarFiltro" value="#{BundleGeppLme.Filtro}" />
+                    <p:selectOneMenu id="tipoId" value="#{geppLmeController.tipo}" style="width: 120px;" >
+                        <f:selectItem itemValue="nroexp" itemLabel="NRO EXPEDIENTE"/>
+                        <f:selectItem itemValue="nrolic" itemLabel="NRO LICENCIA"/>
+                        <f:selectItem itemValue="numdoc" itemLabel="NRO DOCUMENTO"/>
+                    </p:selectOneMenu>
+                    <p:inputText  value="#{geppLmeController.filtro}" required="false" requiredMessage="#{BundleGeppLme.MensajeFiltro}" size="40" />
+                    <p:commandButton id="botonBuscar" value="#{BundleGeppLme.Buscar}" icon="ui-icon-search" actionListener="#{geppLmeController.buscar}"  update=":buscarForm" />&nbsp;
+                </h:panelGrid>
+                <h:panelGroup rendered="#{geppLmeController.resultados == null}">
+                    <br/><br/>
+                    <h:outputLabel value="#{BundleGeppLme.Instrucciones}" style="font-weight: bold"/><br/><br/>
+                    <h:outputLabel value="#{BundleGeppLme.InstruccionesDetalle}" escape="false"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{geppLmeController.resultados != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{BundleGeppLme.Resultados}" escape="false" />
+                        <h:commandLink style="float: right; clear: both;">
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleGeppLme.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatable" fileName="BusquedaAreas" />
+                        </h:commandLink>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{geppLmeController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{BundleGeppLme.MensajeNoResultados}" 
+                                 paginator="true" rows="#{BundleGeppLme.PaginatorFilas}"  
+                                 currentPageReportTemplate="#{BundleGeppLme.ListExpedientesEncontrados} {totalRecords} #{BundleGeppLme.ListExpedientesExpedientes}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{BundleGeppLme.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NRO_LICENCIA}" sortBy="#{item.NRO_LICENCIA}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NRO_LICENCIA}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.NRO_LICENCIA}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_TIPO_DOC}" sortBy="#{item.TIPO_DOC}" width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_TIPO_DOC}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.TIPO_DOC}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NUM_DOC}" sortBy="#{item.NUM_DOC}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NUM_DOC}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.NUM_DOC}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_APE_PAT}" sortBy="#{item.APE_PAT}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_APE_PAT}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.APE_PAT}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_APE_MAT}" sortBy="#{item.APE_MAT}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_APE_MAT}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.APE_MAT}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NOMBRES}" sortBy="#{item.NOMBRES}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NOMBRES}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.NOMBRES}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_NUMERO}" sortBy="#{item.NRO_EXPEDIENTE}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_NUMERO}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.NRO_EXPEDIENTE}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_TIPO_CARGO}" sortBy="#{item.TIPO_CARGO}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_TIPO_CARGO}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.TIPO_CARGO}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_FEC_EMI}" sortBy="#{item.FEC_EMI}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_FEC_EMI}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.FEC_EMI}">
+                                    <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_FEC_VENC}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.FEC_VENC}">
+                                    <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.GeppLmeTitle_TIPO_EMISION}" sortBy="#{item.TIPO_EMISION}">
+                            <f:facet name="header">
+                                <h:outputText value="#{BundleGeppLme.GeppLmeTitle_TIPO_EMISION}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.TIPO_EMISION}"/>
+                        </p:column>
+                        <p:column headerText="#{BundleGeppLme.Opciones}" exportable="false">
+                            <p:commandLink actionListener="#{geppLmeController.mostrarVer}" value="#{BundleGeppLme.Ver}" update="@all"/>
+                            <h:outputText value=" "/>
+                        </p:column>                                 
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

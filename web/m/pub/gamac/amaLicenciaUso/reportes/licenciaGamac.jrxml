@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-12-12T14:27:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="licenciaGamac" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="242" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="de67ae3d-8be2-4cf1-a400-7e218391d8b8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<parameter name="P_FIRMA" class="java.lang.String"/>
+	<parameter name="P_FOTO_PERSONA" class="java.io.InputStream"/>
+	<parameter name="P_FONDO" class="java.lang.String"/>
+	<parameter name="P_ANIO" class="java.lang.String"/>
+	<parameter name="P_FOTO_PERSONA_PEQ" class="java.io.InputStream"/>
+	<parameter name="P_GERENTE" class="java.lang.String"/>
+	<parameter name="P_NUM_DOC" class="java.lang.String"/>
+	<parameter name="P_APEPAT" class="java.lang.String"/>
+	<parameter name="P_APEMAT" class="java.lang.String"/>
+	<parameter name="P_NOMBRES" class="java.lang.String"/>
+	<parameter name="P_MODALIDAD" class="java.lang.String"/>
+	<parameter name="P_NRO_LICENCIA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="0" y="0" width="243" height="153" uuid="af03bfcd-0c19-40a8-9289-fbd2247a94a1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{P_FONDO} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{P_FONDO}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="82" y="51" width="36" height="8" uuid="24f2ea3e-8e4f-481f-bd5b-cd9312a03a47">
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5"/>
+				</textElement>
+				<text><![CDATA[LICENCIA N° :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="118" y="47" width="90" height="13" forecolor="#1388C2" uuid="4086e20b-230b-47f1-ac63-983c798c57af"/>
+				<box>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NRO_LICENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="119" width="85" height="31" forecolor="#1388C2" uuid="1bc7bf15-2e0c-4c19-9d49-b9ab1dfa36f1"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="SansSerif" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_ANIO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="14" y="133" width="64" height="20" uuid="bb93a862-e6f5-49a1-a0f4-483e8f94f351">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="SansSerif" size="4" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_APEPAT} + " " + (($P{P_APEMAT} == null)?"":$P{P_APEMAT} )    + "<br/>"]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" mode="Opaque" x="14" y="52" width="64" height="79" backcolor="#FFFFFF" uuid="edb4c63e-7257-4200-ae36-a2d352439033">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{P_FOTO_PERSONA} != null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{P_FOTO_PERSONA}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" x="220" y="43" width="19" height="21" uuid="c495566d-c8a2-4474-bb01-ecae2a9b910e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{P_FOTO_PERSONA_PEQ}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="14" y="58" width="15" height="62" forecolor="#1388C2" uuid="025d45ee-92e9-45b4-872c-e9ec0fb43f15"/>
+				<box>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="Left" markup="html">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NUM_DOC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="14" y="124" width="64" height="3" forecolor="#FFFFFF" backcolor="#1E6594" uuid="2f24d891-eccf-415e-a77e-954e3abf3b30"/>
+				<box>
+					<topPen lineColor="#000000"/>
+					<leftPen lineColor="#000000"/>
+					<bottomPen lineColor="#000000"/>
+					<rightPen lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NUM_DOC} + " " + $P{P_APEPAT} + " " + (( $P{P_APEMAT} == null)?"": $P{P_APEMAT}) + " " + ( $P{P_NOMBRES} != null ?$P{P_NOMBRES}.trim():"") + " " + $P{P_NUM_DOC} + " " + $P{P_APEPAT} + " " + (( $P{P_APEMAT} == null)?"": $P{P_APEMAT}) + " " + $P{P_NOMBRES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="30" y="38" width="208" height="5" uuid="1cbff36a-71fa-4572-95d1-76c790014066">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="3.27"/>
+				</textElement>
+				<text><![CDATA[SUPERINTENDENCIA NACIONAL DE CONTROL DE SERVICIOS DE SEGURIDAD, ARMAS, MUNICIONES Y EXPLOSIVOS DE USO CIVIL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="4" width="40" height="26" uuid="6e3a7a88-a092-4e8c-b6a1-4e1e693d3e50"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="4.4" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LICENCIA DE USO DE ARMA]]></text>
+			</staticText>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement positionType="Float" mode="Transparent" x="82" y="118" width="65" height="19" backcolor="#FFFFFF" uuid="fecdb9e3-ec70-4506-9df4-7695b4cd19cd">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{P_FIRMA}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="82" y="102" width="146" height="14" forecolor="#990300" uuid="44ae915c-63fc-45d7-896b-f69c0d3c0187">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.3" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_MODALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="82" y="137" width="65" height="5" uuid="d7aaa249-691b-48a9-8a2c-e09128e855f7">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="3" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_GERENTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="82" y="79" width="50" height="8" uuid="5904c4bd-83bc-43e7-8e65-04eb9a1cfdf2">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5"/>
+				</textElement>
+				<text><![CDATA[NOMBRES:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="70" width="146" height="8" uuid="b61cb001-a859-40e8-8cae-c9b4d4057e4d">
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_APEPAT} + " " + (( $P{P_APEMAT} == null)?"": $P{P_APEMAT} )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="82" y="63" width="50" height="8" uuid="f8c2dea1-a1b5-48c2-8459-027a8e35b2a9">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="86" width="146" height="8" uuid="1b9a08ca-b8d4-4fde-adf3-fd2cf726b378">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NOMBRES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="82" y="95" width="116" height="7" isRemoveLineWhenBlank="true" uuid="3356245b-f23b-473d-89f2-f645b45ba1ec">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5"/>
+				</textElement>
+				<text><![CDATA[MODALIDAD DE SERVICIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="142" width="65" height="8" uuid="5abb72bd-6409-4457-8630-c3a5c2711b44">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="2" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GERENTE DE SERVICIOS DE SEGURIDAD PRIVADA<br/> SUCAMEC"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

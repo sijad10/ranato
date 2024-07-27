@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_list_titleBandeja}" rendered="#{sspCarteraClienteController.estado == 'BUSCAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_editar_title}" rendered="#{sspCarteraClienteController.estado == 'EDITAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_ver_title}" rendered="#{sspCarteraClienteController.estado == 'VER'}"/>                
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_declarar_title}" rendered="#{sspCarteraClienteController.estado == 'DECLARAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_title}" rendered="#{sspCarteraClienteController.estado == 'CREAR_TERMINO'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_editarTermino_title}" rendered="#{sspCarteraClienteController.estado == 'EDITAR_TERMINO'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_verTermino_title}" rendered="#{sspCarteraClienteController.estado == 'VER_TERMINO'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_crearAdenda_title}" rendered="#{sspCarteraClienteController.estado == 'CREAR_ADENDA'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_editarAdenda_title}" rendered="#{sspCarteraClienteController.estado == 'EDITAR_ADENDA'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_verAdenda_title}" rendered="#{sspCarteraClienteController.estado == 'VER_ADENDA'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_declararAdenda_title}" rendered="#{sspCarteraClienteController.estado == 'DECLARAR_ADENDA'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" rendered="#{sspCarteraClienteController.estado == 'BUSCAR'}" >
+                
+                <h:panelGrid columns="1" id="pnlGeneral" >
+                    <p:panel id="pnlBusquedaContratos" header="#{BundleBDIntegrado.sspCarteraCli_list_busquedaContratos}" >
+                        <h:panelGrid columns="7" >
+                            <p:outputLabel for="Mostrar" value="Mostrar: " />
+                            <p:selectOneRadio id="Mostrar" value="#{sspCarteraClienteController.tipoProc}">
+                                <f:selectItem itemLabel="Todos" itemValue="todos" />
+                                <f:selectItem itemLabel="Observados" itemValue="obs" />
+                            </p:selectOneRadio>
+                            <p:outputLabel value="" />
+                            <p:outputLabel value="" />
+                            <p:outputLabel value="" />
+                            <p:outputLabel value="" />
+                            <p:outputLabel value="" />
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_buscarPor}" style="display: block; width: 95px;" />
+                            <p:selectOneMenu id="buscarPor" value="#{sspCarteraClienteController.tipoBuscarPor}" >
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItem itemLabel="NRO. DE EXPEDIENTE" itemValue="1"/>
+                               <f:selectItem itemLabel="NOMBRE CLIENTE" itemValue="2"/>
+                               <f:selectItem itemLabel="RUC CLIENTE" itemValue="3"/>
+                               <f:selectItem itemLabel="MODALIDAD" itemValue="4"/>
+                               <f:selectItem itemLabel="CÓDIGO" itemValue="5"/>
+                               <p:ajax event="change" process="pnlBusquedaContratos" update="pnlBusquedaContratos" listener="#{sspCarteraClienteController.cambiarTipoBuscarPor() }" />
+                            </p:selectOneMenu>
+                            <p:inputText value="#{sspCarteraClienteController.filtro}" id="filtroBusqueda" 
+                                         placeholder="Escriba un texto" style="width: 200px;" 
+                                         rendered="#{sspCarteraClienteController.tipoBuscarPor != '4'}"  >
+                                <p:keyFilter mask="int" rendered="#{sspCarteraClienteController.tipoBuscarPor == '1' or sspCarteraClienteController.tipoBuscarPor == '3' }" preventPaste="false" />
+                            </p:inputText>
+                            <p:selectOneMenu id="tipoModalidad" value="#{sspCarteraClienteController.tipoModalidad}" rendered="#{sspCarteraClienteController.tipoBuscarPor == '4'}" style="width: 180px;" >
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarteraClienteController.lstTipoModalidad}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_tipoDeclaración}" style="margin-left: 20px;" />
+                            <p:selectOneMenu id="tipoDeclaracion" value="#{sspCarteraClienteController.tipoDeclaracion}" >
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarteraClienteController.lstTipoDeclaracion}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value=" "/>
+                            <p:commandButton value="#{BundleBDIntegrado.Buscar}" 
+                                            style="margin-left: 20px;"
+                                            process="@this,pnlBusquedaContratos"
+                                            icon="ui-icon-search " actionListener="#{sspCarteraClienteController.buscarBandeja()}" 
+                                            update="@form"/>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="7" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_rangoFecha}"/>
+                            <p:calendar id="fechaInicio"
+                                        locale="es"
+                                        maxdate="#{sspCarteraClienteController.maximafecha}"
+                                        showOn="button" value="#{sspCarteraClienteController.fechaInicial }"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                            <pe:tooltip for="fechaInicio"
+                                value="Ingrese la fecha de inicio de búsqueda" 
+                                showEffect="slideToggle"  
+                                hideEffect="slideToggle" 
+                                showDelay="0" 
+                                myPosition="left center" 
+                                atPosition="right center"/>
+                            <p:outputLabel value="al"/>
+                            <p:calendar id="fechaFin"
+                                        locale="es"
+                                        maxdate="#{sspCarteraClienteController.maximafecha}"
+                                        showOn="button" value="#{sspCarteraClienteController.fechaFinal }"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                                    
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_estado}" style="margin-left: 70px;width: 100px;"  />
+                            <p:selectOneMenu id="estado" value="#{sspCarteraClienteController.estadoCartera}" >
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.descripcion}"
+                                                      value="#{sspCarteraClienteController.lstEstadosCartera}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <h:panelGrid columns="2" width="100%" >
+                        <p:panel id="pnlEnviarContraro" header="#{BundleBDIntegrado.sspCarteraCli_list_enviarContrato}" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_transmitir}"/>
+                            <p:commandButton value="#{BundleBDIntegrado.sspCarteraCli_list_cambiar}" 
+                                     process="@this,pnlBusquedaContratos"
+                                     style="margin-left: 20px;"
+                                     disabled="#{sspCarteraClienteController.disabledBtnTransmitir}"
+                                     icon="ui-icon-transferthick-e-w " actionListener="#{sspCarteraClienteController.cambiarContrato()}" 
+                                     update="@form"/>
+                        </p:panel>
+                        <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.sspCarteraCli_list_leyenda}" >
+                            <h:panelGrid columns="14" >
+                                <p:graphicImage name="/imagenes/gssp_contrato/view_icon.png" width="25"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_verContrato}"/>
+
+                                <p:graphicImage name="/imagenes/gssp_contrato/pencil_icon.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_editarContrato}"/>
+
+                                <p:graphicImage name="/imagenes/gssp_contrato/trash_icon.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_borrarContrato}"/>
+
+                                <p:graphicImage name="/imagenes/gssp_contrato/x_icon.png" width="25" style="margin-left: 12px;" rendered="false" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_terminoContrato}" rendered="false"  />
+                                
+                                <p:graphicImage name="/imagenes/gssp_contrato/date_icon.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_fechaContrato}" />
+
+                                <p:graphicImage name="/imagenes/gssp_contrato/plus.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_adendaContrato}"/>
+                                
+                                <p:graphicImage name="/imagenes/gssp_contrato/declarar_icon.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_declararContrato}"/>
+                                
+                                <p:graphicImage name="/imagenes/gssp_contrato/printer_icon.png" width="25" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_list_imprimirContrato}"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                    
+                    <br/>
+                    <h:panelGrid columns="2" style="width: 100%;margin-bottom: -10px;" >     
+                        <h:panelGrid columns="1" style="float: right;" rendered="#{sspCarteraClienteController.resultadosBandeja.size() > 0}" >
+                            <h:commandLink  >
+                                <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleBDIntegrado.ExportarExcel}"/>
+                                <p:dataExporter type="xls" target="buscarDatatableRegistro" fileName="BandejaCarteraClientes"  />
+                            </h:commandLink>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatableRegistro" value="#{sspCarteraClienteController.resultadosBandeja}"
+                                     var="itemReg" 
+                                     rowKey="#{itemReg.ID}"
+                                     selection="#{sspCarteraClienteController.resultadosBandejaSeleccionados}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                        
+                            <p:ajax event="rowSelect" listener="#{sspCarteraClienteController.seleccionarFilaTablaCarteraCli}" update="@form" process="@form" />
+                            <p:ajax event="rowUnselect" listener="#{sspCarteraClienteController.deseleccionarFilaTablaCarteraCli}" update="@form" process="@form" />
+                            <p:ajax event="rowSelectCheckbox" listener="#{sspCarteraClienteController.seleccionarFilaTablaCarteraCli}" update="@form" process="@form" />
+                            <p:ajax event="rowUnselectCheckbox" listener="#{sspCarteraClienteController.deseleccionarFilaTablaCarteraCli}" update="@form" process="@form" />
+                            <p:ajax event="toggleSelect" listener="#{sspCarteraClienteController.toggleEventFilaCarteraCli(event)}" update="@form" process="@form" />
+                        
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center" exportable="false" />
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_Id}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.ID}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_NroExpediente}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.EXPEDIENTE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_fechasIniFin}" style="text-align: center;" >
+                                <h:outputText value="#{sspCarteraClienteController.obtenerFechaReporte(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_declaracion}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.TIPO_OPE_NOMBRE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_modalidades}" style="text-align: center;" >
+                                <h:outputText value="#{sspCarteraClienteController.obtenerModalidadReporte(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_cliente}" style="text-align: center;" >
+                                <h:outputText value="#{sspCarteraClienteController.obtenerClienteReporte(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_estado}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.ESTADO_NOMBRE}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_dtListado_acciones}" style="text-align: center;" exportable="false" >
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.mostrarVer(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnVer(itemReg)}"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/view_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_verContrato}"/>
+                                </p:commandLink>
+                                
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.mostrarEditar(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnEditar(itemReg)}"
+                                                process="@this"
+                                                ajax="false" >
+                                     <p:graphicImage name="/imagenes/gssp_contrato/pencil_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_editarContrato}"/>
+                                </p:commandLink>
+                                
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.openDlgActuaizaFechaContrato(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnFechaContrato(itemReg)}"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/date_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_fechaContrato}"/>
+                                </p:commandLink>
+                                
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.borrarRegistro(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnBorrar(itemReg)}"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/trash_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_borrarContrato}"/>
+                                     <p:confirm header="Confirmación" message="#{BundleBDIntegrado.ConfirmarEliminar}" icon="ui-icon-alert" />
+                                </p:commandLink>
+
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.mostrarCrearTermino(itemReg)}"
+                                                style="display: inline-table;"
+                                                rendered="false"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/x_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_terminoContrato}"/>
+                                </p:commandLink>
+
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.mostrarCrearAdenda(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnAdendaContrato(itemReg)}"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/plus.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_adendaContrato}"/>
+                                </p:commandLink>
+                                
+                                <p:commandLink  actionListener="#{sspCarteraClienteController.mostrarCrearDeclaracion(itemReg)}"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnDeclaracionContrato(itemReg)}"
+                                                process="@this"
+                                                immediate="true"
+                                                ajax="false"
+                                                partialSubmit="true">
+                                     <p:graphicImage name="/imagenes/gssp_contrato/declarar_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_declararContrato}"/>
+                                </p:commandLink>
+                                
+                                <h:commandLink  target="_blank"
+                                                style="display: inline-table"
+                                                rendered="#{sspCarteraClienteController.renderBtnImprimirConstancia(itemReg)}" >
+                                     <p:graphicImage name="/imagenes/gssp_contrato/printer_icon.png" width="20" style="margin-left: 10px;" title="#{BundleBDIntegrado.sspCarteraCli_list_imprimirContrato}"/>
+                                     <p:fileDownload value="#{sspCarteraClienteController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                                </h:commandLink>
+                                
+                            </p:column>
+                        </p:dataTable>
+                    <br/>
+                </h:panelGrid>                                   
+            </h:form>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+            <ui:include src="Declarar.xhtml"/>
+            <ui:include src="CreateTermino.xhtml"/>
+            <ui:include src="EditTermino.xhtml"/>
+            <ui:include src="ViewTermino.xhtml"/>
+            <ui:include src="CreateAdenda.xhtml"/>
+            <ui:include src="EditAdenda.xhtml"/>
+            <ui:include src="ViewAdenda.xhtml"/>
+            <ui:include src="dlgBuscarMapa.xhtml" />
+            <ui:include src="dlgVerMapa.xhtml" />
+            <ui:include src="dlgBuscarVigilante.xhtml" />
+            <ui:include src="dlgBuscarContrato.xhtml" />
+            <ui:include src="dlgContratoReferenciado.xhtml" />
+            <ui:include src="dlgActualizarFechaFin.xhtml" />
+            <ui:include src="dlgConfirmarEliminar.xhtml" />
+            <ui:include src="dlgMotivo.xhtml" />
+            <ui:include src="dlgBuscarConsorcio.xhtml" />
+            <ui:include src="dlgConfirmarEvento.xhtml" />
+            <ui:include src="dlgEditarLugarServicio.xhtml" />
+        </ui:define>
+    </ui:composition>
+
+</html>

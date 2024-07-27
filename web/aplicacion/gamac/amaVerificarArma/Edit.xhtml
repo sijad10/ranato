@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.EditAmaVerificarArmaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaVerificarArmaController.selected.id}" title="#{bundle.EditAmaVerificarArmaTitle_id}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_nroExpediente}" for="nroExpediente" />
+                    <h:inputText id="nroExpediente" value="#{amaVerificarArmaController.selected.nroExpediente}" title="#{bundle.EditAmaVerificarArmaTitle_nroExpediente}" />
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_pesoActual}" for="pesoActual" />
+                    <h:inputText id="pesoActual" value="#{amaVerificarArmaController.selected.pesoActual}" title="#{bundle.EditAmaVerificarArmaTitle_pesoActual}" />
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_resultadoEvaluacion}" for="resultadoEvaluacion" />
+                    <h:inputText id="resultadoEvaluacion" value="#{amaVerificarArmaController.selected.resultadoEvaluacion}" title="#{bundle.EditAmaVerificarArmaTitle_resultadoEvaluacion}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_resultadoEvaluacion}"/>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_fechaVerifica}" for="fechaVerifica" />
+                    <h:inputText id="fechaVerifica" value="#{amaVerificarArmaController.selected.fechaVerifica}" title="#{bundle.EditAmaVerificarArmaTitle_fechaVerifica}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_fechaVerifica}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:inputText>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaVerificarArmaController.selected.activo}" title="#{bundle.EditAmaVerificarArmaTitle_activo}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaVerificarArmaController.selected.audLogin}" title="#{bundle.EditAmaVerificarArmaTitle_audLogin}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaVerificarArmaController.selected.audNumIp}" title="#{bundle.EditAmaVerificarArmaTitle_audNumIp}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.EditAmaVerificarArmaLabel_armaId}" for="armaId" />
+                    <h:selectOneMenu id="armaId" value="#{amaVerificarArmaController.selected.armaId}" title="#{bundle.EditAmaVerificarArmaTitle_armaId}" required="true" requiredMessage="#{bundle.EditAmaVerificarArmaRequiredMessage_armaId}">
+                        <f:selectItems value="#{amaArmaController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandLink action="#{amaVerificarArmaController.update}" value="#{bundle.EditAmaVerificarArmaSaveLink}"/>
+                <br />
+                <br />
+                <h:link outcome="View" value="#{bundle.EditAmaVerificarArmaViewLink}"/>
+                <br />
+                <h:commandLink action="#{amaVerificarArmaController.prepareList}" value="#{bundle.EditAmaVerificarArmaShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.EditAmaVerificarArmaIndexLink}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

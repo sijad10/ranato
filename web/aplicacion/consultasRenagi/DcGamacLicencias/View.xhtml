@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{dcGamacLicenciasRenagiController.estado == 'VER'}" >
+        <p:focus context="verForm" />
+        <h:panelGrid columns="2">
+            <p:graphicImage  value="#{dcGamacLicenciasRenagiController.foto}" width="240" height="320" cache="false" style="border-color: #000; border-width: 2px; border-style: solid; margin: 10px;"/>
+            <h:panelGrid id="panelGrid" columns="4">
+                <h:outputLabel value="LICENCIA:" style="display: block; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_TIPO_LICENCIA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_LICENCIA}" title="#{bundleRenagi.DcGamacLicenciasTitle_TIPO_LICENCIA}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_NRO_LIC}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.NRO_LIC}" title="#{bundleRenagi.DcGamacLicenciasTitle_NRO_LIC}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_FEC_EMISION}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.FEC_EMISION}" title="#{bundleRenagi.DcGamacLicenciasTitle_FEC_EMISION}">
+                    <f:converter converterId="fechaConverter" />
+                </p:outputLabel>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_FEC_VENCIMIENTO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.FEC_VENCIMIENTO}" title="#{bundleRenagi.DcGamacLicenciasTitle_FEC_VENCIMIENTO}">
+                    <f:converter converterId="fechaConverter" />
+                </p:outputLabel>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_SITUACION}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.SITUACION}" title="#{bundleRenagi.DcGamacLicenciasTitle_SITUACION}" style="font-size: large; color: red; font-weight: bold;"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_ESTADO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.ESTADO}" title="#{bundleRenagi.DcGamacLicenciasTitle_ESTADO}" style="font-size: large; color: red; font-weight: bold;"/>
+                <h:outputLabel value="PROPIETARIO:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_TIPO_PROPIETARIO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_PROPIETARIO}" title="#{bundleRenagi.DcGamacLicenciasTitle_TIPO_PROPIETARIO}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_DOC_PROPIETARIO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.DOC_PROPIETARIO}" title="#{bundleRenagi.DcGamacLicenciasTitle_DOC_PROPIETARIO}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_PROPIETARIO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.PROPIETARIO}" title="#{bundleRenagi.DcGamacLicenciasTitle_PROPIETARIO}"/>                  <h:outputLabel value=""/><h:outputLabel value=""/>
+              
+                <h:outputLabel value="PORTADOR:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.PORTADOR}" title="#{bundleRenagi.DcGamacLicenciasTitle_PORTADOR}"/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_TIPO_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_PORTADOR}" title="#{bundleRenagi.DcGamacLicenciasTitle_TIPO_PORTADOR}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_DOC_PORTADOR}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.DOC_PORTADOR}" title="#{bundleRenagi.DcGamacLicenciasTitle_DOC_PORTADOR}"/>
+                <h:outputLabel value="ARMA:" style="display: block; margin-top: 15px; font-weight: bold;"/><h:outputLabel value=""/>
+                <h:outputLabel value=""/><h:outputLabel value=""/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_NRO_SERIE}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.NRO_SERIE}" title="#{bundleRenagi.DcGamacLicenciasTitle_NRO_SERIE}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_TIPO_ARMA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.TIPO_ARMA}" title="#{bundleRenagi.DcGamacLicenciasTitle_TIPO_ARMA}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_MARCA}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.MARCA}" title="#{bundleRenagi.DcGamacLicenciasTitle_MARCA}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_MODELO}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.MODELO}" title="#{bundleRenagi.DcGamacLicenciasTitle_MODELO}"/>
+                <p:outputLabel value="#{bundleRenagi.DcGamacLicenciasLabel_CALIBRE}"/>
+                <p:outputLabel value="#{dcGamacLicenciasRenagiController.registro.CALIBRE}" title="#{bundleRenagi.DcGamacLicenciasTitle_CALIBRE}"/>
+            </h:panelGrid>
+        </h:panelGrid>
+        <br />
+        <p:commandButton icon="ui-icon-search" actionListener="#{dcGamacLicenciasRenagiController.mostrarBuscar}" value="#{bundleRenagi.DcGamacLicenciasVolverBusqueda}" immediate="true" update="@all"/>
+    </h:form>
+</ui:composition>
+

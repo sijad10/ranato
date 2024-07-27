@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateAmaModelosTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaModelosController.selected.id}" title="#{bundle.CreateAmaModelosTitle_id}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_modelo}" for="modelo" />
+                    <h:inputText id="modelo" value="#{amaModelosController.selected.modelo}" title="#{bundle.CreateAmaModelosTitle_modelo}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_modelo}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_longCanon}" for="longCanon" />
+                    <h:inputText id="longCanon" value="#{amaModelosController.selected.longCanon}" title="#{bundle.CreateAmaModelosTitle_longCanon}" />
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_longArma}" for="longArma" />
+                    <h:inputText id="longArma" value="#{amaModelosController.selected.longArma}" title="#{bundle.CreateAmaModelosTitle_longArma}" />
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaModelosController.selected.activo}" title="#{bundle.CreateAmaModelosTitle_activo}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaModelosController.selected.audLogin}" title="#{bundle.CreateAmaModelosTitle_audLogin}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaModelosController.selected.audNumIp}" title="#{bundle.CreateAmaModelosTitle_audNumIp}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_disposicionId}" for="disposicionId" />
+                    <h:selectOneMenu id="disposicionId" value="#{amaModelosController.selected.disposicionId}" title="#{bundle.CreateAmaModelosTitle_disposicionId}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_disposicionId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_tipoArmaId}" for="tipoArmaId" />
+                    <h:selectOneMenu id="tipoArmaId" value="#{amaModelosController.selected.tipoArmaId}" title="#{bundle.CreateAmaModelosTitle_tipoArmaId}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_tipoArmaId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel value="#{bundle.CreateAmaModelosLabel_marcaId}" for="marcaId" />
+                    <h:selectOneMenu id="marcaId" value="#{amaModelosController.selected.marcaId}" title="#{bundle.CreateAmaModelosTitle_marcaId}" required="true" requiredMessage="#{bundle.CreateAmaModelosRequiredMessage_marcaId}">
+                        <f:selectItems value="#{amaCatalogoController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaModelosController.create}" value="#{bundle.CreateAmaModelosSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{amaModelosController.prepareList}" value="#{bundle.CreateAmaModelosShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateAmaModelosIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.CreateAmaFotoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_id}" for="id" />
+                    <h:inputText id="id" value="#{amaFotoController.selected.id}" title="#{bundle.CreateAmaFotoTitle_id}" required="true" requiredMessage="#{bundle.CreateAmaFotoRequiredMessage_id}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_nroExpediente}" for="nroExpediente" />
+                    <h:inputText id="nroExpediente" value="#{amaFotoController.selected.nroExpediente}" title="#{bundle.CreateAmaFotoTitle_nroExpediente}" />
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_activo}" for="activo" />
+                    <h:inputText id="activo" value="#{amaFotoController.selected.activo}" title="#{bundle.CreateAmaFotoTitle_activo}" required="true" requiredMessage="#{bundle.CreateAmaFotoRequiredMessage_activo}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_audLogin}" for="audLogin" />
+                    <h:inputText id="audLogin" value="#{amaFotoController.selected.audLogin}" title="#{bundle.CreateAmaFotoTitle_audLogin}" required="true" requiredMessage="#{bundle.CreateAmaFotoRequiredMessage_audLogin}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_audNumIp}" for="audNumIp" />
+                    <h:inputText id="audNumIp" value="#{amaFotoController.selected.audNumIp}" title="#{bundle.CreateAmaFotoTitle_audNumIp}" required="true" requiredMessage="#{bundle.CreateAmaFotoRequiredMessage_audNumIp}"/>
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_rutaFile}" for="rutaFile" />
+                    <h:inputText id="rutaFile" value="#{amaFotoController.selected.rutaFile}" title="#{bundle.CreateAmaFotoTitle_rutaFile}" />
+                    <h:outputLabel value="#{bundle.CreateAmaFotoLabel_verificarFotoId}" for="verificarFotoId" />
+                    <h:selectOneMenu id="verificarFotoId" value="#{amaFotoController.selected.verificarFotoId}" title="#{bundle.CreateAmaFotoTitle_verificarFotoId}" >
+                        <f:selectItems value="#{amaVerificarArmaController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaFotoController.create}" value="#{bundle.CreateAmaFotoSaveLink}" />
+                <br />
+                <br />
+                <h:commandLink action="#{amaFotoController.prepareList}" value="#{bundle.CreateAmaFotoShowAllLink}" immediate="true"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.CreateAmaFotoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

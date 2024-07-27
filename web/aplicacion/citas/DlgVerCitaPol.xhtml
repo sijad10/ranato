@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgVerCitaPol" header="#{bundleCitas.CitaDlgVer_Title} " 
+              widgetVar="wvDlgVerCitaPol" modal="true" showEffect="fade" hideEffect="fade" width="80%" maximizable="false"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="dlgVerCitaPolDialogInit()" onHide="" position="center top"
+              style="padding:0!important" >
+        <p:outputPanel id="dlgVerCitaPolPanel" style="text-align:left; padding:0px!important">
+                
+            <h:form id="dlgVerCitaPolForm">
+                <div class="ui-fluid">
+
+                    <p:panel id="panelVerResumen" header="#{bundleCitas.CitaDlgVer_Resumen_Title}" style="margin-bottom: 8px" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Fecha_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.fechaTurno}" style="font-weight: bold;">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                </p:outputLabel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Hora_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.horaProgra}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Tram_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Sede_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                    </p:panel>
+                    
+                    <p:panel id="panelVerDatGen" header="#{bundleCitas.CitaDlgVer_General_Title}" style="margin-bottom: 8px" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_TipDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.tipoDoc.abreviatura}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_NumDoc_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.numDoc}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                        <div class="ui-g" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Nom_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.nombres}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel value="#{bundleCitas.CitaDlgVer_Ape_Label} "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perExamenId.apePat} #{citasReservadasController.turnoSeleccionado.perExamenId.apeMat}" style="font-weight: bold;"/>
+                            </div>
+                        </div>                    
+                    </p:panel>
+
+                    <p:panel id="pnlRecibo" header="Datos de voucher de pago" style="margin-bottom: 8px" rendered="#{citasReservadasController.turnoSeleccionado.secuenciaEmpoce!=null}" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel value="Nro de secuencia: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.secuenciaEmpoce}" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel value="Fecha de pago: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.fechaEmpoce}" style="font-weight: bold;">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                </p:outputLabel>                                
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel value="Monto: "/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.montoEmpoce}" style="font-weight: bold;"/>
+                            </div>
+                        </div>
+                    </p:panel>
+                    
+                    <p:panel id="panelVerDatArm" header="Datos del tipo de Modalidad" >
+                        <div class="ui-g" style="margin-bottom: 3px" >
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel value="RUC: " 
+                                               rendered="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg=='TP_TRA_VP' or citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg=='TP_TRA_SIS'}"/>
+                                <p:outputLabel value="#{citasReservadasController.turnoSeleccionado.perPagoId.ruc}" style="font-weight: bold;" 
+                                               rendered="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg=='TP_TRA_VP' or citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg=='TP_TRA_SIS'}"/>
+                            </div>
+                        </div>
+
+                        <p:dataTable id="dtTipoLic" value="#{citasReservadasController.listaTipoLicencia}"
+                                     var="itemConst" widgetVar="teoTableTip" rowIndexVar="fila"
+                                     emptyMessage="#{bundle.MensajeNoResultados}"
+                                     rowKey="#{itemConst.id}"
+                                     reflow="true">
+
+                            <p:column headerText="Tipo de Licencia" style="font-size:92%!important" class="ui-lg-3">
+                                <h:outputText value="#{itemConst.turnoId.tipoTramiteId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Modalidad" style="font-size:92%!important" class="ui-lg-3">
+                                <h:outputText value="#{itemConst.modalidadId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Arma"  style="font-size:92%!important" class="ui-lg-3"
+                                      rendered="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg == 'TP_TRA_VP' or citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg == 'TP_TRA_SIS'}">
+                                <h:outputText value="#{citasReservadasController.descripcionTipoArma(itemConst)}"/>
+                            </p:column>
+                            <p:column headerText="Arma" style="font-size:92%!important" class="ui-lg-3"
+                                      rendered="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg == 'TP_TRA_VP' or citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg == 'TP_TRA_SIS'}">
+                                <h:outputText value="#{itemConst.armaTeoId.nombre}" rendered="#{itemConst.armaTeoId != null}"/>
+                            </p:column>
+                            <p:column headerText="Arma" style="font-size:92%!important" class="ui-lg-3"
+                                      rendered="#{citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg != 'TP_TRA_VP' and citasReservadasController.turnoSeleccionado.tipoTramiteId.codProg != 'TP_TRA_SIS'}">
+                                <h:outputText value="#{itemConst.armaTeoId.nombre}" rendered="#{itemConst.armaTeoId != null}"/>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        
+                    </p:panel>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-9">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:commandButton value="Cerrar" actionListener="#{citasReservadasController.cerrarVerCita('POL')}" id="btnCancelView" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                    </div>
+
+                </div>
+                <p:blockUI block="dlgVerCitaPolPanel" trigger="btnCancelView" />
+            </h:form>
+
+        </p:outputPanel>
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("#dlgVerCitaPol > .ui-dialog-titlebar").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;"); 
+        $("#dlgVerCitaPol > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+        $("#dlgVerCitaPol > .ui-dialog-content").attr("style", "padding:4px!important;");
+        
+        function dlgVerCitaPolDialogInit() {
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='pnlRecibo_content'], div[id*='panelVerDatArm_content']").attr("style", "padding:0!important");
+            $("div[id*='panelVerResumen_content'], div[id*='panelVerDatGen_content'], div[id*='pnlRecibo_content'], div[id*='panelVerDatArm_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("#dlgVerCitaPol").css('top', 35);
+        }
+
+    </script>
+    
+</ui:composition>

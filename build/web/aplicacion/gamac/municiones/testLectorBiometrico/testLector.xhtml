@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">
+        <f:facet name="header" >
+            SUCAMEC EN LÍNEA - SEL
+        </f:facet>
+
+        <h:outputText value="#{bundleGamacCVMuni.TestLectorTitle}"/>
+    </ui:define>
+
+    <ui:define name="body">
+        <script src="/Sel/resources/css/deployJava.js" type="text/javascript"></script>
+        <div id="wrap">
+            <noscript>
+                <div class="alert alert-error javascript-alert">
+                La aplicación requiere que su Navegador Web tenga Javascript activado para funcionar
+                </div>
+            </noscript>
+        </div>
+                
+        <div class="ui-fluid">
+
+            <h:form id="buscarFrm">
+                <div class="ui-g">
+                    <div class="ui-g-6">
+
+                        <p:panel id="testContenedor" style="margin-bottom:10px;" widgetVar="panel" >
+
+                            <p:panel id="datosUsuPanel" header="#{bundleGamacCVMuni.RegVentaDlgVerifca_PanelUsu_Title}" style="margin-bottom:5px;" widgetVar="panel" >
+
+                                <div class="ui-grid-row">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                        <p:outputLabel value="DNI: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                        <h:outputText value="01234567"/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                                        <p:outputLabel value="Apellidos y Nombres: "/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <h:outputText value="APELLIDOS Y NOMBRES"/>
+                                    </div>
+                                </div>
+                            </p:panel>
+
+                            <div id="layVerificar">
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <div class="ui-messages ui-widget" >
+                                            <div class="ui-messages-info ui-corner-all" style="margin: 0!important; color: #363636!important; background-color: #b3dcf0!important; border-color: #868686!important;">
+                                                <span class="ui-messages-info-icon"></span>
+                                                <ul>
+                                                    <li><span class="ui-messages-info-detail">Haga clic en el botón Capturar para obtener la huella digital de cada dedo.</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:commandButton value="Capturar ÍNDICE IZQUIERDO" actionListener="#{evaluacionController.guardarIni}" id="btnIndIzq"
+                                                         process="@form" update=""
+                                                         partialSubmit="true" oncomplete="confirmaRegistro();" >
+                                        </p:commandButton>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:commandButton value="Capturar ÍNDICE DERECHO" actionListener="#{evaluacionController.guardarIni}" id="btnIndDer"
+                                                         process="@form" update=""
+                                                         partialSubmit="true" oncomplete="confirmaRegistro();" >
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:selectBooleanCheckbox id="indiceIzqAmp" value="1" styleClass="txtLabelChk"/> <p:spacer width="10" /><p:outputLabel for="indiceIzqAmp" value="Índice amputado?" styleClass="txtLabelChk"/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:selectBooleanCheckbox id="indiceDerAmp" value="1" styleClass="txtLabelChk"/> <p:spacer width="10" /><p:outputLabel for="indiceDerAmp" value="Índice amputado?" styleClass="txtLabelChk"/>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:panel id="lectorIndIzq" >
+                                            <p:spacer height="120" />
+                                        </p:panel>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                        <p:panel id="lectorIndDer" >
+                                            <p:spacer height="120" />
+                                        </p:panel>
+                                    </div>
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">&nbsp;</div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:commandButton value="Verificar" actionListener="#{gamacMunicionesTestLectorController.verificaHuella}" id="btnVerificar" icon="ui-icon-search"
+                                                         process="@form" update="mensajesGrowl"
+                                                         partialSubmit="true" oncomplete="afterVerificar();" >
+                                        </p:commandButton>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="layConfirmar">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-3" style="padding-left: 0px!important;">
+                                        <p:panel id="reniecFoto" >
+                                            <p:spacer height="100" />
+                                        </p:panel>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-9" style="padding-right: 0px!important;">
+                                        <p:panel id="reniecDatos" >
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="DNI: " /></div>
+                                                <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="01234567" /></div>
+                                            </div>
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Ape. Paterno: "/></div>
+                                                <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="APELLIDO"/></div>
+                                            </div>
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Ape. Paterno: "/></div>
+                                                <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="APELLIDO" /></div>
+                                            </div>
+                                            <div class="ui-g">
+                                                <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Nombres: " /></div>
+                                                <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="NOMBRES" /></div>
+                                            </div>                                
+
+                                        </p:panel>
+                                    </div>
+
+                                </div>
+
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:commandButton value="Volver a verificar" actionListener="#{gamacMunicionesRegistrarVentaController.reiniciaFormLector}" id="btnVolverVerificar"
+                                                         process="@form" update="mensajesGrowl"
+                                                         partialSubmit="true" oncomplete="beforeVerificar();" >
+                                        </p:commandButton>
+                                    </div>                            
+                                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                        <p:commandButton value="Confirmar" actionListener="#{gamacMunicionesRegistrarVentaController.confirmarHuella}" id="btnConfirmar" icon="ui-icon-check"
+                                                         process="@form" update=""
+                                                         partialSubmit="true" oncomplete="confirmaDatos();" >
+                                        </p:commandButton>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div>
+                                </div>
+
+                            </div>
+
+                        </p:panel>
+                    </div>
+                    
+                    <div class="ui-g-6">
+                        <!--
+                        <p:panel id="testApplet" style="margin-bottom:10px;" widgetVar="panel" >
+                            <object type="application/x-java-applet" style="width:610px;height:490px;" id="verificationApplet">
+                                <param name="image" value="https://serviciosbiometricos.reniec.gob.pe/portal/resources-1.2.3/img/loading-screen1.png" />
+                                <param name="boxmessage" value="Cargando..." />
+                                <param name="boxborder" value="false" />
+                                <param name="code" value="pe.gob.reniec.biometric.biometricDevices.applet.Biometric" />
+                                <param name="archive" value="biometricDevicesManager-2.1-SNAPSHOT.dist_signed.jar,bcprov-jdk16-1.46.jar" />
+                                <param name="codebase" value="https://serviciosbiometricos.reniec.gob.pe/portal/resources-1.2.3/applet/" />
+                                <param name="tipoTestGui" value="0" />
+                                <div class="row-fluid">
+                                    <div class="alert alert-alert" style="margin: 0 auto; width: 200px;">
+                                        <p> Java no está instalado en su PC o no es soportado por su navegador. </p>
+                                        <p>Instale la última versión de Java para plataformas de 32bits. Considere que Java ha sido desactivado en *Chrome* y *Opera*.</p>
+                                        <p>
+                                            <img src="resources-1.2.3/img/java-logo.png" class="pull-left" style="height:45px;margin-right:10px;"/>
+                                            <a href="http://www.java.com/es/download/" class="noAjax" target="_blank">
+                                                Obtenga la última versión de Java aquí
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </object>
+                        </p:panel>
+                        -->
+                        
+                        <p:panel id="bioApplet" style="margin-bottom:10px;" widgetVar="panel" >
+                            <object type="application/x-java-applet" style="width:650px;height:380px;" id="verificationBioApplet">
+                                <param name="image" value="https://serviciosbiometricos.reniec.gob.pe/portal/resources-1.2.3/img/loading-screen1.png" />
+                                <param name="boxmessage" value="Cargando..." />
+                                <param name="boxborder" value="false" />
+                                <param name="code" value="pe.gob.reniec.biometric.bioapplet.BioApplet" />
+                                <param name="archive" value="bioapplet-1.1-2017.02.17.12.49.suc.jar" />
+                                <param name="codebase" value="http://192.168.14.11:8080/Sel/resources/applet/" />
+                                <param name="bioDni" value="40378979" />
+                                <div class="row-fluid">
+                                    <div class="alert alert-alert" style="margin: 0 auto; width: 200px;">
+                                        <p> Java no está instalado en su PC o no es soportado por su navegador. </p>
+                                        <p>Instale la última versión de Java para plataformas de 32bits. Considere que Java ha sido desactivado en *Chrome* y *Opera*.</p>
+                                        <p>
+                                            <img src="resources-1.2.3/img/java-logo.png" class="pull-left" style="height:45px;margin-right:10px;"/>
+                                            <a href="http://www.java.com/es/download/" class="noAjax" target="_blank">
+                                                Obtenga la última versión de Java aquí
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </object>                            
+                        </p:panel>     
+                        <div id="applet-area" class="pull-left">
+                            <div id="requirements-applet" style="display: none;">
+                                <div id="applet-div"></div>
+                            </div>
+                        </div>
+                        
+                    </div>                    
+                </div>
+                <p:blockUI block="testContenedor" trigger="btnVerificar" />
+                
+                <div class="ui-g">
+                    
+                    <div class="ui-g-6">
+                    </div>
+                    
+                </div>
+                    
+            </h:form>
+
+        </div>
+            
+        <script type="text/javascript">
+            $(".txtLabel").parent().attr("style", "padding-top:11px");
+            //$(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            $("div[id*='buscarPanel_content'], div[id*='testPanel_content']").attr("style", "padding:0!important");
+            $("div[id*='testContenedor_content']").attr("style", "padding:2px!important");
+
+            $("#layConfirmar").hide("fast");
+            $("#layVerificar").show("fast");
+            $("div[id*='datosUsuPanel_content'], div[id*='reniecDatos_content'], div[id*='reniecFoto_content']").attr("style", "padding:2px!important");
+
+            function beforeVerificar() {
+                $("#layVerificar").show("fast");
+                $("#layConfirmar").hide("fast");
+            }
+
+            function afterVerificar() {
+                $("#layVerificar").hide("fast");
+                $("#layConfirmar").show("fast");
+            }
+
+            function confirmaDatos() {
+                PF('controlBiometricoDialog').hide();
+            }
+
+            function preFindVig() {
+                $("input[id*='vigilante_input']").val("");
+                $("input[id*='vigilante_hinput']").val("");
+                $("input[id*='vigilante_input']").focus();
+            }
+
+        </script>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="dlgPolvOrigen"               
+              widgetVar="wvDlgPolvOrigen" 
+              header="BUSCAR POLVORIN"
+              width="85%" 
+              height="60%"
+              modal="true" 
+              position="center" 
+              resizable="true" 
+              maximizable="true" 
+              closable="false"
+              appendTo="@(body)" >
+        <h:form id="frmDlgPolvOrigen" >
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="#{bundleGeppGte.Filtro}" />
+                    <p:inputText onblur="this.value = this.value.toUpperCase();"  
+                                 title="RZN.SOCIAL / DESCRIPCION / NRO.RG"
+                                 placeholder="RZN.SOCIAL / DESCRIPCION / NRO.RG"
+                                 value="#{eppRegistroGuiaTransitoController.filtro}" 
+                                 size="40" />
+                    <p:commandButton value="#{bundleGeppGte.Buscar}" 
+                                     icon="ui-icon-search" 
+                                     update="@form" 
+                                     action="#{eppRegistroGuiaTransitoController.buscarPolvorinGT}" />
+                    
+                    <p:outputLabel value="Ubicación Geográfica: " />
+                    <p:autoComplete id="AuComUbigeo" 
+                                        value="#{eppRegistroGuiaTransitoController.ubigeo}" 
+                                        completeMethod="#{eppRegistroGuiaTransitoController.completeUbigeo}" 
+                                        placeholder="Departamento / Provincia / Distrito"
+                                        var="ubigeoSelected" 
+                                        itemLabel="#{ubigeoSelected.nombreCompleto}" 
+                                        itemValue="#{ubigeoSelected}"  
+                                        minQueryLength="3" 
+                                        cache="true" 
+                                        forceSelection="true" />
+                    <p:outputLabel value="" />   
+                </h:panelGrid>
+                <p:dataTable id="datatable" value="#{eppRegistroGuiaTransitoController.lstDlgMapPolvorin}" 
+                             var="item" widgetVar="usrTable"   
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                             paginator="true" rows="4"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}">
+                    <p:column headerText="ID" style="text-align: center;width: 50px;">                      
+                        <h:outputText value="#{item.id}" />
+                    </p:column>
+                    <p:column headerText="Descripción" >                      
+                        <h:outputText value="#{item.descripcion}" style="font-size: 9px"/>
+                    </p:column>
+                    <p:column headerText="Dirección" >                     
+                        <h:outputText value="#{eppRegistroGuiaTransitoController.subStringToolGte(item.direccion)}" title="#{item.direccion}"/>
+                    </p:column>
+                    <p:column headerText="Activo" style="text-align: center"> 
+                        <b><h:outputText value="#{(item.activo == 1)? 'SI': 'NO'}"/></b><br/>
+                        RG: <h:outputText value="#{item.numero}"/>
+                    </p:column>
+                    <p:column headerText="Tipo" style="text-align: center;" >                  
+                        <h:outputText value="#{((item.TIPO == '1')?'DUEÑO':'ARRENDATARIO') }"/>
+                        <br/>
+                        <h:outputText value="#{item.fechaFinContrato}" rendered="#{item.TIPO == '2'}" />
+                    </p:column>
+                    <p:column headerText="Empresa" >
+                        <h:outputText value="#{item.rznSocial}"/>
+                    </p:column>
+                    <p:column headerText="Ubigeo" >
+                        <h:outputText value="#{item.ubigeo}"/>
+                    </p:column>
+                    <p:column headerText="Opción" style="width: 50px;text-align: center">
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('wvDlgPolvOrigen').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgPolvorinGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgPolvOrigen" 
+                                 actionListener="#{eppRegistroGuiaTransitoController.cancelarSeleccionarDlgPolvorinOrigenGt}"
+                                 oncomplete="PF('wvDlgPolvOrigen').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

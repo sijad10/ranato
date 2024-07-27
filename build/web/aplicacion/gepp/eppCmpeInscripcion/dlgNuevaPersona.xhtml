@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="PerViewDlg" widgetVar="PerViewDialog" width="40%" height="45%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Registro de Nueva Persona" closable="true" >
+            <h:form id="persForm" >
+                <h:panelGroup id="perDisplay">
+                    <h:panelGrid columns="1">
+                        <h:panelGrid columns="3" id="pnlAyuda">
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_notadni}" style="color:red"/>
+                            <p:commandButton icon="ui-icon-help" value="Ayuda" 
+                                         partialSubmit="true" 
+                                         process="@this" 
+                                         oncomplete="PF('wvDialogDNI').show();" />
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="2" id="pnlDatos">
+                            <p:outputLabel value="#{BundleBDIntegrado.CreateCarnetTipoDoc}" for="tipoDoc" />
+                            <p:selectOneMenu style="width: 300px" id="tipoDoc"
+                                             value="#{eppCmpeInscripcionController.personaEdicion.tipoDoc}"
+                                             required="true" 
+                                             requiredMessage="#{BundleBDIntegrado.SbPersonaRequiredMessage_tdoc}">
+                                <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                                <f:selectItems value="#{eppCmpeInscripcionController.listaDocumentosPersona}"
+                                               itemValue="#{TP_DOCID}" itemLabel="#{TP_DOCID.nombre}" var="TP_DOCID" />
+                                <p:ajax event="change" update="@this,perDisplay" process="@this" listener="#{eppCmpeInscripcionController.cambiaTipoDocumento()}" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.DireccionTitle_numeroDoc}" for="numero" />
+                            <h:panelGrid columns="3">
+                                <p:inputText id="numero" onblur="this.value = this.value.toUpperCase();" style="width: 100px; min-width: 100px;"
+                                             value="#{eppCmpeInscripcionController.personaEdicion.numDoc}" title="#{BundleBDIntegrado.SbPersonaRequiredMessage_numDoc}" 
+                                             placeholder="A" >
+                                    <f:validateRegex pattern="#{BundleBDIntegrado.RegexTextoNumeros}" />
+                                </p:inputText>
+                                <p:inputText id="numeroDoc" onblur="this.value = this.value.toUpperCase();" style="width: 20px;"
+                                             disabled="#{!eppCmpeInscripcionController.disabledTipoDoc}"
+                                             value="#{eppCmpeInscripcionController.personaEdicion.numDocVal}"
+                                             maxlength="1"
+                                             placeholder="B" >
+                                </p:inputText>
+                                
+                                <p:commandButton value="Buscar Documento"
+                                         actionListener="#{eppCmpeInscripcionController.buscarDocumento()}"
+                                         disabled="#{!eppCmpeInscripcionController.disabledTipoDoc}"
+                                         process="@this,tipoDoc,numero,numeroDoc"
+                                         update="pnlDatos"
+                                         partialSubmit="true"
+                                         icon="ui-icon-search" />
+                            </h:panelGrid>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.SbPersonaLabel_apePaterno}" for="apePat"  />
+                            <p:inputText id="apePat" onblur="this.value = this.value.toUpperCase();" style="width: 500px; min-width: 500px;"
+                                         value="#{eppCmpeInscripcionController.personaEdicion.apePat}" title="#{BundleBDIntegrado.SbPersonaRequiredMessage_apePaterno}"
+                                         disabled="#{eppCmpeInscripcionController.disabledNombres}" 
+                                         required="true" requiredMessage="#{BundleBDIntegrado.EppCertificado_validaMessage_app}" >
+                            </p:inputText>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.SbPersonaLabel_apeMaterno }" for="apeMat"  />
+                            <p:inputText id="apeMat" onblur="this.value = this.value.toUpperCase();" style="width: 500px; min-width: 500px;"
+                                         value="#{eppCmpeInscripcionController.personaEdicion.apeMat}" title="#{BundleBDIntegrado.SbPersonaRequiredMessage_apeMaterno}" 
+                                         disabled="#{eppCmpeInscripcionController.disabledNombres}"
+                                         required="true" requiredMessage="#{BundleBDIntegrado.EppCertificado_validaMessage_apm}" >
+                            </p:inputText>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.SbPersonaLabel_nombres }" for="nombres"  />
+                            <p:inputText id="nombres" onblur="this.value = this.value.toUpperCase();" style="width: 500px; min-width: 500px;"
+                                         value="#{eppCmpeInscripcionController.personaEdicion.nombres}" title="#{BundleBDIntegrado.SbPersonaRequiredMessage_nombres}"
+                                         disabled="#{eppCmpeInscripcionController.disabledNombres}"
+                                         required="true" requiredMessage="#{BundleBDIntegrado.EppCertificado_validaMessage_nombres}" >
+                            </p:inputText>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.SbPersonaLabel_genero }" for="generoId" />
+                            <p:selectOneMenu id="generoId" required="true" value="#{eppCmpeInscripcionController.personaEdicion.generoId}"
+                                         style="width: 200px" requiredMessage="El campo género es obligatorio " >
+                                <f:selectItem itemValue="#{null}" itemLabel="-------"/>
+                                <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_GEN', false)}"
+                                               itemValue="#{TP_GEN}" itemLabel="#{TP_GEN.nombre}" var="TP_GEN"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.SbPersonaLabel_estadoCivil }" for="estCivilId" />
+                            <p:selectOneMenu id="estCivilId" required="true" value="#{eppCmpeInscripcionController.personaEdicion.estCivilId}"
+                                            style="width: 200px" requiredMessage="El campo estado civil es obligatorio " >
+                               <f:selectItem itemValue="#{null}" itemLabel="-------"/>
+                               <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_ECIV', false)}"
+                                              itemValue="#{TP_ECIV}" itemLabel="#{TP_ECIV.nombre}" var="TP_ECIV"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.SbDireccionLabel_direccion }" for="direccion" />
+                            <p:inputText id="direccion"
+                                         style="width: 400px; min-width: 400px"
+                                         placeholder="Direccion"
+                                         value="#{eppCmpeInscripcionController.direccionEdicion.direccion}"
+                                         required="true" requiredMessage="#{BundleBDIntegrado.SbDireccionRequiredMessage_direccion}" >
+                            </p:inputText>
+
+                            <p:outputLabel value="Tipo" for="tipoId2" />
+                            <p:selectOneMenu id="tipoId2" value="#{eppCmpeInscripcionController.direccionEdicion.tipoId}"
+                                             style="width: 150px"
+                                             required="true" requiredMessage="#{BundleBDIntegrado.SbDireccionRequiredMessage_tipoId}">
+                                <f:selectItem itemLabel="---" itemValue="#{null}" />
+                                <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_DIRECB', false)}"
+                                               itemLabel="#{TP_DIRECB.nombre}" itemValue="#{TP_DIRECB}" var="TP_DIRECB" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Zona" for="zonaId2" />
+                            <p:selectOneMenu id="zonaId2" value="#{eppCmpeInscripcionController.direccionEdicion.zonaId}"
+                                             style="width: 150px"
+                                             required="true" requiredMessage="#{BundleBDIntegrado.SbDireccionRequiredMessage_zonaId}">
+                                <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                                <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_ZON', false)}"
+                                               itemLabel="#{TP_ZON.nombre}" itemValue="#{TP_ZON}" var="TP_ZON" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Via" for="viaId2" />
+                            <p:selectOneMenu id="viaId2" value="#{eppCmpeInscripcionController.direccionEdicion.viaId}"
+                                             style="width: 150px"
+                                             required="true" requiredMessage="#{BundleBDIntegrado.SbDireccionRequiredMessage_viaId}">
+                                <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                                <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_VIA', false)}"
+                                               itemLabel="#{TP_VIA.nombre}" itemValue="#{TP_VIA}" var="TP_VIA"
+                                               />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Ubicación Geográfica:"/>
+                            <p:selectOneMenu id="pId" value="#{eppCmpeInscripcionController.direccionEdicion.distritoId}" filter="true"
+                                             effect="fade" filterMatchMode="contains" panelStyle="width:800px"
+                                             style="width: 500px" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItems value="#{eppCmpeInscripcionController.listDistritos}"
+                                               var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                               itemValue="#{distrito}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                    <br/>
+                    <br/>
+                    
+                    <h:panelGrid style="float: right" columns="2">
+                        <p:commandButton value="#{BundleBDIntegrado.Guardar}"
+                                         disabled="#{eppCmpeInscripcionController.disabledReniec}"
+                                         actionListener="#{eppCmpeInscripcionController.guardarPersona()}" 
+                                         icon="ui-icon-disk"  />
+                        <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                     process="@this"
+                                     update="persForm"
+                                     actionListener="#"
+                                     oncomplete="PF('PerViewDialog').hide()"
+                                    icon="ui-icon-cancel" />
+                     </h:panelGrid>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

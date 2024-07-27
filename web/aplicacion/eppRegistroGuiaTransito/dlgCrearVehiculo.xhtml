@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="dlgVehiculo" widgetVar="wvDlgVehiculo" width="25%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CREAR VEHÍCULO" closable="false">
+        <h:form id="frmVehiculo">
+            <h:panelGrid columns="2" >
+
+                <p:outputLabel value="Placa: " />
+                <p:inputText value="#{eppRegistroGuiaTransitoController.vehiculo.placa}" maxlength="20"/>
+
+                <p:outputLabel value="Marca: " />
+                <p:inputText value="#{eppRegistroGuiaTransitoController.vehiculo.marca}" maxlength="50"/>
+
+                <p:outputLabel value="Año: " />
+                <p:inputText id="txtanio" value="#{eppRegistroGuiaTransitoController.vehiculo.anio}" maxlength="4">
+                    <p:keyFilter regEx="/[\d\.]/"/>
+                </p:inputText>
+            </h:panelGrid>
+            <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                <p:commandButton value="Crear" 
+                                 update="@form"
+                                 actionListener="#{eppRegistroGuiaTransitoController.crearVehiculo}"/>        
+                <p:commandButton value="Cancelar" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmVehiculo" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgVehiculo').hide()" />
+                <p:outputLabel value="" />
+                <p:outputLabel value="" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

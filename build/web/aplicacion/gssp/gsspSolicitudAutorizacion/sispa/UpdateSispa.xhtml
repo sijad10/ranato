@@ -1,0 +1,487 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    <ui:define name="title">
+        <b><h:outputText value="SERVICIO INDIVIDUAL DE SEGURIDAD PERSONAL (SISPA) - EDITAR"/></b>
+    </ui:define>
+    
+    <ui:define name="body">     
+        
+      <div class="ui-g">                        
+        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                    
+            <h:form id="FormEditSISPA">
+                <p:focus context="FormEditSISPA" />
+                
+                <p:remoteCommand name="runLoaDDJJ" action="#{gsspSolicitudAutorizacionSISPAController.onload_SISPA()}" autoRun="true" rendered="#{!gsspSolicitudAutorizacionSISPAController.termCondicionAceptaDDJJ}" />
+                <p:defaultCommand target="botonGuardarEditSISPA" />
+                    
+                <div class="ui-fluid">
+                    
+                    <p:panel header="#{BundleBDIntegrado.sspCarne_create_observacionesSolicitud}" id="pnlObservaciones" rendered="#{gsspSolicitudAutorizacionSISPAController.lstObservaciones.size() > 0 }" style="background: #DDA3A3; border-color: #B74646; " >
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                <p:dataTable id="dtObservaciones" var="item"  emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" value="#{gsspSolicitudAutorizacionSISPAController.lstObservacionesOrdenadasDesc}" >
+                                    <p:column headerText="Fecha" style="text-align: center; font-weight: bold;" class="ui-lg-2">
+                                        <h:outputText value="#{item.fecha}"><f:convertDateTime pattern="#{bundle.FormatoFecha}" /></h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Observación" style="text-align: center; font-weight: bold;" class="ui-lg-10"><h:outputText value="#{item.observacion}"/></p:column>
+                                </p:dataTable>
+                            </div>
+                        </div> 
+                    </p:panel>
+                    
+                    <ui:fragment rendered="#{gsspSolicitudAutorizacionSISPAController.lstObservaciones.size() > 0 }">
+                        <div class="ui-g" >                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <BR/>
+                            </div>
+                        </div>
+                    </ui:fragment>
+
+                    
+                    <p:panel id="pnl_DatosSolicitud" header="Datos de la Solicitud" rendered="#{gsspSolicitudAutorizacionSISPAController.registro != null}" >
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="Fecha Solicitud:"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:inputText id="txtFechaSolicitud" value="#{gsspSolicitudAutorizacionSISPAController.registro.fecha}" style="font-weight: bold;" disabled="true">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </p:inputText>
+                            </div>    
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="Nro. Solicitud:"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:inputText id="txtNroSolicitud" value="#{gsspSolicitudAutorizacionSISPAController.registro.nroSolicitiud}" style="font-weight: bold;" disabled="true" />
+                            </div>                                                
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                              <p:outputLabel value="Nro. Expediente"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:inputText id="txtNroExpediente" value="#{gsspSolicitudAutorizacionSISPAController.registro.nroExpediente}" style="font-weight: bold;" disabled="true" />
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    <p:panel id="pnl_AdministradoPJ" header="Datos del Administrado - Persona Jurídica" rendered="#{gsspSolicitudAutorizacionSISPAController.tipoAdministradoUsuario eq 'PersonaJuridica'}" >
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PJ_RzonSocial}"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-6">
+                                <p:inputText id="txtPJRzonSocial" value="#{gsspSolicitudAutorizacionSISPAController.administRazonSocial}" style="font-weight: bold;" disabled="true" />
+                            </div>                                                
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                              <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PJ_RUC}"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                              <p:inputText id="txtPJRuc" value="#{gsspSolicitudAutorizacionSISPAController.administRUC}" disabled="true" style="font-weight: bold;" />
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    
+                    <p:panel id="pnl_AdministradoPN" header="Datos del Administrado - Persona Natural" rendered="#{gsspSolicitudAutorizacionSISPAController.tipoAdministradoUsuario eq 'PersonaNatural'}" >
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_Nombre}"/>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                <p:inputText id="txtPNNombres" value="#{gsspSolicitudAutorizacionSISPAController.administNombres}" style="font-weight: bold;" disabled="true"  />
+                            </div>                                                
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-1">
+                              <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_TipDoc}"/>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                              <p:inputText id="txtPNTipDoc" value="#{gsspSolicitudAutorizacionSISPAController.administTipDoc}" style="font-weight: bold;" disabled="true" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-1">
+                              <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tabl_AutoServSeg_lbl_DatAdministrado_PN_NumDoc}" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                              <p:inputText id="txtPNNumDoc" value="#{gsspSolicitudAutorizacionSISPAController.administNumDoc}" style="font-weight: bold;" disabled="true"  />
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <p:panel id="pnlDatosModalidad" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_title_DatModalidad}" >
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_TipServ} *"  />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                <p:selectOneMenu id="bcoTipServicio"  value="#{gsspSolicitudAutorizacionSISPAController.regTipoSeguridadSelected }" disabled="true" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPAController.regTipoSeguridadList}"/>                                    
+                                </p:selectOneMenu>
+                            </div>
+             
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab2_AutoServSeg_lbl_DatModalidad_ServPrestaod} *" rendered="false" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-5">
+                                <p:selectOneMenu id="cboServPrestado"  value="#{gsspSolicitudAutorizacionSISPAController.regServicioPrestadoSelected }" rendered="false" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPAController.regServicioPrestadoList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            
+                     
+                      
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    <p:panel id="pnl_MediosContacto" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Titulo_03}" >
+                        
+                        <div class="ui-g">   
+                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_Prioridad} *" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:selectOneMenu id="cboLPE_Alm_Prioridad"  value="#{gsspSolicitudAutorizacionSISPAController.regPrioridadLPSSelected }" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPAController.regPrioridadLPSList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_lbl_LPS_MedioContacto} *" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:selectOneMenu id="cboLPE_Alm_MedioContacto"  value="#{gsspSolicitudAutorizacionSISPAController.regTipoMedioContactoLPSSelected }" >   
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionSISPAController.regTipoMedioContactoLPSList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:inputText id="txtLPE_Alm_DescripMedioContacto" value="#{gsspSolicitudAutorizacionSISPAController.regtextoContactoLPS }" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                               <p:commandButton id="btnLPE_AgregarTipoContacto"
+                                     icon="ui-icon-disk"                                      
+                                     action="#{gsspSolicitudAutorizacionSISPAController.agregarTipoContacto()}"
+                                     value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_btn_LPS_titulo_Agregar}"
+                                     ajax="true"
+                                     update="@this, pnl_MediosContacto, dtResultadosMedioContactos" 
+                                     style="display: block; width: 120px; margin-left: 10px;"
+                                />
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="ui-g">   
+                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                               <p:dataTable id="dtResultadosMedioContactos"
+                                     value="#{gsspSolicitudAutorizacionSISPAController.lstContactos}"
+                                     var="itemRegContacto"
+                                     rowKey="#{itemRegContacto.ID}"
+                                     selection="#{gsspSolicitudAutorizacionSISPAController.selectedContacto}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="false" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                                                                 
+                                    <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Prioridad}" style="text-align: center;" >
+                                        <h:outputText value="#{(itemRegContacto.valor eq '290'?'PRINCIPAL':'SECUNDARIO')}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Contacto}" style="text-align: center;" >
+                                        <h:outputText value="#{itemRegContacto.tipoMedioId.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Descripcion}" style="text-align: center;" >
+                                        <h:outputText value="#{itemRegContacto.descripcion}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_tab5_AutoServSeg_tbl_LPS_MedioContacto_Borrar}" style="text-align: center;" >
+
+                                        <p:commandButton 
+                                            immediate="true" 
+                                            update="@this, dtResultadosMedioContactos" 
+                                            icon="ui-icon-trash"
+                                            value="Borrar"
+                                            actionListener="#{gsspSolicitudAutorizacionSISPAController.deleteContacto(itemRegContacto.id)}" >
+                                        </p:commandButton>
+                                        
+                                        
+                                    </p:column>
+                                </p:dataTable>
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <p:panel id="pnl_Fotografia" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelFotografia_LBL_Titulo}"  >
+                        
+                        <div class="ui-g">   
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelFotografia_LBL_AdjFoto} *" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_agregarFoto}"
+                                              invalidFileMessage="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_fileUploadFoto_InvalidFileMessage}"
+                                              fileUploadListener="#{gsspSolicitudAutorizacionSISPAController.handleFileUploadFoto}"
+                                              invalidSizeMessage="#{gsspSolicitudAutorizacionSISPAController.obtenerMsjeInvalidSizeFile_SelFotoPersSeguridad()}"
+                                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('selFotoPersSeguridadPrestaServ_sizeArchivo').valor}"
+                                              onstart="PF('loadingDialog').show()"
+                                              oncomplete="PF('loadingDialog').hide()"
+                                              mode="advanced" dragDropSupport="false"
+                                              multiple="false"                                              
+                                              auto="true" process="@form" update="@form"
+                                              allowTypes="/(\.|\/)(jpg|jpeg)$/" 
+                                              immediate="true" 
+                                              >
+                                    <p:graphicImage value="#{gsspSolicitudAutorizacionSISPAController.archivoFOTO}" cache="false" width="150" height="200">
+                                    </p:graphicImage>
+                                </p:fileUpload>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_msjeCaracteristicasFoto}" escape="false" />
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="ui-g">   
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                &nbsp;
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                <p:outputLabel value="#{gsspSolicitudAutorizacionSISPAController.obtenerMsjeFoto()}" style="color:red;" />
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    <p:panel id="pnl_CertFisicoMental" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCertFiscoMntal_LBL_Titulo}" >
+                        
+                        <div class="ui-g">  
+                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCertFiscoMntal_lbl_Text_CertFiscoMntal} *" />
+                            </div>
+                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                <p:fileUpload id="txf_ArchivoCertFiscoMntal" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCertFiscoMntal_btn_File_AdjPDF}"
+                                              invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                              fileUploadListener="#{gsspSolicitudAutorizacionSISPAController.handleFileUploadPDF_CertFiscoMntal}"
+                                              invalidSizeMessage="#{gsspSolicitudAutorizacionSISPAController.obtenerMsjeInvalidSizeFile_SelCertSaludFisicoMental()}"
+                                              sizeLimit="#{sbParametroController.obtenerParametroXNombre('selCertSaludFisicoMentalaPrestaServ_sizeArchivo').valor}"
+                                              onstart="PF('loadingDialog').show()"
+                                              oncomplete="PF('loadingDialog').hide()"
+                                              mode="advanced" dragDropSupport="false"
+                                              multiple="false"
+                                              fileLimit="1"
+                                              auto="true" process="@this,pnl_CertFisicoMental" update="@this,pnl_CertFisicoMental"
+                                              allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                              >
+                                        <h:outputText value="#{gsspSolicitudAutorizacionSISPAController.nomArchivoCertFiscoMntal }" />
+                                    </p:fileUpload>                                
+                            </div>
+                            
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:commandButton value="Descargar" icon="ui-icon-circle-arrow-s" rendered="#{gsspSolicitudAutorizacionSISPAController.nomArchivoCertFiscoMntal_anterior != null}"
+                                            ajax="false" process="@all" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" immediate="true" >
+                                    <p:fileDownload value="#{gsspSolicitudAutorizacionSISPAController.cargarDocumentoCertFiscoMntal()}" contentDisposition="inline"  />
+                                </p:commandButton>  
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <p:panel id="pnl_CopiaContrato" header="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCopyContrato_LBL_Titulo}"  >                    
+                        
+                        <div class="ui-g">  
+                        
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCopyContrato_lbl_Text_Contrato} *" />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-4">
+                                <p:fileUpload id="txf_ArchivoCopiaContrato" label="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_PanelCopyContrato_btn_File_AdjPDF}"
+                                          invalidFileMessage="#{BundleBDIntegrado.msjeValidacionFormato_PDF}"
+                                          fileUploadListener="#{gsspSolicitudAutorizacionSISPAController.handleFileUploadPDF_CopyContrato}"
+                                          invalidSizeMessage="#{gsspSolicitudAutorizacionSISPAController.obtenerMsjeInvalidSizeFile_SelCopiaContrato()}"
+                                          sizeLimit="#{sbParametroController.obtenerParametroXNombre('selCopiaContratoPrestaServ_sizeArchivo').valor}"
+                                          onstart="PF('loadingDialog').show()"
+                                          oncomplete="PF('loadingDialog').hide()"
+                                          mode="advanced" dragDropSupport="false"
+                                          multiple="false"
+                                          fileLimit="1"
+                                          auto="true" process="@this,pnl_CopiaContrato" update="@this,pnl_CopiaContrato"
+                                          allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true" 
+                                          >
+                                    <h:outputText value="#{gsspSolicitudAutorizacionSISPAController.nomArchivoCopyContrato }" />
+                                </p:fileUpload>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:commandButton value="Descargar" icon="ui-icon-circle-arrow-s" rendered="#{gsspSolicitudAutorizacionSISPAController.nomArchivoCopyContrato_anterior != null}"
+                                            ajax="false" process="@all" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'" immediate="true" >
+                                    <p:fileDownload value="#{gsspSolicitudAutorizacionSISPAController.cargarDocumentoCopyContrato()}" contentDisposition="inline"  />
+                                </p:commandButton>                                
+                            </div>
+                            
+                        </div>
+                        
+                    </p:panel>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-4">
+                            &nbsp;
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-2">
+                            <p:commandButton id="botonGuardarEditSISPA" value="REGISTRAR" 
+                                             action="#{gsspSolicitudAutorizacionSISPAController.btnEditarSISPA()}" 
+                                             ajax="true" icon="ui-icon-disk" iconPos="left"
+                                             update="@this, pnl_AdministradoPJ, pnl_AdministradoPN, pnlDatosModalidad, pnl_MediosContacto, pnl_Fotografia, pnl_CertFisicoMental, pnl_CopiaContrato"  
+                                             process="@this, pnl_AdministradoPJ, pnl_AdministradoPN, pnlDatosModalidad, pnl_MediosContacto, pnl_Fotografia, pnl_CertFisicoMental, pnl_CopiaContrato"  />
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-2">
+                            <p:commandButton id="btnCancelarSISPA" value="CANCELAR" 
+                                             action="#{gsspSolicitudAutorizacionSISPAController.btnCancelarSISPA_Editar()}"
+                                             icon="ui-icon-closethick"  update="@all" process="@all" iconPos="left" styleClass="botonBorrar"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-4">
+                            &nbsp;
+                        </div>
+                    </div>
+                    
+         
+                    <div class="ui-g">                        
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <BR/><BR/>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+            </h:form>
+        
+        </div>          
+      </div>
+            
+        <ui:include src="dlgDeclaracionJuradaSISPA.xhtml" />
+            
+    </ui:define>
+            
+
+</ui:composition>

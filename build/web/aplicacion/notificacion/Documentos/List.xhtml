@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{bundleNotificacion.BuscarNeDocumentoTitulo}" rendered="#{neDocumentoController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{bundleNotificacion.VerNeDocumentoTitulo}" rendered="#{neDocumentoController.estado == 'VER'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{ (neDocumentoController.estado == 'BUSCAR') || (neDocumentoController.estado == 'OBTENER')}">
+            <p:focus context="buscarForm" />
+            <h:panelGroup id="buscarPanel">
+                <p:panel>
+                    <h:panelGrid columns="11">
+                        <p:outputLabel id="buscarAnho" value="#{bundleNotificacion.FiltroAnho}" />
+                        <p:selectOneMenu value="#{neDocumentoController.filtroAnho}" id="selectAnio" >
+                            <f:selectItem  itemValue="" itemLabel="-- Todos --"/>
+                            <f:selectItems value="#{neDocumentoController.ultimosAnhos}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel id="buscarFiltro" value="#{bundleNotificacion.FiltroRef}" />
+                        <p:inputText  value="#{neDocumentoController.filtro}" size="20" style="min-width: 0px;" />
+                        <p:commandButton value="#{bundleNotificacion.Buscar}" icon="ui-icon-search" actionListener="#{neDocumentoController.buscar}"  update=":buscarForm" />
+                    </h:panelGrid>
+                </p:panel>
+                <h:panelGroup rendered="#{neDocumentoController.resultados != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{bundleNotificacion.Resultados500}" escape="false" />
+                        <h:commandLink style="float: right; clear: both;">
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{bundleNotificacion.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatable" fileName="RelacionNotificaciones" />
+                        </h:commandLink>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{neDocumentoController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleNotificacion.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleNotificacion.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleNotificacion.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_fechaDoc}" sortBy="#{item.fechaDoc}" width="10%" style="text-align: center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_fechaDoc}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.fechaDoc}">
+                                <f:convertDateTime pattern="#{bundleNotificacion.FormatoFecha}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_nroExp}" sortBy="#{item.nroExpediente}" width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_nroExp}" />
+                            </f:facet>
+
+                            <h:outputText value="#{neDocumentoController.obtenerNumeroExpediente(item)}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_nroDoc}" sortBy="#{item.nroDoc}" width="5%" style="text-align: center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_nroDoc}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.nroDoc}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_asunto}" sortBy="#{item.asunto}" width="35%" style="vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_asunto}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.asunto}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_referencia}" sortBy="#{item.referencia}" width="30%" style="vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_referencia}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.referencia}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.NeDocumentoTitle_estadoId}" sortBy="#{item.estadoId.nombre}" width="5%" style="text-align: center; vertical-align: middle;">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleNotificacion.NeDocumentoTitle_estadoId}" />
+                            </f:facet>
+                            <h:graphicImage url="#{neDocumentoController.imagenEstado(item.estadoId.codProg)}" title="#{item.estadoId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleNotificacion.OpcionesVer}" exportable="false" width="5%" style="text-align: center; vertical-align: middle;">
+                            <p:commandButton icon="ui-icon-search" actionListener="#{neDocumentoController.mostrarVer}"  update="@all"/>
+                            <h:outputText value=" "/>
+                        </p:column>                                 
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

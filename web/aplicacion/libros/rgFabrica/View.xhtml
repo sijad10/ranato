@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{eppLibroController.estado == 'VER'}" >
+
+        <p:panel header="Lugar y Actividad">
+           
+            <h:panelGrid columns="4" cellspacing="5" >
+                <p:outputLabel value="Fábrica"/>
+                <p:selectOneMenu id="resPL" value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 filter="true" required="true" disabled="true"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="direccion: #{res.eppLocalList.get(0).direccion}"
+                                   itemValue="#{res}"/>
+                   
+
+                </p:selectOneMenu>      
+                <p:outputLabel value="Nro Resolución"/>
+                <p:inputText value="#{eppLibroController.nroResolucion}" id="nroRes" size="50" disabled="true"/>
+                <p:outputLabel value="Tipo Finalidad"/>
+                <p:selectOneMenu value="#{eppLibroController.tipoFinalidad}" 
+
+                                 >
+                    <f:selectItem itemLabel="-----" itemValue="#{null}"/>
+                    <f:selectItems var="librFa" itemLabel="#{librFa.nombre}" itemValue="#{librFa}" 
+                                   value="#{tipoExplosivoController.selectItemsTipo('TP_LIBFAB', null)}"/>
+                  <p:ajax event="change" listener="#{eppLibroController.mostrarEditarRegistroFabrica}" update="@form" process="@form" />   
+
+                </p:selectOneMenu>
+                <p:outputLabel value="Periodo"/>
+                <h:panelGroup>
+                    <p:selectOneMenu value="#{eppLibroController.libroMesFabrica.mesId}" disabled="true"
+                                     >
+                        <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_MES', null)}"                                     
+                                       var="mes" itemLabel="#{mes.abreviatura}" itemValue="#{mes}"/>
+                    </p:selectOneMenu>
+                    <p:inputText value="#{eppLibroController.libroMesFabrica.libromAnio}" disabled="true"/>
+
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+        </p:panel><br/>
+        <!-- explosivos -->
+        <p:panel header="Explosivos Fabricados" >      
+           
+            <p:dataTable id="deExp"  rendered="#{eppLibroController.renderFinaDetalle}"
+                         value="#{eppLibroController.listEppLibroExploFabricadosFa}"
+                         var="itemMat"  widgetVar="exp" 
+                         selection="#{eppLibroController.selectExplosivos}"
+                         rowKey="#{itemMat.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMat.explosivoId.nombre} /  #{itemMat.tipoDetalle == null ? '' :itemMat.tipoDetalle.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMat.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Fabricada">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMat.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMat.dia}"/>
+                </p:column>
+               
+            </p:dataTable>  
+
+            <p:dataTable id="deExpDes" rendered="#{eppLibroController.rennderTableDestr}" 
+                         value="#{eppLibroController.listEppLibroExploFabricadosFaDestruccion}"
+                         var="itemMatDes"  widgetVar="expDes" 
+                         selection="#{eppLibroController.selectExplosivosDes}"
+                         rowKey="#{itemMatDes.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos destruccion
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatDes.explosivoId.nombre} #{itemMat.tipoDetalle == null ? '' :itemMat.tipoDetalle.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatDes.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Fabricada">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatDes.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatDes.dia}"/>
+                </p:column>
+               
+            </p:dataTable>   
+
+            <p:dataTable id="deExpRep" rendered="#{eppLibroController.rennderTableReproc}" 
+                         value="#{eppLibroController.listEppLibroExploFabricadosFaReproce}"
+                         var="itemMatRepr"  widgetVar="exprep" 
+                         selection="#{eppLibroController.selectExplosivosReproc}"
+                         rowKey="#{itemMatRepr.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos Reprocesar
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatRepr.explosivoId.nombre} #{itemMatRepr.tipoDetalle == null ? '' :itemMatRepr.tipoDetalle.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatRepr.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Fabricada">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatRepr.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{itemMatRepr.dia}"/>
+                </p:column>
+               
+            </p:dataTable>   
+
+        </p:panel><br/>
+
+        <!-- material -->
+        <p:panel header="Material Utilizado en la Fabricación" >
+            
+
+            <p:dataTable id="dataMate" rendered="#{eppLibroController.renderTableDetalle}"
+                         value="#{eppLibroController.listEppLibroMaterialUtilizadoFa}"                     
+                         var="itemExpl" widgetVar="mat"
+                         selection="#{eppLibroController.selectMaterial}"
+                         rowKey="#{itemExpl.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Materiales a Procesar
+                </f:facet>
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExpl.explosivoId.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExpl.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Fabricada">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExpl.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExpl.dia}"/>
+                </p:column>
+               
+
+            </p:dataTable>   
+            <p:dataTable id="dataMateRe" rendered="#{eppLibroController.renderTableInsuRepro}"
+                         value="#{eppLibroController.listEppLibroMaterialUtilizadoExploRepro}"                     
+                         var="itemExplRe" widgetVar="matRe"
+                         selection="#{eppLibroController.selectMaterialRepro}"
+                         rowKey="#{itemExplRe.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Materiales a Reprocesar
+                </f:facet>
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExplRe.explosivoId.nombre}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExplRe.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Fabricada">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExplRe.cantidad}">
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{itemExplRe.dia}"/>
+                </p:column>
+               
+
+            </p:dataTable>    
+        </p:panel> <br/>
+        <br/>
+        <div align="center">
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroFabrica()}" 
+                             value="Listado Fabricacion" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

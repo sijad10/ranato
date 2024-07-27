@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="TCViewDialog" widgetVar="TermCondViewDialog" width="25%" height="25%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Terminos y Condiciones">
+            <h:form id="formMensajeTerminos">
+                <h:panelGroup>
+                    <p:panel style="margin-bottom:20px" id="panelConfirmacion">
+                        <h:panelGrid columns="1">
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones1}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones2}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones3}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones4}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones5}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones6}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones7}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones8}"/>
+                            <p:outputLabel value="- #{bundleSistemaBase.InscripcionAccesoTerminosCondiciones9}"/>
+                            <p:outputLabel/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:selectBooleanCheckbox value="#{inscripcionAccesoController.flagAceptar}" />
+                            <p:outputLabel value="#{bundleSistemaBase.AceptoTerminos}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:commandButton value="#{bundleSistemaBase.Enviar}" 
+                                             update="@form"
+                                             action="#{inscripcionAccesoController.registrarInscripcion}"/>
+                            <p:commandButton value="#{bundleSistemaBase.Cancelar}" 
+                                             actionListener="#{inscripcionAccesoController.regresar}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

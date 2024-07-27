@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="Bandeja de Tarjeta de Propiedad Electrónica de Arma de Fuego"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="tarEleForm">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4 ui-lg-3">
+                        <p:outputLabel value="Fecha Inicio "/>
+                        <p:calendar id="fechaIni" showOn="button" 
+                                    value="#{amaTarjetaPropiedadController.fechaIniFiltroEle}"
+                                    pattern="#{bundle.FormatoFecha}"
+                                    navigator="true" locale="es">
+                            <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                        </p:calendar>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-3">
+                        <p:outputLabel value="Fecha Fin "/>
+                        <p:calendar id="fechaFin" showOn="button" 
+                                    value="#{amaTarjetaPropiedadController.fechaFinFiltroEle}"
+                                    pattern="#{bundle.FormatoFecha}"
+                                    navigator="true" locale="es">
+                            <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                        </p:calendar>
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-6">                        
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <p:outputLabel value="Busqueda por "/>
+                        <p:selectOneMenu id="filtroSimpleId" value="#{amaTarjetaPropiedadController.filtroSimpleTipo}" 
+                                         style="width: 200px">
+                            <f:selectItem itemLabel="---" itemValue=""/>
+                            <f:selectItem itemLabel="Nro. expediente" itemValue="1"/>
+                            <f:selectItem itemLabel="Nombre del propietario" itemValue="2"/>
+                            <f:selectItem itemLabel="DNI / CE" itemValue="3"/>
+                            <f:selectItem itemLabel="Nro. Serie" itemValue="4"/>
+                            <f:selectItem itemLabel="Nro. RUA" itemValue="5"/>
+                            <p:ajax event="change" update="filtroSimpleId"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <p:inputText id="filtroITId" value="#{amaTarjetaPropiedadController.filtroSimpleTexto}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-3">
+                        <p:commandButton value="#{bundleCitas.Buscar}" id="botonBuscar"
+                                         process="@this @form"
+                                         icon="ui-icon-search " actionListener="#{amaTarjetaPropiedadController.buscarBandejaTarEle()}"
+                                         update="@form"/>
+                    </div>
+                </div>
+                <p:dataTable id="dtTarEle" value="#{amaTarjetaPropiedadController.lstTarEleMap}"
+                             var="item" 
+                             emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                             paginator="true" rows="#{bundleCitas.PaginatorFilas}"  
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleCitas.PaginatorFilasPorPagina}"
+                             reflow="true">
+                    <p:column headerText="NRO. DE EXPEDIENTE" style="font-size:95%!important" class="ui-lg-3" >
+                        <h:outputText value="#{item.nroExpediente}"/>
+                    </p:column>
+                    <p:column headerText="DNI/CE DEL PROPIETARIO" style="font-size:95%!important" class="ui-lg-2" >
+                        <h:outputText value="#{item.nroPropietario}"/>
+                    </p:column>
+                    <p:column headerText="NOMBRE DEL PROPIETARIO" style="font-size:95%!important" class="ui-lg-1">                          
+                        <h:outputText value=" #{item.nombrePropietario}" />
+                    </p:column>
+                    <p:column headerText="NRO. DE RUA" style="font-size:95%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.nroRua}"/>
+                    </p:column>
+                    <p:column headerText="TIPO ARMA/MARCA/MODELO/CALIBRE" style="font-size:95%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.caracteristicas}"/>
+                    </p:column>
+                    <p:column headerText="SERIE" style="font-size:95%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.serie}"/>
+                    </p:column>
+                    <p:column headerText="FECHA DE EMISIÓN" style="font-size:95%!important" class="ui-lg-1" >                                   
+                        <h:outputText value="#{item.fechaEmision}">
+                            <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                        </h:outputText>  
+                    </p:column>
+                    <p:column headerText="MODALIDAD" style="font-size:95%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.modalidad}"/>
+                    </p:column>
+                                        
+                    <p:column headerText="OPCIÓN" style="font-size:95%!important" class="ui-lg-1" > 
+                        <p:commandLink target="_blank" value="Descargar"  ajax="false">
+                            <p:fileDownload value="#{amaTarjetaPropiedadController.obtenerArchivo(item.tarjeta)}" contentDisposition="inline" />
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

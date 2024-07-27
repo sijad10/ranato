@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <br/>
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Listado}" rendered="#{eppCertificadoController .estado == 'BUSCAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_Titulo}" rendered="#{eppCertificadoController.estado == 'CREAR'}"/>
+            </b>
+        </ui:define>
+        
+        <ui:define name="body">            
+            <h:form id="createForm" rendered="#{eppCertificadoController.estado == 'CREAR'}" > 
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_Texto}" rendered="#{eppCertificadoController .estado == 'CREAR'}"/>
+                <br/> <br/>
+                    
+                <p:panel id="pnlLugarFecha" header="#{BundleBDIntegrado.EppCertificado_Paso1_lugar}" style="margin-top: 20px; ">
+                    <h:panelGrid columns="1"  >
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_escojalugar}" style="color:red; font-style: italic;" />        
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="6"  >
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_lugarfech}" />
+                        <p:selectOneMenu id="lugarFecha"
+                                         value="#{eppCertificadoController.registroSolicitud.capacitacionId }" >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{eppCertificadoController.obtenerLugarFechaCertificacionesConstancia(item)}"
+                                          value="#{eppCertificadoController.itemsCapacitacionCertificadoMS}"/>
+                           <p:ajax event="change" update="@this,pnlLugarFecha" process="@this" listener="#{eppCertificadoController.cambiaCapacitacion()}" />
+                       </p:selectOneMenu>
+
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_vacantes}" style="margin-left: 20px;font-weight: bold;" />
+                        <h:outputText value="#{eppCertificadoController.vacantes }" />
+
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_fechalimite}" style="margin-left: 20px;font-weight: bold;" />
+                        <h:outputText value="#{eppCertificadoController.registroSolicitud.capacitacionId.fechaLimInscrip }" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="1" >
+                        <p:dataTable id="tblEvaluacion" value="#{eppCertificadoController.registroSolicitud.capacitacionId.eppCapaHorariodirList }"
+                                        emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="item" style="width: 100%;" sortBy="#{item.fecha }" >
+
+                              <p:column headerText="#{BundleBDIntegrado.EppCertificado_Paso1_dt_fecha}" style="text-align:center">
+                                  <f:facet name="header">
+                                      <h:outputText value="#{BundleBDIntegrado.EppCertificado_dtHorario_horario}" />
+                                  </f:facet>
+                                  <h:outputText value="#{eppCertificadoController.formatoFechaHorarioPaso1(item)}"/>
+                              </p:column>
+                              <p:column headerText="#{BundleBDIntegrado.EppCertificado_Paso1_dt_direccion}" >
+                                  <f:facet name="header">
+                                      <h:outputText value="#{BundleBDIntegrado.EppCertificado_dtHorario_direccion}" />
+                                  </f:facet>
+                                  <h:outputText value="#{item.direccion}"/>
+                              </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+
+                <p:panel id="pnlComprobante" header="#{BundleBDIntegrado.EppCertificado_Paso1_comp}" rendered="false">
+
+                    <h:panelGrid columns="2"  >
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_msjecomp}" style="color:red; font-style: italic;" />
+                        <p:commandButton value="Ver ejemplo de comprobante" 
+                                         style="margin-left: 30px;"
+                                         icon="ui-icon-search"
+                                         process="@this" 
+                                         actionListener="#{eppCertificadoController.openDlgAyuda(1)}" />
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="4">
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_comprobante}" />
+                        <p:autoComplete id="AuPropiertario" value="#{eppCertificadoController.recibo}"
+                                            placeholder="NRO. COMPROBANTE"
+                                            size="40"
+                                            queryDelay="2000"
+                                            rendered="#{eppCertificadoController.renderRecibo }"
+                                            completeMethod="#{eppCertificadoController.completeRecibo}"
+                                            var="reciboSelected" itemLabel="#{eppCertificadoController.obtenerDescRecibo(reciboSelected)}"
+                                            minQueryLength="3" cache="true" itemValue="#{reciboSelected}"  forceSelection="true" scrollHeight="200" >
+                            <p:ajax event="itemSelect" process="pnlComprobante" update="pnlComprobante" listener="#{eppCertificadoController.seleccionaRecibo}" />
+                        </p:autoComplete>
+                        <h:outputText value="#{eppCertificadoController.obtenerDescRecibo(eppCertificadoController.recibo)}" 
+                                      style ="width:200px;display: block;"
+                                      rendered="#{!eppCertificadoController.renderRecibo}" />
+                        <p:commandButton icon="ui-icon-closethick"
+                                         styleClass="botonBorrar"
+                                         process="@this,pnlComprobante" update="@this,pnlComprobante"
+                                         disabled="#{eppCertificadoController.recibo eq null}"
+                                         actionListener="#{eppCertificadoController.eliminarReciboRegistro()}">
+                        </p:commandButton>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+
+                <p:panel header="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_Participante}" id="pnlParticipante">
+                    <h:panelGrid columns="1">
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_msjeParticipante}" style="color:red; font-style: italic;" />
+
+                        <h:panelGrid columns="2">
+                            <p:commandButton icon="ui-icon-search" 
+                                         value="#{BundleBDIntegrado.EppCertificado_buscarPersona}"
+                                         actionListener="#{eppCertificadoController.openDlgBusqPersona()}"
+                                         process="@this" />
+                            <p:commandButton icon="ui-icon-search" 
+                                         value="#{BundleBDIntegrado.EppCertificado_nuevaPersona}"
+                                         actionListener="#{eppCertificadoController.openDlgNuevaPersona()}"
+                                         process="@this"  />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="4"> 
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_tipoDoc}" for="tipoDoc" style="display:block;width: 190px;" /> 
+                            <p:outputLabel id="tipoDoc" 
+                                         value="#{eppCertificadoController.registro.eppCertificado.personaId.tipoDoc.nombre.concat(' - ').concat(eppCertificadoController.registro.eppCertificado.personaId.numDoc) }" 
+                                         style="font-weight:bold;" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_ape}" for="ape" />
+                            <p:outputLabel id="ape" 
+                                            value="#{eppCertificadoController.registro.eppCertificado.personaId.apePat.concat(' ').concat(eppCertificadoController.registro.eppCertificado.personaId.apeMat).concat(' ').concat(eppCertificadoController.registro.eppCertificado.personaId.nombres) }" 
+                                            style="width: 400px;font-weight:bold;" />
+
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_domicilio}" for="domicilio" style="display:block;width: 190px;" />
+                            <p:outputLabel id="domicilio" 
+                                           value="#{eppCertificadoController.direccionPersona.direccion}" style="width: 400px;font-weight:bold;" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="7">
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_ubigeo}" style="display:block;width: 190px;" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_departamento}"  />
+                            <p:outputLabel value="#{eppCertificadoController.direccionPersona.distritoId.provinciaId.departamentoId.nombre}" style="font-weight:bold;" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_provincia}"  />
+                            <p:outputLabel value="#{eppCertificadoController.direccionPersona.distritoId.provinciaId.nombre}" style="font-weight:bold;" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_distrito}"  />
+                            <p:outputLabel value="#{eppCertificadoController.direccionPersona.distritoId.nombre}" style="font-weight:bold;" />
+                        </h:panelGrid>
+
+                        <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.EppCertificado_foto}"
+                                      invalidFileMessage="#{BundleBDIntegrado.EppCertificado_fileUpload_foto_InvalidFileMessage}"
+                                      fileUploadListener="#{eppCertificadoController.handleFileUpload}"
+                                      mode="advanced" dragDropSupport="false"
+                                      multiple="false"
+                                      auto="true" update="pnlParticipante"
+                                      allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                            <p:graphicImage value="#{eppCertificadoController.foto}" cache="false" width="200" height="200">
+                            </p:graphicImage>
+                        </p:fileUpload>
+                        
+                        <h:panelGrid columns="2">
+                            <p:selectBooleanCheckbox  id="terminosDJ" value="#{eppCertificadoController.terminos}" />
+                            <h:outputText value="#{BundleBDIntegrado.EppCertificado_terminosParticipante}" /> 
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+
+                <p:panel header="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_Actividades}" id="pnlActividades">
+                    <h:panelGrid columns="1"  >
+                        <h:outputText value="#{BundleBDIntegrado.EppCertificado_notaActividades}" style="color:red; font-style: italic;" />
+                    </h:panelGrid>
+                    
+                    <h:panelGrid columns="4">
+                        <p:selectManyCheckbox id="grid" 
+                                              value="#{eppCertificadoController.registro.eppCertificado.tipoExplosivoList}" 
+                                              converter="tipoExplosivoConverter"
+                                              layout="grid" 
+                                              columns="4">
+                            <f:selectItems value="#{eppCertificadoController.lstActividadesDisponibles}" var="TP_PIROACT" itemLabel="#{TP_PIROACT.nombre}" itemValue="#{TP_PIROACT}" />
+                        </p:selectManyCheckbox>
+                    </h:panelGrid>
+                </p:panel>
+                <br/>
+                
+                <p:commandButton id="btnGuardar" icon="ui-icon-disk" update="@all" actionListener="#{eppCertificadoController.crear}"  value="#{BundleBDIntegrado.Guardar}" process="@all" />
+                <p:commandButton icon="ui-icon-closethick" update="@all" actionListener="#{eppCertificadoController.inscripcion() }"  value="#{BundleBDIntegrado.EppCertificado_limpiar}" process="@this"/>
+                
+                <br/><br/><br/>
+            </h:form>
+        
+            <ui:include src="dlgConfirmarInscripcion.xhtml"/>
+            <ui:include src="dlgAyuda.xhtml"/>
+            <ui:include src="dlgBuscarPersona.xhtml"/>
+            <ui:include src="dlgNuevaPersona.xhtml"/>
+            <ui:include src="dlgDni.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>
+
+        
+                
+
+        
+        

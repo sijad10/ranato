@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgCambiarInstructor" widgetVar="wvDlgCambiarInstructor" width="80%" height="55%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CAMBIAR INSTRUCTOR" closable="false">
+        <h:form id="frmCambiarInstructor">
+            <h:panelGrid columns="1" >
+                <p:fieldset id="fsCursos" legend="#{BundleBDIntegrado.sspCursos_modificar_agregarInstructor}" >
+                        <h:panelGrid columns="9" id="pnlInstructores" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_tipoServicio} *" style="font-weight: bold;display: block;" />
+                                <p:selectOneMenu id="tipoServicio" value="#{sspRegistroCursoController.tipoServicio}" 
+                                               disabled="true"   >
+                                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                               <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspRegistroCursoController.lstTipoServicio}"/>
+                                             <p:ajax event="change" process="pnlInstructores" update="pnlInstructores" listener="#{sspRegistroCursoController.ActivarCmbForma() }" /> 
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_tipoFormacion} *" style="font-weight: bold;display: block;"  />
+                                <p:selectOneMenu id="tipoFormacion" value="#{sspRegistroCursoController.tipoFormacion}" 
+                                                 disabled="true" >
+                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                   <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspRegistroCursoController.lstTipoFormacion}"/>
+                                   <p:ajax event="change" process="pnlInstructores" update="pnlInstructores" listener="#{sspRegistroCursoController.cambiarTipoFormacion() }" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Curso: "  />
+                                <p:outputLabel value="#{sspRegistroCursoController.cursoDlg}"  />
+                                <p:outputLabel value=""  />
+                                <p:outputLabel value=""  />
+                                <p:outputLabel value=""  />
+                                
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_tipoDocIdentidad} *" style="font-weight: bold;"  />
+                                <p:selectOneMenu id="tipoDocIdentidad" value="#{sspRegistroCursoController.tipoDoc}" >
+                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                   <f:selectItem itemLabel="DNI" itemValue="1"/>
+                                   <f:selectItem itemLabel="CE" itemValue="2"/>
+                                   <f:selectItem itemLabel="FICHA INSTRUCTOR" itemValue="3"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_nroDocumento} *" style="font-weight: bold;margin-left:10px;"  />
+                                <p:inputText id="nroDocIdentidad" value="#{sspRegistroCursoController.numDoc}" >
+                                    <p:keyFilter mask="int" preventPaste="false" />
+                                </p:inputText>
+                                <p:commandButton icon="ui-icon-search"
+                                                 value="#{BundleBDIntegrado.Buscar}"
+                                                 process="@form" update="@form"
+                                                 actionListener="#{sspRegistroCursoController.buscarInstructorModificatoria()}" >
+                                </p:commandButton>
+
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_nombres}" style="font-weight: bold;margin-left:20px;"  />
+                                <p:outputLabel id="nombresInstructor" value="#{sspRegistroCursoController.nombresInstructor}"  />
+                        </h:panelGrid>
+                </p:fieldset>                
+            </h:panelGrid>
+            <br/>
+            <div align="right">
+                    <p:commandButton  icon="ui-icon-disk"
+                                      value="Cambiar"
+                                      process="@form" update="@form"
+                                      rendered="#{sspRegistroCursoController.flagBtnCambio}"
+                                      actionListener="#{sspRegistroCursoController.confirmarCambioInstructorCurso()}" />
+
+                    <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                     process="@this"
+                                     update="frmCambiarInstructor" 
+                                     actionListener="#"
+                                     oncomplete="PF('wvDlgCambiarInstructor').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

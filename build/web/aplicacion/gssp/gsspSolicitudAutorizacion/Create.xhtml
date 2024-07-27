@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    <ui:define name="title" >
+        <style type="text/css">
+            .titulo-page{
+                padding-left: 30px;
+                /*color:red;*/
+            } 
+            .ui-fluid   {
+                margin: 10px 30px;
+            }
+            .combo_tipo_100{
+                width: 100% ;
+                min-width: auto !important;
+            } 
+        </style>
+        <b><h:outputText value="#{BundleBDIntegrado.gsspSolicitudAutorizacion_Form_title_AutorizacionServicioSeguridad}" class="titulo-page"/></b>
+    </ui:define>
+    
+    <ui:define name="body">
+                    
+            <h:form id="FormSolicitudAutorizacion" class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-10 ui-xl-8">
+                
+                <div class="ui-fluid">
+                    
+                    <p:panel id="pnl_AdministradoPJ_Title" header="Tipos de Prestación de Servicios de Seguridad" >
+                        
+                        <div class="ui-g">    
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="Tipo de Registro" style="font-weight: bold;"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-12 ui-lg-10">
+                                <p:selectOneRadio id="radioTipoRegistro" value="#{gsspSolicitudAutorizacionController.formTipoRegistroSelected}">
+                                    <f:selectItems value="#{gsspSolicitudAutorizacionController.formTipoRegistroLista}" var="tiporegistro" itemLabel="&nbsp; #{tiporegistro.nombre}&nbsp; &nbsp; &nbsp;" itemValue="#{tiporegistro}"/>
+                                    <p:ajax update="@this,bcoTipServicio" listener="#{gsspSolicitudAutorizacionController.ActualizarListaModalidadesCreate()}" />
+                                </p:selectOneRadio>
+                            </div>
+                        </div>  
+                        
+                        
+                        <div class="ui-g">
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:outputLabel value="Tipo de Servicio:" style="font-weight: bold;"/>
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-6">
+                                <p:selectOneMenu id="bcoTipServicio"  value="#{gsspSolicitudAutorizacionController.regTipoSeguridadSelected}" class="combo_tipo_100">   
+                                    <f:selectItem itemLabel="--- Seleccione Tipo de Servicio ---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudAutorizacionController.regTipoSeguridadList}"/>
+                                    <p:ajax event="change" update="btnSiguiente" />
+                                </p:selectOneMenu>
+                            </div>                                                
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <!--Parametro validator aniadido, valida si se selecciono el COD_PROG de la modalidad, si es asi se manda el action al controlador correspondiente-->                                
+                                <ui:param name="validator" value="#{gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_PP') ? gsspSolicitudAutorizacionSPPController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_VP') ? gsspSolicitudAutorizacionController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_SISPE') ? gsspSolicitudAutorizacionSISPEController :
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_SISPA') ? gsspSolicitudAutorizacionSISPAController :
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_SCBC') ? gsspSolicitudAutorizacionSCBCController :
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_SSE') ? gsspSolicitudAutorizacionSSEController :
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_AUTORIZ_SEL_CLO') ? gsspSolicitudAutorizacionSPPController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_TEC') ? gsspSolicitudAutorizacionSTSController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_CEF') ? gsspSolicitudAutorizacionCefoespController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_PCP') ? gsspSolicitudAutorizacionSPCPController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_DEP') ? gsspSolicitudAutorizacionCefoespController : 
+                                                                    gsspSolicitudAutorizacionController.regTipoSeguridadSelected.codProg.equals('TP_GSSP_MOD_TDV') ? gsspSolicitudAutorizacionTDVController : 
+                                                                    gsspSolicitudAutorizacionController }" />
+                                
+                                <p:commandButton id="btnSiguiente" icon="ui-icon-seek-next"                                    
+                                action="#{validator.validarSiguienteSolicAutorizacion(gsspSolicitudAutorizacionController.regTipoSeguridadSelected, gsspSolicitudAutorizacionController.formTipoRegistroSelected)}"
+                                value="Siguiente" update = "@all" process = "@all" 
+                               />
+                            </div>
+                            
+                            <div class="ui-g-12 ui-md-12 ui-lg-2">
+                                <p:commandButton id="btnCancelar" styleClass="botonBorrar" icon="ui-icon-close"                                   
+                                action="#{gsspSolicitudAutorizacionController.prepareList()}"
+                                value="Cancelar"
+                               />
+                            </div>
+                        </div>    
+                    </p:panel>
+                    
+                </div>
+                
+            </h:form>
+        
+    </ui:define>
+            
+
+</ui:composition>

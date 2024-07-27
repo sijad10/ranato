@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    
+    <h:form id="viewForm" rendered="#{eppCmpeInscripcionController.estado == 'VER'}" >
+
+        <p:panel id="pnlLugarFecha" header="#{BundleBDIntegrado.EppCertificado_Paso1_lugar}" style="margin-top: 20px; ">
+            <h:panelGrid columns="6"  >
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_lugarfech}" style="font-weight: bold;" />
+                <h:outputText id="lugarFecha" value="#{eppCmpeInscripcionController.obtenerLugarFechaCertificacionesConstancia(eppCmpeInscripcionController.registro.capacitacionId)}" />
+
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_vacantes}" style="margin-left: 20px;font-weight: bold;" />
+                <h:outputText value="#{eppCmpeInscripcionController.vacantes }" />
+
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_fechalimite}" style="margin-left: 20px;font-weight: bold;" />
+                <h:outputText value="#{eppCmpeInscripcionController.registro.capacitacionId.fechaLimInscrip }" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </h:outputText>
+            </h:panelGrid>
+
+            <h:panelGrid columns="1" >
+                <p:dataTable id="tblEvaluacion" value="#{eppCmpeInscripcionController.registro.capacitacionId.eppCapaHorariodirList }"
+                                emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="item" style="width: 100%;" sortBy="#{item.fecha }" >
+
+                      <p:column headerText="#{BundleBDIntegrado.EppCertificado_Paso1_dt_fecha}" style="text-align:center">
+                          <f:facet name="header">
+                              <h:outputText value="#{BundleBDIntegrado.EppCertificado_dtHorario_horario}" />
+                          </f:facet>
+                          <h:outputText value="#{eppCmpeInscripcionController.formatoFechaHorarioPaso1(item)}"/>
+                      </p:column>
+                      <p:column headerText="#{BundleBDIntegrado.EppCertificado_Paso1_dt_direccion}" >
+                          <f:facet name="header">
+                              <h:outputText value="#{BundleBDIntegrado.EppCertificado_dtHorario_direccion}" />
+                          </f:facet>
+                          <h:outputText value="#{item.direccion}"/>
+                      </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+
+        <p:panel id="pnlComprobante" header="#{BundleBDIntegrado.EppCertificado_Paso1_comp}" rendered="false">
+
+            <h:panelGrid columns="4">
+                <h:outputText value="#{BundleBDIntegrado.EppCertificado_Paso1_comprobante}" />
+                <h:outputText value="#{eppCmpeInscripcionController.obtenerDescRecibo(eppCmpeInscripcionController.recibo)}" />
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+
+        <p:panel header="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_Participante}" id="pnlParticipante">
+            <h:panelGrid columns="1">
+                <h:panelGrid columns="4"> 
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_tipoDoc}" for="tipoDoc" style="display:block;width: 190px;" /> 
+                    <p:outputLabel id="tipoDoc" 
+                                   value="#{eppCmpeInscripcionController.registro.participanteId.tipoDoc.nombre.concat(' - ').concat(eppCmpeInscripcionController.registro.participanteId.numDoc)}" 
+                                 style="font-weight:bold;" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_ape}" for="ape" />
+                    <p:outputLabel id="ape" 
+                                    value="#{eppCmpeInscripcionController.registro.participanteId.apePat.concat(' ').concat(eppCmpeInscripcionController.registro.participanteId.apeMat).concat(' ').concat(eppCmpeInscripcionController.registro.participanteId.nombres) }" 
+                                    style="width: 400px;font-weight:bold;" />
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_domicilio}" for="domicilio" style="display:block;width: 190px;" />
+                    <p:outputLabel id="domicilio" 
+                                   value="#{eppCmpeInscripcionController.direccionPersona.direccion}" style="width: 400px;font-weight:bold;" />
+                </h:panelGrid>
+
+                <h:panelGrid columns="7">
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_ubigeo}" style="display:block;width: 190px;" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_departamento}"  />
+                    <p:outputLabel value="#{eppCmpeInscripcionController.direccionPersona.distritoId.provinciaId.departamentoId.nombre}" style="font-weight:bold;" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_provincia}"  />
+                    <p:outputLabel value="#{eppCmpeInscripcionController.direccionPersona.distritoId.provinciaId.nombre}" style="font-weight:bold;" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_distrito}"  />
+                    <p:outputLabel value="#{eppCmpeInscripcionController.direccionPersona.distritoId.nombre}" style="font-weight:bold;" />
+                    <br/>
+                </h:panelGrid>
+                
+                <p:graphicImage value="#{eppCmpeInscripcionController.foto}" cache="false" width="200" height="200">
+                </p:graphicImage>
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+
+        <p:panel header="#{BundleBDIntegrado.EppCertificadoLabel_Paso2_Actividades}" id="pnlActividades">
+            <h:panelGrid columns="4">
+                <p:selectManyCheckbox id="grid"
+                                      disabled="true"
+                                      value="#{eppCmpeInscripcionController.registro.tipoExplosivoList }"
+                                      converter="tipoExplosivoConverter"
+                                      layout="grid" 
+                                      columns="4">
+                    <f:selectItems value="#{eppCmpeInscripcionController.lstActividadesDisponibles}" var="TP_PIROACT" itemLabel="#{TP_PIROACT.nombre}" itemValue="#{TP_PIROACT}" />
+                </p:selectManyCheckbox>
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+
+        <div align="center">
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppCmpeInscripcionController.prepareListInscritos() }"  value="Ver Listado" process="@this"/>
+        </div>        
+        <br/><br/>
+    </h:form>
+</ui:composition>
+
+        
+        

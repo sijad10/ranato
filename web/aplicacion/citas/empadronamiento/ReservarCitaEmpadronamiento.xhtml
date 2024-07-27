@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="crearCitaEmpadronaVerForm" >
+        <p:wizard showNavBar="false" step="#{citasEmpadronamientoController.paso}" rendered="#{citasGestionController.opcion == 'CITAEMPADRONAMIENTO'}">
+            <p:tab id="paso1" title="1er Paso" >
+                <p:remoteCommand name="loadArma" update="armasDT" actionListener="#{citasEmpadronamientoController.listaArmas}" process="@this" />
+
+                <div class="ui-g" style="display: #{citasEmpadronamientoController.visibleRepresentante eq false?'block':'none'}"> 
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <p:selectBooleanCheckbox value="#{citasEmpadronamientoController.personaCivil}">
+                            <p:ajax update="pnlFFAA" listener="#{citasEmpadronamientoController.listenerPersonaCivil()}" />
+                        </p:selectBooleanCheckbox>
+                        <p:outputLabel value="Civil (No pertenece a las Fuerzas Armadas o Policía Nacional"/>
+                    </div>
+                </div>
+
+                <p:panel id="pnlContFFAA" style="margin:0!important; padding: 0!important; border: 0!important;" 
+                         rendered="#{citasEmpadronamientoController.visibleRepresentante eq false?'true':'false'}">
+                    <p:panel id="pnlFFAA" header="Datos de Personal de Fuerzas Armadas o Policia Nacional" style="margin-bottom:8px;">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                
+                                <p:outputLabel for="perNroCip" value="Nro CIP: "  />
+                                <p:inputText id="perNroCip" value="#{citasEmpadronamientoController.nroCip}" disabled="#{citasEmpadronamientoController.personaCivil}"
+                                             style="font-weight: bold; font-stretch: ultra-expanded">
+                                    <p:ajax event="blur" update="@this"/>
+                                </p:inputText>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-3">
+                                <p:outputLabel value="Institución en la que labora:" />
+                                <p:selectOneMenu id="institucion" autoWidth="false" value="#{citasEmpadronamientoController.institucionId}" disabled="#{citasEmpadronamientoController.personaCivil}">
+                                    <f:selectItem itemLabel="-- Elige Institución --" itemValue="#{null}" />
+                                    <f:selectItems var="item" itemValue="#{item.id}" itemLabel="#{item.nombre}" value="#{citasEmpadronamientoController.listInstitucion}" />
+                                    <p:ajax event="itemSelect" listener="#{citasEmpadronamientoController.eligeInstitucion}" partialSubmit="true" process="@this" update="@none" oncomplete="selectPasos()"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                <p:outputLabel value="en Actividad:"  />
+                                <p:selectOneMenu id="enActividad" autoWidth="false" value="#{citasEmpadronamientoController.enActividad}" disabled="#{citasEmpadronamientoController.personaCivil}">
+                                    <f:selectItem itemLabel="-- Elige --" itemValue="#{null}" />
+                                    <f:selectItem itemLabel="SÍ" itemValue="1" />
+                                    <f:selectItem itemLabel="NO" itemValue="0" />
+                                    <p:ajax event="itemSelect" partialSubmit="true" process="@this" update="@this" oncomplete="selectActividad()"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                <p:outputLabel value="Inicio de Servicio:" />
+                                <p:calendar id="fecIniServicio" 
+                                            value="#{citasEmpadronamientoController.fecIniServicio}" locale="es"
+                                            navigator="true"
+                                            showOn="button"
+                                            readonlyInput="true"
+                                            pattern="#{bundleCitas.FormatoFecha}"
+                                            disabled="#{citasEmpadronamientoController.personaCivil}"
+                                            maxdate="#{citasEmpadronamientoController.hoy}" class="cal-70px">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                    <p:ajax event="dateSelect" listener="#{citasEmpadronamientoController.eligefecIniServicio}" 
+                                            partialSubmit="true" process="@this" oncomplete="selectPasos()"
+                                            update="@none"/>
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-12 ui-md-3 ui-lg-2 finServicio">
+                                <p:outputLabel value="Fin de Servicio:" />
+                                <p:calendar id="fecFinServicio" 
+                                            value="#{citasEmpadronamientoController.fecFinServicio}" locale="es"
+                                            navigator="true"
+                                            showOn="button"
+                                            readonlyInput="true"
+                                            pattern="#{bundleCitas.FormatoFecha}"
+                                            disabled="#{citasEmpadronamientoController.personaCivil}"
+                                            maxdate="#{citasEmpadronamientoController.hoy}" class="cal-70px">
+                                    <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                    <p:ajax event="dateSelect" listener="#{citasEmpadronamientoController.eligefecFinServicio}" 
+                                            partialSubmit="true" process="@this" oncomplete="selectPasos()"
+                                            update="@none"/>
+                                </p:calendar>
+                            </div>
+                        </div>
+                    </p:panel>
+                </p:panel>
+
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3 ui-lg-3" style="display: #{citasEmpadronamientoController.visibleRepresentante eq true?'block':'none'}">
+                        <p:outputLabel value="Persona autorizada para Empadronamiento y Amnistía:* " class="txtLabel" rendered="#{citasEmpadronamientoController.visibleRepresentante eq true?'true':'false'}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-4 ui-lg-4" style="display: #{citasEmpadronamientoController.visibleRepresentante eq true?'block':'none'}">
+                        <p:selectOneMenu id="dniRepresentante" autoWidth="false" >
+                            <f:selectItem itemLabel="-- Elige Representante --" itemValue="#{null}"  />
+                            <f:selectItems var="item" itemLabel="#{item.numDoc} #{item.nombres} #{item.apePat} #{item.apeMat}" itemValue="#{item.id}"
+                                           value="#{citasEmpadronamientoController.citaLstRepresentantes}" />
+                            <p:ajax event="itemSelect" listener="#{citasEmpadronamientoController.eligeRepresentante}"
+                                    partialSubmit="true" process="@this" update="@none" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-2 ui-lg-2" style="display: #{citasEmpadronamientoController.visibleRepresentante eq true?'block':'none'}">
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-9 ui-lg-9" style="display: #{citasEmpadronamientoController.visibleRepresentante eq false?'block':'none'}">
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:commandButton id="btnAddArma" value="Agregar/Editar Armas y/o Municiones" actionListener="#{citasEmpadronamientoController.loadAddArma()}"
+                                         icon="ui-icon-plus" process="@this" />
+                    </div>
+                </div>
+                
+                <p:panel header="Datos de las Armas" id="panelArmasGrupo">
+                    <p:dataTable id="armasDT" value="#{citasEmpadronamientoController.lstDetalleArma}"
+                                 widgetVar="wgArmasDT"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 selection="#{citasEmpadronamientoController.lstDetalleArmaSelected}"
+                                 emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="10, 20">
+
+                        <p:column headerText="Serie" style="text-align: center;font-size:92%!important" class="ui-lg-1">
+                            <h:outputText value="#{item.nroSerie}"/>
+                        </p:column>
+                        <p:column headerText="Tipo de Arma" style="text-align: center;font-size:92%!important" class="ui-lg-1">
+                            <h:outputText value="#{item.tipoArma}"/>
+                        </p:column>
+                        <p:column headerText="Marca" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.marca}" />
+                        </p:column>
+                        <p:column headerText="Modelo" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.modelo}" />
+                        </p:column>
+                        <p:column headerText="Calibre" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.calibre}" />
+                        </p:column>
+                        <p:column headerText="Tipo de Internamiento" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.tipoInternamiento}" />
+                        </p:column>
+                        <p:column headerText="Voucher de Pago" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.reciboArma.nroSecuencia}" />
+                        </p:column>
+                        <p:column headerText="Importe Pagado" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                            <h:outputText value="#{item.reciboArma.importe}" />
+                        </p:column>                    
+                    </p:dataTable>
+                </p:panel>
+                <br/>                
+                <p:panel header="Datos de las Municiones" id="panelMunicionesGrupo">
+                    <p:dataTable id="municionesDT" value="#{citasEmpadronamientoController.lstDetalleMunicion}"
+                                 widgetVar="wgMunicionesDT"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 selection="#{citasEmpadronamientoController.lstDetalleMunicionSelected}"
+                                 emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="10, 20">
+
+                        <p:column headerText="Marca" style="text-align: center;font-size:92%!important" class="ui-lg-2">
+                            <h:outputText value="#{item.marca}"/>
+                        </p:column>
+                        <p:column headerText="Calibre" style="text-align: center;font-size:92%!important" class="ui-lg-2">
+                            <h:outputText value="#{item.calibre}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad Munición (Unids)" style="text-align: center;font-size:92%!important" class="ui-lg-2"> 
+                            <h:outputText value="#{item.cantidad}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+                
+                <div class="ui-g">
+                    <div class="ui-g-10"></div>
+                    <div class="ui-g-2" style="">
+                        <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="paso1 paso2" oncomplete="selectPasos()"
+                                         actionListener="#{citasEmpadronamientoController.siguiente('paso12')}" value="Siguiente" process="@this paso1"/>
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso2" title="2do Paso">
+
+                <p:panel id="panelPaso2" header="#{bundleCitas.CitaArmas_paso2Title}" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso2Sede_Label}" />
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu id="sedeId" autoWidth="false" value="#{citasEmpadronamientoController.registro.tipoSedeId}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.CitaArmas_paso2Sede_Msg}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasEmpadronamientoController.listarSedes()}" />
+                                <p:ajax event="change" listener="#{citasEmpadronamientoController.seleccionarSede}" partialSubmit="true" process="sedeId" update="@form" oncomplete="selectFecha()"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso2Fecha_Label}" for="listaDiasId"
+                                           rendered="#{citasEmpadronamientoController.visibleCalendarCentral or citasEmpadronamientoController.visibleCalendarZonal or citasEmpadronamientoController.visibleCalendarNoPresencial}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                            <p:selectOneMenu id="listaDiasId" autoWidth="false" value="#{citasEmpadronamientoController.fechaTurnoSeleccionada}"
+                                             rendered="#{citasEmpadronamientoController.visibleCalendarCentral or citasEmpadronamientoController.visibleCalendarZonal or citasEmpadronamientoController.visibleCalendarNoPresencial}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}">
+                                <f:selectItem itemLabel="Seleccione Fecha" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.fecha}" value="#{citasEmpadronamientoController.getLstFechasCalendario()}" />
+                                <p:ajax event="change" listener="#{citasEmpadronamientoController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="listaDiasId" oncomplete="selectFecha()"
+                                        update="crearCitaEmpadronaVerForm:pnlDtProg"/>
+                            </p:selectOneMenu>                            
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-7">
+                            <h:panelGrid id="pnlDtProg" style="margin:0!important">
+                                <p:dataTable id="dtProgramacion" value="#{citasEmpadronamientoController.listaHoras}"
+                                             rendered="#{citasEmpadronamientoController.registro.fechaTurno != null}"
+                                             var="item" widgetVar="progTable"
+                                             emptyMessage="#{bundleCitas.MensajeNoResultados}"
+                                             rowKey="#{item.id}">
+                                    <p:ajax event="rowSelectRadio" listener="#{citasEmpadronamientoController.onRowSelectHora}" process="dtProgramacion" update="dtProgramacion" partialSubmit="true" />                                    
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_hora}" style="width: 25%" selectRow="false">
+                                        <h:outputText value="#{item.hora}" />
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_cupos}" style="width: 25%; height: 22px;" selectRow="false">
+                                        <h:outputText value="#{item.cantCuposAct}"/>
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_seleccionar}" selectionMode="single" style="width:16px; text-align:center"
+                                              rendered="#{citasEmpadronamientoController.mostrarSelectorHora(item)}"/>
+
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </div>
+                    </div>
+
+                    <h:panelGrid id="pnlFechaId" columns="4" cellspacing="5">
+
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior2" icon="ui-icon-seek-prev" iconPos="left" update="crearCitaEmpadronaVerForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasEmpadronamientoController.siguiente('paso1')}" value="Anterior" process="@this" />
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonSiguiente2" icon="ui-icon-seek-next" iconPos="right" update="crearCitaEmpadronaVerForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasEmpadronamientoController.siguiente('paso23')}" rendered="#{citasEmpadronamientoController.visibleSiguiente3}" value="Siguiente" process="@this paso2"/>
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso3" title="3er Paso">
+
+                <p:panel id="panelPaso3" header="Confirmar Cita" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3TipTram_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.tipoTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3FecProg_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorProg_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Tipo de Cita: "/>
+                            <p:outputLabel value="Presencial" style="font-weight: bold;"/>
+                        </div>                    
+                    </div>                    
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorPres_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.horaPresen}" style="font-weight: bold; color:red;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.tipoSedeId.nombre}" style="font-weight: bold; color:red;"/>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Datos de las Armas" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:dataTable id="armasDTView" value="#{citasEmpadronamientoController.lstDetalleArma}"
+                                         widgetVar="wgArmasDT"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         selection="#{citasEmpadronamientoController.lstDetalleArmaSelected}"
+                                         emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="10, 20">
+
+                                <p:column headerText="Serie" style="text-align: center;font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.nroSerie}"/>
+                                </p:column>
+                                <p:column headerText="Tipo de Arma" style="text-align: center;font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.tipoArma}"/>
+                                </p:column>
+                                <p:column headerText="Marca" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.marca}" />
+                                </p:column>
+                                <p:column headerText="Modelo" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.modelo}" />
+                                </p:column>
+                                <p:column headerText="Calibre" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.calibre}" />
+                                </p:column>
+                                <p:column headerText="Tipo de Internamiento" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.tipoInternamiento}" />
+                                </p:column>
+                                <p:column headerText="Voucher de Pago" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.reciboArma.nroSecuencia}" />
+                                </p:column>
+                                <p:column headerText="Importe Pagado" style="text-align: center;font-size:92%!important" class="ui-lg-1"> 
+                                    <h:outputText value="#{item.reciboArma.importe}" />
+                                </p:column>                    
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Datos de las Municiones" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:dataTable id="municionesDTView" value="#{citasEmpadronamientoController.lstDetalleMunicion}"
+                                         widgetVar="wgMunicionesDT"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="10, 20">
+
+                                <p:column headerText="Marca" style="text-align: center;font-size:92%!important" class="ui-lg-2">
+                                    <h:outputText value="#{item.marca}"/>
+                                </p:column>
+                                <p:column headerText="Calibre" style="text-align: center;font-size:92%!important" class="ui-lg-2">
+                                    <h:outputText value="#{item.calibre}"/>
+                                </p:column>
+                                <p:column headerText="Cantidad Munición (Unids)" style="text-align: center;font-size:92%!important" class="ui-lg-2"> 
+                                    <h:outputText value="#{item.cantidad}" />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Condi_Title}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{citasEmpadronamientoController.mensajePaso3Nota1}"/><br/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.mensajePaso3Nota2}"/><br/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.CitaArmas_paso3NotaDJ_Title}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.CitaArmas_paso3NotaPersonaCita}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <br/>
+                    <h:panelGrid columns="1" width="100%" >
+                        <h:panelGrid id="gridCaptcha" columns="2" >
+                            <p:graphicImage id="imgCaptcha" value="#{citasEmpadronamientoController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                            <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{citasEmpadronamientoController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                            <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                            <p:inputText id="textoCaptcha" value="#{citasEmpadronamientoController.captcha.textoInput}" required="true" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox id="terminos" value="#{citasEmpadronamientoController.terminos}" itemLabel=" #{bundleCitas.AceptoTerminos}" 
+                                                     required="true" requiredMessage="Debe aceptar los términos y condiciones" style="color:red"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior3" icon="ui-icon-seek-prev" iconPos="left" update="crearCitaEmpadronaVerForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasEmpadronamientoController.siguiente('paso2')}" value="Anterior" process="@this"/>
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton icon="ui-icon-check" actionListener="#{citasEmpadronamientoController.crear}" value="#{bundleCitas.TurnoButton_generarTurno}" oncomplete="selectPasos()"
+                                         style="height: 50px;font-size: medium;"
+                                         process="@this, gridCaptcha, terminos"  partialSubmit="true" update="crearCitaEmpadronaVerForm"/>
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso4" title="4to Paso">
+
+                <p:panel id="panelPaso4" header="Confirmación de Cita" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3TipTram_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.tipoTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3FecProg_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorProg_Label} "/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Tipo de Cita: "/>
+                            <p:outputLabel value="Presencial" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorPres_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.horaPresen}" style="font-weight: bold; color:red;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.tipoSedeId.nombre}" style="font-weight: bold; color:red;"/>
+                        </div>
+                    </div>                                    
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-1">
+                            <p:outputLabel value="Clave de Consulta: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-2">
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.claveConsulta}" style="color:red; font-weight: bold; font-size: 180%"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Debe acercarse el día: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-4">
+                            <p:outputLabel value="#{citasEmpadronamientoController.registro.fechaTurno}" style="color:red; font-weight: bold; font-size: 180%">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-3">
+
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Entre: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-4">
+                            <p:outputLabel value="#{citasEmpadronamientoController.horaPresen} - #{citasEmpadronamientoController.horaProgra}" style="color:red; font-weight: bold; font-size: 180%"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.CitaArmas_paso3NotaPersonaCita}" style="color:red"/></b>
+                        </div>
+                    </div>
+                </p:panel>                            
+
+            </p:tab>
+
+        </p:wizard>
+
+        <div class="ui-g">
+            <div class="ui-g-2">
+                <p:commandButton id="botonLimpiar" icon="ui-icon-trash" iconPos="left" update="@all" actionListener="#{citasGestionController.restaurarCitasEmpadronamiento()}" value="Limpiar" process="@this"/>
+            </div>
+        </div>
+    </h:form>
+
+    <ui:include src="DlgBuscarArma.xhtml" />
+    <ui:include src="DlgAddArma.xhtml" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            $(".txtLabel").parent().attr("style", "padding-top:11px");
+            $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+            $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+
+            $("div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("#evaluarContrato > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px 6px 2px 6px!important;");
+            $("#evaluarContrato > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $("#evaluarContrato_title").attr("style", "font-size:16px !important; padding:0!important;");
+
+            //$("#evaluarContratoForm").children().children().children().children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("div[id*='pnlContFFAA_content'], div[id*='pnlContMsg_content'], div[id*='pnlContEmpoceRLU_content']").attr("style", "margin:0!important; padding: 0!important; border: 0!important;");
+            $("div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $("div[id*='pnlMsg_content']").attr("style", "background-color: #BFEBFF!important;");
+
+            setTimeout(function () {
+                $("form[id*='crearCitaEmpadronaVerForm']")[0].reset();
+            }, 500);
+        });
+
+        function selectTab7() {
+            $("div[id*='pnlContFFAA_content'], div[id*='pnlContMsg_content'], div[id*='pnlContEmpoceRLU_content']").attr("style", "margin:0!important; padding: 0!important; border: 0!important;");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content']").attr("style", "padding:2px!important");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("a[href*='tab7']").parent().show("fast");
+        }
+
+        function selectTipoDoc() {
+            $("div[id*='pnlContFFAA_content'], div[id*='pnlContMsg_content'], div[id*='pnlContEmpoceRLU_content']").attr("style", "margin:0!important; padding: 0!important; border: 0!important;");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").attr("style", "padding:2px!important");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        }
+
+        function selectPasos() {
+            $("div[id*='pnlContFFAA_content'], div[id*='pnlContMsg_content'], div[id*='pnlContEmpoceRLU_content']").attr("style", "margin:0!important; padding: 0!important; border: 0!important;");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").attr("style", "padding:2px!important");
+            $("div[id*='pnlFFAA_content'], div[id*='pnlEmpoceRLU_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+
+            $("div[id*='pnlMsg_content']").attr("style", "background-color: #BFEBFF!important;");
+        }
+
+        function selectActividad() {
+            $(".finServicio").addClass("ui-helper-hidden");
+            setTimeout(function () {
+                if ($("select[id*='enActividad']").val() === "0") {
+                    $(".finServicio").removeClass("ui-helper-hidden");
+                    //$(".finServicio").show();
+                }
+            }, 500);
+        }
+
+        function selectFecha() {
+            $("div[id*='panelPaso2_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso2_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        }
+
+        function addArma() {
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            //$("input[id*='nroLicencia'], input[id*='nroSerie']").val("");
+        }
+
+        function limpiarInputDet() {
+            $("input[id*='nroLicencia'], input[id*='nroSerie']").val("");
+        }
+
+        function delArma() {
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+        }
+
+        /*setTimeout(function(){
+         loadArma();
+         }, 1000);*/
+    </script>
+
+</ui:composition>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition>
+        <p:dialog id="CrearPViewDialog" widgetVar="dlgCrearPersona" height="15%" maximizable="true"
+                  modal="true" resizable="false" appendTo="@(body)" header="#{bundleGamac.BandejaVinculacionTitle_nuePer}">
+            <h:form id="crearPersonaForm">
+                <h:panelGrid id="panelGridPersona">
+                    <p:panel header="" style="width:100%;">
+                        <h:panelGrid id="newPersona">
+                            <h:panelGrid columns="6" id="datosDoc">
+                                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_tipoDoc.concat(' *')}" style="font-weight: bold"/>
+                                <p:selectOneMenu id="cbTipoDoc" requiredMessage="#{bundleGamac.requiredMessage_tipoDoc}"
+                                                 value="#{sbPersonaGtController.personaNew.tipoDoc}" autoWidth="false">
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                   value="#{sbPersonaGtController.listTipoDoc}"/>
+                                    <p:ajax event="change" update="@form" process="@this" listener="#{sbPersonaGtController.obtenerNumCaract}" />
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_nrodoc.concat(' *')}" style="font-weight: bold"/>
+                                <p:inputText value="#{sbPersonaGtController.personaNew.numDoc}" id="numDoc" size="25" maxlength="#{sbPersonaGtController.cantNumeros}"
+                                              requiredMessage="#{bundleGamac.SbPersonaRequiredMessage_numDoc}">
+                                    <p:keyFilter mask="#{sbPersonaGtController.disabledBtVal?'':'num'}"/>
+                                </p:inputText>
+                                <p:commandButton ajax="true" id="validar"  actionListener="#{sbPersonaGtController.validarDocumento}" partialSubmit="true" disabled="#{sbPersonaGtController.disabledBtVal}"
+                                         value="Validar" icon="ui-icon-check" update="@this, datosPerNat"  process="@this,cbTipoDoc, numDoc" iconPos="right" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="6" id="datosPerNat" rendered="#{sbPersonaGtController.personaNew.tipoDoc.codProg eq 'TP_DOCID_DNI' 
+                                                                                  or sbPersonaGtController.personaNew.tipoDoc.codProg eq 'TP_DOCID_CE'}">
+                                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_nombres.concat(' *')}" style="font-weight: bold" for="nomb"/>
+                                <p:inputText value="#{sbPersonaGtController.personaNew.nombres}" size="30" id="nomb"
+                                             requiredMessage="#{bundleGamac.requiredMessage_nombres}">
+                                    <f:ajax listener="#{sbPersonaGtController.validarDatoIngresado('NOM')}"/>
+                                </p:inputText>
+                                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_apePat.concat(' *')}" style="font-weight: bold"/>
+                                <p:inputText value="#{sbPersonaGtController.personaNew.apePat}" id="appat" size="25"
+                                             requiredMessage="#{bundleGamac.requiredMessage_apePat}">
+                                    <f:ajax listener="#{sbPersonaGtController.validarDatoIngresado('APPAT')}"/>
+                                </p:inputText>
+                                <p:outputLabel value="#{bundleGamac.BandejaVinculacionLabel_apeMat.concat(sbPersonaGtController.disabledBtVal?'':' *')}" style="font-weight: bold"/>
+                                <p:inputText value="#{sbPersonaGtController.personaNew.apeMat}" id="apmat"
+                                            requiredMessage="#{bundleGamac.requiredMessage_nombres}">
+                                    <f:ajax listener="#{sbPersonaGtController.validarDatoIngresado('APMAT')}"/>
+                                </p:inputText>
+                                <p:outputLabel value="#{bundleGamac.CrearPersona_Genero.concat(' *')}" style="font-weight: bold"/>
+                                <p:selectOneMenu id="cbGenero" requiredMessage="#{bundleGamac.CrearPersonaRequiredMessage_Genero}"
+                                                 style="width: 85%" autoWidth="false"
+                                                 value="#{sbPersonaGtController.personaNew.generoId}" >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                   value="#{tipoBaseController.listGenero}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{bundleGamac.CrearPersona_FecNac}" style="font-weight: bold" for="fecha"/>
+                                <p:calendar id="fecha" requiredMessage="#{bundleGamac.CrearPersonaRequiredMessage_FecNac}"
+                                            maxdate="#{sbPersonaGtController.fechaMinMayorEdad}"
+                                            showOn="button" value="#{sbPersonaGtController.personaNew.fechaNac}" 
+                                            pattern="#{bundleGamac.FormatoFecha}"
+                                            navigator="true" locale="es">  
+                                    <p:ajax event="dateSelect"  />
+                                    <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                                </p:calendar>
+                                <p:outputLabel value="#{bundleGamac.CrearPersona_EstCivil}" style="font-weight: bold" for="cbEstadoCiv"/>
+                                <p:selectOneMenu id="cbEstadoCiv" requiredMessage="#{bundleGamac.CrearPersonaRequiredMessage_EstCivil}"
+                                                 value="#{sbPersonaGtController.personaNew.estCivilId}" >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                   value="#{tipoBaseController.listEstCivil}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="#{bundleGamac.CrearPersona_Ocupacion}" style="font-weight: bold" for="cbOcupacion"/>
+                                <p:selectOneMenu id="cbOcupacion" autoWidth="false" style="width: 150px"
+                                                 requiredMessage="#{bundleGamac.CrearPersonaRequiredMessage_Ocupacion}"
+                                                 value="#{sbPersonaGtController.personaNew.ocupacionId}" >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                   value="#{tipoBaseController.listOcupacion}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" id="rzonSocial" rendered="#{sbPersonaGtController.personaNew.tipoDoc.codProg eq 'TP_DOCID_RUC' 
+                                                                                 or sbPersonaGtController.personaNew.tipoDoc.codProg eq 'TP_DOCID_EXT'}">
+                                <p:outputLabel value="#{bundleGamac.RazonSocial_lb.concat(' *')}" style="font-weight: bold"/>
+                                <p:inputText value="#{sbPersonaGtController.personaNew.rznSocial}" requiredMessage="El campo Razón Social es obligatorio" id="rs" size="50"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="#{bundleGamac.BandejaVinculacionButton_regVin}"
+                                         actionListener="#{sbPersonaGtController.openDlgConfirmarRegistro}"
+                                         process="@this,panelGridPersona" 
+                                         update="crearPersonaForm"/>
+                        <p:commandButton id="cancelar"  oncomplete="PF('dlgCrearPersona').hide()"
+                                         icon="ui-icon-closethick" immediate="true" value="Cancelar"
+                                         process="@this"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

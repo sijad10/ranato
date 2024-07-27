@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="ConfDlgBorrarUso" widgetVar="ConfDialogUso" width="30%" height="40%" closable="false"
+                  modal="true" resizable="false" appendTo="@(body)" header="Confirmación">
+            <h:form id="usoForm" >
+                <h:panelGroup id="expe">
+                    <div align="center">
+                        <p:outputLabel value="#{eppLibroController.valorTextoBorrarUso}" escape="false" />      
+                        <div align="center">
+                            <br/><br/>
+                            <p:dataTable id="deExpM"  
+                                         value="#{eppLibroController.listExploFabricadosBorrarUsoDialog}"
+                                         var="explo"                                     
+                                         rowKey="#{explo.id}" style="margin-bottom:0"
+                                         emptyMessage="#{bundle.MensajeNoResultados}"
+                                         paginator="true" 
+                                         rows="#{bundle.PaginatorFilas}"  
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                                <f:facet name="header">
+                                    Lista de Explosivos
+                                </f:facet>  
+                                <p:column headerText="Explosivo">
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Explosivo"/>
+                                    </f:facet>
+                                    <h:outputText value="#{explo.explosivoId.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Guia transito">
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Guia transito"/>
+                                    </f:facet>
+                                    <h:outputText value="#{explo.registroId.registroId.eppResolucion.numero}"/>
+                                </p:column>
+                            </p:dataTable> 
+                        </div><br/>
+                        <p:commandButton value="Aceptar" actionListener="#{eppLibroController.borrarExploDeGuiaAll()}"
+                                         process="@this" update="crearForm:pnExUso,:editarForm:pnExUso" 
+                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('ConfDialogUso').hide()"
+                                         />
+                        <p:commandButton value="Cancelar" 
+                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('ConfDialogUso').hide()"
+                                         />
+
+                    </div>
+
+                </h:panelGroup>           
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

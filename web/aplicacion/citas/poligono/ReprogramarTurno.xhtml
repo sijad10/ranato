@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:define name="title">      
+        <h:outputText value="#{bundlePoligono.TurnoTitle_reprogramarTurno}"/>        
+    </ui:define>
+    <ui:define name="body">
+        <script type="text/javascript">
+            //<![CDATA[
+            var disabledDays = #{turTurnoController.feriadosStrList};
+            function disableAllTheseDays(date) {
+                var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+                var flag = true;
+                for (i = 0; i < disabledDays.length; i++) {
+                    if ($.inArray((m + 1) + '-' + d + '-' + y, disabledDays) != -1) {
+                        flag = false;
+                        //return [false];
+                    }
+                }
+                var day = date.getDay();
+                if (day == 0 || day == 6) {
+                    flag = false;
+                }
+                return [flag];
+            }
+            //]]>
+        </script> 
+        <h:form id="crearForm">
+
+            <p:wizard showNavBar="false" step="#{turTurnoController.paso}">
+                <p:tab id="paso1" title="1er Paso">
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_rep1}" style="color:red"/>
+
+                    <h:panelGrid id="reprogramarPnl" columns="5" style="width: 100%">
+                        <p:outputLabel value="#{bundlePoligono.TurnoLabel_nroConsulta}"/>
+                        <p:inputText style="width: 100px" value="#{turTurnoController.nroConsulta}" maxlength="4"/>
+
+                        <p:outputLabel value="#{bundlePoligono.TurnoLabel_dniCePas}"/>
+                        <p:inputText style="width: 100px" value="#{turTurnoController.nroDoc}" maxlength="20"/>
+
+                        <p:commandButton value="#{bundlePoligono.Buscar}"
+                                         action="#{turTurnoController.buscarTurnoProgramado()}"
+                                         icon="ui-icon-search" partialSubmit="true" process="reprogramarPnl"
+                                         update="reprogramarPnl armasId"/>
+                    </h:panelGrid>
+
+                    <p:fieldset id="armasId">
+
+                        <h:panelGrid columns="2" style="width: 100%">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_turnoProgra}"/>
+                            <p:outputLabel value="#{turTurnoController.fechaTurnoAnt}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_tipoTramite}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.tipoTramiteId.nombre}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_nroRuc}" rendered="#{turTurnoController.visibleNroRuc}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.perPagoId.ruc}" rendered="#{turTurnoController.visibleNroRuc}"/>
+                        </h:panelGrid>
+
+
+                        <p:dataTable id="dtArmas" value="#{turTurnoController.listaComprobantes}"
+                                     var="item" widgetVar="armasTable"
+                                     emptyMessage="#{bundlePoligono.MensajeNoResultados}"
+                                     style="width: 100%">
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_tipoArma}">
+                                <h:outputText value="#{item.tipoArmaId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_calibre}">
+                                <h:outputText value="#{item.calibreId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_nroSerie}">
+                                <h:outputText value="#{item.nroSerie}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="@all" actionListener="#{turTurnoController.siguiente('rpaso12')}" value="Siguiente" process="@this" partialSubmit="true"/>
+                    </h:panelGrid>
+
+                </p:tab>
+                <p:tab id="paso2" title="2do Paso">
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_rep2}" style="color:red"/>
+
+                    <p:fieldset id="disponibilidadId" legend="#{bundlePoligono.TurnoTitle_disponibilidad}" style="margin-bottom:20px;width: 450px !important;margin-right: 10px">
+                        <h:panelGrid columns="4">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_sede}"/>
+                            <p:selectOneMenu style="width: 100px" disabled="true">
+                                <f:selectItem itemLabel="LIMA" itemValue="0"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_fecha}"/>
+                            <p:calendar id="fechaTurnoId" required="false"
+                                        value="#{turTurnoController.registro.fechaTurno}" locale="es"
+                                        showOn="button"
+                                        readonlyInput="true"
+                                        mindate="#{turTurnoController.hoy}"
+                                        pattern="#{bundlePoligono.FormatoFecha}"
+                                        disabledWeekends="true"
+                                        maxdate="#{turTurnoController.maxFecha}"
+                                        beforeShowDay="disableAllTheseDays">
+                                <f:convertDateTime pattern="#{bundlePoligono.FormatoFecha}" />
+                                <p:ajax event="dateSelect" listener="#{turTurnoController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="fechaTurnoId" 
+                                        update="@all"/>
+                            </p:calendar>
+                        </h:panelGrid>
+                        <p:dataTable id="dtProgramacion" value="#{turTurnoController.listaProgramaciones}"
+                                     rendered="#{turTurnoController.registro.fechaTurno != null}"
+                                     var="item" widgetVar="progTable"
+                                     emptyMessage="#{bundlePoligono.MensajeNoResultados}"
+                                     style="width: 100%"
+                                     selection="#{turTurnoController.registro.programacionId}" rowKey="#{item.id}">
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_hora}" style="width: 25%">
+                                <h:outputText value="#{item.hora}"/>
+                            </p:column>
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_cupos}" style="width: 25%">
+                                <h:outputText value="#{item.cantCupos}"/>
+                            </p:column>
+                            <p:column headerText="#{bundlePoligono.TurnoLabel_seleccionar}" selectionMode="single" style="width:16px;text-align:center" rendered="#{turTurnoController.mostrarSelector(item)}"/>
+                        </p:dataTable>
+                    </p:fieldset>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="botonAnterior2" icon="ui-icon-seek-prev" iconPos="left" update="@all" actionListener="#{turTurnoController.siguiente('paso1')}" value="Anterior" process="@this"/>
+                        <p:commandButton id="botonSiguiente2" icon="ui-icon-seek-next" iconPos="right" update="@all" actionListener="#{turTurnoController.siguiente('rpaso23')}" value="Siguiente" process="@this dtProgramacion"/>
+                    </h:panelGrid>
+
+                </p:tab>
+                <p:tab id="paso3" title="3er Paso">
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_progAnt}"/><br/>
+                    <p:outputLabel value="#{turTurnoController.fechaTurnoAnt}"/><br/>
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_nroDocu4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.perExamenId.numDoc}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_fechaProgra4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.fechaTurno}">
+                                <f:convertDateTime pattern="#{bundlePoligono.FormatoFecha}" />
+                            </p:outputLabel>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_horaPres4}" style="color:red"/>
+                            <p:outputLabel value="#{turTurnoController.horaPresen}" style="color:red"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_tipoTram4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.tipoTramiteId.nombre}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_horaProgra4}"/>
+                            <p:outputLabel value="#{turTurnoController.horaProgra}"/>
+                        </h:panelGrid>
+                    </h:panelGrid><br/><br/>
+
+                    <b><p:outputLabel value="#{bundlePoligono.TurnoLabel_tomeNota4}" style="color:red"/></b><br/><br/>
+
+                    <u><p:outputLabel value="#{bundlePoligono.TurnoLabel_condiciones}"/></u><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota1}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota2}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota3}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota4}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota5}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota6}"/><br/>
+                    <p:outputLabel value="#{bundlePoligono.TurnoLabel_nota7}"/><br/>
+                    <b><p:outputLabel value="#{bundlePoligono.TurnoLabel_decJur}" style="color:red"/></b><br/><br/>
+
+                    <h:panelGrid columns="1" width="100%" >
+                        <h:panelGrid id="gridCaptcha" columns="2" >
+                            <p:graphicImage id="imgCaptcha" value="#{turTurnoController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                            <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{turTurnoController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                            <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                            <p:inputText id="textoCaptcha" value="#{turTurnoController.captcha.textoInput}" required="true" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox id="terminos" value="#{turTurnoController.terminos}" itemLabel="#{bundlePoligono.AceptoTerminos}" required="true" requiredMessage="Debe aceptar los términos y condiciones" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton id="botonAnterior3" icon="ui-icon-seek-prev" iconPos="left" update="@all" actionListener="#{turTurnoController.siguiente('paso2')}" value="Anterior" process="@this"/>
+                        <p:commandButton style="height: 50px;width: 200px;font-size: medium;" icon="ui-icon-check" actionListener="#{turTurnoController.reprogramarTurno}" value="#{bundlePoligono.TurnoButton_generarTurno}" process="@this,gridCaptcha,terminos"  partialSubmit="true" update="@all"/>
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab id="paso4" title="4to Paso">
+                    <h:panelGrid columns="2">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_nroDocu4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.perExamenId.numDoc}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_fechaProgra4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.fechaTurno}">
+                                <f:convertDateTime pattern="#{bundlePoligono.FormatoFecha}" />
+                            </p:outputLabel>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_horaPres4}" style="color:red"/>
+                            <p:outputLabel value="#{turTurnoController.horaPresen}" style="color:red"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_tipoTram4}"/>
+                            <p:outputLabel value="#{turTurnoController.registro.tipoTramiteId.nombre}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_horaProgra4}"/>
+                            <p:outputLabel value="#{turTurnoController.horaProgra}"/>
+
+                            <p:outputLabel value="#{bundlePoligono.TurnoLabel_claveCons}" style="color:red"/>
+                            <p:outputLabel value="#{turTurnoController.registro.claveConsulta}" style="color:red"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:tab>
+            </p:wizard>
+            <p:commandButton id="botonLimpiar" icon="ui-icon-trash" iconPos="left" update="@all" actionListener="#{turTurnoController.restaurarReprogramacion()}" value="Limpiar" process="@this"/>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+

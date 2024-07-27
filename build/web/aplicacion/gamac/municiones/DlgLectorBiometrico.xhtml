@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:outputScript name="js/deployJava.js"/>
+    <p:dialog id="controlBiometrico" header="#{bundleGamacCVMuni.RegVentaDlgVerifca_Title}" 
+              widgetVar="controlBiometricoDialog" modal="true" showEffect="fade" hideEffect="fade" width="910px"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="showDialogBio();" onHide="" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="controlBiometricoView" style="text-align:left; padding:0px!important">
+            <h:form id="controlBiometricoForm">
+                
+                <div class="ui-fluid">
+
+                    <p:panel id="datosUsuPanel" header="#{bundleGamacCVMuni.RegVentaDlgVerifca_PanelUsu_Title}" style="margin-bottom:5px;" widgetVar="panel" >
+                        <h:inputHidden id="bioLogin"/>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                                <p:outputLabel for="bioDNI" value="DNI: " styleClass="txtLabel"/>
+                                <h:outputText id="bioDNI" styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-9">
+                                <p:outputLabel for="bioNombre" value="Apellidos y Nombres: "  styleClass="txtLabel"/>
+                                <h:outputText id="bioNombre" styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                        </div>
+                    </p:panel>
+
+                    <div id="layVerificar">
+
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <div class="ui-messages ui-widget" >
+                                    <div class="ui-messages-info ui-corner-all" style="margin: 0!important; color: #363636!important; background-color: #b3dcf0!important; border-color: #868686!important;">
+                                        <span class="ui-messages-info-icon"></span>
+                                        <ul>
+                                            <li><span class="ui-messages-info-detail">Haga clic en el botón Capturar para obtener la huella digital de cada dedo.</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <p:panel id="bioApplet" style="margin-bottom:10px;" widgetVar="panel" >
+                            </p:panel>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-2"></div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:commandButton value="Reiniciar" id="btnReiniciar" icon="ui-icon-search"
+                                                 process="@form" update="mensajesGrowl"
+                                                 partialSubmit="true" oncomplete="ReiniciarBio()" >
+                                </p:commandButton>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:commandButton value="Cerrar" id="btnCerrar" icon="ui-icon-circle-close"
+                                                 process="@form" update="mensajesGrowl"
+                                                 partialSubmit="true" oncomplete="beforeVerificar();cancelBio('0');" >
+                                </p:commandButton>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2"></div>                            
+                        </div>
+
+                    </div>
+
+                    <div id="layConfirmar">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-3" style="padding-left: 0px!important;">
+                                <p:panel id="reniecFoto" >
+                                    <p:spacer height="100" />
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-9" style="padding-right: 0px!important;">
+                                <p:panel id="reniecDatos" >
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="DNI: " /></div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="01234567" /></div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Ape. Paterno: "/></div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="APELLIDO"/></div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Ape. Paterno: "/></div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="APELLIDO" /></div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12 ui-md-6 ui-lg-3"><p:outputLabel value="Nombres: " /></div>
+                                        <div class="ui-g-12 ui-md-6 ui-lg-9"><h:outputText value="NOMBRES" /></div>
+                                    </div>                                
+
+                                </p:panel>
+                            </div>
+
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:commandButton value="Volver a verificar" actionListener="#{gamacMunicionesRegistrarVentaController.reiniciaFormLector}" id="btnVolverVerificar"
+                                                 process="@form" update="mensajesGrowl"
+                                                 partialSubmit="true" oncomplete="beforeVerificar();" >
+                                </p:commandButton>
+                            </div>                            
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:commandButton value="Confirmar" actionListener="#{gamacMunicionesRegistrarVentaController.confirmarHuella}" id="btnConfirmar" icon="ui-icon-check"
+                                                 process="@form" update=""
+                                                 partialSubmit="true" oncomplete="confirmaDatos();" >
+                                </p:commandButton>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-2">&nbsp;</div>
+                        </div>
+
+                    </div>
+                </div>
+                <p:blockUI block="controlBiometricoView" trigger="btnCerrar" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    <script type="text/javascript">
+        $("#layConfirmar").hide("fast");
+        $("#layVerificar").show("fast");
+        $("div[id*='datosUsuPanel_content'], div[id*='reniecDatos_content'], div[id*='reniecFoto_content']").attr("style", "padding:2px!important");        
+
+        function showDialogBio() {
+            $("#controlBiometrico").css('top', 30);
+        }
+
+        function beforeVerificar() {
+            $("#layVerificar").show("fast");
+            $("#layConfirmar").hide("fast");
+        }
+
+        function afterVerificar() {
+            $("#layVerificar").hide("fast");
+            $("#layConfirmar").show("fast");
+        }
+
+        function confirmaDatos() {
+            PF('controlBiometricoDialog').hide();
+        }
+
+        /*function preFindVig() {
+            $("input[id*='vigilante_input']").val("");
+            $("input[id*='vigilante_hinput']").val("");
+            $("input[id*='vigilante_input']").focus();
+        }*/
+        
+        function asignarDniBio(a, b){
+            $("span[id*='bioDNI']").text(a);
+            $("span[id*='bioNombre']").text(b);
+        }
+
+        function cancelBio(a){
+            console.log("ticket: " + a);
+            PF('controlBiometricoDialog').hide();
+        }
+
+        function failVerificacionBio(a){
+            console.log("mens: " + a);
+            rcFailBio([{name: 'mensaje', value: a}]);
+        }
+
+        function successBio(a, b) {
+            console.log("id: " + a + ", mensaje: " + b);
+            rcSuccessBio([{name: 'id', value: a},{name: 'mensaje', value: b}]);
+        }
+    
+        function loadBio(valor, bioLog){
+            $("div[id*='bioApplet_content']").attr("style", "padding:0px!important");
+            var attributes = {
+                id: "verificationBioApplet",
+                //codebase: "http://192.168.14.11:8080/Sel/resources/applet/",
+                code: "pe.gob.reniec.biometric.bioapplet.BioApplet",
+                archive: "#{request.contextPath}/resources/applet/bioapplet-1.1-2017.12.14.09.38.suc.jar",
+                width: "900",
+                height: "380",
+                scriptable: "true",
+                mayscript: "true"
+            };
+            var parameters = {
+                codigoUsuario: bioLog,
+                bioDni: valor
+                //requirementsCallback: "requirementsCallback"
+                //requirementsCallback: "login.testRequirementsAppletCallback"
+            };
+            writeAppletInto("controlBiometricoForm:bioApplet_content", function(){deployJava.runApplet(attributes, parameters, "1.6");});            
+            //deployJava.runApplet(attributes, parameters, '1.6');            
+        }
+        
+        function writeAppletInto(e,d){
+            var a,c,b;
+            a=document.getElementById(e);
+            a.innerHTML="";
+            c=document.write;
+            b="";
+            document.write=function(f){b+=f};
+            d();
+            a.innerHTML+=b;
+            document.write=c;
+        }
+
+        function ReiniciarBio(){
+            var valor = $("span[id*='bioDNI']").text();
+            var bioLog = $("input[id*='bioLogin']").val();
+            loadBio(valor, bioLog);
+        }    
+    </script>
+</ui:composition>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h="http://xmlns.jcp.org/jsf/html"
+		xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pm="http://primefaces.org/mobile">
+    <pm:page id="verPage" rendered="#{sQLPruebaMovilController.estado == 'VER'}" >
+        <pm:header title="#{bundlePrueba.VerSQLPruebaMovilTitulo}" />
+        <pm:content>
+			<h:form id="verForm">
+					<p:focus context="verForm" />
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_ID_EXPEDIENTE}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.ID_EXPEDIENTE}" title="#{bundlePrueba.SQLPruebaMovilTitle_ID_EXPEDIENTE}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_NUMERO}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.NUMERO}" title="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_NUMERO_IDENTIFICACION}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.NUMERO_IDENTIFICACION}" title="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO_IDENTIFICACION}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_PROCESO}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.PROCESO}" title="#{bundlePrueba.SQLPruebaMovilTitle_PROCESO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_FECHA}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.FECHA}" title="#{bundlePrueba.SQLPruebaMovilTitle_FECHA}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_TITULO}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.TITULO}" title="#{bundlePrueba.SQLPruebaMovilTitle_TITULO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_OBSERVACIONMP}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.OBSERVACIONMP}" title="#{bundlePrueba.SQLPruebaMovilTitle_OBSERVACIONMP}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_ANHO}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.ANHO}" title="#{bundlePrueba.SQLPruebaMovilTitle_ANHO}"/>
+		                </pm:field>
+		                <pm:field>
+							<p:outputLabel value="#{bundlePrueba.SQLPruebaMovilLabel_ESTADO}"/>
+							<p:outputLabel value="#{sQLPruebaMovilController.registro.ESTADO}" title="#{bundlePrueba.SQLPruebaMovilTitle_ESTADO}"/>
+		                </pm:field>
+						<p:commandButton icon="ui-icon-search" actionListener="#{sQLPruebaMovilController.mostrarBuscar}" value="#{bundlePrueba.SQLPruebaMovilVolverBusqueda}" immediate="true" update="@all"/>
+			</h:form>
+        </pm:content>
+    </pm:page>
+</ui:composition>
+

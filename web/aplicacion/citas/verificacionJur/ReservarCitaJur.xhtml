@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="crearCitaVerJurForm" >
+        <p:wizard showNavBar="false" step="#{citasVerificacionJurController.paso}" rendered="#{citasGestionController.opcion == 'CITAVER'}">
+
+            <p:tab id="paso1" title="1er Paso">
+                <p:remoteCommand name="loadArma" update="armasDT" actionListener="#{citasVerificacionJurController.listaArmas}" process="@this"  />
+                <p:panel id="panelPaso1" header="Verificación de Armas" style="margin-bottom:8px;" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Para realizar la venta del arma de fuego a un tercero, según lo establecido en el artículo 57.3 del Reglamento de la Ley de Armas N° 30299 o en caso la SUCAMEC lo requiera" />
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Verificación de arma de fuego para: " class="txtLabel" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:selectOneMenu id="subTramite" autoWidth="false" widgetVar="wvSubTramite" disabled="#{citasVerificacionJurController.disabledTramite}">
+                                <f:selectItem itemLabel="-- Elige trámite --" itemValue="#{null}"  />
+                                <f:selectItems var="item" itemLabel="#{item.nombre}" itemValue="#{item.id}" value="#{citasVerificacionJurController.listaSubTramites}" />
+                                <p:ajax event="itemSelect" listener="#{citasVerificacionJurController.eligeSubTramite}" partialSubmit="true" process="@this" update="@none" oncomplete="selectPasos()"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Persona autorizada para Verificación: " class="txtLabel" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:selectOneMenu id="dniRepresentante" autoWidth="false" >
+                                <f:selectItem itemLabel="-- Elige Representante --" itemValue="#{null}"  />
+                                <f:selectItems var="item" itemLabel="#{item.numDoc} #{item.nombres} #{item.apePat} #{item.apeMat}" itemValue="#{item.id}"
+                                               value="#{citasVerificacionJurController.citaLstRepresentantes}" />
+                                <p:ajax event="itemSelect" listener="#{citasVerificacionJurController.eligeRepresentante}"
+                                        partialSubmit="true" process="@this" update="@none" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-2 ui-md-2 ui-lg-2" style="">
+                            <p:commandButton id="listarArmas" icon="ui-icon-bookmark" update="armasDT" oncomplete="selectPasos()"
+                                             actionListener="#{citasVerificacionJurController.listaArmas}" value="Listar armas de fuego" process="@this"
+                                             rendered="#{citasVerificacionJurController.visibleBtnCargarArma}"/>
+                            <p:commandButton id="btnBuscarArma" value="Busca Arma" actionListener="#{citasVerificacionJurController.loadBuscaArma()}"
+                                             icon="ui-icon-search" process="@this"
+                                             rendered="#{citasVerificacionJurController.visibleBtnBuscarArma}"/>
+                            
+                        </div>
+                    </div>
+
+                    <ui:remove>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-3 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso1TipTram_Label}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-9 ui-lg-3">
+                            <p:selectOneMenu value="#{citasVerificacionJurController.tipoTramite}" required="true" requiredMessage="#{bundleCitas.CitaArmas_paso1TipTram_Msg}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasVerificacionJurController.listaTramites}" />
+                                <p:ajax event="change" listener="#{citasVerificacionJurController.seleccionarTramite}" partialSubmit="true" process="@this" update="armasDT" oncomplete="selectPasos()"/>                                                
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    </ui:remove>
+                    
+                </p:panel>
+
+                <p:dataTable id="armasDT" value="#{citasVerificacionJurController.lstDetalleArma}"
+                             var="item"
+                             rowKey="#{item.id}"
+                             emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                             paginator="true" rows="10"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="10, 20"
+                             reflow="true">
+
+                    <p:column headerText="NRO RUA" style="font-size:92%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.nroRua}"/>
+                        <h:inputHidden id="codCur" value="#{item.id}"/>
+                    </p:column>
+
+                    <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Serie_Title}" style="font-size:92%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.nroSerie}"/>
+                    </p:column>
+
+                    <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Arma_Title}" style="font-size:92%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.tipoArma}"/>
+                    </p:column>
+
+                    <p:column headerText="MARCA / MODELO / CALIBRE" style="font-size:92%!important" class="ui-lg-1">
+                        <h:outputText value="#{item.marca}"/>
+                        <h:outputText value=" / #{item.modelo}"/>
+                        <h:outputText value=" / #{item.calibre}"/>
+                    </p:column>
+
+                    <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Estado_Title}" style="font-size:92%!important" class="ui-lg-2">
+                        <h:outputText value="#{item.estado}"/>
+                    </p:column>
+
+                    <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Situac_Title}" style="font-size:92%!important" class="ui-lg-2">
+                        <h:outputText value="#{item.situacion}"/>
+                    </p:column>
+
+                    <p:column headerText="EMPOCE" style="font-size:92%!important" class="ui-lg-1" rendered="#{citasVerificacionJurController.solicitarRecibo || citasVerificacionJurController.solicitarVoucherTemp}">
+                        <h:outputText value="#{item.reciboArma.nroSecuencia}"/>                        
+                    </p:column>
+                    
+                </p:dataTable>
+
+                <div class="ui-g">
+                    <div class="ui-g-10"></div>
+                    <div class="ui-g-2" style="">
+                        <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="paso1 paso2" oncomplete="selectPasos()"
+                                         actionListener="#{citasVerificacionJurController.siguiente('paso12')}" value="Siguiente" process="@this paso1"/>                                    
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso2" title="2do Paso">
+
+                <p:panel id="panelPaso2" header="#{bundleCitas.CitaArmas_paso2Title}" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso2Tipo_Label}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu id="tipoId" autoWidth="false" value="#{citasVerificacionJurController.tipoCita}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.CitaArmas_paso2Sede_Tipo}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasVerificacionJurController.listarTipoCitas()}" />
+                                <p:ajax event="change" listener="#{citasVerificacionJurController.seleccionarTipoCita}" partialSubmit="true" process="tipoId" update="@form"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-8">
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso2Sede_Label}" rendered="#{citasVerificacionJurController.visibleTipoSede}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu id="sedeId" autoWidth="false" value="#{citasVerificacionJurController.registro.tipoSedeId}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.CitaArmas_paso2Sede_Msg}"
+                                             rendered="#{citasVerificacionJurController.visibleTipoSede}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasVerificacionJurController.listarSedes()}" />
+                                <p:ajax event="change" listener="#{citasVerificacionJurController.seleccionarSede}" partialSubmit="true" process="sedeId" update="@form" oncomplete="selectFecha()"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso2Fecha_Label}" for="listaDiasId"
+                                           rendered="#{citasVerificacionJurController.visibleCalendarCentral or citasVerificacionJurController.visibleCalendarZonal or citasVerificacionJurController.visibleCalendarNoPresencial}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                            <p:selectOneMenu id="listaDiasId" autoWidth="false" value="#{citasVerificacionJurController.fechaTurnoSeleccionada}"
+                                             rendered="#{citasVerificacionJurController.visibleCalendarCentral or citasVerificacionJurController.visibleCalendarZonal or citasVerificacionJurController.visibleCalendarNoPresencial}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}">
+                                <f:selectItem itemLabel="Seleccione Fecha" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.fecha}" value="#{citasVerificacionJurController.getLstFechasCalendario()}" />
+                                <p:ajax event="change" listener="#{citasVerificacionJurController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="listaDiasId" oncomplete="selectFecha()"
+                                        update="crearCitaVerJurForm:pnlDtProg"/>
+                            </p:selectOneMenu>    
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-7">
+                            <h:panelGrid id="pnlDtProg" style="margin:0!important">
+                                <p:dataTable id="dtProgramacion" value="#{citasVerificacionJurController.listaHoras}"
+                                             rendered="#{citasVerificacionJurController.registro.fechaTurno != null}"
+                                             var="item" widgetVar="progTable"
+                                             emptyMessage="#{bundleCitas.MensajeNoResultados}"
+                                             
+                                             rowKey="#{item.id}">
+                                    <p:ajax event="rowSelectRadio" listener="#{citasVerificacionJurController.onRowSelectHora}" process="@this" update="dtProgramacion" partialSubmit="true" />                                    
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_hora}" style="width: 25%" selectRow="false">
+                                        <h:outputText value="#{item.hora}" />
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_cupos}" style="width: 25%; height: 22px;" selectRow="false">
+                                        <h:outputText value="#{item.cantCuposAct}"/>
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_seleccionar}" selectionMode="single" style="width:16px; text-align:center"
+                                              rendered="#{citasVerificacionJurController.mostrarSelectorHora(item)}"/>
+                                    
+                                </p:dataTable>
+                            </h:panelGrid>                                        
+                        </div>
+                    </div>
+
+                    <h:panelGrid id="pnlFechaId" columns="4" cellspacing="5">
+
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior2" icon="ui-icon-seek-prev" iconPos="left" update="crearCitaVerJurForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasVerificacionJurController.siguiente('paso1')}" value="Anterior" process="@this" />
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonSiguiente2" icon="ui-icon-seek-next" iconPos="right" update="crearCitaVerJurForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasVerificacionJurController.siguiente('paso23')}" rendered="#{citasVerificacionJurController.visibleSiguiente3}" value="Siguiente" process="@this"/>
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso3" title="3er Paso">
+
+                <p:panel id="panelPaso3" header="Confirmar Cita" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3TipTram_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.tipoTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3FecProg_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorProg_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Sub Trámite: "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.tipoSubTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorPres_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasVerificacionJurController.horaPresen}" style="font-weight: bold; color:red;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.tipoSedeId.nombre}" style="font-weight: bold; color:red;"/>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="DATOS DE LAS ARMAS" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:dataTable id="armasDTView" value="#{citasVerificacionJurController.lstDetalleArma}"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                         paginator="false" rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="10, 20"
+                                         reflow="true">
+
+                                <p:column headerText="NRO RUA" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.nroRua}"/>
+                                    <h:inputHidden id="codCur" value="#{item.id}"/>
+                                </p:column>
+
+                                <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Serie_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.nroSerie}"/>
+                                </p:column>
+
+                                <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Arma_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.tipoArma}"/>
+                                </p:column>
+
+                                <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Marca_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.marca}"/>
+                                </p:column>
+
+                                <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Modelo_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.modelo}"/>
+                                </p:column>
+
+                                <p:column headerText="#{bundleCitas.CitaArmas_p1DT_Calibre_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                    <h:outputText value="#{item.calibre}"/>
+                                </p:column>
+
+                                <p:column headerText="EMPOCE" style="font-size:92%!important" class="ui-lg-1" rendered="#{citasVerificacionJurController.solicitarRecibo || citasVerificacionJurController.solicitarVoucherTemp}">
+                                    <h:outputText value="#{item.reciboArma.nroSecuencia}"/>                        
+                                </p:column>
+                                
+                            </p:dataTable>                                
+                        </div>
+                    </div>
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Condi_Title}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{citasVerificacionJurController.mensajePaso3Nota1}"/><br/>
+                            <p:outputLabel value="#{citasVerificacionJurController.mensajePaso3Nota2}"/><br/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.CitaArmas_paso3NotaDJ_Title}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <br/>
+                    <h:panelGrid columns="1" width="100%" >
+                        <h:panelGrid id="gridCaptcha" columns="2" >
+                            <p:graphicImage id="imgCaptcha" value="#{citasVerificacionJurController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                            <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{citasVerificacionJurController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                            <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                            <p:inputText id="textoCaptcha" value="#{citasVerificacionJurController.captcha.textoInput}" required="true" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox id="terminos" value="#{citasVerificacionJurController.terminos}" itemLabel=" #{bundleCitas.AceptoTerminos}" 
+                                                     required="true" requiredMessage="Debe aceptar los términos y condiciones" style="color:red"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior3" icon="ui-icon-seek-prev" iconPos="left" update="crearCitaVerJurForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasVerificacionJurController.siguiente('paso2')}" value="Anterior" process="@this"/>
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton icon="ui-icon-check" actionListener="#{citasVerificacionJurController.crear}" value="#{bundleCitas.TurnoButton_generarTurno}" oncomplete="selectPasos()"
+                                         style="height: 50px;font-size: medium;"
+                                         process="@this, gridCaptcha, terminos"  partialSubmit="true" update="crearCitaVerJurForm"/>
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso4" title="4to Paso">
+
+                <p:panel id="panelPaso4" header="Confirmación de Cita" >
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3TipTram_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.tipoTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3FecProg_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorProg_Label} "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="Sub Trámite: "/>
+                            <p:outputLabel value="#{citasVerificacionJurController.tipoSubTramite.nombre}" style="font-weight: bold;"/>
+                        </div>
+                    </div>                    
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3HorPres_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasVerificacionJurController.horaPresen}" style="font-weight: bold; color:red;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-8">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} " style="color:red;"/>
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.tipoSedeId.nombre}" style="font-weight: bold; color:red;"/>
+                        </div>
+                    </div>                                    
+                    <br />
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-lg-1">
+                            <p:outputLabel value="Clave de Consulta: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-2">
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.claveConsulta}" style="color:red; font-weight: bold; font-size: 180%"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Debe acercarse el día: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-4">
+                            <p:outputLabel value="#{citasVerificacionJurController.registro.fechaTurno}" style="color:red; font-weight: bold; font-size: 180%">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-3">
+
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-2">
+                            <p:outputLabel value="Entre: " style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-8 ui-lg-4">
+                            <p:outputLabel value="#{citasVerificacionJurController.horaPresen} - #{citasVerificacionJurController.horaProgra}" style="color:red; font-weight: bold; font-size: 180%"/>
+                        </div>
+                    </div>
+
+                </p:panel>                            
+
+                <ui:remove>
+                    <div class="ui-g">
+                        <div class="ui-g-3" style="">
+                        </div>
+                        <div class="ui-g-6"></div>
+                        <div class="ui-g-3" style="">
+                            <p:commandButton icon="ui-icon-print" iconPos="left" update="crearCitaVerJurForm" 
+                                             actionListener="#{citasVerificacionJurController.mostrarReporte(citasVerificacionJurController.registro)}" value="Imprimir" process="@this"/>
+                            <h:commandLink target="_blank" class="">
+                                <p:graphicImage name="/icons/printVer.png" width="52" alt="Imprimir contancia" class="verConst ui-helper-hidden"/>
+                                <p:fileDownload value="#{citasVerificacionJurController.verPdf(citasVerificacionJurController.registro)}" contentDisposition="inline"  />
+                            </h:commandLink>                                                                        
+                        </div>
+                    </div>
+                </ui:remove>
+            </p:tab>
+
+        </p:wizard>
+
+        <div class="ui-g">
+            <div class="ui-g-2">
+                <p:commandButton id="botonLimpiar" icon="ui-icon-trash" iconPos="left" update="@all" actionListener="#{citasGestionController.restaurarCitasVerJur()}" value="Limpiar" process="@this"/>
+            </div>
+        </div>
+    </h:form>
+
+    <ui:include src="DlgBuscarArmaJur.xhtml" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            //$(".txtLabel").parent().attr("style", "padding-top:11px");
+            $(".txtLabel").attr("style", "line-height: 190%");                        
+            $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+            $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("#evaluarContrato > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px 6px 2px 6px!important;");
+            $("#evaluarContrato > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $("#evaluarContrato_title").attr("style", "font-size:16px !important; padding:0!important;");
+
+            //$("#evaluarContratoForm").children().children().children().children(".ui-g").children().attr("style", "padding:3px!important;");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            
+            setTimeout(function() {                
+                $("form[id*='crearCitaVerJurForm']")[0].reset();
+                //console.log("val: " + $("select[id*='subTramite_input']").val());
+                $("select[id*='subTramite_input'] option:selected").each(function() {
+                    //console.log(this.text + " " + this.value);
+                    $("select[id*='subTramite_input']").find("option[value='" + this.value + "']").attr("selected", false).change();
+                    $("li[id*='subTramite']").removeClass("ui-state-highlight");
+                });                
+                $("select[id*='subTramite_input']").find("option[value='']").attr("selected", true).change();
+                $("label[id*='subTramite_label']").text($("select[id*='subTramite_input'] option:selected").text());
+                $("li[id*='subTramite_0']").addClass("ui-state-highlight");                
+                //console.log("val: " + $("select[id*='subTramite_input']").val());
+            }, 500);            
+        });
+
+        function selectTab5(){
+            $("div[id*='panelPaso1_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");            
+            $("a[href*='tab5']").parent().show("fast");            
+        }
+
+        function selectTipoDoc() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        }
+
+        function selectPasos() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+            $("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");            
+        }
+
+        function selectFecha() {
+            $("div[id*='panelPaso2_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso2_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        }
+
+        function addArma() {
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            //$("input[id*='nroLicencia'], input[id*='nroSerie']").val("");
+        }
+
+        function limpiarInputDet() {
+            $("input[id*='nroLicencia'], input[id*='nroSerie']").val("");
+        }
+
+        function delArma() {
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+        }
+
+        /*setTimeout(function(){
+            loadArma();
+        }, 1000);*/
+    </script>
+
+</ui:composition>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgBuscarArmaJur" widgetVar="wvDlgBuscarArmaJur" closable="true" header="Búsqueda de Arma" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgBuscarArma()" width="90%">
+        <h:form id="buscarArmaJurForm">
+            <p:focus context="buscarArmaJurForm" />
+            
+            <div class="ui-g">
+                <div class="ui-lg-4 ui-md-4 ui-g-12" style="padding-left:0px!important">
+                    <p:panel id="pnlBuscarArma" style="margin-bottom:5px">
+                        <h:panelGrid id="buscPnl" columns="3">
+                            <p:outputLabel value="#{bundleCitas.dlgBuscarArmaLabel_filtro}" for="filtroId"/>
+                            <p:inputText id="filtroId" value="#{citasVerificacionJurController.filtroArmas}" 
+                                         required="true" requiredMessage="#{bundle.dlgBuscarArmaRequiredMessage_filtro}"
+                                         placeholder="SERIE"/>
+
+                            <p:commandButton id="botonBuscar" icon="ui-icon-search" partialSubmit="true" process="buscPnl"
+                                             update="tabGestion:buscarArmaJurForm:dtArmasNoTi" actionListener="#{citasVerificacionJurController.buscarArmas()}" value="#{bundle.Buscar}"/>
+
+                        </h:panelGrid>
+                    </p:panel>                    
+                </div>
+                <div class="ui-lg-12 ui-md-12 ui-g-12" style="padding-right: 0px!important">
+                    <p:panel id="pnlgComprobante" rendered="#{citasVerificacionJurController.solicitarRecibo}" style="margin-bottom: 5px!important">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <p:outputLabel value="Nro. Documento del Comprador: " for="acDNIComprador" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-2">
+                                <p:inputText id="acDNIComprador" value="#{citasVerificacionJurController.nroDocComprador}" 
+                                         required="true" requiredMessage="#{bundleCitas.dlgBuscarArmaRequiredDocumentoComprador}"
+                                         placeholder="DNI/CE del Comprador" maxlength="20"
+                                         disabled="#{citasVerificacionJurController.disableReciboBn}">
+                                    <p:ajax event="blur" update="@this"/>
+                                </p:inputText>    
+                            </div>
+                            <div class="ui-g-12 ui-md-1 ui-lg-1">
+                                <p:outputLabel value="Comprobante: " for="acReciboBn" class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-3">
+                                <div class="ui-inputgroup">
+                                    <p:autoComplete id="acReciboBn"
+                                                    value="#{citasVerificacionJurController.reciboBn}"
+                                                    completeMethod="#{citasVerificacionJurController.autoCompleteRecibos}"
+                                                    disabled="#{citasVerificacionJurController.disableReciboBn}"
+                                                    placeholder="NRO. COMPROBANTE"
+                                                    required="true"
+                                                    requiredMessage="Debe ingresar el número del comprobante"
+                                                    var="item"
+                                                    itemLabel="#{item.nroSecuencia}"
+                                                    itemValue="#{item}"
+                                                    minQueryLength="2"
+                                                    cache="true"
+                                                    onchange="buscaRecArm()"
+                                                    onkeypress="return runScript(event)"
+                                                    forceSelection="true" >
+                                        <p:ajax event="itemSelect" listener="#{citasVerificacionJurController.lstnrSelectRecibo}" update="pnlgComprobante" oncomplete="buscaRecArm()" />
+                                    </p:autoComplete>
+                                    <p:commandButton id="regDelBusLic" icon="ui-icon-close" class="red-button btnBusqueda" title="Borrar Recibo seleccionado"
+                                                     process="@this" update="pnlgComprobante" actionListener="#{citasVerificacionJurController.borrarReciboSeleccionado()}"
+                                                     rendered="#{citasVerificacionJurController.reciboBn != null}" partialSubmit="true" oncomplete="buscaRecArm()"/>
+                                    <pe:tooltip for="acReciboBn"
+                                                rendered="#{citasVerificacionJurController.reciboBn == null}"
+                                                value="Ingrese el número del recibo del Banco de la Nación"
+                                                showEffect="slideToggle"
+                                                hideEffect="slideToggle"
+                                                showDelay="0"
+                                                myPosition="left center"
+                                                atPosition="right center"/>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                                <p:outputLabel value="Numero Comprobante: " rendered="#{citasVerificacionJurController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasVerificacionJurController.strNroSecuencia}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Fecha Comprobante: " rendered="#{citasVerificacionJurController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasVerificacionJurController.strFechaMovimiento}" escape="false" class="txtLabel"/>
+                                <p:outputLabel value=" / Monto: " rendered="#{citasVerificacionJurController.reciboBn != null}" class="txtLabel"/>
+                                <p:outputLabel value="#{citasVerificacionJurController.strImporte}" escape="false" class="txtLabel"/>
+                            </div>
+                        </div>
+                    </p:panel>            
+                </div>
+            </div>
+            
+            <p:dataTable id="dtArmasNoTi" value="#{citasVerificacionJurController.armasMap}"
+                         var="item" widgetVar="progTable" emptyMessage="#{bundleCitas.MensajeNoResultados}"
+                         style="width: 100%" paginator="true" rows="#{bundle.PaginatorFilas}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <p:column headerText="#{bundleCitas.dlgBuscarArmaGrilla_datProp}" style="font-size:95%!important" class="ui-lg-3">
+                    <h:outputText value="#{item.personaComprador}"/>
+                </p:column>
+                <p:column headerText="#{bundleCitas.dlgBuscarArmaGrilla_nroRua}" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.nroRua}"/>
+                </p:column>
+                <p:column headerText="#{bundleCitas.dlgBuscarArmaGrilla_nroSerie}" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.serie}"/>
+                </p:column>
+                <p:column headerText="#{bundleCitas.dlgBuscarArmaGrilla_tipoArma}" style="font-size:95%!important" class="ui-lg-1">
+                    <h:outputText value="#{item.tipoArma}"/>
+                </p:column>
+                <p:column headerText="Marca / Calibre / Modelo" style="font-size:95%!important" class="ui-lg-3">
+                    <h:outputText value="#{item.marca}"/> / 
+                    <h:outputText value="#{item.calibre}"/> /
+                    <h:outputText value="#{item.modelo}"/>
+                </p:column>
+                <p:column headerText="Situación" style="font-size:95%!important" class="ui-lg-2">
+                    <h:outputText value="#{item.situacion}"/>
+                </p:column>
+                <p:column headerText="#{bundleCitas.dlgBuscarArmaGrilla_opcion}" style="font-size:95%!important" class="ui-lg-1">
+                    <p:commandButton action="#{citasVerificacionJurController.seleccionarTarjeta(item)}" value="#{bundle.Seleccionar}"
+                                     partialSubmit="true" process="dtArmasNoTi, @this" 
+                                     rendered="#{citasVerificacionJurController.validaArmaxAdmExp(item)}"
+                                     />
+                </p:column>
+
+            </p:dataTable>
+
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-9 ui-lg-9"></div>
+
+                <div class="ui-g-12 ui-md-3 ui-lg-3" style="text-align: right">
+                    <p:commandButton immediate="true" icon="ui-icon-close" value="Cerrar" update="@this" onclick="PF('wvDlgBuscarArmaJur').hide();" />
+                </div>
+            </div>
+            
+        </h:form>
+    </p:dialog>
+    
+    <script type="text/javascript">
+        
+        function showDlgBuscarArma() {
+            $("div[id*='dlgBuscarArmaJur']").css('top', 100);
+            //$("div[id*='buscarArmaId_content']").attr("style", "padding:2px!important");
+
+            $("div[id*='dlgBuscarArmaJur'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;"); 
+            $("div[id*='dlgBuscarArmaJur'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;"); 
+            $("div[id*='dlgBuscarArmaJur'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $("div[id*='pnlBuscarArma_content'], div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+            
+            //$("div[id*='pnlDatExp_content'], div[id*='pnlDatArmDis_content'], div[id*='pnlDatArmGam_content']").attr("style", "padding:0!important");
+            //$("div[id*='pnlDatExp_content'], div[id*='pnlDatArmDis_content'], div[id*='pnlDatArmGam_content']").children(".ui-g").children().attr("style", "padding:3px!important;");                
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");            
+        }
+        
+        function buscaRecArm() {
+            $("div[id*='pnlBuscarArma_content'], div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content']").attr("style", "padding:0px!important");
+
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");            
+        }
+        
+        function runScript(e) {
+            //See notes about 'which' and 'key'
+            if (e.keyCode == 13) {
+                //var tb = document.getElementById("scriptBox");
+                //eval(tb.value);
+                return false;
+            }
+        }
+    </script>
+    
+</ui:composition>
+

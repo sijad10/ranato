@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgEmpresaTransp" widgetVar="CreateViewDialogEmpresaTransp" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR EMPRESA DE TRANSPORTE" closable="false">
+        <h:form id="fmrDlgEmpTransp">
+                <h:panelGrid columns="1" >
+                    <h:panelGrid columns="3" >
+                        <p:outputLabel value="Filtro" /> 
+                        <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" 
+                                     title="RZN. SOCIAL / RUC"
+                                     placeholder="RZN. SOCIAL / RUC" /> 
+                        <p:commandButton value="#{bundleGeppGte.Buscar}" 
+                                         update="@form" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.buscarDlgEmpresaTransp}" /> 
+                    </h:panelGrid>
+                    <p:dataTable id="datatable" widgetVar="usrTable"  
+                                 value="#{eppRegistroGuiaTransitoController.lstDlgEmpresaTransp}" 
+                                 var="item"  
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 paginator="true" 
+                                 rows="6"  
+                                 paginatorTemplate="{CurrentPageReport}
+                                 {FirstPageLink} {PreviousPageLink} 
+                                 {PageLinks} {NextPageLink} {LastPageLink} 
+                                 {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}" >
+
+                        <p:column headerText="Nombres/Razón Social" >                    
+                            <h:outputText value="#{item.rznSocial} #{item.nombres} #{item.apePat} #{item.apeMat} "/>
+                        </p:column>
+
+                        <p:column headerText="RUC" >                    
+                            <h:outputText value="#{item.ruc}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleGeppGte.Opcion}" style="text-align: center" >
+                            <p:commandButton icon="ui-icon-check" 
+                                             title="SELECCIONAR" 
+                                             oncomplete="PF('CreateViewDialogEmpresaTransp').hide()" 
+                                             actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgEmpresaTransp(item)}" />
+                        </p:column>
+
+                    </p:dataTable>
+                    <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                     style="float: right"
+                                     process="@this"
+                                     update="fmrDlgEmpTransp" 
+                                     actionListener="#"
+                                     oncomplete="PF('CreateViewDialogEmpresaTransp').hide()" />
+                </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>
+

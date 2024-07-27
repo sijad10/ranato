@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="verPage">
+            <pm:header title="#{bundleCydoc.VerMvCdExpedienteTitulo}" />
+            <pm:content>
+                <h:form id="verForm">
+                    <p:focus context="verForm" />
+                    <h:panelGroup rendered="#{mvCdExpedienteCodigoController.registro != null}">
+                        <pm:field>
+                            <p:outputLabel value="#{bundleCydoc.MvCdExpedienteLabel_NUMERO}"/>
+                            <p:outputLabel value="#{mvCdExpedienteCodigoController.registro.NUMERO}" title="#{bundleCydoc.MvCdExpedienteTitle_NUMERO}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="#{bundleCydoc.MvCdExpedienteLabel_PROCESO}"/>
+                            <p:outputLabel value="#{mvCdExpedienteCodigoController.registro.PROCESO}" title="#{bundleCydoc.MvCdExpedienteTitle_PROCESO}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="#{bundleCydoc.MvCdExpedienteLabel_TITULO}"/>
+                            <p:outputLabel value="#{mvCdExpedienteCodigoController.registro.TITULO}" title="#{bundleCydoc.MvCdExpedienteTitle_TITULO}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="#{bundleCydoc.MvCdExpedienteLabel_ESTADO}"/>
+                            <p:outputLabel value="#{mvCdExpedienteCodigoController.registro.ESTADO}" title="#{bundleCydoc.MvCdExpedienteTitle_ESTADO}"/>
+                        </pm:field>
+
+                        <p:dataTable id="detalleDatatable" value="#{mvCdExpedienteCodigoController.detalle}"
+                                     reflow="true"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleCydoc.MensajeNoResultados}" 
+                                     paginator="true" rows="#{bundleCydoc.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{bundleCydoc.PaginatorFilasPorPagina}">
+                            <p:column headerText="#{bundleCydoc.MvCdExpedienteDetTitle_FECHA}" sortBy="#{item.FECHA}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleCydoc.MvCdExpedienteDetTitle_FECHA}" />
+                                </f:facet>
+
+                                <h:outputText value="#{item.FECHA}">
+                                    <f:converter converterId="fechaConverter" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{bundleCydoc.MvCdExpedienteDetTitle_AREA}" sortBy="#{item.AREA}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleCydoc.MvCdExpedienteDetTitle_AREA}" />
+                                </f:facet>
+
+                                <h:outputText value="#{item.AREA}"/>
+                            </p:column>
+                            <p:column headerText="#{bundleCydoc.MvCdExpedienteDetTitle_ESTADO}" sortBy="#{item.ESTADO}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleCydoc.MvCdExpedienteDetTitle_ESTADO}" />
+                                </f:facet>
+
+                                <h:outputText value="#{item.ESTADO}"/>
+                            </p:column>
+                            <p:column headerText="#{bundleCydoc.MvCdExpedienteDetTitle_OBSERVACION}" sortBy="#{item.OBSERVACION}">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleCydoc.MvCdExpedienteDetTitle_OBSERVACION}" />
+                                </f:facet>
+
+                                <h:outputText value="#{item.OBSERVACION}" escape="false" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{mvCdExpedienteCodigoController.registro == null}">
+                        <p:outputLabel value="No se encontró el documento."/>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

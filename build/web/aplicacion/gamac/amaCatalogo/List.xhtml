@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaCatalogoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaCatalogoEmpty}" rendered="#{amaCatalogoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaCatalogoController.items.rowCount > 0}">
+                    <h:outputText value="#{amaCatalogoController.pagination.pageFirstItem + 1}..#{amaCatalogoController.pagination.pageLastItem + 1}/#{amaCatalogoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaCatalogoController.previous}" value="#{bundle.Previous} #{amaCatalogoController.pagination.pageSize}" rendered="#{amaCatalogoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaCatalogoController.next}" value="#{bundle.Next} #{amaCatalogoController.pagination.pageSize}" rendered="#{amaCatalogoController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaCatalogoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_nombre}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nombre}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_abreviatura}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.abreviatura}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_descripcion}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_codProg}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.codProg}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_orden}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.orden}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaCatalogoTitle_tipoId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tipoId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaCatalogoController.prepareView}" value="#{bundle.ListAmaCatalogoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaCatalogoController.prepareEdit}" value="#{bundle.ListAmaCatalogoEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaCatalogoController.destroy}" value="#{bundle.ListAmaCatalogoDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaCatalogoController.prepareCreate}" value="#{bundle.ListAmaCatalogoCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaCatalogoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h="http://xmlns.jcp.org/jsf/html"
+		xmlns:f="http://xmlns.jcp.org/jsf/core"
+		xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{geppLmeController.estado == 'VER'}" >
+        	<p:focus context="verForm" />
+                <h:panelGrid id="panelGrid" columns="2">
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_NRO_LICENCIA}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.NRO_LICENCIA}" title="#{bundleRenagi.GeppLmeTitle_NRO_LICENCIA}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_RUC}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.RUC}" title="#{bundleRenagi.GeppLmeTitle_RUC}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_RZN_SOCIAL}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.RZN_SOCIAL}" title="#{bundleRenagi.GeppLmeTitle_RZN_SOCIAL}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_TIPO_DOC}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.TIPO_DOC}" title="#{bundleRenagi.GeppLmeTitle_TIPO_DOC}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_NUM_DOC}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.NUM_DOC}" title="#{bundleRenagi.GeppLmeTitle_NUM_DOC}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_APE_PAT}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.APE_PAT}" title="#{bundleRenagi.GeppLmeTitle_APE_PAT}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_APE_MAT}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.APE_MAT}" title="#{bundleRenagi.GeppLmeTitle_APE_MAT}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_NOMBRES}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.NOMBRES}" title="#{bundleRenagi.GeppLmeTitle_NOMBRES}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_NUMERO}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.NRO_EXPEDIENTE}" title="#{bundleRenagi.GeppLmeTitle_NUMERO}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_TIPO_CARGO}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.TIPO_CARGO}" title="#{bundleRenagi.GeppLmeTitle_TIPO_CARGO}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_FEC_EMI}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.FEC_EMI}" title="#{bundleRenagi.GeppLmeTitle_FEC_EMI}">
+                        <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_FEC_VENC}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.FEC_VENC}" title="#{bundleRenagi.GeppLmeTitle_FEC_VENC}">
+                        <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_TIPO_EMISION}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.TIPO_EMISION}" title="#{bundleRenagi.GeppLmeTitle_TIPO_EMISION}"/>
+                    <p:outputLabel value="#{bundleRenagi.GeppLmeLabel_TIPO_LICENCIA}"/>
+                    <p:outputLabel value="#{geppLmeController.registro.TIPO_LICENCIA}" title="#{bundleRenagi.GeppLmeTitle_TIPO_LICENCIA}"/>
+                </h:panelGrid>
+                <br />
+                <p:commandButton icon="ui-icon-search" actionListener="#{geppLmeController.mostrarBuscar}" value="#{bundleRenagi.GeppLmeVolverBusqueda}" immediate="true" update="@all"/>
+    </h:form>
+</ui:composition>
+

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">    
+    
+    <ui:define name="body">
+        <style>
+            .txtContenido {
+                font-size:80%!important; 
+                vertical-align: middle;                
+            }
+        </style>
+        <pm:page id="buscarPage">
+            <pm:content style="width:99%;padding-top: 0; margin-top: 0;" styleClass="txtContenido" >
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGrid columns="6" >
+                            <p:outputLabel id="lblAreas" value="Oficina: " />
+                            <p:selectOneMenu id="areas" value="#{sbPublicacionDocController.area}" 
+                                             filter="true" required="true" styleClass="txtContenido"
+                                             effect="fade" filterMatchMode="contains" >
+                                    <f:selectItems value="#{sbPublicacionDocController.listadoAreas}" var="item" itemLabel="#{item.descripcion}" itemValue="#{item}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel id="lblTipoDoc" value="Tipo documento: " style="margin-left: 50px;" />
+                            <p:selectOneMenu id="tipoDoc" value="#{sbPublicacionDocController.tipoDoc}" styleClass="txtContenido"
+                                             filter="true" required="true"
+                                             effect="fade" filterMatchMode="contains" >
+                                    <f:selectItems value="#{sbPublicacionDocController.listadoTipoDocs}" var="item" itemLabel="#{item.nombre}" itemValue="#{item}" />
+                            </p:selectOneMenu>
+
+                             <p:outputLabel id="lblanio" value="Año: " style="margin-left: 50px;" />
+                             <p:selectOneMenu id="anio" value="#{sbPublicacionDocController.anioReporte}" styleClass="txtContenido"
+                                             filter="true" required="true"
+                                             effect="fade" filterMatchMode="contains" >
+                                    <f:selectItems value="#{sbPublicacionDocController.obtenerListadoAnio() }" var="item" itemLabel="#{item}" itemValue="#{item}" />
+                            </p:selectOneMenu>
+                    </h:panelGrid>
+                    
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{BundleBDIntegrado.Filtro}" />
+                            <p:inputText  value="#{sbPublicacionDocController.filtro}" required="false" placeholder="#{BundleBDIntegrado.SbPublicacionDoc_PhExpedienteRG}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{BundleBDIntegrado.Buscar}" icon="ui-icon-search" 
+                                         actionListener="#{sbPublicacionDocController.buscarPublicacionesMovil()}" process="@form" update="@form" />
+                    </h:panelGroup>
+                    
+                    <h:panelGroup rendered="#{sbPublicacionDocController.resultados != null}">
+                            <h:outputLabel value="Se encontró #{sbPublicacionDocController.resultados.rowCount} resultado(s)." escape="false" />
+                            <p:dataTable id="buscarDatatable" value="#{sbPublicacionDocController.resultados}"
+                                         reflow="true"
+                                         var="item" 
+                                         style="font-size:90%!important;"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleReportes.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleReportes.PaginatorFilas}"  
+                                         rowIndexVar="index"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleReportes.PaginatorFilasPorPagina}">
+                                <p:column headerText="#{sbPublicacionDocController.obtenerDescDocumento()}" sortBy="#{item.numeroDoc}" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{sbPublicacionDocController.obtenerDescDocumento()}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.numeroDoc}"/>
+                                </p:column>
+                                <p:column headerText="Descripción" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <h:outputText value="Descripción" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.titulo}"/>
+                                </p:column>                                
+                                <p:column headerText="#{sbPublicacionDocController.obtenerDescFecha()}" sortBy="#{item.fechaDoc}" style="text-align: center;">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{sbPublicacionDocController.obtenerDescFecha()}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.fechaDoc}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Descarga" style="text-align: center;width: 6%;" >
+                                    <f:facet name="header">
+                                        <h:outputText value="Descarga" />
+                                    </f:facet>
+
+                                    <h:commandLink
+                                        rendered="#{item.archivo ne null and item.archivo.length() > 0}"
+                                        style="display: inline-table"
+                                        target = "_blank">
+                                        <p:graphicImage name="/imagenes/descarga_on.png" width="21" style="margin-left: 10px;" title="Ver archivo"/>
+                                        <p:fileDownload value="#{sbPublicacionDocController.descagarArchivo(item)}" contentDisposition="inline"  />
+                                    </h:commandLink>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

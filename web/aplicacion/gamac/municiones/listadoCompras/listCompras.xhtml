@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:define name="title">
+        <f:facet name="header" >
+            SUCAMEC EN LÍNEA - SEL
+        </f:facet>
+        
+        <h:outputText value="#{bundleGamacCVMuni.listComprasTitle}"/>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <div class="ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p>#{bundleGamacCVMuni.listComprasIntro}</p>
+                    <h:form id="buscarForm">                      
+                        <p:focus context="buscarForm" />
+                        <p:defaultCommand target="botonBuscar"/>
+                        
+                        <p:panel id="buscarPanel" header="#{bundleGamacCVMuni.listComprasPanelBusTitle}" style="margin-bottom:10px;" toggleable="true" toggleSpeed="500" widgetVar="panel" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                    <p:outputLabel for="tipoFiltro" value="#{bundleGamacCVMuni.listComprasBusTipoFiltro_Label}" styleClass="txtLabel"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-3 ui-lg-2">
+                                    <p:selectOneMenu id="tipoFiltro" value="#{gamacMunicionesListadoCompraController.tipoFiltro}"  >
+                                        <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                        <f:selectItem itemValue="1" itemLabel="RUC O DNI DEL VENDEDOR" />
+                                        <f:selectItem itemValue="2" itemLabel="NOMBRE VENDEDOR" />
+                                        <f:selectItem itemValue="3" itemLabel="FECHA COMPRA" />
+                                        <f:selectItem itemValue="4" itemLabel="LOCAL DE COMPRA" />                                        
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo1">
+                                    <p:inputText id="filtroBusqueda" size="20" value="#{gamacMunicionesListadoCompraController.filtro}" requiredMessage="Ingresar texto a filtrar" autocomplete="false"/>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo2" >
+                                    <p:calendar id="findFechaVenta" value="#{gamacMunicionesListadoCompraController.findFechaVenta}"
+                                                size="10" autocomplete="false" 
+                                                pattern="#{bundleGamacCVMuni.FormatoFecha}" navigator="true" locale="es" showOn="button">
+                                    </p:calendar>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-6 ui-lg-3 ui-helper-hidden tipo3" >
+                                    <p:selectOneMenu id="findLocal" value="#{gamacMunicionesListadoCompraController.findLocal}" >
+                                        <f:selectItem itemValue="#{null}" itemLabel="------"/> 
+                                        <f:selectItems value="#{gamacMunicionesListadoCompraController.listDire()}" var="item" itemValue="#{item}"
+                                                       itemLabel="#{item.direccion} #{item.numero}, #{item.distritoId.nombre} - #{item.distritoId.provinciaId.nombre} - #{item.distritoId.provinciaId.departamentoId.nombre}" /> 
+                                        <p:ajax event="change" update="@none" process="@this" partialSubmit="true"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-1">
+                                    <p:commandButton value="#{bundleGamacCVMuni.listComprasBusBtnBuscar_Label}" id="botonBuscar"
+                                                     process="@this, tipoFiltro, filtroBusqueda, findFechaVenta, findLocal"
+                                                     icon="ui-icon-search " actionListener="#{gamacMunicionesListadoCompraController.buscar}" 
+                                                     update=":buscarForm:buscarDatatable"/>
+                                </div>
+
+                                <div class="ui-g-12 ui-md-12 ui-lg-1">
+                                </div>
+                                
+                                <div class="ui-g-12 ui-md-6 ui-lg-2">
+                                    <p:commandButton value="#{bundleGamacCVMuni.listComprasBusBtnRegistrarComp_Label}" 
+                                                     actionListener="#{gamacMunicionesListadoCompraController.newRegistroCompra}" id="btnCrate" icon="ui-icon-plus"
+                                                     process="@this" update=":newCompraForm"
+                                                     partialSubmit="true" oncomplete="createCompra();" >
+                                    </p:commandButton>
+                                </div>
+
+                            </div>
+
+                            <p:blockUI block="buscarPanel" trigger="botonBuscar" />
+                        </p:panel>                        
+
+                        <p:dataTable id="buscarDatatable" value="#{gamacMunicionesListadoCompraController.lstCompras}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleGamacCVMuni.MensajeNoResultados}" 
+                                     paginator="true" rows="#{bundleGamacCVMuni.PaginatorFilas}"  
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{bundleGamacCVMuni.PaginatorFilasPorPagina}"
+                                     rowIndexVar="idExp"
+                                     reflow="true">
+                            
+                            <f:facet name="header">
+                                <h:outputLabel value="#{bundleGamacCVMuni.Resultados}" />
+                            </f:facet>
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTLocalCom_Title}" style="font-size:92%!important" class="ui-lg-2">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTLocalCom_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.direccion}"/>
+                                <h:inputHidden id="idCompra" value="#{item.id}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTTipoNroDoc_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTTipoNroDoc_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoDoc} #{item.nroDoc}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasDTTipoVend_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasDTTipoVend_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoVendedor}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTVendedor_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTVendedor_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.vendedorNombre}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTTipoAut_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTTipoAut_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoAutorizacion}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTNroAut_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTNroAut_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.nroAutorizacion}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTTpTransc_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTTpTransc_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tipoTransaccion}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTFechaCom_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTFechaCom_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.fechaCompra}">
+                                    <f:convertDateTime pattern="#{bundleGamacCVMuni.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTTotalMun_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTTotalMun_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.totalMuniciones}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTResponsable_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTResponsable_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.responsable}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasDTAcciones_Title}" style="font-size:92%!important" class="ui-lg-1">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasDTAcciones_Title}" />
+                                </f:facet>
+                                <p:column style="margin: 0!important; padding: 0!important" >
+                                    <p:commandLink actionListener="#{gamacMunicionesListadoCompraController.loadVerCompra}" process=":buscarForm:buscarDatatable"
+                                                   oncomplete="verCompra()" partialSubmit="true" >
+                                        <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0; display: inline-block;" title="Ver Detalle" />
+                                    </p:commandLink>
+                                </p:column>&nbsp;
+                                <p:column style="margin: 0!important; padding: 0!important" rendered="#{item.cierreInventario==1 and item.isCancelable ==true}">
+                                    <p:commandLink actionListener="#{gamacMunicionesListadoCompraController.loadAnularCompra}" process=":buscarForm:buscarDatatable"
+                                                   partialSubmit="true" >
+                                        <h:outputText styleClass="ui-icon ui-icon-cancel" style="margin:0; display: inline-block;" title="Anular Compra" />
+                                        <p:confirm header="#{bundleGamacCVMuni.ConfirmarTitulo}" message="#{bundleGamacCVMuni.ConfirmarAnularRegCompra}" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column style="margin: 0!important; padding: 0!important">
+                                    <p:commandLink actionListener="#{gamacMunicionesListadoCompraController.loadDevolCompra}" process=":buscarForm:buscarDatatable"
+                                                   oncomplete="createDevolucion()"
+                                                   partialSubmit="true" >
+                                        <h:outputText styleClass="ui-icon ui-icon-arrowreturnthick-1-w" style="margin:0; display: inline-block;" title="Devolver compra" />
+                                        <p:confirm header="#{bundleGamacCVMuni.ConfirmarTitulo}" message="#{bundleGamacCVMuni.ConfirmarDevolverRegCompra}" icon="ui-icon-alert" />
+                                    </p:commandLink>
+                                </p:column>&nbsp;
+                            </p:column>
+                        </p:dataTable>
+                        <p:blockUI block="buscarDatatable" trigger="buscarDatatable" >
+                            CARGANDO<br />
+                            <p:graphicImage url="/resources/imagenes/ajaxloadingbar.gif"/>
+                        </p:blockUI>
+                        
+                    </h:form>
+                </div>
+            </div>
+        </div>
+        
+        <ui:include src="DlgCreateCompra.xhtml" />
+        <ui:include src="DlgCreateImportacion.xhtml" />
+        <ui:include src="DlgViewCompra.xhtml" />
+        <ui:include src="DlgDevolucion.xhtml" />        
+        
+        <script type="text/javascript">
+            //$(".tipo1").show();            
+            $(".txtLabel").parent().attr("style", "padding-top:11px");
+            //$(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            $(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            $("div[id*='buscarPanel_content']").attr("style", "padding:0!important");
+            
+            $("select[id*='tipoFiltro']").on("change", function () {
+                $(".tipo1, .tipo2, .tipo3, .tipo4").hide();
+                valorTipo = $(this).val();
+                console.log("$(tipoFiltro).val(): " + $(this).val());
+                switch (valorTipo) {
+                    case '1':
+                    case '2':
+                        $(".tipo1").show();
+                        break;
+                    case '3':
+                        $(".tipo2").show();
+                        break;
+                    case '4':
+                        $(".tipo3").show();
+                        break;                        
+                }
+            });
+            
+            function createCompra() {
+                $("#newCompra > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;");
+                $("#newCompra_title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+                $("#newCompra > .ui-dialog-content").attr("style", "padding:4px!important;");
+                setTimeout(function () {
+                    $("div[id*='datosMunicPanel_content'], div[id*='datosCompraPanel_content']").attr("style", "padding:2px!important");
+                    $(".ui-datatable-footer").attr("style", "padding:2px!important");
+                }, 300);
+                
+            }
+            
+            function createDevolucion() {
+                $("#devMunicionC > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;");
+                $("#devMunicionC_title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+                $("#devMunicionC > .ui-dialog-content").attr("style", "padding:4px!important;");
+            }
+            
+            function verCompra() {
+                $("#viewCompra > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 6px!important; color: #fff!important; background: #2399e5!important;");
+                $("#viewCompra_title").attr("style", "color: #fff!important; font-size:100%!important; padding:0!important;");                
+                //$("#viewCompra > .ui-dialog-content").attr("style", "padding:4px!important; border-width:0 5px 5px 5px!important; border-style:solid!important; border-color: #2399e5!important;");
+                $("#viewCompra > .ui-dialog-content").attr("style", "padding:4px!important;");
+                $("div[id*='datosMunicPanel_content'], div[id*='datosVentaPanel_content']").attr("style", "padding:2px!important");
+                setTimeout(function () {
+                    $("div[id*='datosMunicPanel_content'], div[id*='datosCompraPanel_content']").attr("style", "padding:2px!important");
+                    $(".ui-datatable-footer").attr("style", "padding:2px!important");
+                    $("#viewCompra").css('top', 30);                    
+                }, 300);
+                
+            }
+            
+            function updateDialogInicio() {
+                $("#newCompra, #devMunicion").css('top', 30);
+            }
+
+            function updateDialogInicioHide() {
+                document.getElementById("newCompraForm").reset();
+                $('#newCompraForm').trigger("reset");
+            }
+            
+        </script>
+        
+    </ui:define>
+</ui:composition>

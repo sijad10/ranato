@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgBusquedaLocal" widgetVar="wvDlgBusquedaLocal" width="65%" height="53%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR LOCAL" closable="false">
+        <h:form id="frmBusquedaLocal">
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="5" >
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_nombreDireccion} *" />
+                    <p:inputText value="#{sspRegistroCursoController.filtro}" id="filtroBusqueda" placeholder="Escriba el nombre o dirección" style="width: 200px;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_ubigeo}"  />
+                    <p:selectOneMenu id="ubigeoLocal" value="#{sspRegistroCursoController.ubigeoBusqueda }" filter="true"
+                                     autoWidth="false"
+                                     effect="fade" filterMatchMode="contains" panelStyle="width:400px"
+                                     style="width: 300px" >
+                        <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                        <f:selectItems value="#{sspRegistroCursoController.listDistritos}"
+                                      var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                      itemValue="#{distrito}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton value="Buscar"
+                                     actionListener="#{sspRegistroCursoController.buscarLocalCurso()}"
+                                     process="@form"
+                                     update="@form"
+                                     icon="ui-icon-search" />
+                </h:panelGrid>
+                <p:dataTable id="dtListado"
+                             value="#{sspRegistroCursoController.lstLocalesBusqueda}" 
+                             var="item" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="5"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda}">
+                    <p:column headerText="Nombre Local" style="text-align: center;" >
+                        <h:outputText value="#{item.nombreLocal}" />
+                    </p:column>
+                    <p:column headerText="Dirección" style="text-align: center;" >
+                        <h:outputText value="#{item.direccion}" />
+                    </p:column>
+                    <p:column headerText="Referencia" style="text-align: center;" >
+                        <h:outputText value="#{item.referencia}" />
+                    </p:column>
+                    <p:column headerText="Ubigeo" style="text-align: center;" >
+                        <h:outputText value="#{item.distritoId.provinciaId.departamentoId.nombre}/#{item.distritoId.provinciaId.nombre}/#{item.distritoId.nombre}" />
+                    </p:column>
+                    <p:column headerText="Opción" style="text-align: center;width: 50px;" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR"
+                                         actionListener="#{sspRegistroCursoController.seleccionarLocalCurso(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmBusquedaLocal" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgBusquedaLocal').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

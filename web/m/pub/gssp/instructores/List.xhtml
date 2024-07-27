@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage">
+            <pm:header title="#{bundleDisca.BuscarMvDcGsspInstructoresTitulo}" />
+            <pm:content>
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarCurso" value="#{bundleDisca.Curso}" />
+                            <p:selectOneMenu value="#{mvDcGsspInstructoresController.curso}" id="selectCurso" >
+                                <f:selectItem itemLabel="-- TODOS --" itemValue="" />
+                                <f:selectItems value="#{mvDcGsspInstructoresController.listaCursos}"/>
+                            </p:selectOneMenu>
+
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{bundleDisca.Filtro}" />
+                            <p:inputText  value="#{mvDcGsspInstructoresController.filtro}" required="false" requiredMessage="#{bundleCydoc.MensajeRequiereBusqueda}" placeholder="#{bundleDisca.PhMvDcGsspInstructoresBusqueda}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{bundleDisca.Buscar}" icon="ui-icon-search" actionListener="#{mvDcGsspInstructoresController.buscar}"  update="@form" />
+                        <h:panelGroup rendered="#{mvDcGsspInstructoresController.resultados != null}">
+                            <h:outputLabel value="#{bundleDisca.Resultados}" escape="false" />
+                            <p:dataTable id="buscarDatatable" value="#{mvDcGsspInstructoresController.resultados}"
+                                         reflow="true"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleDisca.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleDisca.PaginatorFilas}"  
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleDisca.PaginatorFilasPorPagina}">
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_DNI}" sortBy="#{item.DNI}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_DNI}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{mvDcGsspInstructoresController.obtenerNroDoc(item.DNI)}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_NOMBRES}" sortBy="#{item.NOMBRES}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_NOMBRES}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NOMBRES}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_NOMCURSO}" sortBy="#{item.NOMCURSO}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_NOMCURSO}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NOMCURSO}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_NROFICHA}" sortBy="#{item.NROFICHA}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_NROFICHA}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NROFICHA}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_FECHAEMISION}" sortBy="#{item.FECHAEMISION}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_FECHAEMISION}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.FECHAEMISION}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_FECHACADUCIDAD}" sortBy="#{item.FECHACADUCIDAD}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_FECHACADUCIDAD}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.FECHACADUCIDAD}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_TELEFONO}" sortBy="#{item.TELEFONO}">
+                                    <f:facet name="header">
+                                        <h:outputText  value="#{bundleDisca.MvDcGsspInstructoresTitle_TELEFONO}" />
+                                    </f:facet>
+                                    <p:link href="tel:#{item.TELEFONO}" value="#{item.TELEFONO}" />
+                                </p:column>
+                                <p:column headerText="#{bundleDisca.MvDcGsspInstructoresTitle_CORREO}" sortBy="#{item.CORREO}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleDisca.MvDcGsspInstructoresTitle_CORREO}" />
+                                    </f:facet>
+
+                                    <p:link href="mailto:#{item.CORREO}" value="#{item.CORREO}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

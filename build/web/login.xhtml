@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>SEL - Login</title>
+            </f:facet>
+            <h:outputStylesheet name="css/estilos.css"/>
+        </h:head>
+
+        <h:body>
+            <center>
+                <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+                <h:form  id="loginForm" acceptcharset="UTF-8">
+                    <p:focus context="loginForm" />
+                    
+                    <h:graphicImage url="/resources/imagenes/logo_sucamec.png" /><br/><br/>
+                    <p:panel header="Ingreso" style="width:400px">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="documento" value="Documento:" />
+                            <h:panelGrid columns="2">
+                                <p:selectOneMenu id="tipoDoc" value="#{loginController.txtTipoDoc}" style="vertical-align: middle; clear: both;">
+                                    <f:selectItem itemValue="RUC" itemLabel="RUC" />
+                                    <f:selectItem itemValue="DNI" itemLabel="DNI" />
+                                    <f:selectItem itemValue="CE" itemLabel="CE" />
+                                </p:selectOneMenu>
+                                <p:inputText value="#{loginController.txtDocumento}" id="documento" required="true" label="documento" autocomplete="false" size="11" maxlength="11" requiredMessage="Por favor ingrese el documento del administrado" validatorMessage="El documento no es válido">
+                                </p:inputText>
+                            </h:panelGrid>
+                            <p:outputLabel for="usuario" value="Usuario:" />
+                            <p:inputText value="#{loginController.txtUsuario}" id="usuario" required="true" label="username" autocomplete="false"  size="27" maxlength="20" requiredMessage="Por favor ingrese el usuario"/>
+                            <p:outputLabel for="clave" value="Clave:" />
+                            <p:password value="#{loginController.txtClave}" id="clave" required="true" label="clave" autocomplete="false" size="27" maxlength="20" requiredMessage="Por favor ingrese la clave"/>
+                        </h:panelGrid>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <h:panelGrid id="gridCaptcha" columns="2" >
+                                    <p:graphicImage id="imgCaptcha" value="#{loginController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                                    <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{loginController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                                    <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                                    <p:inputText id="textoCaptcha" value="#{loginController.captcha.textoInput}" required="false" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                                </h:panelGrid>
+                            </div>
+                        </div>
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel />
+                            <p:commandButton ajax="false" id="ingresar" value="Ingresar" 
+                                             action="#{loginController.hacerLogin(2)}" /> 
+                            <p:outputLabel />
+                            <p:link id="recuperar" value="¿Olvido su contraseña?" outcome="pub/RecuperarClave.xhtml" target="_blank" >
+                                <f:param name="paso" value="INICIO" />                                
+                            </p:link>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:graphicImage url="/resources/imagenes/nuevo.gif" width="35" alt="Nuevo" />
+                            <p:link id="registro" value="Registro para persona natural" outcome="pub/inscripcionAcceso.xhtml"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <br/><br/><br/>
+                    <h:panelGrid columns="4" cellpadding="10">
+                        <ui:remove>
+                            <p:link target="_blank"  href="http://www.sucamec.gob.pe/web/index.php/consulta-expedientes" >
+                                <p:graphicImage url="/resources/imagenes/btn-consulta.png"/>
+                            </p:link>
+                        </ui:remove>
+                        <p:link target="_blank"  href="https://www.sucamec.gob.pe/tradoc/faces/aplicacion/expedientes/List.xhtml" >
+                                <p:graphicImage url="/resources/imagenes/btn-consulta.png"/>
+                            </p:link>
+                        <p:link target="_blank"  href="http://www.sucamec.gob.pe/DICSCEL/" rendered="false">
+                            <p:graphicImage url="/resources/imagenes/btn-dicscel.png"/>
+                        </p:link>
+                        <p:link target="_blank"  href="http://www.sucamec.gob.pe/DICSCCCV/" rendered="false">
+                            <p:graphicImage url="/resources/imagenes/btn-cccv.png"/>
+                        </p:link>
+                        <p:link target="_blank"  href="/faces/pub/VerificadorWeb.xhtml" >
+                            <p:graphicImage url="/resources/imagenes/btn-val.png"/>
+                        </p:link>
+                        <p:link target="_blank"  href="/resources/manualInscripcion.pdf" >
+                            <p:graphicImage url="/resources/imagenes/btn-manual-sel.png"/>
+                        </p:link>
+                        <p:link target="_blank"  href="https://www.sucamec.gob.pe/web/IMAGENES/2020/imagenes/pdfs/anexo_a.docx" >
+                            <p:graphicImage url="/resources/imagenes/btn-formato_pj.png"/>
+                        </p:link>
+                    </h:panelGrid>
+                    <p:defaultCommand target="ingresar"/>
+                </h:form>
+            </center>
+        </h:body>
+    </f:view>
+    <script type="text/javascript">
+        //<![CDATA[
+
+       $.extend( $.ui.keyCode, {
+        NUMPAD_ENTER: 108
+      });
+        //]]>
+    </script>    
+</html>

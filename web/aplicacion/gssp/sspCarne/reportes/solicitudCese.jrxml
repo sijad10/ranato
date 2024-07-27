@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2018-05-02T09:13:50 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solicitudCese" pageWidth="595" pageHeight="842" columnWidth="539" leftMargin="28" rightMargin="28" topMargin="14" bottomMargin="14" uuid="8cf005a6-cbf4-417b-b858-51bafba6fc3b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.layout" value="cm"/>
+	<property name="com.jaspersoft.studio.unit." value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="cm"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_TH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_CH" mode="Opaque" backcolor="#000000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dsVigilantesCesados" uuid="8d163aea-92a1-4639-8751-aa4923e96e5f">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nroExpe" class="java.lang.String">
+			<fieldDescription><![CDATA[nroExpe]]></fieldDescription>
+		</field>
+		<field name="fecExpe" class="java.util.Date">
+			<fieldDescription><![CDATA[fecExpe]]></fieldDescription>
+		</field>
+		<field name="nroDocumento" class="java.lang.String">
+			<fieldDescription><![CDATA[nroDocumento]]></fieldDescription>
+		</field>
+		<field name="nombreVigilante" class="java.lang.String">
+			<fieldDescription><![CDATA[nombreVigilante]]></fieldDescription>
+		</field>
+		<field name="nroCarne" class="java.lang.String">
+			<fieldDescription><![CDATA[nroCarne]]></fieldDescription>
+		</field>
+		<field name="modalidad" class="java.lang.String">
+			<fieldDescription><![CDATA[modalidad]]></fieldDescription>
+		</field>
+		<field name="fecCese" class="java.util.Date">
+			<fieldDescription><![CDATA[fecCese]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="P_FECHASTRING" class="java.lang.String"/>
+	<parameter name="P_EMPRESASTRING" class="java.lang.String"/>
+	<parameter name="p_dir_emp" class="java.lang.String"/>
+	<parameter name="P_TIPONRODOC" class="java.lang.String"/>
+	<parameter name="P_logoSucamec" class="java.lang.String"/>
+	<parameter name="P_NROSECUENCIA" class="java.lang.String"/>
+	<parameter name="P_TABLA_VIGILANTE" class="java.util.ArrayList"/>
+	<parameter name="P_FECHAPAGO" class="java.lang.String"/>
+	<parameter name="P_CODOFICINA" class="java.lang.String"/>
+	<parameter name="P_CODTRIBUTO" class="java.lang.String"/>
+	<parameter name="P_MONTO" class="java.lang.String"/>
+	<parameter name="NRO_SOLICITUD" class="java.lang.String"/>
+	<parameter name="CANTIDAD_CESE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="77" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement positionType="Float" x="0" y="17" width="210" height="60" uuid="3024c2c0-e270-467e-8945-d15294650862"/>
+				<imageExpression><![CDATA[$P{P_logoSucamec}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="259" y="29" width="280" height="20" uuid="ab4b7997-bbe6-4bd0-a871-2a3c670562e6"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nro. de solicitud: "+$P{NRO_SOLICITUD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="259" y="49" width="280" height="20" uuid="caad46f0-3260-4d97-a080-09c021b0e66b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha: " + $P{P_FECHASTRING}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="309" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="3" y="10" width="534" height="20" uuid="ad8f470b-9edb-466e-8226-21a71150e104"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Solicitud de registro de cese de personal de seguridad"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="3" y="40" width="534" height="20" uuid="68689870-620d-4cea-acab-d432e1022077"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La SUCAMEC, hace constar por medio de la presente que la empresa de seguridad <b> "+ $P{P_EMPRESASTRING} +" </b>, con "+$P{P_TIPONRODOC} + ", ha solicitado el cese del siguiente personal registrado en su empresa: "]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" mode="Transparent" x="4" y="71" width="524" height="60" uuid="24e11cbf-9a1b-4920-91b4-a84ab9e3dc67">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 4_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 4_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 4_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsVigilantesCesados" uuid="0307847e-e10a-42ac-8edc-184d18403e1a">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{P_TABLA_VIGILANTE})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="70" uuid="d795cd88-1861-4ef6-8543-08ee3858ae1a">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="30" forecolor="#FFFFFF" uuid="8436ee75-4f7f-4d35-81b3-248256b38e3f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Nro. Exp]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="70" height="30" uuid="169cdf7e-b051-45bf-8ed3-06201223a5fe"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nroExpe}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="61" uuid="08e8b06b-a04d-4700-a61a-9b87b0521700">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="61" height="30" forecolor="#FFFFFF" uuid="b7177072-a6cd-44d9-95ae-5da81da067aa"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Fec. exp]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="61" height="30" uuid="3507ecf9-1035-4f54-b5d4-09c7976befaa"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{fecExpe}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="70" uuid="8ebac876-e582-40e3-9ed1-383848d3b44d">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="30" forecolor="#FFFFFF" uuid="01f49524-69e9-47cb-a25e-5859cd655c14"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Nro. Documento]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="70" height="30" uuid="9b81bf22-a0c7-4708-92b9-6f1964624b6d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nroDocumento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="118" uuid="d7b21963-3103-47cd-8ae7-a4a520d725a8">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="118" height="30" forecolor="#FFFFFF" uuid="ced9cc88-ac59-4988-8b82-fbfdd76e3aac"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Vigilante]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="118" height="30" uuid="0902d0e0-713c-4bdc-a898-5e0bcd16bf65"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nombreVigilante}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="59" uuid="7123b2b7-9ac3-42fb-8c14-8cff85aa9c7d">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="59" height="30" forecolor="#FFFFFF" uuid="2141482f-396f-4833-94c9-1798024e44ee"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Carné]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="59" height="30" uuid="e1140436-84b5-4954-89c6-985ce14df5f4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{nroCarne}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="91" uuid="5f06f11a-cce9-4a58-b811-90ea598630fc">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="91" height="30" forecolor="#FFFFFF" uuid="e404a43b-61d5-4036-a1c1-d1426b29171b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Modalidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true" pattern="">
+								<reportElement x="0" y="0" width="91" height="30" uuid="ad286581-43dc-4d2c-bf7f-50e8d68d38fb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{modalidad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="114554a2-fe0a-483d-a6cc-ebcef1a97f4b">
+						<jr:columnHeader style="Table 4_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="30" forecolor="#FFFFFF" uuid="ea851c4c-ca0d-4c79-882a-33f03cf6b74f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Fec. Cese]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 4_TD" height="30">
+							<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="60" height="30" uuid="5ee69c2d-c6de-4b7c-a983-cbe543324df0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="9"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{fecCese}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="253" y="143" width="280" height="20" uuid="d0a72ef2-eae3-4fd7-93b2-6a68ef1a4018"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cantidad de ceses: " + $P{CANTIDAD_CESE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="4" y="185" width="176" height="20" uuid="2d103b98-4a86-430b-8bd3-b2d5edc30b7c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["VOUCHER DE PAGO:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="4" y="244" width="216" height="20" uuid="c2e8fa32-62fb-43de-bb20-6a712f7001ce"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NOTA DEVOLUCIÓN DE CARNÉ:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="4" y="265" width="529" height="20" uuid="62e6df36-331a-408c-ad3b-0d541fbc91cc"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["- La devolución del carné está pendiente y debe presentarse en un plazo no mayor a 30 días el(los) carné(s) original(es) de la empresa de la que se está cesando al(los) agente(s) de seguridad; en caso de no poseerlo, se debe presentar la denuncia policial por pérdida. La devolución del carné es bajo responsabilidad."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="4" y="207" width="280" height="20" uuid="a24db75a-a3d1-4ce9-9ff1-acbf22b0b18f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Código de pago: " + $P{P_CODTRIBUTO} + "<br/>"+
+"Monto: S/. " + $P{P_MONTO} + "<br/>"+
+"Nro. de Secuencia: " + $P{P_NROSECUENCIA} + "<br/>"+
+"Fecha de pago: " + $P{P_FECHAPAGO} +"<br/>" +
+"Código de Oficina: " + $P{P_CODOFICINA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="42">
+			<property name="com.jaspersoft.studio.unit.height" value="cm"/>
+			<textField>
+				<reportElement x="351" y="12" width="100" height="30" uuid="679577c9-9c24-4c62-a807-d868656702b4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="451" y="12" width="86" height="30" uuid="e1ae2655-7fbc-4d4c-b21a-8f57588d1e6b"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

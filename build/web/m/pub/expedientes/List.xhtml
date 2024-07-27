@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage">
+            <pm:header title="#{bundleCydoc.BuscarMvCdExpedienteTitulo}" />
+            <pm:content>
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+                    <h:panelGroup id="buscarPanel">
+                        <p:selectOneMenu value="#{mvCdExpedienteController.filtroAnho}" id="selectAnio" >
+                            <f:selectItems value="#{mvCdExpedienteController.ultimosAnhos}"/>
+                        </p:selectOneMenu>
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="#{bundleCydoc.MvCdExpedienteFiltro}" />
+                            <p:inputText  value="#{mvCdExpedienteController.filtro}" required="true" requiredMessage="#{bundleCydoc.MensajeRequiereBusqueda}" placeholder="#{bundleCydoc.PhMvCdExpedienteBusqueda}"/>
+                        </pm:field>
+                        <p:commandButton id="botonBuscar" value="#{bundleCydoc.Buscar}" icon="ui-icon-search" actionListener="#{mvCdExpedienteController.buscar}"  update=":buscarPage:buscarForm" />
+                        <h:panelGroup rendered="#{mvCdExpedienteController.resultados != null}">
+                            <h:outputLabel value="#{bundleCydoc.Resultados}" escape="false" />
+                            <p:dataTable id="buscarDatatable" value="#{mvCdExpedienteController.resultados}"
+                                         reflow="true"
+                                         var="item"
+                                         rowKey="#{item.id}"
+                                         emptyMessage="#{bundleCydoc.MensajeNoResultados}" 
+                                         paginator="true" rows="#{bundleCydoc.PaginatorFilas}"  
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                         rowsPerPageTemplate="#{bundleCydoc.PaginatorFilasPorPagina}">
+                                <p:column headerText="#{bundleCydoc.MvCdExpedienteTitle_NUMERO}" sortBy="#{item.NUMERO}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleCydoc.MvCdExpedienteTitle_NUMERO}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NUMERO}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleCydoc.MvCdExpedienteTitle_NUMERO_IDENTIFICACION}" sortBy="#{item.NUMERO_IDENTIFICACION}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleCydoc.MvCdExpedienteTitle_NUMERO_IDENTIFICACION}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.NUMERO_IDENTIFICACION}"/>
+                                </p:column>
+                                <p:column headerText="#{bundleCydoc.MvCdExpedienteTitle_FECHA}" sortBy="#{item.FECHA}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleCydoc.MvCdExpedienteTitle_FECHA}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.FECHA}">
+                                        <f:converter converterId="fechaConverter" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{bundleCydoc.MvCdExpedienteTitle_ESTADO}" sortBy="#{item.ESTADO}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundleCydoc.MvCdExpedienteTitle_ESTADO}" />
+                                    </f:facet>
+
+                                    <h:outputText value="#{item.ESTADO}"/>
+                                </p:column>
+                                <p:column headerText="" exportable="false">
+                                    <p:commandButton action="#{mvCdExpedienteController.mostrarVer}" value="#{bundleCydoc.Ver}" update=":verPage" process="@this" />
+                                </p:column>                                 
+                            </p:dataTable>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>
+        </pm:page>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

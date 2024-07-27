@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+            <h:form id="modificarForm" rendered="#{sspRegistroCursoController.estado == 'RECTIFICAR'}" >
+                <p:panel id="pnlAgendar" style="border: 0px;" >
+                    <p:tabView>
+                        <p:tab title="Programación">
+                                <p:panel id="pnlLeyenda" header="#{BundleBDIntegrado.sspCursos_list_leyenda}" >
+                                    <h:panelGrid columns="6" >
+                                        <p:graphicImage name="/imagenes/admin_image.png" width="30"  />
+                                        <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_local}"/>
+
+                                        <p:graphicImage name="/imagenes/admin_person.png" width="30" style="margin-left: 12px;" />
+                                        <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_instructor}"/>
+
+                                        <p:graphicImage name="/imagenes/admin_calculator.png" width="30" style="margin-left: 12px;" />
+                                        <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_horario}"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <br/><br/>
+
+                                <p:dataTable id = "dtProgramacion" var="itemReg" 
+                                             value="#{sspRegistroCursoController.lstModulosNoRep}" expandedRow="false" >
+                                    <f:facet name="header">
+                                        Programación
+                                    </f:facet>
+                                    <p:column style="width:16px">
+                                        <p:rowToggler />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_curso}">
+                                        <h:outputText value="#{sspRegistroCursoController.mostrarDescModuloRegistro(itemReg)}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_instructor}" style="text-align: center;" >
+                                        <h:outputText value="#{sspRegistroCursoController.obtenerNombreInstructorModificatoria(itemReg)}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_modificar}" style="text-align: center;" >
+                                        <p:commandButton process="@form"
+                                                        update="@form"
+                                                        id="btnModificarInstructor"
+                                                        icon="ui-icon-person"
+                                                        style="margin-left: 5px;"
+                                                        value="#{sspRegistroCursoController.obtenerTextoBtnModificatoriaCurso(itemReg)}"
+                                                        rendered="#{sspRegistroCursoController.renderBtnModificatoriaProgramacionInstructor(itemReg,1)}"
+                                                        actionListener="#{sspRegistroCursoController.openDlgModificarInstructor(itemReg) }" />
+                                    </p:column>
+
+                                    <p:rowExpansion>
+                                        <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.obtenerDetalleProgramacionXCurso(itemReg)}"
+                                                    var="detalle"
+                                                    emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_local}" style="text-align: center;" >
+                                                <h:outputText value="#{detalle.localId.nombreLocal}" />
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horario}" style="text-align: center;" >
+                                                <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.getSspPrograHoraListActivos(detalle.sspPrograHoraList)}"
+                                                      var="itemHorario" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_fecha}" style="text-align: center;" >
+                                                       <h:outputText value="#{itemHorario.fecha}" >
+                                                           <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                                       </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaIni}" style="text-align: center;" >
+                                                       <h:outputText value="#{itemHorario.horaInicio}" >
+                                                           <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                                       </h:outputText>
+                                                    </p:column>                          
+                                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaFin}" style="text-align: center;" >
+                                                       <h:outputText value="#{itemHorario.horaFin}" >
+                                                           <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                                       </h:outputText>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_modificar}" style="text-align: center;" >
+                                                <p:commandButton process="@form"
+                                                                 update="@form"
+                                                                 id="btnModificarLocal"
+                                                                 icon="ui-icon-image"
+                                                                 rendered="#{sspRegistroCursoController.renderBtnModificatoriaProgramacionLocal(detalle)}"
+                                                                 actionListener="#{sspRegistroCursoController.openDlgModificarLocal(detalle) }" />
+                                                <p:commandButton process="@form"
+                                                                 update="@form"
+                                                                 id="btnModificarHorario"
+                                                                 icon="ui-icon-calculator"
+                                                                 style="margin-left: 5px;"
+                                                                 rendered="#{sspRegistroCursoController.renderBtnModificatoriaProgramacionHorario(detalle)}"
+                                                                 actionListener="#{sspRegistroCursoController.openDlgModificarHorario(detalle) }" />
+                                            </p:column>                     
+                                        </p:dataTable>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+			 </p:tab>
+                        <p:tab title="Alumnos" rendered="#{sspRegistroCursoController.renderTabAlumnos()}" >
+                            <p:panel id="pnlVigilante" style="border: 0px;">
+                                <p:fieldset id="fsVigilante" legend="#{BundleBDIntegrado.sspCursos_crear_prospecto}" >
+                                    <h:panelGrid columns="2" style="padding:0px!important">
+                                        <h:panelGrid columns="1" style="padding:0px!important">
+                                            <h:panelGrid columns="6" style="padding:0px!important">
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_tipoDoc} *" style="font-weight: bold;width: 120px;display: block;"  />
+                                                <p:selectOneMenu id="tipoDocVigilante" value="#{sspRegistroCursoController.tipoDocVigilante}" autoWidth="false" style="width: 70px;" >
+                                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                   <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspRegistroCursoController.listarTipoDoc}"/>
+                                                   <p:ajax event="change" process="@form" update="@form" listener="#{sspRegistroCursoController.cambiarTipoDocVigilante() }" oncomplete="tab04();" />
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_numDoc} *" style="font-weight: bold;margin-left: 20px;"  />
+                                                <p:inputText id="numDocVigilante" value="#{sspRegistroCursoController.numDocVigilante}" maxlength="#{sspRegistroCursoController.maxLength}">
+                                                        <p:keyFilter mask="int" preventPaste="false" />
+                                                </p:inputText>
+                                                <p:commandButton icon="ui-icon-search"
+                                                                 style="margin-left: 20px;"
+                                                                 value="#{BundleBDIntegrado.Buscar}"
+                                                                 process="@form" update="@form"
+                                                                 actionListener="#{sspRegistroCursoController.buscarVigilante(2)}" oncomplete="tab04();" >
+                                               </p:commandButton>
+                                                <p:outputLabel value="" />
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="6" rendered="#{sspRegistroCursoController.renderPanelVigilante}" style="padding:0px!important">
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_nombres} *" style="font-weight: bold;width: 120px;display: block;"  />
+                                                <p:inputText id="nombresVigilante" value="#{sspRegistroCursoController.nombresVigilante}" maxlength="200" disabled="#{sspRegistroCursoController.disabledNombres}" />
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_apePat} *" style="font-weight: bold;margin-left: 20px;"  />
+                                                <p:inputText id="apePatVigilante" value="#{sspRegistroCursoController.apePatVigilante}" maxlength="200" disabled="#{sspRegistroCursoController.disabledNombres}" />
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_apeMat}" style="font-weight: bold;margin-left: 20px;"  />
+                                                <p:inputText id="apeMatVigilante" value="#{sspRegistroCursoController.apeMatVigilante}" maxlength="200" disabled="#{sspRegistroCursoController.disabledNombres}" />
+
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_sexo}" style="font-weight: bold;width: 120px;display: block;"  />
+                                                <p:selectOneMenu id="sexoVigilante" value="#{sspRegistroCursoController.sexoVigilante}" >
+                                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                                   <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspRegistroCursoController.listarSexo}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_direccion} *" style="font-weight: bold;margin-left: 20px;"  />
+                                                <p:inputText value="#{sspRegistroCursoController.direccionVigilante}" id="direccionVigilante" maxlength="300" style="width: 250px;" rendered="#{!sspRegistroCursoController.renderDireccionCombo }" />
+                                                <p:selectOneMenu id="direccionCombo" value="#{sspRegistroCursoController.direccionCombo}" rendered="#{sspRegistroCursoController.renderDireccionCombo }" >
+                                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.direccion}" value="#{sspRegistroCursoController.lstDirecciones}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_ubigeo} *" style="font-weight: bold;margin-left: 20px;"  />
+                                                <p:selectOneMenu id="ubigeoVigilante" value="#{sspRegistroCursoController.ubigeoVigilante }" filter="true"
+                                                                 autoWidth="false"
+                                                                 effect="fade" filterMatchMode="contains" panelStyle="width:360px"
+                                                                 style="width: 320px" >
+                                                       <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                                       <f:selectItems value="#{sspRegistroCursoController.listDistritos}"
+                                                                      var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                                                      itemValue="#{distrito}"/>
+                                                </p:selectOneMenu>
+
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_fechaNacimiento} *" style="font-weight: bold;width: 120px;display: block;"  />
+                                                <p:calendar id="fechaNacimiento"
+                                                            locale="es"
+                                                            maxdate="#{sspRegistroCursoController.fechaMaxima}"
+                                                            showOn="button" value="#{sspRegistroCursoController.fechaNacimiento}"
+                                                            pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                                </p:calendar>
+                                                <p:outputLabel value="" />
+                                                <p:outputLabel value="" />
+                                                <p:outputLabel value="" />
+                                                <p:outputLabel value="" />
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="7" rendered="#{sspRegistroCursoController.renderPanelVigilante}" style="padding:0px!important">
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_correo} *" style="font-weight: bold;width: 120px;display: block;"  />
+                                                <p:inputText value="#{sspRegistroCursoController.correo}" id="correoVigilante" maxlength="200" style="width: 200px;" validatorMessage="#{BundleBDIntegrado.sspCursos_validator_correo}" />
+
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_telefonoFijo} *" style="font-weight: bold;display: block;"  />
+                                                <p:inputMask id="telefonoFijo" value="#{sspRegistroCursoController.telefonoFijo}" mask="(99) 9999999" autoClear="false"   />
+
+                                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_crear_vigilante_telefonoMovil} *" style="font-weight: bold;display: block;"  />
+                                                <p:inputMask id="telefonoMovil" value="#{sspRegistroCursoController.telefonoMovil}" mask="999999999" autoClear="false" />
+
+                                                <p:commandButton icon="ui-icon-plus"
+                                                                 style="margin-left: 20px;"
+                                                                 value="#{BundleBDIntegrado.sspCursos_crear_vigilante_agregarProspecto}"
+                                                                 process="@form" update="@form"
+                                                                 actionListener="#{sspRegistroCursoController.agregarVigilante(2)}" oncomplete="tab04();">
+                                               </p:commandButton>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="1" rendered="#{sspRegistroCursoController.renderPanelVigilante}" style="padding:0px!important">
+                                            <p:fileUpload id="idFoto" label="#{BundleBDIntegrado.sspCursos_crear_agregarFoto}"
+                                                          invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessage}"
+                                                          fileUploadListener="#{sspRegistroCursoController.handleFileUpload}"
+                                                          style="margin-left: 15px;"
+                                                          onstart="PF('loadingDialog').show()"
+                                                          oncomplete="PF('loadingDialog').hide()"
+                                                          mode="advanced" dragDropSupport="false"
+                                                          multiple="false"
+                                                          auto="true" process="@this,pnlVigilante" update="@this,pnlVigilante"
+                                                          allowTypes="/(\.|\/)(jpg|jpeg)$/" immediate="true" >
+                                                <p:graphicImage value="#{sspRegistroCursoController.foto}" cache="false" width="150" height="150">
+                                                </p:graphicImage>
+                                            </p:fileUpload>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+
+                                </p:fieldset>
+                                <br/>
+                                <p:fieldset id="fsLista" legend="#{BundleBDIntegrado.sspCursos_crear_prospectoSeleccionados}" >
+                                    <p:dataTable id="dtVigilante" value="#{sspRegistroCursoController.lstAlumnosVigilantesActivos }"
+                                                     var="itemReg"
+                                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                                     {RowsPerPageDropdown}"  
+                                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_tipoDoc}" style="text-align: center;" >
+                                                <h:outputText value="#{itemReg.personaId.tipoDoc.nombre}" />
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_numDoc}" style="text-align: center;" >
+                                                <h:outputText value="#{itemReg.personaId.numDoc}" />
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_apellidos}" style="text-align: center;" >
+                                                <h:outputText value="#{itemReg.personaId.apePat} #{itemReg.personaId.apeMat}" />
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_nombres}" style="text-align: center;" >
+                                                <h:outputText value="#{itemReg.personaId.nombres}" />
+                                            </p:column>
+                                            <p:column headerText="Foto" style="text-align: center;" >
+                                                <p:commandButton icon="ui-icon-search"
+                                                                 process="@form"
+                                                                 update="@form"
+                                                                 id="btnVerFoto"
+                                                                 rendered="#{itemReg.fotoId ne null}"
+                                                                 actionListener="#{sspRegistroCursoController.openDlgFoto(itemReg) }">
+                                                </p:commandButton>
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtVigilante_acciones}" style="text-align: center;" >
+                                                <p:commandButton icon="ui-icon-closethick"
+                                                                value="Borrar"
+                                                                process="@form"
+                                                                update="@form"
+                                                                actionListener="#{sspRegistroCursoController.eliminarVigilanteSeleccionado(itemReg)}">
+                                                    <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro seleccionado?" ></p:confirm>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                </p:fieldset>
+                            </p:panel>
+			</p:tab>
+                    </p:tabView>
+
+                </p:panel>
+                
+                <br/>
+                <br />
+                <h:panelGrid columns="2" width="100%" >
+                    <h:panelGrid columns="1" style="text-align: left;" width="100%" >
+                        <p:commandButton icon="ui-icon-arrowthick-1-w"
+                                        action="#{sspRegistroCursoController.prepareList() }"
+                                        value="Regresar"
+                                        style="margin-left: 20px;"
+                                        immediate="true" update="@all"  />
+                    </h:panelGrid>
+                    <h:panelGroup style="float: right" >
+                        <p:commandButton icon="ui-icon-closethick"
+                                         styleClass="botonBorrar"
+                                         actionListener="#{sspRegistroCursoController.openDlgCancelarCurso() }"
+                                         value="Cancelar Curso"
+                                         rendered="#{sspRegistroCursoController.renderBtnCancelarCursoModificatoria()}"
+                                         style="margin-right: 20px;"
+                                         process="@form" update="@form"  />
+                        
+                        <p:commandButton icon="ui-icon-disk"
+                                         action="#{sspRegistroCursoController.guardarModificatoria() }"
+                                         value="Guardar"
+                                         style="margin-right: 20px;"
+                                         update="@all"  />
+                    </h:panelGroup>
+                        
+                    <br/><br/>
+                </h:panelGrid>
+            </h:form>
+</ui:composition>

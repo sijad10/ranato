@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">    
+
+    <ui:define name="body">
+        <style>
+            .txtContenido {
+                font-size:80%!important; 
+                vertical-align: middle;                
+            }
+        </style>
+        <pm:page id="buscarPage">
+            <pm:header title="Consulta de carnés de seguridad privada" />
+            <pm:content style="width:95%;padding-top: 0; margin-top: 10px;" styleClass="txtContenido" >
+                <h:form id="buscarForm" >
+                    <p:defaultCommand target="botonBuscar"/>
+
+                    <h:panelGroup id="buscarPanel">
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltro" value="DNI/CE: " />
+                            <p:inputText  value="#{sspCarneController.filtro}" required="false" placeholder="#{BundleBDIntegrado.EppCarne_PhFiltro}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel id="buscarFiltroFC" value="NRO. CARNÉ: " />
+                            <p:inputText  value="#{sspCarneController.filtroNroCarne}" required="false" placeholder="#{BundleBDIntegrado.EppCarne_PhFiltro2}"/>
+                        </pm:field>
+                        <ui:remove>
+                            <pm:field>
+                                <p:outputLabel id="buscarFiltroFN" value="FEC. NACIMIENTO: " />
+                                <p:calendar value="#{sspCarneController.filtroFecNac}" locale="de" navigator="true" pattern="dd/MM/yyyy" /> 
+                            </pm:field>
+                        </ui:remove>
+                        <ui:remove>
+                            <p:commandButton id="botonBuscar" value="#{BundleBDIntegrado.Buscar}" icon="ui-icon-search" 
+                                             oncomplete="completeFind();" style="margin-top: 10px;"
+                                             actionListener="#{sspCarneController.buscarCarnesMovil()}" process="@form" update="@form" />
+                        </ui:remove>
+                        <h:commandLink
+                            rendered="#{sspCarneController.itemSelected ne null}"
+                            style="display: inline-table">
+                            <p:graphicImage name="/imagenes/descarga_on.png" width="21" style="margin-left: 10px;" title="Ver archivo"/>
+                            <p:fileDownload value="#{sspCarneController.descargarCarnesMovil()}" />
+                        </h:commandLink>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{sspCarneController.itemSelected == null and sspCarneController.accionEjecutada }" style="padding-right: 5px;">
+                        <p:outputLabel value="No se encontró un carné con el documento ingresado" style="color:red;" />
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{sspCarneController.itemSelected != null}" style="padding-right: 5px;">
+                        <p:panelGrid style="text-align: center;margin:0;padding: 0;">
+                            <p:outputLabel value="Datos del Carné" style="font-weight: bold;margin-top: 10px;" />
+                        </p:panelGrid>
+                        <p:panelGrid style="text-align: center;margin-top: 10px;width: 100%;">
+                            <p:graphicImage value="#{sspCarneController.generarPDFCarne()}" cache="false" width="95%" style="max-width: 500px;">
+                            </p:graphicImage>
+                        </p:panelGrid>
+
+
+                        <p:panelGrid style="text-align: center;margin:0;padding: 0;width: 100%;">
+                            <pm:field>
+                                <p:outputLabel id="nroCarne" value="Nro. de Carné:" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarneController.itemSelected.NRO_CARNE}" />                        
+                            </pm:field>
+                            <pm:field>                        
+                                <p:outputLabel id="vigencia" value="Situación" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarneController.obtenerVigenciaCarne()}" style="#{sspCarneController.obtenerEstiloCarne()}" />                        
+                            </pm:field>
+                            <pm:field>
+                                <p:outputLabel id="tipoOpe" value="Tipo de operación:" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarneController.itemSelected.TIPO_OPE_NOMBRE}" />
+                            </pm:field>
+                            <pm:field>
+                                <p:outputLabel id="fechaEmision" value="Fecha de Emisión:" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarneController.itemSelected.FECHA_INI}" >
+                                    <f:converter converterId="fechaConverter" />
+                                </p:outputLabel>
+                            </pm:field>
+                            <pm:field>
+                                <p:outputLabel id="fechaVcto" value="Fecha de Vencimiento" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarneController.itemSelected.FECHA_FIN}" >
+                                    <f:converter converterId="fechaConverter" />
+                                </p:outputLabel>
+                            </pm:field>
+                        </p:panelGrid>
+                    </h:panelGroup>
+                </h:form>
+                <script type="text/javascript">
+                    function completeFind() {
+                        $(".ui-field-contain").attr("style", "margin:0;");
+                        $("button[id*='botonBuscar']").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;text-shadow:None");
+                    }
+
+                    $(document).ready(function () {
+                        $(".ui-field-contain").attr("style", "margin:0;");
+                        $("button[id*='botonBuscar']").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;text-shadow:None");
+                    });
+                </script>
+            </pm:content>
+        </pm:page>
+    </ui:define>
+</ui:composition>
+

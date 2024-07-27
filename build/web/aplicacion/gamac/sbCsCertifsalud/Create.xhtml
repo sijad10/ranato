@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="createForm" rendered="#{sbCsCertifsaludController.estado == 'CREAR'}" >
+        <p:focus context="createForm" />
+        <p:outputLabel  value="#{BundleBDIntegrado.sbCsCertifsalud_crear_msje }" />
+        <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+            <p:ajax event="click" process="@this" update="@this" listener="#{sbCsCertifsaludController.openDlgAyuda(2)}" />
+        </h:graphicImage>
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsCertifsalud_crear_datosCertificado}" id="pnlDatosCrear" >
+            
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroCertificado}" style="font-weight: bold;display: block;width: 130px;" />
+                <h:panelGrid columns="3" >
+                        <p:inputText id="certificado"                            
+                                    maxlength="6"
+                                    size="8"
+                                    value="#{sbCsCertifsaludController.nroCertificado}"
+                                    validatorMessage="El máximo de caracteres permitidos en el certificado es 6"
+                                    onblur="this.value = this.value.toUpperCase();" >
+                            <f:validateLength maximum="6"  />
+                            <p:keyFilter mask="int" preventPaste="false" />
+                            <p:ajax update="certificado" event="blur" />
+                        </p:inputText>
+                        <p:outputLabel value="-#{sbCsCertifsaludController.complementoCertificado}" />
+                        <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+                            <p:ajax event="click" process="@this" update="@this" listener="#{sbCsCertifsaludController.openDlgAyuda(4)}" />
+                        </h:graphicImage>
+                </h:panelGrid>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_establecimiento}" style="font-weight: bold;display: block;width: 130px;" />
+                <p:selectOneMenu id="estabCentroSalud"
+                                 value="#{sbCsCertifsaludController.registro.establecimientoId}"
+                                 autoWidth="false"
+                                 style="width: 250px;">
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{sbCsCertifsaludController.obtenerDescripcionEstablecimiento(item)}"
+                                   value="#{sbCsCertifsaludController.obtenerEstablecimientosCSActivo }"/>
+                    <p:ajax event="change" process="@this" update="@this" listener="#{sbCsCertifsaludController.cambiarEstablecimiento()}" />
+                </p:selectOneMenu>
+                              
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_solicitante}" style="font-weight: bold;display: block;width: 130px;" />
+                <h:panelGrid columns="4" id = "pnlSolicitante">
+                    <p:autoComplete id="solicitante" value="#{sbCsCertifsaludController.registro.solicitanteId}"
+                                        placeholder="INGRESE EL NUMERO COMPLETO DEL DNI O CE"
+                                        converter="sbPersonaConverter"
+                                        size="80"
+                                        queryDelay="2000"
+                                        onblur="this.value = this.value.toUpperCase();"
+                                        rendered="#{sbCsCertifsaludController.renderSolicitante}"
+                                        completeMethod="#{sbCsCertifsaludController.completeSolicitante}"
+                                        var="solicitanteSelected" itemLabel="#{sbCsCertifsaludController.obtenerDescSolicitante(solicitanteSelected)}"
+                                        minQueryLength="8" cache="true" itemValue="#{solicitanteSelected}"  forceSelection="true" scrollHeight="200" >
+                        <p:ajax event="itemSelect" process="@this,pnlSolicitante" update="pnlSolicitante" listener="#{sbCsCertifsaludController.seleccionaSolicitante}" />
+                    </p:autoComplete>
+                    
+                    <h:outputText value="#{sbCsCertifsaludController.obtenerDescSolicitante(sbCsCertifsaludController.registro.solicitanteId)}" 
+                                  style ="width:420px;display: block;"
+                                  rendered="#{!sbCsCertifsaludController.renderSolicitante}" />
+                    <p:commandButton icon="ui-icon-closethick"
+                                     styleClass="botonBorrar"
+                                     process="pnlSolicitante" update="pnlSolicitante"
+                                     disabled="#{sbCsCertifsaludController.registro.solicitanteId eq null}"
+                                     actionListener="#{sbCsCertifsaludController.eliminarSolicitanteRegistro()}">
+                    </p:commandButton>
+                    
+                    <p:commandButton value="#{BundleBDIntegrado.sbCsCertifsalud_crear_crearNuevo}" style="margin-left: 20px;"
+                                     actionListener="#{sbCsCertifsaludController.openDlgNuevoSolicitante()}"
+                                     process="pnlSolicitante" />
+                </h:panelGrid>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_fechaEmision}" for="fechaInicio" style="display: block;width: 130px; font-weight: bold;margin-bottom: 5px;margin-top: 5px;" />
+                <p:calendar  id="fechaInicio" 
+                             readonlyInput="true"
+                             locale="es"
+                             mindate="#{sbCsCertifsaludController.minFechaEmision}"
+                             maxdate="#{sbCsCertifsaludController.maxFechaEmision}"
+                             validatorMessage="Por favor ingrese la fecha de inicio"
+                             requiredMessage="Por favor ingrese la fecha de inicio"
+                             showOn="button" value="#{sbCsCertifsaludController.registro.fechaEmision}"
+                             pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        <p:ajax event="dateSelect" process="@form" listener="#{sbCsCertifsaludController.calcularFechaFin()}" update="@form"/>
+                </p:calendar>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_fechaVencimiento}" style="display: block;width: 130px; font-weight: bold;margin-bottom: 5px;margin-top: 5px;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.fechaVencimiento }" id="fechaVencimiento" style="margin-left: 5px;margin-bottom: 5px;margin-top: 5px;" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_condicionObtenida}" style="font-weight: bold;display: block;width: 130px;" />
+                <p:selectOneMenu id="condicionObtenida"
+                                 value="#{sbCsCertifsaludController.registro.condicionObtenidaId}" >
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                   value="#{sbCsCertifsaludController.obtenerTipoCondicion }"/>
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroHistoriaClinica}" style="font-weight: bold;display: block;width: 130px;" />
+                <h:panelGrid columns="2" >
+                        <p:inputText id="nroHistoria"
+                                    style="width: 200px;"
+                                    value="#{sbCsCertifsaludController.registro.nroHistClinica}"
+                                    title="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroHistoriaClinica}"
+                                    validatorMessage="El máximo de caracteres permitidos en la denominación es 10"
+                                    onblur="this.value = this.value.toUpperCase();" >
+                            <f:validateLength maximum="10"  />
+                        </p:inputText>
+                        <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+                            <p:ajax event="click" process="@this" update="@this" listener="#{sbCsCertifsaludController.openDlgAyuda(5)}" />
+                        </h:graphicImage>
+                </h:panelGrid>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroEspecieValorada}" style="font-weight: bold;display: block;width: 130px;" />
+                <h:panelGrid columns="2" >
+                        <p:inputText id="especieValorada"
+                                    style="width: 200px;"
+                                    value="#{sbCsCertifsaludController.registro.especieValorada}"
+                                    title="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroEspecieValorada}"
+                                    onblur="this.value = this.value.toUpperCase();" >
+                        </p:inputText>
+                        <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+                            <p:ajax event="click" process="@this" update="@this" listener="#{sbCsCertifsaludController.openDlgAyuda(3)}" />
+                        </h:graphicImage>
+                </h:panelGrid>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_certificadoAdjunto}" style="font-weight: bold;display: block;width: 130px;" />
+                <p:fileUpload id="pfileUpload" label="Adjuntar Certificado"
+                                invalidFileMessage="#{BundleBDIntegrado.sbCsCertifsalud_fileUpload_InvalidFileMessage}"
+                                invalidSizeMessage="#{BundleBDIntegrado.sbCsCertifsalud_fileUpload_InvalidSizeMessage}"
+                                fileUploadListener="#{sbCsCertifsaludController.handleFileUploadAdjunto}"
+                                mode="advanced" dragDropSupport="true"
+                                multiple="false" sizeLimit="#{BundleBDIntegrado.sbCsCertifsalud_MaxSize}"
+                                auto="true" process="@this" update="@this"
+                                allowTypes="/(\.|\/)(jpg|JPG|jpeg|JPEG|pdf|PDF)$/" immediate="true"  >
+                    <h:outputText value="#{sbCsCertifsaludController.archivo }" />
+                </p:fileUpload>
+                
+                <h:outputText value=" " style="font-weight: bold;display: block;width: 120px;"  />
+                <h:outputText value="#{BundleBDIntegrado.sbCsCertifsalud_adjunto_formato }" style="color: red;" />
+            </h:panelGrid>            
+        </p:panel>
+        <br/>
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsCertifsalud_crear_medicosQueFirman}" id="pnlMedicosFirman" >
+            <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_msjeMedicos}" style="color: red;" /><br/><br/>
+            <h:panelGrid columns="3">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_medico}" style="font-weight: bold;" />
+                <p:selectCheckboxMenu id="menu" value="#{sbCsCertifsaludController.medicoEstabSeleccionados}" label="Seleccione los médicos"
+                                      disabled="#{sbCsCertifsaludController.lstMedicosFirman.size() == 3 }"
+                                      filter="true" filterMatchMode="contains" converter="sbCsMedicoEstabsalConverter" >
+                    <f:selectItems value="#{sbCsCertifsaludController.lstMedicos}" var="item" itemValue="#{item}" itemLabel="#{sbCsCertifsaludController.obtenerDescripcionMedico(item)}" />
+                    <p:ajax event="toggleSelect"  process="@this" listener="#{sbCsCertifsaludController.seleccionaAllMedico()}" />
+                    <p:ajax event="change"  process="@this" listener="#{sbCsCertifsaludController.seleccionaMedico()}" />
+                </p:selectCheckboxMenu>
+                
+                <p:commandButton icon="ui-icon-plus"
+                                 value="Agregar"
+                                 disabled="#{sbCsCertifsaludController.lstMedicosFirman.size() == 3 }"
+                                 process="@this,pnlMedicosFirman" update="@this,pnlMedicosFirman"
+                                 actionListener="#{sbCsCertifsaludController.agregarMedico()}" >
+                 </p:commandButton>
+            </h:panelGrid>
+            
+            <h:panelGrid columns="1">
+                <p:dataTable id="dtMedicos" value="#{sbCsCertifsaludController.lstMedicosFirman}"
+                            var="itemReg"
+                            rowKey="#{itemReg.id}"
+                            selection="#{sbCsCertifsaludController.lstMedicosSeleccionados}"
+                            emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center"  />
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_nroCMP}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.nroCmp}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_dni}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.personaId.numDoc}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_apellidosYNombres}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.personaId.apellidosyNombres}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_cargo}" style="text-align: center;" >
+                        <h:outputText value="#{sbCsCertifsaludController.obtenerDescDelegadoListadoMedicos(itemReg)}" />
+                    </p:column>
+               </p:dataTable>
+                
+                <p:commandButton icon="ui-icon-closethick"
+                                 styleClass="botonBorrar"
+                                 value="Eliminar Seleccionados"
+                                 process="@this,pnlMedicosFirman"
+                                 update="@this,pnlMedicosFirman"
+                                 actionListener="#{sbCsCertifsaludController.eliminarMedicosSeleccionados()}">
+                    <p:confirm header="Confirmación" message="¿Está seguro de borrar los registros seleccionados?" ></p:confirm>
+                </p:commandButton>
+            </h:panelGrid>
+        </p:panel>
+        
+        <br/>
+        <p:commandButton id="botonGuardar" 
+                         icon="ui-icon-disk" 
+                         update="@all" 
+                         actionListener="#{sbCsCertifsaludController.crear}" 
+                         value="#{BundleBDIntegrado.Guardar}"/>
+        <p:commandButton icon="ui-icon-closethick"
+                         action="#{sbCsCertifsaludController.prepareCertificadoDeSalud() }"
+                         value="Cancelar"
+                         style="margin-left: 20px;"
+                         immediate="true" update="@all"  />
+        <br />
+    </h:form>
+</ui:composition>
+

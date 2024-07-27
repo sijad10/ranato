@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgMediosContacto" widgetVar="wvDlgMediosContacto" width="40%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="MEDIOS DE CONTACTO" closable="false">
+        <h:form id="frmMediosContacto">
+            <h:panelGrid columns="2" >
+                <h:outputText value="Instructor: " style="font-weight: bold;" />
+                <h:outputText value="#{sspRegistroCursoController.instructorContacto}" />
+                
+                <h:outputText value="Teléfono: " style="font-weight: bold;" />
+                <h:outputText value="#{sspRegistroCursoController.telefonoContacto}" />
+                
+                <h:outputText value="Correo: " style="font-weight: bold;" />
+                <h:outputText value="#{sspRegistroCursoController.correoContacto}" />
+                
+            </h:panelGrid>
+            <div align="right">
+                <p:commandButton value="#{BundleBDIntegrado.Aceptar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmMediosContacto" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgMediosContacto').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

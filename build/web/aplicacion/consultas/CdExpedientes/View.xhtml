@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+        <h:form id="verForm" rendered="#{cdExpedienteController.estado == 'VER'}">
+	    <p:focus context="verForm" />
+            <h:panelGroup id="buscarPanel">
+                <h:panelGrid id="panelGrid" columns="2">
+                    <p:outputLabel value="#{bundleCydoc.CdExpedienteLabel_NUMERO}"/>
+                    <p:outputLabel value="#{cdExpedienteController.registro.NUMERO}" title="#{bundleCydoc.CdExpedienteTitle_NUMERO}"/>
+                    <p:outputLabel value="#{bundleCydoc.CdExpedienteLabel_PROCESO}"/>
+                    <p:outputLabel value="#{cdExpedienteController.registro.PROCESO}" title="#{bundleCydoc.CdExpedienteTitle_PROCESO}"/>
+                    <p:outputLabel value="#{bundleCydoc.CdExpedienteLabel_FECHA}"/>
+                    <p:outputLabel value="#{cdExpedienteController.registro.FECHA}" title="#{bundleCydoc.CdExpedienteTitle_FECHA}">
+                            <f:converter converterId="fechaConverter" />
+                    </p:outputLabel>
+                    <p:outputLabel value="#{bundleCydoc.CdExpedienteLabel_TITULO}"/>
+                    <p:outputLabel value="#{cdExpedienteController.registro.TITULO}" title="#{bundleCydoc.CdExpedienteTitle_TITULO}"/>
+                    <p:outputLabel value="#{bundleCydoc.CdExpedienteLabel_ESTADO}"/>
+                    <p:outputLabel value="#{cdExpedienteController.registro.ESTADO}" title="#{bundleCydoc.CdExpedienteTitle_ESTADO}"/>
+                </h:panelGrid>
+                <h:panelGroup rendered="#{cdExpedienteController.resultadosTraza != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{bundleCydoc.Resultados}" escape="false" />
+                        <h:commandLink style="float: right; clear: both;">
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{bundleCydoc.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatable" fileName="BusquedaAreas" />
+                        </h:commandLink>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{cdExpedienteController.resultadosTraza}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleCydoc.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleCydoc.PaginatorFilas}"  
+                                 currentPageReportTemplate="#{bundleCydoc.ListExpedientesEncontrados} {totalRecords} #{bundleCydoc.ListExpedientesExpedientes}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleCydoc.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{bundleCydoc.CdExpedienteTrazaTitle_FECHA}" sortBy="#{item.FECHA}"  width="5%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleCydoc.CdExpedienteTrazaTitle_FECHA}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.FECHA}">
+                                    <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleCydoc.CdExpedienteTrazaTitle_AREA}" sortBy="#{item.AREA}"  width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleCydoc.CdExpedienteTrazaTitle_AREA}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.AREA}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleCydoc.CdExpedienteTrazaTitle_ESTADO}" sortBy="#{item.ESTADO}"  width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleCydoc.CdExpedienteTrazaTitle_ESTADO}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.ESTADO}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleCydoc.CdExpedienteTrazaTitle_OBSERVACION}" sortBy="#{item.OBSERVACION}"  width="75%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleCydoc.CdExpedienteTrazaTitle_OBSERVACION}" />
+                            </f:facet>
+                            
+                            <h:outputText value="#{item.OBSERVACION}" escape="false"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+            <br />
+            <p:commandButton icon="ui-icon-search" actionListener="#{cdExpedienteController.mostrarBuscar}" value="#{bundleCydoc.CdExpedienteVolverBusqueda}" immediate="true" update="@all"/>
+        </h:form>
+</ui:composition>
+

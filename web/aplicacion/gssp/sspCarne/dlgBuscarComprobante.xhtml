@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgBuscarComp" widgetVar="wvDialogBusquedaComprobante" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="Buscar Comprobantes de pago" closable="false">
+        <h:form id="frmBusComprobante">
+            <h:panelGrid columns="1" > 
+                <h:panelGrid columns="3" id="pnlBusqueda">
+                    <p:selectOneMenu style="width: 150px;" 
+                                     id="buscarPor"                                          
+                                     value="#{sspCarneController.tipoBusqueda}" >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItem itemLabel="NRO. DE SECUENCIA" itemValue="nro"/>
+                           <p:ajax event="change" update="pnlBusqueda" listener="#{sspCarneController.cambiaTipoBusquedaComprobante()}" />
+                    </p:selectOneMenu>                     
+                    <h:panelGrid columns="2" id="pnlBusquedaCriterio">
+                        <p:inputText value="#{sspCarneController.filtro}" 
+                                     rendered="#{!sspCarneController.muestraBusquedafecha}" 
+                                     id="filtroBusqueda"
+                                     style="width: 250px;"
+                                     placeholder="Ingrese dato a buscar"  />
+                        <p:calendar id="fechaBusqueda"
+                                        locale="es"
+                                        validatorMessage="#{BundleBDIntegrado.GsspSolicitudCese_validator_fecha}"                                        
+                                        rendered="#{sspCarneController.muestraBusquedafecha}"
+                                        showOn="button" value="#{sspCarneController.fechaBusqueda}"
+                                        pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </p:calendar>
+                     </h:panelGrid>
+                    <p:commandButton value="Buscar" 
+                                     process="@this,pnlBusqueda"
+                                     actionListener="#{sspCarneController.buscarDlgComprobante()}" 
+                                     update="@form"/>
+                </h:panelGrid >
+                <p:dataTable id="dataTable" 
+                             var="item" widgetVar="dt"  
+                             value="#{sspCarneController.lstRecibosBusqueda }"
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="#{BundleBDIntegrado.PaginatorFilas_busqueda}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                    <p:column headerText="Numero Comprobante" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Numero Secuencia" />
+                        </f:facet>
+                        <h:outputText value="#{item.nroSecuencia}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Comprobante" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Fecha Comprobante" />
+                        </f:facet>
+                        <h:outputText value="#{item.fechaMovimiento}">
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Monto Comprobante" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Monto Comprobante" />
+                        </f:facet>
+                        <h:outputText value="#{item.importe}"/>
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.Opcion}" style="text-align: center" >
+                        <p:commandButton icon="ui-icon-check"
+                                         title="SELECCIONAR"                                         
+                                         process="@this"
+                                         actionListener="#{sspCarneController.seleccionarDlgComprobante(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmBusComprobante" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogBusquedaComprobante').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

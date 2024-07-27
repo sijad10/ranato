@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="seleccionId" widgetVar="seleccionViewDialog" width="40%" height="30%" closable="false" position="center center"
+                  modal="true" resizable="false" appendTo="@(body)" header="Encuesta de opinión y satisfacción">
+            <h:form id="formSeleccion">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align:justify;">
+                        <p:outputLabel value="#{sbEncuestaController.encuestaPend.mensajeAdministrado}" escape="false" />
+                    </div>
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align:justify;">
+                        <p:outputLabel value="#{bundle.MensajeBienvenida2}"/>
+                    </div>
+                </div>    
+                <h:panelGrid columns="2" rendered="false">
+                    <p:selectOneMenu id="cbDirDestino" value="#{sbEncuestaController.encuestaPend}" >
+                        <f:selectItem itemLabel="Seleccione" itemValue="#{null}"/>
+                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                       value="#{sbEncuestaController.listEncuestas}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <br/>
+                <center>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Iniciar Encuesta" 
+                                     process="@this, cbDirDestino" actionListener="#{sbEncuestaController.openEncuesta}"
+                                     update="@form"/>
+                </h:panelGrid>
+                </center>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

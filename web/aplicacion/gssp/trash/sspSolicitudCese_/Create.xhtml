@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+        <h:form id="createForm" rendered="#{sspSolicitudCeseController.estado == 'CREAR'}" >
+            <br/>
+            <p:wizard id="wizard" showNavBar="false" step="#{sspSolicitudCeseController.paso }" >
+                    <p:tab id="paso1" title="#{BundleBDIntegrado.GsspSolicitudCese_1erPaso}" >
+                        <p:panel id="pnlComprobantePago" >
+                            <br/>
+                            <h:panelGrid columns="1"  >
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_Paso1_nota1}" style="color:red; font-style: italic;" />
+                            
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_Paso1_nota1_2}" style="color:red; font-style: italic;" />
+                                    <p:commandButton value="Ayuda" 
+                                         partialSubmit="true" 
+                                         process="@this" 
+                                         oncomplete="PF('wvDialogAyuda').show();" />
+                                </h:panelGrid>
+                                
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_Paso1_nota1_3}" style="color:red; font-style: italic;" />
+                            </h:panelGrid>
+                            <br/>
+
+                            <p:fieldset legend="#{BundleBDIntegrado.GsspSolicitudCese_paso1_comprobante}" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton icon="ui-icon-search"  value="#{BundleBDIntegrado.GsspSolicitudCese_buscarComprobante}"
+                                                         actionListener="#{sspSolicitudCeseController.openDlgComprobante()}"
+                                                         process="@this,wizard" update="@this,wizard"/>
+
+                                    <p:dataTable id="tableComproPago" value="#{sspSolicitudCeseController.lstRecibos }"
+                                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="itemComp" >
+
+                                        <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_numero}" style="text-align:center" >
+                                            <f:facet name="header">
+                                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_numero}" />
+                                            </f:facet>
+                                            <h:outputText value="#{itemComp.nroSecuencia}"/>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_fecha}" style="text-align:center" >
+                                            <f:facet name="header">
+                                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_fecha}" />
+                                            </f:facet>
+                                            <h:outputText value="#{itemComp.fechaMovimiento}">
+                                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_monto}" style="text-align:center" >
+                                            <f:facet name="header">
+                                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtComprobante_monto}" />
+                                            </f:facet>
+                                            <h:outputText value="#{itemComp.importe}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <br/>
+                                    
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <br/>
+                        </p:panel>
+                        <br/>
+
+                        <h:panelGrid columns="1">
+                            <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="@all" actionListener="#{sspSolicitudCeseController.siguiente('paso12')}" value="#{BundleBDIntegrado.GsspSolicitudCese_siguiente}" process="@this" partialSubmit="true" disabled="#{sspSolicitudCeseController.disabledSiguiente}" />
+                        </h:panelGrid>
+                    </p:tab>
+
+                    <p:tab id="paso2" title="#{BundleBDIntegrado.GsspSolicitudCese_2doPaso }" >
+                        <p:panel id="pnlBusqueda" >
+                            <br/>
+                            <h:panelGrid columns="1">
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_nota1}" style="color:red; font-style: italic;" />
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_nota2}" style="color:red; font-style: italic;" />
+                            </h:panelGrid>
+                            <br/>
+                            <h:panelGrid columns="6">
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_tipoDoc}" />
+                                <p:selectOneMenu id="tipoDocBusqueda"
+                                                style="width: 200px;"
+                                                value="#{sspSolicitudCeseController.tipoDocBusqueda }"  >
+                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>                               
+                                   <f:selectItem itemLabel="DNI" itemValue="2"/>
+                                   <f:selectItem itemLabel="CARNÉ DE EXTRANJERÍA" itemValue="5"/>
+                                   <p:ajax event="change" process="@this,pnlBusqueda" update="@this,pnlBusqueda" listener="#{sspSolicitudCeseController.cambiaTipoDocumento() }" />
+                                </p:selectOneMenu>
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_numero}"  />
+                                <p:inputText id="numDocBusqueda" 
+                                             value="#{sspSolicitudCeseController.numDocBusqueda}" 
+                                             maxlength="20"
+                                             onblur="this.value = this.value.toUpperCase();" >
+                                    <p:keyFilter regEx="/[0-9]/i" preventPaste="false" rendered="#{sspSolicitudCeseController.tipoDocBusqueda == '2' }" />
+                                </p:inputText>
+                                <pe:tooltip for="numDocBusqueda"
+                                        value="Ingrese el número de documento"
+                                        showEffect="slideToggle"
+                                        hideEffect="slideToggle"
+                                        showDelay="0"
+                                        myPosition="left center"
+                                        atPosition="right center"/>
+                                
+                                <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                                 process="@this,wizard"
+                                                 icon="ui-icon-search " actionListener="#{sspSolicitudCeseController.buscarVigilante()}" 
+                                                 update="@this,wizard"/>
+                            </h:panelGrid>
+                            <br/>
+                            <h:panelGrid columns="6"  >
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_tipoDoc}" style="display: block; width: 90px;"  />
+                                <h:outputText id="tipoDoc" value="#{(sspSolicitudCeseController.tipoDoc == null)?'-':sspSolicitudCeseController.tipoDoc}" style="font-weight: bold;" />
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_numero}" style="display: block; width: 90px;margin-left: 30px;" />
+                                <h:outputText id="numDoc" value="#{(sspSolicitudCeseController.numDoc == null)?'-':sspSolicitudCeseController.numDoc}" style="font-weight: bold;" />
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_nombresYApellidos}" style="display: block; width: 130px;margin-left: 30px;" />
+                                <h:outputText id="nombres" value="#{(sspSolicitudCeseController.nombreYApellidos == null)?'-':sspSolicitudCeseController.nombreYApellidos}" style="font-weight: bold;" />
+                            </h:panelGrid>    
+                            
+                            <h:panelGrid columns="4" >
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_modalidad}" style="display: block; width: 90px;" />
+                                <p:selectOneMenu id="modalidad"
+                                                style="width: 200px;"
+                                                value="#{sspSolicitudCeseController.modalidad }"  >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item.TIP_MOD}" itemLabel="#{item.DES_MOD}"
+                                                      value="#{sspSolicitudCeseController.lstVigilanteBusqueda}"/>
+                                    <p:ajax event="change" process="@this,pnlBusqueda" update="@this,pnlBusqueda" listener="#{sspSolicitudCeseController.cambiaModalidad()}" />
+                                </p:selectOneMenu>
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_carne}" style="margin-left: 30px;" />
+                                <h:outputText id="carnet" value="#{(sspSolicitudCeseController.carnet == null?'-':sspSolicitudCeseController.carnet)}" style="font-weight: bold;" />
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="7"  >
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_fecEmision}" style="display: block; width: 90px;" />
+                                <h:outputText id="fecEmision" value="#{(sspSolicitudCeseController.fecEmision == null)?'-':sspSolicitudCeseController.fecEmision}" style="font-weight: bold;" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_fecVencimiento}" style="margin-left: 30px;" />
+                                <h:outputText id="fecVencimiento" value="#{(sspSolicitudCeseController.fecvencimiento == null)?'-':sspSolicitudCeseController.fecvencimiento}" style="font-weight: bold;" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                                <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_paso2_estado}" style="margin-left: 30px;" />
+                                <h:outputText id="estado" value="#{(sspSolicitudCeseController.estadoCese == null)?'-':sspSolicitudCeseController.estadoCese}" style="font-weight: bold;" />
+                                <p:commandButton value="#{BundleBDIntegrado.Agregar}"
+                                                 rendered="#{sspSolicitudCeseController.renderDatosVigilante}"
+                                                 process="@this,pnlBusqueda"
+                                                 icon="ui-icon-search " actionListener="#{sspSolicitudCeseController.agregarVigilante()}"
+                                                 update="@this,pnlBusqueda"/>
+                            </h:panelGrid>
+                            <br/>
+                            <h:panelGrid columns="1">
+                                <p:dataTable id="tableVigilantes" value="#{sspSolicitudCeseController.lstVigilante }"
+                                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="item" 
+                                             paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}" >
+
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_tipoDoc}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_tipoDoc}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.tipoDoc_desc}"/>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_nroDoc}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_nroDoc}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.numDoc_desc}"/>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_nombreYApellidos}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_nombreYApellidos}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.nombreYApellidos}"/>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_carnet}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_carnet}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.NRO_CRN_VIG}"/>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_modalidad}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_modalidad}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.DES_MOD}"/>
+                                    </p:column>                                    
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_fecEmision}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_fecEmision}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.FEC_EMI}">
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_fecVencimiento}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_fecVencimiento}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.FEC_VENC}">
+                                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                        </h:outputText>
+                                    </p:column>                                    
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_estado}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_estado}" />
+                                        </f:facet>
+                                        <h:outputText value="#{item.estadoCese}"/>
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_opcion}" style="text-align:center" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{BundleBDIntegrado.GsspSolicitudCese_dtVigilante_opcion}" />
+                                        </f:facet>
+                                        <p:commandButton update="@form"
+                                                        icon="ui-icon-trash"
+                                                        style="background: #ed1c24 !important"
+                                                        actionListener="#{sspSolicitudCeseController.borrarFilaCese(item)}" 
+                                                        value="#{BundleBDIntegrado.Eliminar}" >
+                                            <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro?" icon="ui-icon-alert" /> 
+                                       </p:commandButton>
+                                    </p:column>                                    
+                                </p:dataTable>
+                                <br/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <br/>
+                        
+                        <h:panelGrid columns="2">
+                            <p:commandButton id="botonAnterior2" icon="ui-icon-seek-prev" iconPos="left" update="@all" actionListener="#{sspSolicitudCeseController.siguiente('paso1')}" value="#{BundleBDIntegrado.GsspSolicitudCese_anterior}" process="@this"/>
+                            <p:commandButton icon="ui-icon-newwin" update="@form" actionListener="#{sspSolicitudCeseController.validacionCese() }"  value="Procesar" />
+                            <h:outputText value=" " />
+                        </h:panelGrid>
+                        <br/>
+                    </p:tab>
+            </p:wizard>
+        </h:form>
+</ui:composition>
+
+                
+
+        
+        

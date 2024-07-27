@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <div class="ui-fluid">
+        <p:dialog id="dlgDeclaracionJurada" widgetVar="wvDialogDeclaracionJurada" width="45%"
+                  modal="true" resizable="false" appendTo="@(body)" 
+                  header="#{BundleBDIntegrado.amaArma_declaracionJurada }"
+                  responsive="true"
+                  closable="false">
+            
+            <h:form id="frmDeclaracionJurada" >
+                <p:panel id="pnlInpe" rendered="#{amaRegEmpArmaController.esPerfilInpe()}">
+                    <p:steps activeIndex="#{amaRegEmpArmaController.activeTabDeclaracion}" >
+                        <p:menuitem value="Seleccionar región"  />
+                        <p:menuitem value="Confirmación" />                    
+                    </p:steps>
+                    
+                    <p:panel rendered="#{amaRegEmpArmaController.esPerfilInpe() and amaRegEmpArmaController.activeTabDeclaracion == 0}" >
+                        <br/><br/>
+                        <p:outputLabel value="Región: " style="font-weight: bold;" />
+                        <p:selectOneMenu id="regionInpeDeclaracion"                                     
+                                         value="#{amaRegEmpArmaController.regionInpe }" >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                          value="#{amaRegEmpArmaController.listarRegionesInpe() }"/>
+                        </p:selectOneMenu>
+                        <br/>
+                        <br/>                   
+                        
+                        <h:panelGrid style="float: right" columns="2" >
+                                <p:commandButton value="#{BundleBDIntegrado.Siguiente}"
+                                                 id="btnSiguiente"
+                                                 rendered="#{amaRegEmpArmaController.activeTabDeclaracion == 0}"
+                                                 actionListener="#{amaRegEmpArmaController.siguienteTabDeclaracionInpe()}"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="ui-icon-arrowthick-1-e"  />
+                                <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                                 process="@this"
+                                                 update="frmDeclaracionJurada"
+                                                 actionListener="#"
+                                                 oncomplete="PF('wvDialogDeclaracionJurada').hide()"
+                                                 icon="ui-icon-closethick" />
+                        </h:panelGrid>
+                        <br/>
+                        <br/>
+                    </p:panel>
+                </p:panel>
+                
+                <p:panel rendered="#{amaRegEmpArmaController.activeTabDeclaracion == 1}" >
+                        <p:panel style="height: 300px;min-height: 300px !important; overflow-y: auto !important;" >
+                            <h:panelGrid columns="1" style="text-align: justify;" >
+                                <p:outputLabel value="#{amaRegEmpArmaController.obtenerDatosJuramento() }" style="text-align: justify;width: 100%;" escape="false" /> <br/>
+                                <h:panelGrid columns="2" >
+                                    <p:graphicImage name="/imagenes/warning.png" width="40" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_textoImportante }" style="color:red;" /> <br/>    
+                                </h:panelGrid>                
+
+                                <h:panelGrid columns="6" >
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_porEmitir }" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{amaRegEmpArmaController.contPorEmitir}" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_emitidos }" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{amaRegEmpArmaController.contEmitidos}" />
+                                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_nopertenece }" style="font-weight: bold;" />
+                                    <p:outputLabel value="#{amaRegEmpArmaController.contNoPertenecen}" />
+                                </h:panelGrid>
+
+                                <h:panelGrid columns="2" id="pnlTerminos">
+                                    <p:selectBooleanCheckbox value="#{amaRegEmpArmaController.acepto}" >
+                                        <p:ajax process="@this" update="@form" listener="#{amaRegEmpArmaController.clickAcepto()}" />
+                                    </p:selectBooleanCheckbox>
+                                    <h:outputText value="#{BundleBDIntegrado.amaArma_acepto}" />
+                                </h:panelGrid>
+                            </h:panelGrid>                    
+                        </p:panel>
+                        <div id="pnlProgressBar" style="width: 100%;display: none;" >
+                            <p:progressBar widgetVar="pbAjax" ajax="true" value="#{amaRegEmpArmaController.progress}" id="progressBar"
+                                           labelTemplate="{value}%" styleClass="animated" global="false" />
+                        </div>
+                        <h:panelGrid style="float: left" columns="1" rendered="#{amaRegEmpArmaController.esPerfilInpe() and amaRegEmpArmaController.activeTabDeclaracion == 1}">                                
+                                <p:commandButton value="#{BundleBDIntegrado.Atras}"
+                                                 id="btnAtras"
+                                                 actionListener="#{amaRegEmpArmaController.regresarTabDeclaracionInpe()}"
+                                                 process="@form"
+                                                 update="@form"
+                                                 icon="ui-icon-arrowthick-1-w"  />
+                        </h:panelGrid>
+                        <h:panelGrid style="float: right" columns="2">
+                                <p:commandButton value="#{BundleBDIntegrado.Guardar}"
+                                                 onclick="setVisibleProgressBar(); PF('pbAjax').start(); "                                         
+                                                 disabled="#{!amaRegEmpArmaController.acepto}"
+                                                 actionListener="#{amaRegEmpArmaController.registrar()}"
+                                                 icon="ui-icon-disk"  />
+
+                                <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                             process="@this"
+                                             update="frmDeclaracionJurada"
+                                             actionListener="#"
+                                             oncomplete="PF('wvDialogDeclaracionJurada').hide()"
+                                             icon="ui-icon-closethick" />
+                        </h:panelGrid>
+                </p:panel>
+                        
+               
+            </h:form>
+            <script type="text/javascript">
+                //<![CDATA[
+                function setVisibleProgressBar() {
+                    document.getElementById("pnlProgressBar").style.display = 'block';
+                }
+                //]]>
+            </script> 
+        </p:dialog>
+    </div>
+        
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaModelosTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_id}"/>
+                    <h:outputText value="#{amaModelosController.selected.id}" title="#{bundle.ViewAmaModelosTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_modelo}"/>
+                    <h:outputText value="#{amaModelosController.selected.modelo}" title="#{bundle.ViewAmaModelosTitle_modelo}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_longCanon}"/>
+                    <h:outputText value="#{amaModelosController.selected.longCanon}" title="#{bundle.ViewAmaModelosTitle_longCanon}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_longArma}"/>
+                    <h:outputText value="#{amaModelosController.selected.longArma}" title="#{bundle.ViewAmaModelosTitle_longArma}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_activo}"/>
+                    <h:outputText value="#{amaModelosController.selected.activo}" title="#{bundle.ViewAmaModelosTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_audLogin}"/>
+                    <h:outputText value="#{amaModelosController.selected.audLogin}" title="#{bundle.ViewAmaModelosTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_audNumIp}"/>
+                    <h:outputText value="#{amaModelosController.selected.audNumIp}" title="#{bundle.ViewAmaModelosTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_disposicionId}"/>
+                    <h:outputText value="#{amaModelosController.selected.disposicionId}" title="#{bundle.ViewAmaModelosTitle_disposicionId}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_tipoArmaId}"/>
+                    <h:outputText value="#{amaModelosController.selected.tipoArmaId}" title="#{bundle.ViewAmaModelosTitle_tipoArmaId}"/>
+                    <h:outputText value="#{bundle.ViewAmaModelosLabel_marcaId}"/>
+                    <h:outputText value="#{amaModelosController.selected.marcaId}" title="#{bundle.ViewAmaModelosTitle_marcaId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaModelosController.destroyAndView}" value="#{bundle.ViewAmaModelosDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaModelosEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaModelosController.prepareCreate}" value="#{bundle.ViewAmaModelosCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaModelosController.prepareList}" value="#{bundle.ViewAmaModelosShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaModelosIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

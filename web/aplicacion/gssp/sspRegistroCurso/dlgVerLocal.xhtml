@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgVerLocales" widgetVar="wvDlgVerLocales" width="70%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="LOCALES / PLATAFORMA" closable="false">
+        <h:form id="frmVerLocales">
+            <h:panelGrid columns="1" >
+                <p:dataTable id="dtListado" rendered ="#{!sspRegistroCursoController.esVirtual}"
+                             value="#{sspRegistroCursoController.obtenerListadoLocalesBandeja()}" 
+                             var="item" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="5"
+                             currentPageReportTemplate="Total {totalRecords} local(es)"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda_}">
+                    <p:column headerText="Nombre" style="text-align: center;" >
+                        <h:outputText value="#{item.nombreLocal}" />
+                    </p:column>
+                    <p:column headerText="Dirección" style="text-align: center;" >
+                        <h:outputText value="#{item.direccion}" />
+                    </p:column>
+                    <p:column headerText="Ubigeo" style="text-align: center;" >
+                        <h:outputText value="#{item.distritoId.provinciaId.departamentoId.nombre}/#{item.distritoId.provinciaId.nombre}/#{item.distritoId.nombre}" />
+                    </p:column>
+                    <p:column headerText="Referencia" style="text-align: center;" >
+                        <h:outputText value="#{item.referencia}" />
+                    </p:column>
+                    <p:column headerText="Aforo" style="text-align: center;" >
+                        <h:outputText value="#{item.aforo}" />
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable id="dtListado2" rendered ="#{sspRegistroCursoController.esVirtual}"
+                             value="#{sspRegistroCursoController.obtenerListadoLocalesBandeja()}" 
+                             var="item" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="5"
+                             currentPageReportTemplate="Total {totalRecords} local(es)"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda_}">
+                    <p:column headerText="Plataforma" style="text-align: center;" >
+                        <h:outputText value="#{item.nombreLocal}" />
+                    </p:column>
+                    <p:column headerText="Características" style="text-align: center; width: 300px;" >
+                        <h:outputText value="#{item.caracteristicas}" />
+                    </p:column>
+                    <p:column headerText="Persona Responsable" style="text-align: center;" >
+                        <h:outputText value="#{item.referencia}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_telefono}" style="text-align: center; width: 70px;" >
+                        <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(item.sspLocalContactoList,'TP_MEDIOC_TEL')}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dt_correo}" style="text-align: center; width: 160px;" >
+                        <h:outputText value="#{sspRegistroCursoController.obtenerValorContactoTablaLocal(item.sspLocalContactoList,'TP_MEDIOC_COR')}" />
+                    </p:column>
+                    <p:column headerText="Aforo" style="text-align: center; width: 30px;" >
+                        <h:outputText value="#{item.aforo}" />
+                    </p:column>
+                    
+                </p:dataTable>
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmVerLocales" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgVerLocales').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

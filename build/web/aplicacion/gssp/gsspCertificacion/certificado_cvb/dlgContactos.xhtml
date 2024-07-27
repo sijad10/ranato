@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgContacto" widgetVar="wvDlgContacto" closable="true" header="Registro de Medios de Contacto" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogStyle()" width="56%">
+        <h:form id="frmCuerpoContacto" prependId="false">
+            
+            <div class="card">
+          
+                <p:panel id="pnl_Contactow_Title" header="Medio de Contacto" >
+                    <div>                        
+                        <div class="ui-g">
+
+                            <div class="ui-g-3">
+                                <div class="field">
+                                    <p:outputLabel value="Prioridad: *" />
+                                    <p:selectOneMenu id="cboPrioridad" value="#{gsspSolicitudCertificacionCVBController.cboDlgPrioridadSelected}">   
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboDlgPrioridadLista}"/>                                        
+                                        <p:ajax event="change" update="@this" />
+                                    </p:selectOneMenu>     
+                                </div>
+                            </div>
+
+                            <div class="ui-g-4">
+                                <div class="field">
+                                    <p:outputLabel value="Medio de Contacto: *" />
+                                    <p:selectOneMenu id="cboMedioContacto" value="#{gsspSolicitudCertificacionCVBController.cboDlgMedioContactoSelected}">   
+                                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboDlgMedioContactoLista}"/>                                        
+                                        <p:ajax event="change" update="@this, @form" listener="#{gsspSolicitudCertificacionCVBController.fnValidarFragmentMedioContacto()}" />
+                                    </p:selectOneMenu>  
+                                </div>
+                            </div>                    
+                            
+                             
+                                <div class="ui-g-5">
+                                    <p:fragment id="divFragment_ValorMedioContacto" rendered="#{gsspSolicitudCertificacionCVBController.dlgFragmentContacto}">
+                                        <div class="field">
+                                            <p:outputLabel value="#{gsspSolicitudCertificacionCVBController.dlgLabelContacto}" />
+                                            <ui:param name="tipo_medio_fijo_param" value="validateNumeros(event, 'fijo')" />
+                                            <ui:param name="tipo_medio_seleccionado" value="#{gsspSolicitudCertificacionCVBController.cboDlgMedioContactoSelected.codProg eq 'TP_MEDCO_COR'}" />
+                                            <p:inputText id="txtLPE_Alm_DescripMedioContacto" style="width: 80%" value="#{gsspSolicitudCertificacionCVBController.dlgtextoContacto}" 
+                                                         maxlength="#{(tipo_medio_seleccionado == true) ? 200 :  20 }"                                           
+                                                         onkeypress="#{(tipo_medio_seleccionado == true) ? 'validateAlphanumericCorreo(event)' :  tipo_medio_fijo_param }" 
+                                                         onblur="#{(tipo_medio_seleccionado == true) ? 'validarCorreo(this)' :  '' }"> 
+                                                <p:keyFilter for="txtLPE_Alm_DescripMedioContacto" 
+                                                             mask="#{(tipo_medio_seleccionado == true) ? 'email' :  'int' }"/>
+                                            </p:inputText>
+                                        </div>
+                                    </p:fragment>
+                                </div>
+                             
+                            
+                        </div>
+                        
+                    </div>  
+                </p:panel>
+            
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:commandButton id="registrar"  action="#{gsspSolicitudCertificacionCVBController.btnAgregarMedioContacto()}" 
+                                     value="Agregar" icon="ui-icon-disk" update="@form, :formRegSolicCertVB:fsMediosContacto"  process="@form" iconPos="left" />
+                         &nbsp;
+                        <p:commandButton id="btnCancelar"  actionListener="#{gsspSolicitudCertificacionCVBController.fnCancelarDlgMedioContacto()}"
+                                     icon="ui-icon-closethick" value="Cancelar" update="@none" process="@this"/>
+                    </div>
+                </div>
+       
+                
+                
+                </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        function showDlgMarcoDialogStyle() {
+            $("div[id*='dlgContacto'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgContacto'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgContacto'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+    
+    <style>
+        #dlgContacto{
+            width: 40% !important;
+            max-width: 1000px;
+        }
+    </style>
+</ui:composition>
+
+

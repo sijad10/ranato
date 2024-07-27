@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgPolicia" widgetVar="CreateViewDialogPolicia" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="BUSCAR CUSTODIO POLICIAL" closable="false">
+        <h:form id="frmDlgPolicia">
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3" >
+                            <p:outputLabel value="Nro. de CIP: " />
+                            <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}"/>
+                            <p:commandButton value="Buscar" 
+                                             update="@form"
+                                             actionListener="#{eppRegistroGuiaTransitoController.buscarDlgPolicia}"/>
+                </h:panelGrid >
+                <p:dataTable id="dataTable" var="item" widgetVar="dt" 
+                             value="#{eppRegistroGuiaTransitoController.lstDlgPolicia}" 
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                             paginator="true" rows="4" 
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                             rowsPerPageTemplate="5">
+                    <p:column headerText="id" >
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>
+                    <p:column headerText="dni" >
+                        <h:outputText value="#{item.dniPolicia}"/>
+                    </p:column>
+                    <p:column headerText="Nombres y Apellidos" >
+                        <h:outputText value="#{item.nombresPolicia} #{item.apaternoPolicia} #{item.amaternoPolicia}"/>
+                    </p:column>
+                    <p:column headerText="Nro. de CIP" >
+                        <h:outputText value="#{item.nroPlaca}"/>
+                    </p:column>
+                    <p:column headerText="Grado" >
+                        <h:outputText value="#{item.gradoId.nombre}"/>
+                    </p:column>                                        
+                    <p:column headerText="Unidad Policial" >
+                        <h:outputText value="#{item.unidadPolicialId.nombre}"/>
+                    </p:column>                                        
+                    <p:column headerText="#{bundleGeppGte.Opcion}" style="width:5%; vertical-align: middle" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogPolicia').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgPoliciaGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgPolicia" 
+                                 actionListener="#"
+                                 oncomplete="PF('CreateViewDialogPolicia').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

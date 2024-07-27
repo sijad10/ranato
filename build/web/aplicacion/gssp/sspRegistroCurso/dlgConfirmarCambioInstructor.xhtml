@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgConfirmarCambioInstructor" widgetVar="wvDlgConfirmarCambioInstructor" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="CONFIRMACIÓN DE CAMBIO DE INSTRUCTOR" closable="false">
+        <h:form id="frmConfirmarCambioInstructor">
+            <h:panelGrid columns="2" >
+                
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmacionModificar_instructor}" style="display: block; width: 200px;font-weight: bold;" />
+                <h:outputText value="#{sspRegistroCursoController.programacionConfirma.instructorId.personaId.nombreCompleto}" />
+                
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmacionModificar_nuevoInstructor}" style="display: block; width: 200px;font-weight: bold;" />
+                <h:outputText value="#{sspRegistroCursoController.nombresInstructor}" />
+                
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmacionModificar_enLaFecha}" style="display: block; width: 200px;font-weight: bold;" />
+                <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.obtenerProgramacionXModulo()}"
+                             var="itemProgra" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_local}" style="text-align: center;" >
+                        <h:outputText value="#{itemProgra.localId.nombreLocal}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horario}" style="text-align: center;" >
+                        <p:dataTable id="dtHorario" value="#{sspRegistroCursoController.getSspPrograHoraListActivos(itemProgra.sspPrograHoraList)}"
+                             var="itemHorario" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_fecha}" style="text-align: center;" >
+                                <h:outputText value="#{itemHorario.fecha}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaIni}" style="text-align: center;" >
+                                <h:outputText value="#{itemHorario.horaInicio}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                </h:outputText>
+                            </p:column>                          
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horaFin}" style="text-align: center;" >
+                                <h:outputText value="#{itemHorario.horaFin}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+                </p:dataTable>
+                
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmacionModificar_motivo}" style="display: block; width: 150px;font-weight: bold;" />
+                <p:inputTextarea cols="60" rows="3" maxlength="400"  autoResize="false"  
+                                 id="motivo" value="#{sspRegistroCursoController.motivoLocal}" >
+                </p:inputTextarea>
+                
+            </h:panelGrid>
+            <div align="right">
+                <p:commandButton icon="ui-icon-disk"
+                                value="Cambiar"
+                                process="@form" update="@form"
+                                actionListener="#{sspRegistroCursoController.cambiarInstructorCurso()}" >
+                </p:commandButton>
+                
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmConfirmarCambioInstructor" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgConfirmarCambioInstructor').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

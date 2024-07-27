@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions" >
+    
+    <p:dialog id="dlgActualizarNota" widgetVar="wvDlgActualizarNota" width="75%" height="60%"
+              modal="true" resizable="false" appendTo="@(body)" closable="false">
+        
+        <h:form id="frmActualizarNota" >
+            <p:focus context="frmActualizarNota" />
+            <p:defaultCommand target="btnAceptar"/>
+            
+            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_actualizar_documentos}" >
+                <h:panelGrid columns="6" style="width: 100%;" rendered ="#{!sspRegistroCursoController.esVirtual}">
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_nombreLocal}" style="font-weight: bold;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.nombreLocal}" />
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_ubicacion}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:commandButton icon="ui-icon-search"                                            
+                                        process="@form"
+                                        update="@form"
+                                        value="Mapa"
+                                        id="btnMapa"
+                                        actionListener="#{sspRegistroCursoController.openDlgVerMapa(sspRegistroCursoController.programacionConfirma.localId) }">
+                    </p:commandButton>
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_direccion}" style="font-weight: bold;margin-left: 20px;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.direccion}" />
+                    
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_referencia}" style="font-weight: bold;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.referencia}" />
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_Aforo}" style="font-weight: bold;margin-left: 20px;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.aforo}" />
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_Curso}" style="font-weight: bold;margin-left: 20px;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.moduloId.nombre}" />
+                </h:panelGrid>
+                <h:panelGrid columns="6" style="width: 100%;" rendered ="#{sspRegistroCursoController.esVirtual}">
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_nombrePlataforma}" style="font-weight: bold;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.nombreLocal}" />
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_Responsable}" style="font-weight: bold;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.localId.referencia}" />
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_Curso}" style="font-weight: bold;margin-left: 20px;" />
+                    <h:outputText value="#{sspRegistroCursoController.programacionConfirma.moduloId.nombre}" />
+                </h:panelGrid>
+                <h:panelGrid columns="4" >
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_asistencia}" style="font-weight: bold;" />
+                    <h:panelGrid columns="1" >
+                        <p:fileUpload   id="pfileUpload" label="Adjuntar"
+                                        invalidFileMessage="#{BundleBDIntegrado.sspCursos_fileUpload_InvalidFileMessage}"
+                                        invalidSizeMessage="#{sspRegistroCursoController.obtenerMsjeInvalidSize()}"
+                                        fileUploadListener="#{sspRegistroCursoController.handleFileUploadAdjuntoPDF}"
+                                        onstart="PF('loadingDialog').show()"
+                                        oncomplete="PF('loadingDialog').hide()"
+                                        mode="advanced" dragDropSupport="true"
+                                        multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCursos_sizeLimite_asistencia').valor}"
+                                        auto="true" process="@this" update="@this" 
+                                        allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"  >                        
+                            <p:commandButton  icon="ui-icon-document"
+                                            ajax="false"
+                                            style="background-color: #F2F2F2;color: #000000;"
+                                            value="#{sspRegistroCursoController.archivo}"
+                                            rendered="#{sspRegistroCursoController.archivo ne null}"
+                                            process="@all"
+                                            actionListener="#"
+                                            onclick="this.form.target = '_blank'"
+                                            onblur="this.form.target = '_self'"
+                                            immediate="true" >
+                                  <p:fileDownload value="#{sspRegistroCursoController.cargarDocumento()}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:fileUpload>
+                        <h:outputText value="#{BundleBDIntegrado.sspCursos_mensajeActualizarNota}" style="color:red;" />
+                    </h:panelGrid>
+                    
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_actualizar_archivoNotas}" style="font-weight: bold;margin-left: 10px;" />
+                    <h:panelGrid columns="1" >
+                        <p:fileUpload   id="pfileUploadNotas" label="Adjuntar"
+                                        invalidFileMessage="#{BundleBDIntegrado.sspCursos_fileUpload_InvalidFileMessage}"
+                                        invalidSizeMessage="#{sspRegistroCursoController.obtenerMsjeInvalidSizeNotas()}"
+                                        fileUploadListener="#{sspRegistroCursoController.handleFileUploadAdjuntoNotasPDF}"
+                                        onstart="PF('loadingDialog').show()"
+                                        oncomplete="PF('loadingDialog').hide()"
+                                        mode="advanced" dragDropSupport="true"
+                                        multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCursos_sizeLimite_archivoNotas').valor}"
+                                        auto="true" process="@this" update="@this" 
+                                        allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"  >                        
+                            <p:commandButton  icon="ui-icon-document"
+                                            ajax="false"
+                                            style="background-color: #F2F2F2;color: #000000;"
+                                            value="#{sspRegistroCursoController.archivoNotas }"
+                                            rendered="#{sspRegistroCursoController.archivoNotas ne null}"
+                                            process="@all"
+                                            actionListener="#"
+                                            onclick="this.form.target = '_blank'"
+                                            onblur="this.form.target = '_self'"
+                                            immediate="true" >
+                                <p:fileDownload value="#{sspRegistroCursoController.cargarDocumentoNotas()}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:fileUpload>
+                        <h:outputText value="#{BundleBDIntegrado.sspCursos_mensajeSubirNota}" style="color:red;" /> 
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:fieldset>
+            <br/>
+            <p:fieldset legend="#{BundleBDIntegrado.sspCursos_actualizar_asistente}" rendered="#{sspRegistroCursoController.esInstructor}" >
+                <p:dataTable id="dtNotas" var="item" value="#{sspRegistroCursoController.lstNotasTemporales}" 
+                             editable="true" editMode="cell" widgetVar="wtvNotas" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                             paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas_busqueda}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                             {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                             {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda_}" >
+                    <p:ajax event="cellEdit" listener="#{sspRegistroCursoController.onCellEdit}" update="@this" />
+                    
+                    <p:column headerText="APELLIDOS">
+                           <h:outputText value="#{item.alumnoId.personaId.apePat} #{item.alumnoId.personaId.apeMat}" />
+                    </p:column>
+                    <p:column headerText="NOMBRES">
+                           <h:outputText value="#{item.alumnoId.personaId.nombres}" />
+                    </p:column>
+                    <p:column headerText="T. DOC" style="text-align: center;width: 60px;" >
+                           <h:outputText value="#{item.alumnoId.personaId.tipoDoc.nombre}" />
+                    </p:column>
+                    <p:column headerText="ASISTENCIA" style="text-align: center;width: 90px;">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{sspRegistroCursoController.obtenerDescAsistenciaActualizacion(item) }" style="font-weight: bold;#{sspRegistroCursoController.obtenerColorAsistencia(item)}" /></f:facet>
+                           <f:facet name="input">
+                                <p:selectOneMenu id="asistencia" value="#{item.asistencia }" >
+                                   <f:selectItem itemLabel="ASISTIÓ" itemValue="1"/>
+                                   <f:selectItem itemLabel="FALTÓ" itemValue="0"/>
+                                   <p:ajax event="change" update=":frmActualizarNota:dtNotas" listener="#{sspRegistroCursoController.cambiaAsistencia(item) }" />
+                                </p:selectOneMenu>
+                           </f:facet>
+                       </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="N° DOC" style="text-align: center;width: 90px;">
+                           <h:outputText value="#{item.alumnoId.personaId.numDoc}" />
+                    </p:column>
+                    <p:column headerText="NOTA" style="text-align: center;width: 70px;">
+                           <p:cellEditor>
+                               <f:facet name="output"><h:outputText value="#{item.notaInt }" style="font-weight: bold;#{sspRegistroCursoController.obtenercolorNota(item.notaInt)}" /></f:facet>
+                               <f:facet name="input">
+                                   <p:inputText value="#{item.notaInt }" id="notaAct" style="width:96%;text-align: center;" styleClass="background-color-InputText" disabled="#{!item.asistenciaBoolean}" >
+                                       <p:keyFilter mask="pint" preventPaste="false"  />
+                                       <p:ajax event="blur" listener="#{sspRegistroCursoController.cambiaAsistencia(item)}" update=":frmActualizarNota:dtNotas" />
+                                   </p:inputText>
+                               </f:facet>
+                           </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="ESTADO" style="text-align: center;">
+                        <h:outputText value="#{sspRegistroCursoController.obtenerDescEstado(item.estado) }" style="font-weight: bold; #{sspRegistroCursoController.obtenercolorNota(item.notaInt)}" />
+                    </p:column>
+                    <p:column headerText="OBSERVACIÓN">
+                           <p:cellEditor>
+                               <f:facet name="output"><h:outputText value="#{item.observacion}" /></f:facet>
+                               <f:facet name="input"><p:inputText value="#{item.observacion}" style="width:96%" onblur="this.value = this.value.toUpperCase();" maxlength="400" /></f:facet>
+                           </p:cellEditor>
+                    </p:column>
+                </p:dataTable>
+            </p:fieldset>
+            
+            <br/>
+            <div align="right">
+                <p:commandButton value="Salir"
+                                 process="@this"
+                                 style="float: right"
+                                 update="@form"
+                                 oncomplete="PF('wvDlgActualizarNota').hide(); PF('wtvNotas').getPaginator().setPage(0);" />
+                
+                <p:commandButton value="Aceptar"
+                                 id="btnAceptar"
+                                 process="@form"
+                                 actionListener="#{sspRegistroCursoController.actualizarNotasInstructor() }"
+                                 oncomplete="PF('wtvNotas').getPaginator().setPage(0);"
+                                 style="float: right"
+                                 update="@form" >
+                    <p:confirm header="Confirmación" message="#{BundleBDIntegrado.sspCursos_actualizar_confirmacionMsje}" rendered="#{!sspRegistroCursoController.esInstructor}" ></p:confirm>
+                </p:commandButton>
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

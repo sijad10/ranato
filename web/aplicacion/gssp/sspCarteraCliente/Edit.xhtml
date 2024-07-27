@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+            <h:form id="editForm" rendered="#{sspCarteraClienteController.estado == 'EDITAR'}" >
+                
+                <p:panel id="pnlObservaciones" header="#{BundleBDIntegrado.sspCarteraCli_editar_observaciones}" rendered="#{sspCarteraClienteController.lstObservaciones.size() > 0 }" >
+                    <h:panelGrid columns="1">
+                        <p:dataTable id="datatableObsv" 
+                                     value="#{sspCarteraClienteController.lstObservacionesOrdenadasDesc }"
+                                     var="item"  
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}">
+                            <p:column headerText="Fecha" style="text-align: center;">
+                                <h:outputText value="#{item.fecha}">
+                                    <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Observación" style="text-align: center;" >
+                                <h:outputText value="#{item.observacion}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                    <br/>
+                </p:panel>
+                
+                <p:panel id="pnlDatosAdministrado" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosAdministrado}" >
+                    <br/>
+                    <h:panelGrid columns="3" id="pnlDatosAdministradoPG"  >
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sede}(*)" style="font-weight: bold;" rendered="false"  />
+                        <p:selectOneMenu id="sede" value="#{sspCarteraClienteController.registro.sedeId}" rendered="false"  >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.direccion} #{item.numero}" value="#{sspCarteraClienteController.lstDirecciones}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_modalidad}(*)" style="margin-left: 10px;font-weight: bold;" />
+                        <p:dataTable id="buscarDatatableRegistro" value="#{sspCarteraClienteController.lstModalidades}"
+                                     var="itemReg"
+                                     style="width: 320px;"
+                                     rowKey="#{itemReg.id}"
+                                     selection="#{sspCarteraClienteController.registro.tipoSeguridadList}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            
+                            <p:ajax event="rowSelect" listener="#{sspCarteraClienteController.seleccionarFilaTablaModalidades}" update="@form" process="@this,editForm:pnlDatosAdministrado" />
+                            <p:ajax event="rowUnselect" listener="#{sspCarteraClienteController.deseleccionarFilaTablaModalidades}" update="@form" process="@this,editForm:pnlDatosAdministrado" />
+                            <p:ajax event="rowSelectCheckbox" listener="#{sspCarteraClienteController.seleccionarFilaTablaModalidades}" update="@form" process="@this,editForm:pnlDatosAdministrado" />
+                            <p:ajax event="rowUnselectCheckbox" listener="#{sspCarteraClienteController.deseleccionarFilaTablaModalidades}" update="@form" process="@this,editForm:pnlDatosAdministrado" />
+                            <p:ajax event="toggleSelect" listener="#{sspCarteraClienteController.toggleEventFilaModalidades}" update="@form" process="@this,editForm:pnlDatosAdministrado" />
+                            
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"  visible="#{itemReg.activo == 1 }" />
+                            <p:column style="width:16px;text-align:center"  visible="#{itemReg.activo != 1 }" />
+                            <p:column headerText="MODALIDAD" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nombre}" />
+                            </p:column>
+                         </p:dataTable>
+                        <p:outputLabel value=" " />
+                        
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_representante}(*)" style="font-weight: bold;" rendered="false"  />
+                        <p:selectOneMenu id="representante" value="#{sspCarteraClienteController.registro.reprAdminId}" rendered="false"  >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombreCompleto} / #{item.numDoc}" 
+                                          value="#{sspCarteraClienteController.lstRepresentante}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_consorcio}" style="font-weight: bold;margin-left: 10px;"  />
+                        <p:dataTable id="tblConsorcio" value="#{sspCarteraClienteController.listadoConsorcio}"
+                                     var="itemReg"
+                                     style="width: 320px;"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column headerText="EMPRESA" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.rznSocial}" />
+                            </p:column>
+                            <p:column headerText="ACCIÓN" style="text-align: center;width: 40px;" >
+                                <p:commandButton icon="ui-icon-trash"
+                                                 styleClass="botonBorrar"
+                                                 update="@form"
+                                                 title="Borrar"
+                                                 actionListener="#{sspCarteraClienteController.eliminarConsorcio(itemReg) }" >
+                                    <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro seleccionado?" icon="ui-icon-alert" /> 
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton icon="ui-icon-search"                                            
+                                         process="pnlDatosAdministradoPG"
+                                         update="pnlDatosAdministradoPG"
+                                         value="Buscar"
+                                         id="btnConsorcio"
+                                         actionListener="#{sspCarteraClienteController.openBuscarConsorcio() }" >
+                        </p:commandButton>
+                        
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_evento}(*)" style="font-weight: bold;" rendered="#{sspCarteraClienteController.renderEvento}" />
+                        <h:panelGrid columns="6" id="pnlEvento" rendered="#{sspCarteraClienteController.renderEvento}" >
+                            <p:selectBooleanCheckbox  id="evento" value="#{sspCarteraClienteController.blnEvento}"  >
+                                <p:ajax process="@this,pnlDatosAdministradoPG" update="@this,pnlDatosAdministradoPG" listener="#{sspCarteraClienteController.openDlgConfirmarEvento()}" />
+                            </p:selectBooleanCheckbox>
+                            <p:inputText value="#{sspCarteraClienteController.registro.tipoEvento}" id="tipoEvento" 
+                                         style="width: 350px;"
+                                         placeholder="EJEMPLO: ESPECTÁCULOS/CONVENCIONES/CERTÁMENES"
+                                         rendered="#{sspCarteraClienteController.blnEvento }"
+                                         maxlength="200"  />
+                        </h:panelGrid>
+                        <p:outputLabel value=" " />
+                        <p:outputLabel value=" " />
+                        <p:outputLabel value=" " />
+                    </h:panelGrid>
+                </p:panel>
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlPersona}" >
+                    <p:panel id="pnlDatosCliente" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosCliente}"  >
+                        <h:panelGrid columns="6" id="pnlCabecera" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tiposCliente}(*)" style="width: 120px;display: block;font-weight: bold;" />
+                            <p:selectOneMenu id="tipoDoc" value="#{sspCarteraClienteController.tipoDoc}" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item.id}" itemLabel="#{item.nombre}" value="#{sspCarteraClienteController.lstTipoDoc}"/>
+                                <p:ajax event="change" process="@form" update="@form" listener="#{sspCarteraClienteController.cambiarTipoDoc() }" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ruc}(*)" rendered="#{sspCarteraClienteController.esRuc}" style="margin-left: 20px;font-weight: bold;"  />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_documento}(*)" rendered="#{sspCarteraClienteController.esDni}" style="margin-left: 20px;font-weight: bold;" />
+                            <h:panelGrid columns="2" rendered="#{sspCarteraClienteController.esRuc or sspCarteraClienteController.esDni}" >
+                                <p:inputText value="#{sspCarteraClienteController.numDoc}" id="ruc" maxlength="11"  >
+                                    <p:keyFilter mask="int" preventPaste="false" />
+                                </p:inputText>
+                                <p:commandButton value="Buscar" 
+                                                 actionListener="#{sspCarteraClienteController.buscarDatosCliente()}"
+                                                 process="@this,pnlDatosCliente"
+                                                 partialSubmit="true"
+                                                 icon="ui-icon-search" />
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_rznSocial}(*)" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" style="margin-left: 20px;font-weight: bold;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombres}(*)" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" style="margin-left: 20px;font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.clienteId.rznSocial}" id="rznSocial" rendered="#{(sspCarteraClienteController.esRuc ) and sspCarteraClienteController.blnBusco }" style="width: 300px;" maxlength="300" disabled="#{sspCarteraClienteController.disabledBusco}" />  
+                            <p:inputText value="#{sspCarteraClienteController.registro.clienteId.nombres}" id="nombresDni" rendered="#{(sspCarteraClienteController.esDni) and sspCarteraClienteController.blnBusco }" style="width: 300px;" maxlength="200" disabled="#{sspCarteraClienteController.disabledBusco}" />  
+
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombreComercial}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.clienteId.nomCom}" id="nomCom" maxlength="200" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" disabled="#{!sspCarteraClienteController.esNuevo}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.direccionRuc}" id="direccionRuc" maxlength="300" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco and !sspCarteraClienteController.renderDireccionRucCombo}" disabled="#{sspCarteraClienteController.disabledDireccion}" />
+                            <p:selectOneMenu id="direccionRucCombo" value="#{sspCarteraClienteController.direccionRucCombo}" 
+                                             autoWidth="false" style="width:250px;"
+                                             rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco and sspCarteraClienteController.renderDireccionRucCombo}" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.direccion}" value="#{sspCarteraClienteController.lstDireccionCombo}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:selectOneMenu id="ubigeoRuc" value="#{sspCarteraClienteController.ubigeoRuc }" filter="true" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}"
+                                             effect="fade" filterMatchMode="contains" panelStyle="width:800px"
+                                             disabled="#{sspCarteraClienteController.disabledDireccion}"
+                                             style="width: 500px" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItems value="#{sspCarteraClienteController.listDistritos}"
+                                               var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                               itemValue="#{distrito}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.correo }" id="correoRuc" maxlength="200" 
+                                         rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" 
+                                         disabled="#{sspCarteraClienteController.disabledCorreo}"
+                                         validatorMessage="#{BundleBDIntegrado.sspCarteraCli_validatorMessage_correo}" >
+                                <f:validateRegex pattern="#{BundleBDIntegrado.RegexEmailN}" />
+                            </p:inputText>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.telefono}" id="telefonoRuc" maxlength="200" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" disabled="#{sspCarteraClienteController.disabledTelefono}" />
+
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apePaterno}(*)" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}"  />
+                            <p:inputText value="#{sspCarteraClienteController.registro.clienteId.apePat}" id="apePat" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" disabled="#{sspCarteraClienteController.disabledBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apeMaterno}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.clienteId.apeMat}" id="apeMat" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" disabled="#{sspCarteraClienteController.disabledBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sexo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:selectOneMenu id="generoId" required="true" value="#{sspCarteraClienteController.registro.clienteId.generoId}"  rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}"
+                                             disabled="#{!sspCarteraClienteController.esNuevo}"
+                                            requiredMessage="El campo género es obligatorio " >
+                                <f:selectItem itemValue="#{null}" itemLabel="-------"/>
+                                <f:selectItems value="#{sspCarteraClienteController.lstGeneros}" itemValue="#{TP_GEN}" itemLabel="#{TP_GEN.nombre}" var="TP_GEN"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaNacimiento}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:calendar id="fechaNac"
+                                    locale="es"
+                                    disabled="#{!sspCarteraClienteController.esNuevo}"
+                                    rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}"
+                                    maxdate="#{sspCarteraClienteController.maximafecha}"
+                                    showOn="button" value="#{sspCarteraClienteController.registro.clienteId.fechaNac}"
+                                    pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.direccionDni}" id="direccionDni" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco and !sspCarteraClienteController.renderDireccionDniCombo}" disabled="#{sspCarteraClienteController.disabledDireccion}" />
+                            <p:selectOneMenu id="direccionDniCombo" value="#{sspCarteraClienteController.direccionDniCombo}" 
+                                             autoWidth="false" style="width:250px;"
+                                             rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco and sspCarteraClienteController.renderDireccionDniCombo}" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.direccion}" value="#{sspCarteraClienteController.lstDireccionCombo}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:selectOneMenu id="ubigeoDni" value="#{sspCarteraClienteController.ubigeoDni}" filter="true" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}"
+                                             disabled="#{sspCarteraClienteController.disabledDireccion}"                 
+                                             effect="fade" filterMatchMode="contains" panelStyle="width:600px" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItems value="#{sspCarteraClienteController.listDistritos}"
+                                               var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                               itemValue="#{distrito}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.correo }" id="correoDni" 
+                                         rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" 
+                                         disabled="#{sspCarteraClienteController.disabledCorreo}" 
+                                         validatorMessage="#{BundleBDIntegrado.sspCarteraCli_validatorMessage_correo}" >
+                                <f:validateRegex pattern="#{BundleBDIntegrado.RegexEmailN}" />
+                            </p:inputText>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:inputText value="#{sspCarteraClienteController.telefono}" id="telefonoDni" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" disabled="#{sspCarteraClienteController.disabledTelefono }"  />
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>                    
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlRepLegal}" >
+                    <p:panel id="pnlDatosRepLegal" header="#{BundleBDIntegrado.sspCarteraCli_crear_RepLegal}"  >
+                        <h:panelGrid columns="6" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tiposDocumento}(*)" style="width: 120px;display: block;font-weight: bold;" />
+                            <p:selectOneMenu id="tipoDocRepLegal" value="#{sspCarteraClienteController.tipoDocRepLegal}" >
+                                <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                <f:selectItems var="item" itemValue="#{item.id}" itemLabel="#{item.nombre}" value="#{sspCarteraClienteController.lstTipoDocRepLegal}"/>
+                                <p:ajax event="change" process="pnlDatosRepLegal" listener="#{sspCarteraClienteController.cambiarTipoDocRepLegal() }" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_documento}(*)" style="margin-left: 20px;font-weight: bold;" />
+                            <h:panelGrid columns="2" >
+                                <p:inputText value="#{sspCarteraClienteController.numDocRepLegal}" id="docRepLegal" maxlength="#{sspCarteraClienteController.maxLengthRepLegal}"  >
+                                    <p:keyFilter mask="int" preventPaste="false" />
+                                </p:inputText>
+                                <p:commandButton value="Buscar" 
+                                                 actionListener="#{sspCarteraClienteController.buscarDatosClienteRepLegal()}"
+                                                 process="@this,pnlDatosRepLegal"
+                                                 partialSubmit="true"
+                                                 icon="ui-icon-search" />
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombres}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.reprCliId.nombres}" id="nombresRepLegal" style="width: 300px;" maxlength="200" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" disabled="#{sspCarteraClienteController.disabledBuscoRepLegal}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apePaterno}(*)" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.reprCliId.apePat}" id="apePatRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" disabled="#{sspCarteraClienteController.disabledBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apeMaterno}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.reprCliId.apeMat}" id="apeMatRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" disabled="#{sspCarteraClienteController.disabledBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sexo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:selectOneMenu id="generoIdRepLegal" required="true" value="#{sspCarteraClienteController.registro.reprCliId.generoId}"   rendered="#{sspCarteraClienteController.blnBuscoRepLegal}"
+                                             disabled="#{!sspCarteraClienteController.esNuevoRepLegal}"
+                                            requiredMessage="El campo género es obligatorio " >
+                                <f:selectItem itemValue="#{null}" itemLabel="-------"/>
+                                <f:selectItems value="#{sspCarteraClienteController.lstGeneros}" itemValue="#{TP_GEN}" itemLabel="#{TP_GEN.nombre}" var="TP_GEN"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}(*)" style="font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.direccionRepLegal}" id="direccionRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" disabled="#{sspCarteraClienteController.disabledDireccionRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}(*)" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:selectOneMenu id="ubigeoRepLegal" value="#{sspCarteraClienteController.ubigeoRepLegal }" filter="true" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}"
+                                             disabled="#{sspCarteraClienteController.disabledDireccionRepLegal}"
+                                             effect="fade" filterMatchMode="contains" panelStyle="width: 600px" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItems value="#{sspCarteraClienteController.listDistritos}"
+                                               var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                               itemValue="#{distrito}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaNacimiento}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal and sspCarteraClienteController.tipoDocRepLegal == '4'}" />
+                            <p:calendar id="fechaNacRepLegal"
+                                    locale="es"
+                                    rendered="#{sspCarteraClienteController.blnBuscoRepLegal and sspCarteraClienteController.tipoDocRepLegal == '4'}"
+                                    maxdate="#{sspCarteraClienteController.maximafecha}"
+                                    showOn="button" value="#{sspCarteraClienteController.registro.reprCliId.fechaNac}"
+                                    pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:calendar>
+                            
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.telefonoRepLegal}" id="telefonoRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" disabled="#{sspCarteraClienteController.disabledTelefonoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:inputText value="#{sspCarteraClienteController.correoRepLegal }" id="correoRepLegal" 
+                                         rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" 
+                                         disabled="#{sspCarteraClienteController.disabledCorreoRepLegal }" 
+                                         validatorMessage="#{BundleBDIntegrado.sspCarteraCli_validatorMessage_correo}" >
+                                <f:validateRegex pattern="#{BundleBDIntegrado.RegexEmailN}" />
+                            </p:inputText>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>                    
+                
+                <br/>
+                <h:panelGrid >
+                    <p:panel id="pnlDatosServicio" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosServicio}"  >
+                        <h:panelGrid columns="5" id="pnlDatosMapa" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccionServicio}(*)" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.direccionServicio }" id="direccionServicio" style="width: 350px;" validatorMessage="#{BundleBDIntegrado.sspCarteraCli_crear_validatorMsje_direccion}"  maxlength="500" onblur="this.value = this.value.toUpperCase();" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}(*)" style="font-weight: bold;" />
+                            <p:selectOneMenu id="ubigeoServicio" value="#{sspCarteraClienteController.lugarServicio.distId }" filter="true" 
+                                             effect="fade" filterMatchMode="contains" panelStyle="width: 600px" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItems value="#{sspCarteraClienteController.listDistritos}"
+                                               var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                               itemValue="#{distrito}"/>
+                                <p:ajax event="change" process="@this,pnlDatosMapa" update="@this,pnlDatosMapa" listener="#{sspCarteraClienteController.cambiarUbigeoLugarServicio() }" />
+                            </p:selectOneMenu>
+                            <p:outputLabel value=" " />
+
+                            <h:panelGrid columns="2" rendered="#{BundleBDIntegrado.sspCarteraCli_GoogleMapsActivo == 1}">
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_mapa}(*)" style="font-weight: bold;" />
+                                <p:commandButton icon="ui-icon-search"                                            
+                                                    process="pnlDatosServicio"
+                                                    update="pnlDatosServicio"
+                                                    value="Mapa"
+                                                    id="btnMapa"
+                                                    actionListener="#{sspCarteraClienteController.openDlgMapa() }" >
+                                    <p:ajax event="click" listener="#{sspCarteraClienteController.updateFormMapa() }" />
+                                </p:commandButton>
+                            </h:panelGrid>                        
+                            <h:panelGrid columns="4" rendered="#{BundleBDIntegrado.sspCarteraCli_GoogleMapsActivo == 1}">                            
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_latitud}" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarteraClienteController.lugarServicio.latitud}" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_longitud}" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarteraClienteController.lugarServicio.longitud}" />
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_referencia}" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.lugarServicio.referencia }" id="referenciaServicio" style="width: 350px;" onblur="this.value = this.value.toUpperCase();" />
+                            <p:commandButton icon="ui-icon-plus"
+                                             value="#{BundleBDIntegrado.sspCarteraCli_crear_agregar}"
+                                             process="@this,pnlDatosMapa,pnlTableDatosServicio" update="@this,pnlDatosMapa,pnlTableDatosServicio"
+                                             rendered="#{sspCarteraClienteController.listadoLugarServicio.size() != 1}"
+                                             actionListener="#{sspCarteraClienteController.agregarServicio()}" >
+                            </p:commandButton>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" id="pnlTableDatosServicio" >
+                            <p:dataTable id="dtLugarServicio" value="#{sspCarteraClienteController.listadoLugarServicio}"
+                                         var="itemReg"
+                                         rowKey="#{itemReg.id}"
+                                         selection="#{sspCarteraClienteController.lstServicioSeleccionados}"
+                                         emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center" />
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_direccion}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.direccion}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_ubigeo}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.distId.provinciaId.departamentoId.nombre} #{itemReg.distId.provinciaId.nombre} #{itemReg.distId.nombre}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_latitud}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.latitud} / #{itemReg.longitud}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_verMapa}" style="text-align: center;" >
+                                    <p:commandButton icon="ui-icon-search"
+                                                    process="@this"
+                                                    value="Mapa"
+                                                    id="btnVerMapa"
+                                                    actionListener="#{sspCarteraClienteController.openDlgVerMapa(itemReg) }" >
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_referencia}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.referencia}" />
+                                </p:column>
+                             </p:dataTable>
+
+                            <p:commandButton icon="ui-icon-closethick"
+                                            value="Eliminar Seleccionados"
+                                            process="@this,dtLugarServicio,pnlDatosMapa"
+                                            update="@this,dtLugarServicio,pnlDatosMapa"
+                                            actionListener="#{sspCarteraClienteController.eliminarServiciosSeleccionados()}">
+                               <p:confirm header="Confirmación" message="¿Está seguro de borrar los registros seleccionados?" ></p:confirm>
+                           </p:commandButton>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_observacion}" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.registro.observacion }" placeholder="Ingrese Observación" id="observacionServ" style="width: 350px;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_adjuntarContrato}(*)" style="margin-left: 15px;font-weight: bold;" />
+                            <p:fileUpload id="pfileUpload" label="Adjuntar contrato"
+                                        invalidFileMessage="#{BundleBDIntegrado.sspCarteraCli_fileUpload_InvalidFileMessage}"
+                                        invalidSizeMessage="#{sspCarteraClienteController.obtenerMsjeInvalidSize()}"
+                                        fileUploadListener="#{sspCarteraClienteController.handleFileUploadAdjunto}"
+                                        mode="advanced" dragDropSupport="true"
+                                        onstart="PF('loadingDialog').show()"
+                                        oncomplete="PF('loadingDialog').hide()"
+                                        multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarteraCli_MaxSize').valor}"
+                                        auto="true" process="@this" update="@this"
+                                        allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"  >
+                                 <p:commandButton  icon="ui-icon-document"
+                                                ajax="false"
+                                                style="background-color: #F2F2F2;color: #000000;"
+                                                value="#{sspCarteraClienteController.archivo }"
+                                                process="@all"
+                                                rendered="#{sspCarteraClienteController.archivo != null and sspCarteraClienteController.archivo.length() > 0}"
+                                                onclick="this.form.target = '_blank'"
+                                                onblur="this.form.target = '_self'"
+                                                immediate="true" >
+                                      <p:fileDownload value="#{sspCarteraClienteController.cargarDocumento()}" contentDisposition="inline"  />
+                                </p:commandButton>
+                            </p:fileUpload>
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaInicioServ}(*)" style="font-weight: bold;" />
+                            <h:panelGrid columns="2" >
+                                <p:calendar id="fechaInicio"
+                                            readonlyInput="true"
+                                            locale="es"
+                                            maxdate="#{sspCarteraClienteController.maximafecha}"
+                                            showOn="button" value="#{sspCarteraClienteController.fechaInicioServicio}"
+                                            validatorMessage="#{BundleBDIntegrado.sspCarteraCli_crear_validatorMsje_fechaInicio}"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                        <p:ajax event="dateSelect" process="@this, fechaFin" update="@this, fechaFin" />
+                                </p:calendar>
+                                <pe:timePicker value="#{sspCarteraClienteController.horaInicioEvento}" mode="popup"
+                                               id="horaInicio" rendered="#{sspCarteraClienteController.blnEvento and sspCarteraClienteController.renderEvento}"
+                                               widgetVar="spnHoraInicio"  maxHour="23" maxMinute="59" locale="es" 
+                                               validatorMessage="Ingrese correctamente la hora de inicio"
+                                               showOn="button" label="Hora de inicio"/>
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaTerminoServ}" style="margin-left: 15px;font-weight: bold;" />
+                            <h:panelGrid columns="2" >
+                                <p:calendar id="fechaFin"
+                                            readonlyInput="true"
+                                            locale="es"
+                                            disabled="#{sspCarteraClienteController.fechaInicioServicio eq null}"
+                                            mindate="#{sspCarteraClienteController.minimafecha}"
+                                            showOn="button" value="#{sspCarteraClienteController.registro.fechaFin}"
+                                            validatorMessage="#{BundleBDIntegrado.sspCarteraCli_crear_validatorMsje_fechaTermino}"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>
+                                <pe:timePicker value="#{sspCarteraClienteController.horaFinEvento}" mode="popup" 
+                                               id="horaFin" rendered="#{sspCarteraClienteController.blnEvento and sspCarteraClienteController.renderEvento}"
+                                               widgetVar="spnHoraFin"  maxHour="23" maxMinute="59" locale="es"
+                                               validatorMessage="Ingrese correctamente la hora de inicio"
+                                               showOn="button" label="Hora de fin"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>                    
+                
+                <br/>
+                <h:panelGrid id="pngTodosRecursos" rendered="#{sspCarteraClienteController.renderCheckTodosRecursos()}" style="border-style: solid;border-color: #045FB4; width: 100%;border-width: 1px;">
+                    <p:panel id="pnlTodosRecursos" header="#{BundleBDIntegrado.sspCarteraCli_crear_asignarRecursos}"   >
+                        <p:selectBooleanCheckbox id="asignarRecursos"
+                                                 value="#{sspCarteraClienteController.registro.todoRecursosBoolean}"
+                                                 itemLabel="Asignar todos los recursos (Armas, vigilantes y vehículos)" >
+                            <p:ajax process="@this"
+                                    update="@form"
+                                    listener="#{sspCarteraClienteController.cambiaCheckTodosRecursos()}" />
+                        </p:selectBooleanCheckbox>
+                    </p:panel>
+                </h:panelGrid>
+                
+                <br/>
+                <h:panelGrid id="pngRelacionPersonal" rendered="#{sspCarteraClienteController.renderPnlVigilantes}" >
+                    <p:panel id="pnlRelacionPersonal" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionPersonal}"  >
+                        <h:panelGrid columns="2" >
+                            <h:panelGrid columns="5" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_vigilante}(*)" style="font-weight: bold;" />
+                                <p:commandButton icon="ui-icon-search"                                            
+                                                    process="pnlRelacionPersonal"
+                                                    update="pnlRelacionPersonal"
+                                                    value="Buscar"
+                                                    id="btnBuscarVigilante"
+                                                    actionListener="#{sspCarteraClienteController.openBuscarVigilanteSeguridad() }" >
+                                </p:commandButton>
+                            </h:panelGrid>
+                            <h:panelGrid columns="5" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombres}" rendered="#{sspCarteraClienteController.nombresSeguridad ne null}" style="font-weight: bold;" />
+                                <p:outputLabel value="#{sspCarteraClienteController.nombresSeguridad}" rendered="#{sspCarteraClienteController.nombresSeguridad ne null}"  />
+                                <p:outputLabel value="#{sspCarteraClienteController.obtenerTipoDocSeguridad()}" rendered="#{sspCarteraClienteController.nombresSeguridad ne null}" style="font-weight: bold;margin-left: 20px;" />
+                                <p:outputLabel value="#{sspCarteraClienteController.numDocSeguridad}" rendered="#{sspCarteraClienteController.nombresSeguridad ne null}" />
+                                <p:commandButton icon="ui-icon-plus"
+                                                value="#{BundleBDIntegrado.sspCarteraCli_crear_agregar}"
+                                                rendered="#{sspCarteraClienteController.nombresSeguridad ne null}"
+                                                process="@this,pnlRelacionPersonal" update="@this,pnlRelacionPersonal"
+                                                actionListener="#{sspCarteraClienteController.agregarPersonalSeguridad()}" >
+                               </p:commandButton>
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                        <p:dataTable id="dtPersonalSeguridad" value="#{sspCarteraClienteController.lstPersonalSeguridadContratoActivos}"
+                                     var="itemReg"
+                                     rowKey="#{itemReg.id}"
+                                     selection="#{sspCarteraClienteController.lstPersonalSeguridadSeleccionados}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center" />
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nombres}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nombres}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroDNI}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.doc}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroCarne}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.carne}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroLicencia}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.licencia}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton icon="ui-icon-closethick"
+                                            value="Eliminar Seleccionados"
+                                            process="@this,dtPersonalSeguridad"
+                                            update="@this,dtPersonalSeguridad"
+                                            actionListener="#{sspCarteraClienteController.eliminarPersonalSeguridadSeleccionados()}">
+                               <p:confirm header="Confirmación" message="¿Está seguro de borrar los registros seleccionados?" ></p:confirm>
+                        </p:commandButton>
+                    </p:panel>
+                </h:panelGrid>
+                
+                <br/>
+                <h:panelGrid id="pngRelacionArmas" rendered="#{sspCarteraClienteController.renderPnlArmas}" >
+                    <p:panel id="pnlRelacionArmas" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionArmas}"  >
+                        <h:panelGrid columns="13" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tipoBusqueda}(*)" style="font-weight: bold;" />
+                            <p:selectOneMenu id="tipoDocSeguridad" value="#{sspCarteraClienteController.tipoDocArmas}" >
+                                <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                                <f:selectItem itemLabel="NRO. RUA" itemValue="1"/>
+                                <f:selectItem itemLabel="SERIE" itemValue="2"/>
+                            </p:selectOneMenu>                    
+                            <p:inputText value="#{sspCarteraClienteController.documentoArma }" id="numDocSeguridad" maxlength="25" onblur="this.value = this.value.toUpperCase();" />
+                            <p:commandButton value="Buscar" 
+                                             actionListener="#{sspCarteraClienteController.buscarDatosArma()}"
+                                             process="@this,pnlRelacionArmas"
+                                             update="pnlRelacionArmas"
+                                             icon="ui-icon-search" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_rua}" style="font-weight: bold;margin-left: 15px;" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.tarjetaPropiedad.armaId.nroRua}" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_serie}" style="font-weight: bold;margin-left: 15px;" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.tarjetaPropiedad.armaId.serie}" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tipoArma}" style="font-weight: bold;" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.tarjetaPropiedad.armaId.tipoArmaId.nombre}" rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}" />
+                            <p:commandButton icon="ui-icon-plus"
+                                                value="#{BundleBDIntegrado.sspCarteraCli_crear_agregar}"
+                                                rendered="#{sspCarteraClienteController.tarjetaPropiedad ne null}"
+                                                process="@this,pnlRelacionArmas" update="@this,pnlRelacionArmas"
+                                                actionListener="#{sspCarteraClienteController.agregarArmas()}" >
+                            </p:commandButton>
+                        </h:panelGrid>
+                        <p:dataTable id="dtArmas" value="#{sspCarteraClienteController.listadoArmasContratoActivo}"
+                                     var="itemReg"
+                                     rowKey="#{itemReg.id}"
+                                     selection="#{sspCarteraClienteController.lstArmasSeleccionadas}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center" />
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_rua}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.nroRua}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_serie}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.serie}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_modelo}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.modeloId.modelo}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_tipoArma}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.tipoArmaId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_calibre}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.calibreId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_marca}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.marcaId.nombre}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton icon="ui-icon-closethick"
+                                            value="Eliminar Seleccionados"
+                                            process="@this,dtArmas"
+                                            update="@this,dtArmas"
+                                            actionListener="#{sspCarteraClienteController.eliminarArmasSeleccionados()}">
+                               <p:confirm header="Confirmación" message="¿Está seguro de borrar los registros seleccionados?" ></p:confirm>
+                        </p:commandButton>
+                    </p:panel>
+                </h:panelGrid>
+                
+                <br/>
+                <h:panelGrid id="pngRelacionvehiculos" rendered="#{sspCarteraClienteController.renderPnlVehiculos}" >
+                    <p:panel id="pnlRelacionvehiculos" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionVehiculos}"  >
+                        <h:panelGrid columns="5" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tarjetaPropiedad}" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.vehiculo.tarjetaPropiedad }" id="tarjetaPropiedadVehiculo" maxlength="20" onblur="this.value = this.value.toUpperCase();" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_marca}" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.vehiculo.marca }" id="marcaVehiculo" maxlength="50" onblur="this.value = this.value.toUpperCase();" />
+                            <p:outputLabel value=" " />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_placa}(*)" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.nroPlaca }" id="placaVehiculo" maxlength="50" requiredMessage="#{BundleBDIntegrado.sspCarteraCli_crear_requiredMessage_placa}" validatorMessage="#{BundleBDIntegrado.sspCarteraCli_crear_requiredMessage_placa}" onblur="this.value = this.value.toUpperCase();" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_certificadoSUCAMEC}" style="font-weight: bold;" />
+                            <p:inputText value="#{sspCarteraClienteController.vehiculo.certificado }" id="certificadoVehiculo" maxlength="50" onblur="this.value = this.value.toUpperCase();" />
+                            <p:commandButton icon="ui-icon-plus"
+                                                value="#{BundleBDIntegrado.sspCarteraCli_crear_agregar}"
+                                                process="@this,pnlRelacionvehiculos" update="@this,pnlRelacionvehiculos"
+                                                actionListener="#{sspCarteraClienteController.agregarVehiculo()}" >
+                            </p:commandButton>
+                        </h:panelGrid>
+                        <p:dataTable id="dtVehiculos" value="#{sspCarteraClienteController.listadoVehiculosContratoActivo}"
+                                     var="itemReg"
+                                     rowKey="#{itemReg.id}"
+                                     selection="#{sspCarteraClienteController.lstVehiculosSeleccionados}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center" />
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_tarjetPropiedad}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.tarjetaPropiedad}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_marca}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.marca}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_placa}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.placa}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_certificadoSUCAMEC}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.certificado}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton icon="ui-icon-closethick"
+                                            value="Eliminar Seleccionados"
+                                            process="@this,dtVehiculos"
+                                            update="@this,dtVehiculos"
+                                            actionListener="#{sspCarteraClienteController.eliminarVehiculosSeleccionados()}">
+                               <p:confirm header="Confirmación" message="¿Está seguro de borrar los registros seleccionados?" ></p:confirm>
+                        </p:commandButton>
+                    </p:panel>
+                </h:panelGrid>
+
+                <br/>
+                <br />
+                <h:panelGrid columns="2" >
+                    <p:commandButton id="botonGuardar" 
+                                     icon="ui-icon-disk" 
+                                     update="@all"
+                                     action="#{sspCarteraClienteController.editar()}" 
+                                     value="#{BundleBDIntegrado.Guardar}"/>
+                    <p:commandButton icon="ui-icon-closethick"
+                                     action="#{sspCarteraClienteController.prepareList() }"
+                                     value="Cancelar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" update="@all"  />
+                    <br/><br/>
+                </h:panelGrid>
+            </h:form>
+            
+            <script src="#{sspCarteraClienteController.obtenerKeyGoogle()}" type="text/javascript"></script>
+            <script type="text/javascript" src="#{sspCarteraClienteController.obtenerApiGoogle()}"></script>
+</ui:composition>

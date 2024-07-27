@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{bundleEpp.BuscarConsultaGuiasTitulo}" rendered="#{geppConsultaGuiasController.estado == 'BUSCAR'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{geppConsultaGuiasController.estado == 'BUSCAR'}">
+            <p:focus context="buscarForm" />
+            <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+                <h:panelGrid columns="5">
+                    <p:outputLabel id="buscarFiltro" value="#{bundleEpp.Filtro}" />
+                    <p:selectOneMenu id="tipoId" value="#{geppConsultaGuiasController.tipo}" style="width: 240px;" >
+                        <f:selectItem itemValue="guia" itemLabel="NUMERO DE GUÍA"/>
+                        <f:selectItem itemValue="rg" itemLabel="RESOLUCION DE GERENCIA"/>
+                        <f:selectItem itemValue="expediente" itemLabel="EXPEDIENTE"/>
+                    </p:selectOneMenu>
+                    <p:inputText  value="#{geppConsultaGuiasController.filtro}" size="40" placeholder="#{bundleEpp.PhCriterio}"/>
+                    <p:commandButton id="botonBuscar" value="#{bundleEpp.Buscar}" icon="ui-icon-search" actionListener="#{geppConsultaGuiasController.buscar}"  update=":buscarForm" />&nbsp;
+                </h:panelGrid>
+                <h:panelGroup rendered="#{geppConsultaGuiasController.resultados == null}">
+                    <br/><br/>
+                    <h:outputLabel value="#{bundleEpp.Instrucciones}" style="font-weight: bold"/><br/><br/>
+                    <h:outputLabel value="#{bundleEpp.InstruccionesGeppGuias}" escape="false"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{geppConsultaGuiasController.resultados != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{bundleEpp.Resultados}" escape="false" />
+                        <h:commandLink style="float: right; clear: both;">
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{bundleEpp.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatable" fileName="BusquedaAreas" />
+                        </h:commandLink>
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{geppConsultaGuiasController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleEpp.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleEpp.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleEpp.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_NOMBRE}" sortBy="#{item.NOMBRE}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_NOMBRE}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NOMBRE == null? 'PENDIENTE': item.NOMBRE}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_NRO_RG}" sortBy="#{item.NRO_RG}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_NRO_RG}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NRO_RG == null? 'PENDIENTE': item.NRO_RG}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_NRO_EXPEDIENTE}" sortBy="#{item.NRO_EXPEDIENTE}" width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_NRO_EXPEDIENTE}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NRO_EXPEDIENTE}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_NRO_GT}" sortBy="#{item.NRO_GT}">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_NRO_GT}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NRO_GT}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_FECHA_INI}" sortBy="#{item.FECHA_INI}" width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_FECHA_INI}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FECHA_INI}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.ConsultaGuiasTitle_FECHA_FIN}" sortBy="#{item.FECHA_FIN}" width="10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleEpp.ConsultaGuiasTitle_FECHA_FIN}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FECHA_FIN}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleEpp.Opciones}" exportable="false" width="5%">
+                            <p:commandButton value="#{bundleEpp.Ver}" ajax="false" onclick="this.form.target = '_blank'" onblur="this.form.target = '_self'">
+                                <p:fileDownload value="#{geppConsultaGuiasController.archivoGuia}" contentDisposition="inline"/>
+                            </p:commandButton>
+                            <h:outputText value=" "/>
+                        </p:column>                                 
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

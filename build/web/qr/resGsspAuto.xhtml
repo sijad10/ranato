@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de Licencias - GAMAC</title>
+            </f:facet>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <style>
+                .celdaCentrada {
+                    text-align: center;
+                }
+            </style>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGrid columnClasses="celdaCentrada" columns="1" style="width: 80%; background: white;" cellpadding="5" >
+                        <h:graphicImage name="imagenes/logo_sucamec_h.png"/>
+                        <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                    </h:panelGrid>
+                    
+                    <br/>
+                    
+                    <h:panelGrid columns="1" style="width: 80%; background: white; padding: 20px; font-size: medium;">
+                        <div style="font-weight: bold; text-align: center; font-size: 22px;">Solicitud de Autorizacion para Prestación de Servicios de Seguridad</div>
+                    </h:panelGrid>    
+                    
+                    
+                    <h:panelGrid id="panelGrid" columns="1" rendered="#{verificadorQRController.registroMap != null}" style="width: 80%; background: white; padding: 10px; font-size: medium;">
+                                             
+                       <p:panel header="DATOS DE LA RESOLUCIÓN" style="font-size: 12px; width: 100%; text-align: center;" >
+
+                            <table border="0" style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">Resolución :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;">#{verificadorQRController.registroMap.RESOLUCION_NUM}</td>
+                                    <td style="text-align: left;">Fecha Resolución :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.RESOLUCION_FECHA}"  ><f:convertDateTime pattern="dd/MM/yyyy" /></p:outputLabel>  </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="text-align: left;">Fecha Inicio :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.RESOLUCION_FECHAINI}"  ><f:convertDateTime pattern="dd/MM/yyyy" /></p:outputLabel>  </td>
+                                    <td style="text-align: left;">Fecha Fin :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.RESOLUCION_FECHAFIN}"  ><f:convertDateTime pattern="dd/MM/yyyy" /></p:outputLabel>  </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="text-align: left;">Estado :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;">#{verificadorQRController.registroMap.VIGENCIA}</td>
+                                    <td style="text-align: left;"></td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"></td>
+                                </tr>
+                                
+                            </table>
+
+                        </p:panel>
+                        
+                         <br/>
+                         
+                        <p:panel header="DATOS DEL ADMINISTRADO" style="font-size: 12px; width: 100%; text-align: center;" >
+
+                            <table border="0" style="width: 100%;">
+                                <tr>
+                                    <td style="text-align: left;">Administrado :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.EMPRESA_NOMBRE}"  ></p:outputLabel>  </td>
+                                    <td style="text-align: left;">Modalidad :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.TIPO_PRO_NOMBRE}"  ></p:outputLabel>  </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="text-align: left;">#{verificadorQRController.registroMap.TIPO_DOCUMENTO} :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.EMPRESA_NUMDOC}"  ></p:outputLabel>  </td>
+                                    <td style="text-align: left;">Expediente :</td>
+                                    <td style="text-align: left; font-weight: bold; text-transform: uppercase;"><p:outputLabel value="#{verificadorQRController.registroMap.NRO_EXPEDIENTE}"  ></p:outputLabel>  </td>
+                                </tr>
+                                
+                            </table>
+
+                        </p:panel>
+                        
+                        <br/>
+                        <br/>
+                        
+                        
+                    </h:panelGrid>
+                    
+                    <h:panelGroup layout="block" rendered="#{verificadorQRController.registroMap == null}" style="color: red; font-size: large; font-weight: bold; width: 80%; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

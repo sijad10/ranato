@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="creaCitaTramForm" >
+        <script type="text/javascript">
+            //<![CDATA[
+            var disabledDays = #{citasTramiteController.feriadosStrList};
+            function disableAllTheseDays(date) {
+                var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+                var flag = true;
+                for (i = 0; i < disabledDays.length; i++) {
+                    if ($.inArray((m + 1) + '-' + d + '-' + y, disabledDays) != -1) {
+                        flag = false;
+                        //return [false];
+                    }
+                }
+                var day = date.getDay();
+                if (day == 0 || day == 6) {
+                    flag = false;
+                }
+                  
+                var sede = $("select[id*='sedeId1']").val();
+                if (sede == "51") {
+                    if (m == 7 && d == 16 && y == 2021) {
+                        flag = false;
+                    }
+                }
+                return [flag];
+            }
+
+            function disableAllTheseDaysZonal(date) {
+                var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+                var flag = true;
+                for (i = 0; i < disabledDays.length; i++) {
+                    if ($.inArray((m + 1) + '-' + d + '-' + y, disabledDays) != -1) {
+                        flag = false;
+                        //return [false];
+                    }
+                }
+                var day = date.getDay();
+                if (day == 0 || day == 6 || day == 1 || day == 3 || day == 5) { //|| day == 2 
+                    flag = false;
+                }
+
+                var sede = $("select[id*='sedeId1']").val();
+                if (sede == "52" || sede == "51" || sede == "55" || sede == "56"
+                        || sede == "54" || sede == "58" || sede == "53" || sede == "57") {
+                    if (m == 11 && d == 31 && y == 2021) {
+                        flag = false;
+                    }
+                }
+                if (sede == "51") {
+                    if (m == 7 && d == 16 && y == 2021) {
+                        flag = false;
+                    }
+                }
+                return [flag];
+            }
+
+            var enabled1o3Jueves = #{citasTramiteController.validarTacna};
+            function disableAllTheseDaysTacna(date) {
+                var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+                var flag = false;
+                for (i = 0; i < disabledDays.length; i++) {
+                    if ($.inArray((m + 1) + '-' + d + '-' + y, disabledDays) == -1) {
+                        flag = true;
+                        //return [false];
+                    }
+                }
+                for (i = 0; i < enabled1o3Jueves.length; i++) {
+                    if ($.inArray((m + 1) + '-' + d + '-' + y, enabled1o3Jueves) == -1) {
+                        flag = false;
+                        //return [false];
+                    }
+                }
+                return [flag];
+            }
+            //]]>
+        </script>
+
+        <p:wizard showNavBar="false" step="#{citasTramiteController.paso}" >
+
+            <p:tab id="paso1" title="1er Paso">
+                <p:panel id="panelPaso1" header="#{bundleCitas.TurnoLabel_fechaHora}" style="color:red">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="Sub Trámite : " class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu value="#{citasTramiteController.registro.subTramiteId}" required="true" requiredMessage="El sub tipo de trámite es obligatorio" style="font-size: medium;">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasTramiteController.listaSubTramites}" />
+                                <p:ajax event="change" listener="#{citasGestionController.seleccionarSubTramite}" partialSubmit="true" process="@this" update="panelPaso1" oncomplete=""/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_sede}" class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-10 ui-lg-3">
+                            <p:selectOneMenu id="sedeId1" autoWidth="false" value="#{citasTramiteController.registro.tipoSedeId}"
+                                             required="true" disabled="false"
+                                             requiredMessage="#{bundleCitas.CitaArmas_paso2Sede_Msg}">
+                                <f:selectItem itemLabel="---" itemValue=""/>
+                                <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{citasTramiteController.listarSedes()}" />
+                                <p:ajax event="change" listener="#{citasTramiteController.seleccionarSede}" partialSubmit="true" process="sedeId1" update="panelPaso1" oncomplete="selectFecha()"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_fecha}" for="fechaTurnoId" class="txtLabel"
+                                           rendered="#{citasTramiteController.visibleCalendarCentral or citasTramiteController.visibleCalendarZonal or citasTramiteController.visibleCalendarTacna}"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-3 ui-lg-2">
+                            <p:calendar id="fechaTurnoId" required="true"
+                                        rendered="#{citasTramiteController.visibleCalendarCentral}"
+                                        requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}"
+                                        value="#{citasTramiteController.registro.fechaTurno}" locale="es"
+                                        showOn="button"
+                                        readonlyInput="true"
+                                        mindate="#{citasTramiteController.fechaIni}"
+                                        pattern="#{bundleCitas.FormatoFecha}"
+                                        beforeShowDay="disableAllTheseDays"
+                                        disabledWeekends="true"
+                                        maxdate="#{citasTramiteController.maxFecha}" class="cal-70px">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                <p:ajax event="dateSelect" listener="#{citasTramiteController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="fechaTurnoId sedeId1" oncomplete="selectFecha()"
+                                        update="creaCitaTramForm:pnlDtProg"/>
+                            </p:calendar>
+                            <p:calendar id="fechaTurnoId2" required="true"
+                                        rendered="#{citasTramiteController.visibleCalendarZonal}"
+                                        requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}"
+                                        value="#{citasTramiteController.registro.fechaTurno}" locale="es"
+                                        showOn="button"
+                                        readonlyInput="true"
+                                        mindate="#{citasTramiteController.fechaIni}"
+                                        pattern="#{bundleCitas.FormatoFecha}"
+                                        beforeShowDay="disableAllTheseDays"
+                                        disabledWeekends="true"
+                                        maxdate="#{citasTramiteController.maxFechaZonal}" class="cal-70px">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                <p:ajax event="dateSelect" listener="#{citasTramiteController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="fechaTurnoId2 sedeId1" oncomplete="selectFecha()"
+                                        update="creaCitaTramForm:pnlDtProg"/>
+                            </p:calendar>
+                            <p:calendar id="fechaTurnoId3" required="true"
+                                        rendered="#{citasTramiteController.visibleCalendarTacna}"
+                                        requiredMessage="#{bundleCitas.TurnoReqMsg_fechaTurno}"
+                                        value="#{citasTramiteController.registro.fechaTurno}" locale="es"
+                                        showOn="button"
+                                        readonlyInput="true"
+                                        mindate="#{citasTramiteController.fechaIni}"
+                                        pattern="#{bundleCitas.FormatoFecha}"
+                                        beforeShowDay="disableAllTheseDays"
+                                        disabledWeekends="true"
+                                        maxdate="#{citasTramiteController.maxFechaZonal}" class="cal-70px">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                                <p:ajax event="dateSelect" listener="#{citasTramiteController.cargarTurnosDisponibles}" 
+                                        partialSubmit="true" process="fechaTurnoId3 sedeId1" oncomplete="selectFecha()"
+                                        update="creaCitaTramForm:pnlDtProg"/>
+                            </p:calendar>                            
+                        </div>
+
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-12 ui-lg-7">
+                            <h:panelGrid id="pnlDtProg" style="margin:0!important">
+                                <p:dataTable id="dtProgramacion" value="#{citasTramiteController.listaHoras}"
+                                             rendered="#{citasTramiteController.registro.fechaTurno != null}"
+                                             var="item" widgetVar="progTable"
+                                             emptyMessage="#{bundleCitas.MensajeNoResultados}" 
+                                             rowKey="#{item.id}">
+                                    <p:ajax event="rowSelectRadio" listener="#{citasTramiteController.onRowSelectHora}" process="dtProgramacion" update="dtProgramacion" partialSubmit="true" />
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_hora}" style="" class="ui-lg-5" selectRow="false">
+                                        <h:outputText value="#{item.hora}" />
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_cupos}" style="" class="ui-lg-5" selectRow="false" >
+                                        <h:outputText value="#{item.cantCuposAct}"/>
+                                    </p:column>
+                                    <p:column headerText="#{bundleCitas.TurnoLabel_seleccionar}" selectionMode="single" style="text-align:center" class="ui-lg-2"  
+                                              rendered="#{citasTramiteController.mostrarSelectorHora(item)}" />
+                                </p:dataTable>
+                            </h:panelGrid>                                        
+                        </div>
+                    </div>
+
+                </p:panel>
+
+                <h:panelGrid id="pnlFechaId" columns="4" cellspacing="5">
+                </h:panelGrid>
+
+                <div class="ui-g">
+                    <div class="ui-g-10"></div>
+                    <div class="ui-g-2" style="">
+                        <p:commandButton id="botonSiguiente1" icon="ui-icon-seek-next" iconPos="right" update="paso3" oncomplete="selectPasos()"
+                                         actionListener="#{citasTramiteController.siguiente('paso12')}" value="Siguiente" process="@this paso1"/>                                    
+                    </div>
+                </div>
+
+            </p:tab>           
+
+            <p:tab id="paso3" title="2do Paso">
+                <p:panel id="panelPaso3" header="2.1 Solicitud" rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_REQ'}">
+                    
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:outputLabel value="Nro Solicitud : " class="txtLabel"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:inputText id="nroSolicitud" value="#{citasTramiteController.nroSolicitud}" />
+                            </div>
+                            <div class="ui-g-12 ui-md-2 ui-lg-1">
+                                <p:commandButton value="Buscar" actionListener="#{citasTramiteController.buscarSolicitudes()}" update="dtExpe" />
+                            </div>
+                        </div>        
+                        <p:dataTable id="dtExpe" value="#{citasTramiteController.listaSolExpedientes}"
+                                     var="item" widgetVar="teoTable" rowIndexVar="fila"
+                                     selection="#{citasTramiteController.listaSolExpedientesSelected}"
+                                     emptyMessage="#{bundle.MensajeNoResultados}"
+                                     style="width: 100%;"
+                                     editable="true" editMode="cell"
+                                     rowKey="#{item.id}">
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center" >
+                                
+                            </p:column>
+                            <p:column headerText="Procedimiento" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.tupaProcedimientoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Solicitud" width="100px">
+                                <h:outputText value="#{item.numeroSolicitud}"/>
+                            </p:column>
+                            <p:column headerText="Expediente" width="100px" >
+                                <h:outputText value="#{item.nroExpediente}"/>
+                            </p:column>
+                            <p:column headerText="Estado" width="100px">
+                                <h:outputText value="#{item.estadoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Área" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.areaId.nombre}"/>
+                            </p:column> 
+                            
+                        </p:dataTable>
+                       
+                </p:panel>
+
+                
+                
+                <p:panel id="panelPaso23" header="2.1 Indique el motivo de su visita a la SUCAMEC" rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_OTR'}">
+                    <p:inputTextarea value="#{citasTramiteController.registro.motivoTurno}" maxlength="500" style="width: 100%" required="true"  requiredMessage="Ingrese motivo de su visita a la SUCAMEC"/>
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior3" icon="ui-icon-seek-prev" iconPos="left" update="creaCitaTramForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasTramiteController.siguiente('paso1')}" value="Anterior" process="@this"/>
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonSiguiente3" icon="ui-icon-seek-next" iconPos="right" update="paso3"
+                                         oncomplete="if(args.validationFailed){updateFalied();} else { updateOk(); } selectPasos();"
+                                         value="Siguiente" process="@this paso3"/>
+                        <p:remoteCommand name="updateFalied" process="paso3" update="mensajesGrowl" /> 
+                        <p:remoteCommand name="updateOk" actionListener="#{citasTramiteController.siguiente('paso34')}" process="paso3" update="mensajesGrowl paso3" oncomplete="selectPasos();" /> 
+                    </div>
+                </div>
+
+            </p:tab>
+
+            <p:tab id="paso4" title="3er Paso">
+
+                <p:panel id="panelPaso4" header="RESUMEN DE LA CITA" >
+                    <div class="ui-g" style="margin-bottom: 5px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="Por favor, verifique los datos ingresados " style="color: red"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">                        
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.CitaArmas_paso3Sede_Label} "/>
+                            <p:outputLabel value="#{citasTramiteController.registro.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                        </div> 
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_fechaProgra4}"/>
+                            <p:outputLabel value="#{citasTramiteController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} "/>
+                            <p:outputLabel value="#{citasTramiteController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel value="Motivo para asistir a SUCAMEC: " rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_OTR'}"/>
+                            <p:outputLabel value="#{citasTramiteController.registro.motivoTurno}" rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_OTR'}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">                        
+                        <p:dataTable id="dtExpe2" value="#{citasTramiteController.listaSolExpedientesSelected}"
+                                     rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_REQ'}"
+                                     var="item" widgetVar="teoTable" rowIndexVar="fila"
+                                     emptyMessage="#{bundle.MensajeNoResultados}"
+                                     style="width: 100%;"
+                                     editable="true" editMode="cell"
+                                     rowKey="#{item.id}">
+                            <p:column headerText="Procedimiento" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.tupaProcedimientoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Expediente" width="100px" >
+                                <h:outputText value="#{item.nroExpediente}"/>
+                            </p:column>
+                            <p:column headerText="Área" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.areaId.nombre}"/>
+                            </p:column> 
+                        </p:dataTable>
+                    </div>
+
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} " style="color:red; font-size: x-large"/>
+                            <p:outputLabel value="#{citasTramiteController.horaProgra}" style="color:red; font-size: x-large; font-weight: bold"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.TurnoLabel_tomeNota4}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <u><p:outputLabel value="#{bundleCitas.TurnoLabel_condiciones}"/></u><br/>
+                            <p:outputLabel value="1. Debe presentarse 5 minutos antes de la hora de inicio"/><br/>
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_nota2}"/><br/>
+                            <p:outputLabel value="3. Para poder ingresar debes contar con mascarilla y protector facial" style="color:red"/><br/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 8px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <b><p:outputLabel value="#{bundleCitas.TurnoLabel_decJur}" style="color:red"/></b>
+                        </div>
+                    </div>
+                    <h:panelGrid columns="1" width="100%" >
+                        <h:panelGrid id="gridCaptcha" columns="2" >
+                            <p:graphicImage id="imgCaptcha" value="#{citasTramiteController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                            <p:commandButton id="botonCaptcha" icon="ui-icon-refresh" actionListener="#{citasTramiteController.captcha.generarCaptcha()}" value="Cambiar captcha" partialSubmit="true" process="@this" update="gridCaptcha" style="width: 90px; height: 50px;"/>
+                            <p:outputLabel for="textoCaptcha" value="Ingrese el texto de la imagen:" />
+                            <p:inputText id="textoCaptcha" value="#{citasTramiteController.captcha.textoInput}" required="true" requiredMessage="Por favor ingrese el texto del Captcha" validatorMessage="El texto ingresado en el captcha no es válido" maxlength="5" style="width: 80px;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="1">
+                            <p:selectBooleanCheckbox id="terminos" value="#{citasTramiteController.terminos}" itemLabel="#{bundleCitas.AceptoTerminos}" required="true" requiredMessage="Debe aceptar los términos y condiciones" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                </p:panel>
+
+                <div class="ui-g">
+                    <div class="ui-g-3" style="">
+                        <p:commandButton id="botonAnterior5" icon="ui-icon-seek-prev" iconPos="left" update="creaCitaTramForm" oncomplete="selectPasos()"
+                                         actionListener="#{citasTramiteController.siguiente('paso43')}" value="Anterior" process="@this" />
+                    </div>
+                    <div class="ui-g-6"></div>
+                    <div class="ui-g-3" style="">
+                        <p:commandButton icon="ui-icon-check" iconPos="right" update="creaCitaTramForm" oncomplete="selectPasos()" style="height: 50px;font-size: medium;"
+                                         actionListener="#{citasTramiteController.crear}" value="#{bundleCitas.TurnoButton_generarTurno}" process="@this,gridCaptcha,terminos"/>
+                    </div>
+                </div>                 
+            </p:tab>
+
+            <p:tab id="paso5" title="4to Paso">
+                <p:panel id="panelPaso5" header="CITA GENERADA" >
+                    <div class="ui-g" style="margin-bottom: 6px">                        
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_sede4} "/>
+                            <p:outputLabel value="#{citasTramiteController.registro.tipoSedeId.nombre}" style="font-weight: bold;"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_fechaProgra4} "/>
+                            <p:outputLabel value="#{citasTramiteController.registro.fechaTurno}" style="font-weight: bold;">
+                                <f:convertDateTime pattern="#{bundleCitas.FormatoFecha}" />
+                            </p:outputLabel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} "/>
+                            <p:outputLabel value="#{citasTramiteController.horaProgra}" style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel value="Motivo para asistir a SUCAMEC: " rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_OTR'}"/>
+                            <p:outputLabel value="#{citasTramiteController.registro.motivoTurno}" rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_OTR'}"  style="font-weight: bold;"/>
+                        </div>
+                    </div>
+                    <div class="ui-g" style="margin-bottom: 5px">                        
+                        <p:dataTable id="dtExpe3" value="#{citasTramiteController.listaSolExpedientesSelected}"
+                                     rendered="#{citasTramiteController.registro.getSubTramiteId().getCodProg()=='TP_TRAM_REQ'}"
+                                     var="item" widgetVar="teoTable" rowIndexVar="fila"
+                                     emptyMessage="#{bundle.MensajeNoResultados}"
+                                     style="width: 100%;"
+                                     editable="true" editMode="cell"
+                                     rowKey="#{item.id}">
+                            <p:column headerText="Procedimiento" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.tupaProcedimientoId.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Expediente" width="100px" >
+                                <h:outputText value="#{item.nroExpediente}"/>
+                            </p:column>
+                            <p:column headerText="Área" width="100px">
+                                <h:outputText value="#{item.procedimientoTupaId.areaId.nombre}"/>
+                            </p:column> 
+                        </p:dataTable>
+                    </div>
+                    
+                    <div class="ui-g" style="margin-bottom: 6px">
+                        <div class="ui-g-12 ui-md-12 ui-lg-12">
+                            <p:outputLabel value="#{bundleCitas.TurnoLabel_horaProgra4} " style="color:red; font-size: xx-large"/>
+                            <p:outputLabel value="#{citasTramiteController.horaProgra}" style="color:red; font-size: xx-large; font-weight: bold"/>
+                        </div>
+                        
+                    </div>
+                </p:panel>
+
+            </p:tab>
+
+        </p:wizard>
+
+        <div class="ui-g">
+            <div class="ui-g-2">
+                <p:commandButton id="botonLimpiar" icon="ui-icon-trash" iconPos="left" update="@all" actionListener="#{citasGestionController.restaurarCitasTram()}" value="Limpiar" process="@this"/>
+            </div>
+        </div>
+
+    </h:form>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ui-dialog-titlebar").attr("style", "padding:8px!important; margin:0!important");
+            //$(".ui-layout-unit-header").attr("style", "border: 1px solid #1f89ce; color: #fff; background: #2399e5;");
+            //$(".ui-state-disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none;");
+            //$("textarea:disabled").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            //$("select:disabled").parent().parent().children("label, .ui-selectonemenu-trigger").attr("style", "opacity: .80; filter: Alpha(Opacity=80); background-image: none; background-color:#EEEEEE");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".contRuc, .contSRuc").hide();
+            optimizaVista();
+        });
+
+        function optimizaVista() {
+            $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content'], div[id*='pnlTipoLicencia_content']").attr("style", "padding:0px!important");
+            $("div[id*='pnlVoucherTemp_content'], div[id*='pnlgComprobante_content'], div[id*='pnlTipoLicencia_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+
+        function selectTab6() {
+            $("div[id*='panelPaso1_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            $(".txtLabel").attr("style", "line-height: 190%");
+            $("a[href*='tab6']").parent().show("fast");
+            optimizaVista();
+        }
+
+        function selectPasos() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content'], div[id*='panelPaso3_content'], div[id*='panelPaso4_content'], div[id*='panelPaso5_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function selectFecha() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function buscaRec() {
+            $("div[id*='panelPaso1_content'], div[id*='panelPaso2_content']").attr("style", "padding:2px!important");
+            $("div[id*='panelPaso1_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+            optimizaVista();
+        }
+
+        function runScript(e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        }
+
+    </script>
+
+</ui:composition>

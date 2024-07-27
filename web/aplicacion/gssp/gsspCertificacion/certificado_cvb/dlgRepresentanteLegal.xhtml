@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:dialog id="dlgRepresentanteLegal" widgetVar="wvDlgRepresentanteLegal" closable="true" header="Registro de Persona como responsable legal" 
+              resizable="false" modal="true" appendTo="@(body)" onShow="showDlgMarcoDialogRepresentante()" width="56%">
+        <h:form id="frmCuerpoPersona">
+            
+            <div class="card">
+          
+                <p:panel id="pnl_Persona_Title" header="Datos de la persona" >
+                    <div>                        
+                        <div class="ui-g">
+
+                            <div class="ui-g-3">
+                                <div class="field">
+                                    <p:outputLabel value="Tipo Documento: * " />
+                                    <p:selectOneMenu id="cboPersonaTipDoc" value="#{gsspSolicitudCertificacionCVBController.cboDlgTipoDocSelected}">   
+                                        <f:selectItem itemLabel="---------------------------" itemValue="#{null}"/>
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{gsspSolicitudCertificacionCVBController.cboDlgTipoDocLista}"/>
+                                        <p:ajax event="change" update="@this,pnl_Persona_Title" listener="#{gsspSolicitudCertificacionCVBController.obtenerNumCaractDocumentoRepresentanteLegal()}" />
+                                    </p:selectOneMenu>     
+                                </div>
+                            </div>
+
+                            <div class="ui-g-4">
+                                <div class="field">
+                                    <p:outputLabel value="Número: *" />
+                                    <div class="ui-inputgroup">
+                                            <p:inputText id="txtPersonaNumDoc" value="#{gsspSolicitudCertificacionCVBController.txtDlgNroDoc}"  style="font-weight: bold;" />
+                                        <p:commandButton id="btnBuscarDNIRepresentante" 
+                                                         icon="ui-icon-search"  
+                                                         process="@this, frmCuerpoPersona"
+                                                         update="@this, frmCuerpoPersona"
+                                                         actionListener="#{gsspSolicitudCertificacionCVBController.BuscarPersonaRepresentanteLegal()}"
+                                                         style="display: block; width: 30px" 
+                                                         />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                                                
+                        <div class="ui-g">
+                            <div class="ui-g-12"><hr style="background-color: #bdbdbd; height: 1px; border: 0;"/></div>
+                        </div>
+                        
+                        <div class="ui-g">
+                            <div class="ui-g-3">
+                                <div class="field">
+                                    <p:outputLabel value="Nombres: * " />
+                                    <p:inputText id="txtfrmRLNombres" value="#{gsspSolicitudCertificacionCVBController.txtDlgNombre}" style="width: 100%;" />
+                                </div>
+                            </div>
+                            <div class="ui-g-3">
+                                <div class="field">
+                                    <p:outputLabel value="Apellido Paterno * " />
+                                    <p:inputText id="txtfrmRLApePat"  style="width: 100%;" value="#{gsspSolicitudCertificacionCVBController.txtDlgApePat}" />
+                                </div>
+                            </div>
+                            <div class="ui-g-3">
+                                <div class="field">
+                                    <p:outputLabel value="Apellido Materno * " />
+                                    <p:inputText id="txtfrmRLApeMat"  style="width: 100%;"  value="#{gsspSolicitudCertificacionCVBController.txtDlgApeMat}" />
+                                </div>
+                            </div>
+                            <div class="ui-g-2">
+                                <div class="field" >
+                                    <p:outputLabel value="Fecha Nacimiento * " />
+                                    <p:calendar id="txtfrmRLFechaNac" styleClass="dateTimeStyle" showOn="button" pattern="dd/MM/yyyy" value="#{gsspSolicitudCertificacionCVBController.txtDlgAFechaNac}" >                                
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </p:calendar>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>  
+                </p:panel>
+            
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:commandButton id="registrar"  actionListener="#{gsspSolicitudCertificacionCVBController.btnRegistrarPersonaRL()}" 
+                                     value="Registrar" icon="ui-icon-disk" update="@form"  process="@form" iconPos="left" />
+                         &nbsp;
+                        <p:commandButton id="btnCancelar"  actionListener="#{gsspSolicitudCertificacionCVBController.fnCancelarDlgRL()}"
+                                     icon="ui-icon-closethick" value="Cancelar" update="@none" 
+                                     process="@this"/>
+                    </div>
+                </div>
+       
+                
+                
+                </div>
+        </h:form>
+    </p:dialog>
+
+    <script type="text/javascript">
+        function showDlgMarcoDialogRepresentante() {
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgRepresentanteLegal'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+    </script>
+    
+    <style>
+        .dateTimeStyle input {
+            width:70%;
+        }
+        
+        #dlgRepresentanteLegal{
+            width: 80% !important;
+            max-width: 1000px;
+        }
+    </style>
+
+</ui:composition>
+
+

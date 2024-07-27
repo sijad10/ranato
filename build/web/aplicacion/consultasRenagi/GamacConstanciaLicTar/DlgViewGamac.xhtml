@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <style>
+        /*.colorPopup{
+            border: 10px;border-style: outset;background-color: #f1f1f1; border-color:gray;
+        }*/
+        .txtContenido{font-size: 103%!important; color:#141414; font-weight: bold;}
+        .txtMensaje{font-size: 110%!important; color:#ed1c24; font-weight: bold;}
+        .txtConfirmar{font-size: 125%!important; color:#156090; font-weight: bold;}        
+    </style>
+
+    <p:dialog id="dlgViewArmGamac" widgetVar="wvDlgViewArmGamac" closable="true" width="90%" onShow="updateDlgViewArmGam();"
+              header="DETALLE DEL ARMA DE FUEGO" resizable="false" modal="true" appendTo="@(body)" 
+              position="center top">
+        <div class="ui-fluid">
+
+            <h:form id="dlgViewArmGamacForm">
+                <p:focus context="dlgViewArmGamacForm" />
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3 ui-lg-2" style="text-align: center;">
+                        <p:graphicImage value="#{gamacConstanciaLicTarController.foto}" width="180" height="240" cache="false" 
+                                        style="border-color: #000; border-width: 2px; border-style: solid; text-align: center;"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-9 ui-lg-10">
+                        <p:panel id="pnl1" header="Datos de la Tarjeta de Propiedad" style="margin-bottom:8px;" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Licencia de uso vinculada: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.licenciaId.nroLicencia}" class="txtContenido"/>
+                                    
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-9">
+                                    <p:outputLabel value="Propietario: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.registro.DOC_PROPIETARIO} - #{dcGamacLicenciasController.registro.PROPIETARIO}" class="txtContenido"/>                                    
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Expediente: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.nroExpediente}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-9">
+                                    <p:outputLabel value="Procedimiento: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.expTar.idProceso.nombre}" class="txtContenido"/>                                    
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Fecha de Emisión: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.fechaEmision}" class="txtContenido">
+                                        <f:convertDateTime pattern="#{bundleRenagi.FormatoFecha}" />
+                                    </p:outputLabel>
+                                    
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-9">
+                                    <p:outputLabel value="Estado: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.estadoId.nombre}" class="txtContenido"/>
+                                    
+                                </div>
+                            </div>
+                        </p:panel>
+
+                        <p:panel id="pnl2" header="Datos del Arma" style="margin-bottom:8px;" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Nro de Serie: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.serie}" class="txtContenido"/>                                    
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="RUA: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.nroRua}" class="txtContenido"/>                                    
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-6">
+                                    <p:outputLabel value="Tipo Arma: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.modeloId.tipoArmaId.nombre}" class="txtContenido" />
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Marca: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.modeloId.marcaId.nombre}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Modelo: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.modeloId.modelo}" class="txtContenido"/>                                    
+                                </div>
+                                <div class="ui-g-12 ui-md-4 ui-lg-6">
+                                    <p:outputLabel value="Calibre: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.armaCalibre}" class="txtContenido" />
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Estado: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.estadoId.nombre}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-9">
+                                    <p:outputLabel value="Situación: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.armaId.situacionId.nombre}" class="txtMensaje"/>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-3">
+                                    <p:outputLabel value="Modalidad: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.modalidadId.nombre}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-9">
+                                    <p:outputLabel value="Restricción: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.tarjeta.restriccionId.nombre}" class="txtContenido"/>
+                                </div>
+                            </div>
+                        </p:panel>
+
+                        <p:panel id="pnl3" header="Datos del Internamiento" >
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Nro de Acta: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.guiaT.nroGuia}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                    <p:outputLabel value="Fecha: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.guiaT.fechaEmision}" class="txtContenido">
+                                        <f:convertDateTime pattern="#{bundleRenagi.FormatoFecha}" />
+                                    </p:outputLabel>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                    <p:outputLabel value="Tipo de Internamiento: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.inventarioArma.tipoInternamientoId.nombre}" class="txtContenido"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                    <p:outputLabel value="Tipo de Depósito: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.guiaT.tipoGuiaId.nombre}" class="txtContenido" />
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                    <p:outputLabel value="Almacén: "/>
+                                    <p:outputLabel value="#{gamacConstanciaLicTarController.direInternamiento}" class="txtContenido"/>
+                                </div>
+                            </div>
+                        </p:panel>         
+                    </div>
+                    
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+
+                    <div class="ui-g-12 ui-md-5 ui-lg-3">
+                        <ui:remove>
+                        <p:commandButton id="btnImprimir" icon="ui-icon-print" partialSubmit="true"
+                                         process="@this" update="@none" 
+                                         action="#{gamacConstanciaLicTarController.imprimirConstancia()}" value="IMPRIMIR" 
+                                         />
+                        </ui:remove>
+                    </div>
+                    <div class="ui-g-12 ui-md-5 ui-lg-3">
+                        <p:commandButton immediate="true" icon="ui-icon-close" value="Cerrar" update="@this" onclick="PF('wvDlgViewArmGamac').hide();" />
+                    </div>
+                    <div class="ui-g-12 ui-md-1 ui-lg-3"></div>
+                </div>
+            </h:form>
+
+        </div>
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("#dlgViewArmGamac > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+        $("#dlgViewArmGamac > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+        $("#dlgViewArmGamac > .ui-dialog-content").attr("style", "padding:4px!important;");
+
+        function updateDlgViewArmGam() {
+            $("#dlgViewArmGamac").css('top', 50);
+            $("div[id*='pnl1_content'], div[id*='pnl2_content'], div[id*='pnl3_content']").attr("style", "padding:1px!important");
+            $("div[id*='pnl1_content'], div[id*='pnl2_content'], div[id*='pnl3_content']").children(".ui-g").children().attr("style", "padding:3px!important;");
+        }
+    </script>
+
+</ui:composition>
+

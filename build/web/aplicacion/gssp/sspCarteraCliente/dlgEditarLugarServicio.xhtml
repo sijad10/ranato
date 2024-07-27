@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgEditarLugarServicio" widgetVar="wvDlgEditarLugarServicio" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="EDITAR LUGAR DE SERVICIO" closable="false">
+        <h:form id="frmEditarLugarServicio">
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccionServicio}(*)" style="font-weight: bold;" />
+                    <p:inputText value="#{sspCarteraClienteController.direccionServicio }" id="direccionServicio" style="width: 350px;" validatorMessage="#{BundleBDIntegrado.sspCarteraCli_crear_validatorMsje_direccion}"  maxlength="500" onblur="this.value = this.value.toUpperCase();" />
+                    <p:outputLabel value=" " />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}(*)" style="font-weight: bold;" />
+                    <p:selectOneMenu id="ubigeoServicio" value="#{sspCarteraClienteController.ubigeoAdenda}" filter="true" 
+                                     effect="fade" filterMatchMode="contains" panelStyle="width: 600px" >
+                        <f:selectItem itemLabel="--------" itemValue="#{null}"/>
+                        <f:selectItems value="#{sspCarteraClienteController.listDistritos}"
+                                       var="distrito" itemLabel="#{distrito.nombreCompleto}"
+                                       itemValue="#{distrito}"/>
+                        <p:ajax event="change" process="@form" update="@form" listener="#{sspCarteraClienteController.cambiarUbigeoLugarServicioAdenda() }" />
+                    </p:selectOneMenu>
+                    <p:outputLabel value=" " />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_mapa}(*)" style="font-weight: bold;" />
+                    <p:commandButton icon="ui-icon-search"                                            
+                                        process="@form"
+                                        update="@form"
+                                        value="Mapa"
+                                        id="btnMapa"
+                                        actionListener="#{sspCarteraClienteController.openDlgMapaAdenda() }" >
+                        <p:ajax event="click" listener="#{sspCarteraClienteController.updateFormMapa() }" />
+                    </p:commandButton>
+                    <p:outputLabel value=" " />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_latitud}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{sspCarteraClienteController.latitud}" />
+                    <p:outputLabel value=" " />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_longitud}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{sspCarteraClienteController.longitud}" />
+                    <p:outputLabel value=" " />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_referencia}" style="font-weight: bold;" />
+                    <p:inputText value="#{sspCarteraClienteController.referencia }" id="referenciaServicio" style="width: 350px;" onblur="this.value = this.value.toUpperCase();" />
+                    <p:outputLabel value=" " />
+                </h:panelGrid>
+            </h:panelGrid>
+            
+            <div align="right">
+                <p:commandButton icon="ui-icon-pencil"
+                                 value="Guardar"
+                                 process="@form" update="@form"
+                                 actionListener="#{sspCarteraClienteController.editarServicio()}" >
+                </p:commandButton>
+                
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmEditarLugarServicio" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgEditarLugarServicio').hide()" />
+            </div>
+        </h:form>
+    </p:dialog>
+</html>

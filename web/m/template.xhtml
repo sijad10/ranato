@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      >
+    <f:view contentType="text/html" renderKitId="PRIMEFACES_MOBILE">
+        <h:head>
+            <f:facet name="first">
+                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+                <title>SUCAMEC en Línea</title>
+            </f:facet>
+            <!-- <h:outputStylesheet name="css/estilos.css"/> -->
+            <style>
+                .ui-widget input,
+                .ui-widget select,
+                .ui-widget textarea, .ui-inputfield, .ui-inputtext {
+                    text-transform: uppercase;
+                }
+                .ui-mobile .ui-page {
+                    min-height: 100px;
+                }
+            </style>
+        </h:head>
+
+        <h:body>
+            <p:growl id="mensajesGrowl" autoUpdate="true" /> 
+            <ui:insert name="body">Default Body</ui:insert>
+            <h:form> 
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" appendTo="@(body)" >  
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+                </p:confirmDialog>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

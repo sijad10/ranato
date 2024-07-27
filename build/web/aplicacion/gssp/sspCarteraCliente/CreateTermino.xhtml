@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    
+    <h:form id="createTerminoForm" rendered="#{sspCarteraClienteController.estado == 'CREAR_TERMINO'}" >
+        <p:panel id="pnlTerminoContrato" header="#{BundleBDIntegrado.sspCarteraCli_crearTermino_datosTermino}" >
+            <h:panelGrid columns="4" >
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_motivoTermino}(*)" style="font-weight: bold;" />
+                <p:selectOneMenu id="motivo" value="#{sspCarteraClienteController.registro.motivoContratoId}" autoWidth="false" style="width: 300px;" >
+                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                   <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" value="#{sspCarteraClienteController.lstMotivosContrato}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_detalleMotivo}(*)" style="font-weight: bold; margin-left: 20px;" />
+                <p:inputTextarea value="#{sspCarteraClienteController.registro.detalleMotivo }" 
+                                 id="detalleMotivo" maxlength="200"  rows="3" cols="80" styleClass="inputTextArea" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_adjuntarDocumento}(*)" style="font-weight: bold;" />
+                <p:fileUpload id="pfileUploadTermino" label="Adjuntar contrato"
+                            invalidFileMessage="#{BundleBDIntegrado.sspCarteraCli_fileUpload_InvalidFileMessage}"
+                            invalidSizeMessage="#{sspCarteraClienteController.obtenerMsjeInvalidSize()}"
+                            fileUploadListener="#{sspCarteraClienteController.handleFileUploadAdjuntoTermino}"
+                            mode="advanced" dragDropSupport="true"
+                            multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('sspCarteraCli_MaxSize').valor}"
+                            auto="true" process="@this" update="@this"
+                            allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"  >
+                    <h:outputText value="#{sspCarteraClienteController.archivoTermino }" />
+                </p:fileUpload>
+                <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_fechaTermino}(*)" style="font-weight: bold;margin-left: 20px;" />
+                <p:calendar id="fechaTerminoContrato"
+                        locale="es"
+                        mindate="#{sspCarteraClienteController.minimafechaTermino}"
+                        showOn="button" value="#{sspCarteraClienteController.registro.fechaFin}"
+                        pattern="#{BundleBDIntegrado.FormatoFecha}" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:calendar>
+            </h:panelGrid>
+            <h:panelGrid style="float: right; margin-top: 25px;" columns="2">
+                <p:commandButton icon="ui-icon-closethick"
+                                     action="#{sspCarteraClienteController.prepareList() }"
+                                     value="Cancelar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" update="@all"  />
+                <p:commandButton id="botonGuardar"
+                                    icon="ui-icon-disk" 
+                                    update="@all"
+                                    action="#{sspCarteraClienteController.crearTermino()}" 
+                                    value="#{BundleBDIntegrado.Guardar}"/>
+            </h:panelGrid>
+        </p:panel>
+        <br/><br/>
+        
+        <h:panelGrid columns="1" style="width: 100%;">
+                <h:outputText value="#{BundleBDIntegrado.sspCarteraCli_crearTermino_detalleTitle}" style="font-weight: bold; font-size:medium; " />
+            
+                <p:panel id="pnlDatosAdministrado" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosAdministrado}" >
+                    <br/>
+                    <h:panelGrid columns="2" id="pnlDatosAdministradoPG"  >
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sede}" style="font-weight: bold;" rendered="false"  />
+                        <p:outputLabel value="#{sspCarteraClienteController.registro.sedeId.direccion} #{sspCarteraClienteController.registro.sedeId.numero}" rendered="false" />
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_modalidad}" style="margin-left: 40px;font-weight: bold;" />
+                        <p:dataTable id="buscarDatatableRegistro" value="#{sspCarteraClienteController.registro.tipoSeguridadList}"
+                                     var="itemReg"
+                                     style="width: 320px;"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column headerText="MODALIDAD" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nombre}" />
+                            </p:column>
+                         </p:dataTable>
+                        
+                        <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_representante}" style="font-weight: bold;" rendered="false"  />
+                        <p:outputLabel value="#{sspCarteraClienteController.registro.reprAdminId.nombreCompleto} / #{sspCarteraClienteController.registro.reprAdminId.numDoc}" rendered="false"  />
+                        <p:outputLabel value=" " />
+                        <p:outputLabel value=" " />
+                    </h:panelGrid>
+                </p:panel>
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlPersona}" >
+                    <p:panel id="pnlDatosCliente" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosCliente}"  >
+                        <h:panelGrid columns="6" id="pnlCabecera" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tiposCliente}" style="width: 120px;display: block;font-weight: bold;" />
+                            <p:outputLabel value="#{sspCarteraClienteController.obtenerTipoDocView(sspCarteraClienteController.tipoDoc)}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ruc}" rendered="#{sspCarteraClienteController.esRuc}" style="margin-left: 20px;font-weight: bold;"  />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_documento}" rendered="#{sspCarteraClienteController.esDni}" style="margin-left: 20px;font-weight: bold;" />
+                            <h:panelGrid columns="2" rendered="#{sspCarteraClienteController.esRuc or sspCarteraClienteController.esDni}" >
+                                <p:outputLabel value="#{sspCarteraClienteController.numDoc}" />
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_rznSocial}" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" style="margin-left: 20px;font-weight: bold;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombres}" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" style="margin-left: 20px;font-weight: bold;" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.clienteId.rznSocial}" id="rznSocial" rendered="#{(sspCarteraClienteController.esRuc ) and sspCarteraClienteController.blnBusco }" style="width: 300px;"  />  
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.clienteId.nombres}" id="nombresDni" rendered="#{(sspCarteraClienteController.esDni) and sspCarteraClienteController.blnBusco }" style="width: 300px;" />  
+
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombreComercial}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.clienteId.nomCom}" id="nomCom" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.direccionRuc}" id="direccionRuc" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel id="ubigeoRuc" value="#{sspCarteraClienteController.ubigeoRuc.nombreCompleto }" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+ 
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.correo }" id="correoRuc" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.telefono}" id="telefonoRuc" rendered="#{sspCarteraClienteController.esRuc and sspCarteraClienteController.blnBusco}" />
+
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apePaterno}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}"  />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.clienteId.apePat}" id="apePat" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apeMaterno}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.clienteId.apeMat}" id="apeMat" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sexo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel id="generoId" value="#{sspCarteraClienteController.registro.clienteId.generoId.nombre}" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaNacimiento}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel id="fechaNac" value="#{sspCarteraClienteController.registro.clienteId.fechaNac}" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:outputLabel>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.direccionDni}" id="direccionDni" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel id="ubigeoDni" value="#{sspCarteraClienteController.ubigeoDni.nombreCompleto}" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.correo }" id="correoDni" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.telefono}" id="telefonoDni" rendered="#{sspCarteraClienteController.esDni and sspCarteraClienteController.blnBusco}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>                    
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlRepLegal}" >
+                    <p:panel id="pnlDatosRepLegal" header="#{BundleBDIntegrado.sspCarteraCli_crear_RepLegal}"  >
+                        <h:panelGrid columns="6" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_tiposDocumento}" style="width: 120px;display: block;font-weight: bold;" />
+                            <p:outputLabel value="#{sspCarteraClienteController.obtenerTipoDocView(sspCarteraClienteController.tipoDocRepLegal)}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_documento}" style="margin-left: 20px;font-weight: bold;" />
+                            <h:panelGrid columns="2" >
+                                <p:outputLabel value="#{sspCarteraClienteController.numDocRepLegal}" id="docRepLegal" />
+                            </h:panelGrid>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_nombres}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.reprCliId.nombres}" id="nombresRepLegal" style="width: 300px;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apePaterno}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.reprCliId.apePat}" id="apePatRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_apeMaterno}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.reprCliId.apeMat}" id="apeMatRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_sexo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel id="generoIdRepLegal" value="#{sspCarteraClienteController.registro.reprCliId.generoId.nombre}" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_direccion}" style="font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.direccionRepLegal}" id="direccionRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_ubigeo}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel id="ubigeoRepLegal" value="#{sspCarteraClienteController.ubigeoRepLegal.nombreCompleto }" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_telefono}" style="margin-left: 20px;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.telefonoRepLegal}" id="telefonoRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_correo}" style="width: 120px;display: block;font-weight: bold;" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                            <p:outputLabel value="#{sspCarteraClienteController.correoRepLegal }" id="correoRepLegal" rendered="#{sspCarteraClienteController.blnBuscoRepLegal}" />
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>                    
+                
+                <br/>
+                <h:panelGrid >
+                    <p:panel id="pnlDatosServicio" header="#{BundleBDIntegrado.sspCarteraCli_crear_datosServicio}"  >
+                        <h:panelGrid columns="1" id="pnlTableDatosServicio" >
+                            <p:dataTable id="dtLugarServicio" value="#{sspCarteraClienteController.listadoLugarServicio}"
+                                         var="itemReg"
+                                         emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_direccion}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.direccion}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_ubigeo}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.distId.provinciaId.departamentoId.nombre} #{itemReg.distId.provinciaId.nombre} #{itemReg.distId.nombre}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_latitud}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.latitud} / #{itemReg.longitud}" />
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_verMapa}" style="text-align: center;" >
+                                    <p:commandButton icon="ui-icon-search"
+                                                    process="@this"
+                                                    value="Mapa"
+                                                    id="btnVerMapa"
+                                                    actionListener="#{sspCarteraClienteController.openDlgVerMapa(itemReg) }" >
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtDatosServicio_referencia}" style="text-align: center;" >
+                                    <h:outputText value="#{itemReg.referencia}" />
+                                </p:column>
+                             </p:dataTable>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_observacion}" style="font-weight: bold;" />
+                            <p:outputLabel value="#{sspCarteraClienteController.registro.contratoId.observacion }" id="observacionServ" style="width: 350px;" />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_adjuntarContrato}" style="margin-left: 15px;font-weight: bold;" />
+                            <p:commandButton  icon="ui-icon-document"
+                                            ajax="false"
+                                            style="background-color: #F2F2F2;color: #000000;"
+                                            value="#{sspCarteraClienteController.archivo }"
+                                            process="@all"
+                                            rendered="#{sspCarteraClienteController.archivo != null}"
+                                            onclick="this.form.target = '_blank'"
+                                            onblur="this.form.target = '_self'"
+                                            immediate="true" >
+                                  <p:fileDownload value="#{sspCarteraClienteController.cargarDocumentoTermino()}" contentDisposition="inline"  />
+                            </p:commandButton>
+                            <p:outputLabel value=" " rendered="#{sspCarteraClienteController.archivo == null}" />
+
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaInicioServ}" style="font-weight: bold;" />
+                            <p:outputLabel id="fechaInicio" value="#{sspCarteraClienteController.fechaInicioServicio}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:outputLabel>
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCarteraCli_crear_fechaTerminoServ}" style="margin-left: 15px;font-weight: bold;" />
+                            <p:outputLabel id="fechaFin" value="#{sspCarteraClienteController.registro.contratoId.fechaFin}" >
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </p:outputLabel>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:panelGrid>
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlVigilantes}" >
+                    <p:panel id="pnlRelacionPersonal" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionPersonal}"  >
+                        <p:dataTable id="dtPersonalSeguridad" value="#{sspCarteraClienteController.lstPersonalSeguridadContratoActivos}"
+                                     var="itemReg"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nombres}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nombres}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroDNI}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.doc}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroCarne}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.carne}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionPersonal_nroLicencia}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.licencia}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:panelGrid>
+                
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlArmas}" >
+                    <p:panel id="pnlRelacionArmas" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionArmas}"  >
+                        <p:dataTable id="dtArmas" value="#{sspCarteraClienteController.listadoArmasContratoActivo}"
+                                     var="itemReg"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_rua}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.nroRua}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_serie}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.serie}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_modelo}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.modeloId.modelo}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_tipoArma}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.tipoArmaId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_calibre}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.calibreId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionArma_marca}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.armaId.armaId.marcaId.nombre}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:panelGrid>
+                
+                <br/>
+                <h:panelGrid rendered="#{sspCarteraClienteController.renderPnlVehiculos}" >
+                    <p:panel id="pnlRelacionvehiculos" header="#{BundleBDIntegrado.sspCarteraCli_crear_relacionVehiculos}"  >
+                        <p:dataTable id="dtVehiculos" value="#{sspCarteraClienteController.listadoVehiculosContratoActivo}"
+                                     var="itemReg"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_tarjetPropiedad}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.tarjetaPropiedad}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_marca}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.marca}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_placa}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.placa}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCarteraCli_crear_dtRelacionVeh_certificadoSUCAMEC}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.vehiculoId.certificado}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:panelGrid>
+        </h:panelGrid>
+        <br/><br/>
+    </h:form>
+            
+    <script src="#{sspCarteraClienteController.obtenerKeyGoogle()}" type="text/javascript"></script>
+    <script type="text/javascript" src="#{sspCarteraClienteController.obtenerApiGoogle()}"></script>
+</ui:composition>

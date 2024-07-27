@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <!-- OJO NO USAR PRIMEFACES PARA OPTIMIZAR EN MOVILES -->
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Validaci&oacute;n de Constancias de Pol&iacute;gono - GAMAC</title>
+            </f:facet>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="form" acceptcharset="UTF-8">
+                <center>
+                    <h:panelGrid columns="2" style="width: 950px; background: white;" cellpadding="5" >
+                        <h:graphicImage name="imagenes/logo_sucamec_h.png" style="padding-left: 20px;" />
+                        <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGroup>
+                        <ui:repeat value="#{verificadorQRController.visualizador.imagenes}" var="img">
+                            <h:graphicImage value="img/GAMAC_POL?imagen=#{img}&amp;rnd=#{verificadorQRController.visualizador.millis}"/><br/><br/>
+                        </ui:repeat>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" rendered="#{!verificadorQRController.visualizador.verDocumento}" style="color: red; font-size: large; font-weight: bold; width: 950px; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorSistema}" rendered="#{verificadorQRController.error}"/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" rendered="#{!verificadorQRController.error}"/>
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                </center>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>

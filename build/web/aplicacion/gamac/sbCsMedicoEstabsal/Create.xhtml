@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="createForm" rendered="#{sbCsMedicoEstabsalController.estado == 'CREAR'}" >
+        <p:focus context="createForm" />
+        <h:outputText value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_msje}" /> <br/><br/>
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_profesionalesAutorizados}" id="pnlDatosCrear" >
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_establecimiento}" for="establecimiento" style="display: block; width: 100px;" />
+                <p:selectOneMenu id="establecimiento"
+                                value="#{sbCsMedicoEstabsalController.registro.establecimientoId }" >
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{sbCsMedicoEstabsalController.obtenerEstablecimientosCSActivo}"
+                                   var="CS" itemLabel="#{sbCsMedicoEstabsalController.obtenerDescripcionEstablecimiento(CS)}" itemValue="#{CS}" />
+                    <p:ajax event="change" process="@this" update="@this"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+            
+            <h:panelGrid columns="4">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaInicio}" for="fechaInicio" style="display: block; width: 100px;" />
+                <p:calendar  id="fechaInicio"
+                             locale="es"
+                             navigator="true"
+                             validatorMessage="Por favor ingrese la fecha de inicio"
+                             requiredMessage="Por favor ingrese la fecha de inicio"
+                             showOn="button" value="#{sbCsMedicoEstabsalController.registro.fechaIni}"
+                             pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:calendar>               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaFin}" for="fechaVencimiento" style="display: block; width: 100px;margin-left: 20px;" />
+                <p:calendar  id="fechaVencimiento" 
+                             locale="es"
+                             navigator="true"
+                             requiredMessage="Por favor ingrese la fecha de fin"
+                             validatorMessage="Por favor ingrese la fecha de fin"
+                             showOn="button" value="#{sbCsMedicoEstabsalController.registro.fechaFin }"
+                             pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:calendar>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaInicioHabilitacion}" for="fechaInicioHab" style="display: block; width: 100px;" />
+                <p:calendar  id="fechaInicioHab"
+                             locale="es"
+                             navigator="true"
+                             validatorMessage="Por favor ingrese la fecha de inicio de habilitación"
+                             requiredMessage="Por favor ingrese la fecha de inicio de habilitación"
+                             showOn="button" value="#{sbCsMedicoEstabsalController.registro.fechaIniHab}"
+                             pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:calendar>
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_fechaFinHabilitacion}" for="fechaVencimientoHab" style="display: block; width: 100px;margin-left: 20px;" />
+                <p:calendar  id="fechaVencimientoHab" 
+                             locale="es"
+                             navigator="true"
+                             requiredMessage="Por favor ingrese la fecha de fin"
+                             validatorMessage="Por favor ingrese la fecha de fin"
+                             showOn="button" value="#{sbCsMedicoEstabsalController.registro.fechaFinHab }"
+                             pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:calendar>
+            </h:panelGrid>
+            
+            <h:panelGrid id="pnlDatos" columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_medico}" style="display: block; width: 100px;" />
+                <h:panelGrid columns="4" id="pnlMedico">
+                    <p:autoComplete id="medico" value="#{sbCsMedicoEstabsalController.registro.medicoId}"
+                                        placeholder="INGRESE NRO DE DNI O NRO DE CMP" 
+                                        size="70"
+                                        queryDelay="2000"
+                                        onblur="this.value = this.value.toUpperCase();"
+                                        rendered="#{sbCsMedicoEstabsalController.renderMedico}"
+                                        completeMethod="#{sbCsMedicoEstabsalController.completeMedico}"
+                                        var="medicoSelected" itemLabel="#{sbCsMedicoEstabsalController.obtenerDescMedico(medicoSelected)}"
+                                        minQueryLength="3" cache="true" itemValue="#{medicoSelected}"  forceSelection="true" scrollHeight="200" >
+                        <p:ajax event="itemSelect" process="@this,pnlDatos" update="@this,pnlDatos" listener="#{sbCsMedicoEstabsalController.seleccionaMedico}" />
+                    </p:autoComplete>
+                    <h:outputText value="#{sbCsMedicoEstabsalController.obtenerDescMedico(sbCsMedicoEstabsalController.registro.medicoId)}" 
+                                  rendered="#{!sbCsMedicoEstabsalController.renderMedico}" />
+                    <p:commandButton icon="ui-icon-closethick"
+                                     styleClass="botonBorrar"
+                                     process="@this,pnlMedico" update="@this,pnlMedico"
+                                     disabled="#{sbCsMedicoEstabsalController.registro.medicoId eq null}"
+                                     actionListener="#{sbCsMedicoEstabsalController.eliminarMedicoRegistro()}">
+                    </p:commandButton>
+                    
+                    <p:commandButton value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_nuevoMedico}" style="margin-left: 20px;"
+                                     actionListener="#{sbCsMedicoEstabsalController.openDlgNuevoMedico()}"
+                                     process="@form" />
+                </h:panelGrid>
+               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_cargo}" for="cargoId" style="display: block; width: 100px;" />
+                <p:selectOneMenu id="cargoId" value="#{sbCsMedicoEstabsalController.registro.cargoId }" >
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{sbCsMedicoEstabsalController.listarCargos }"
+                                   var="cargo" itemValue="#{cargo}"
+                                   itemLabel="#{cargo.nombre} " />
+                    <p:ajax event="change" process="@this,pnlDatos" update="@this,pnlDatos" listener="#{sbCsMedicoEstabsalController.cambiarTipoCargomedico()}" />
+                </p:selectOneMenu>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedico_registrar_cmp}" style="display: block; width: 100px;" />
+                <p:inputText id="nroCmp" value="#{sbCsMedicoEstabsalController.nroCmp}" style="width: 200px;" maxlength="20" validatorMessage="Ingrese por favor el nro. CMP" >
+                    <p:keyFilter mask="int" />
+                </p:inputText>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedico_registrar_esDelegado}" style="display: block; width: 100px;" rendered="#{sbCsMedicoEstabsalController.renderDelegadoMedico()}" />
+                <p:selectBooleanCheckbox value="#{sbCsMedicoEstabsalController.registro.esDelegadoBoolean}" rendered="#{sbCsMedicoEstabsalController.renderDelegadoMedico()}" >
+                    <p:ajax process="@this,pnlDatos" update="@this,pnlDatos" listener="#{sbCsMedicoEstabsalController.cambiaEsDelegado()}" />
+                </p:selectBooleanCheckbox>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_firma}" style="display: block; width: 100px;" />
+                <h:panelGrid columns="2" id="pnlFirma">
+                    <p:fileUpload id="firma" label="#{BundleBDIntegrado.sbCsMedicoEstabsal_registrar_agregarFoto}"
+                                  invalidFileMessage="#{BundleBDIntegrado.foto_fileUploadImagen_InvalidFileMessageJPG_PDF}"
+                                  fileUploadListener="#{sbCsMedicoEstabsalController.handleFileUploadFirma}"
+                                  invalidSizeMessage="#{sbCsMedicoEstabsalController.obtenerMsjeInvalidSizeFoto()}"
+                                  onstart="PF('loadingDialog').show()"
+                                  oncomplete="PF('loadingDialog').hide()"
+                                  mode="advanced" dragDropSupport="false"
+                                  multiple="false"
+                                  sizeLimit="#{sbParametroController.obtenerParametroXNombre('SbCsMedicoEstabsal_sizeFoto').valor}"
+                                  auto="true" process="@form" update="@form"
+                                  allowTypes="/(\.|\/)(jpg|pdf|JPG|PDF)$/" immediate="true" >
+                        <h:outputText value="#{sbCsMedicoEstabsalController.fileName }" />
+                    </p:fileUpload>
+                    <p:graphicImage rendered="#{sbCsMedicoEstabsalController.renderFotoFirma()}" 
+                                    value="#{sbCsMedicoEstabsalController.fotoFirma}" cache="false"
+                                    width="250" height="250"
+                                    style="margin-left: 20px;" >
+                    </p:graphicImage>
+                    <p:media rendered="#{sbCsMedicoEstabsalController.renderPdfFirma()}"
+                             value="#{sbCsMedicoEstabsalController.pdfFirma}"
+                             style="margin-left: 20px;"
+                             cache="false" player="pdf" height="300px" />
+                </h:panelGrid>
+            </h:panelGrid>
+        </p:panel>
+        
+        <br/>
+        <br/>
+        <p:commandButton id="botonGuardar" 
+                         icon="ui-icon-disk" 
+                         update="@all" 
+                         actionListener="#{sbCsMedicoEstabsalController.crear}" 
+                         value="#{BundleBDIntegrado.Guardar}"/>
+        <p:commandButton icon="ui-icon-closethick"
+                         action="#{sbCsMedicoEstabsalController.prepareList()}"
+                         value="Cancelar"
+                         style="margin-left: 20px;"
+                         immediate="true" update="@all"  />
+        <br />
+    </h:form>
+</ui:composition>
+

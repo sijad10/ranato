@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.VerEmitirGt}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="verForm">   
+                <h:panelGrid columns="2" > 
+                    <p:outputLabel value="Ayuda: " />
+                    <h:graphicImage name="imagenes/ayuda.png" onclick="PF('dlgAyuda').show();" style="cursor: help;"/>
+                </h:panelGrid>
+                <p:panel id="pnlDatosGt" header="DATOS DE LA GUÍA DE TRÁNSITO ELECTRÓNICA" style="margin-bottom:20px" >                    
+                    <h:panelGrid columns="2" >
+                        <p:outputLabel value="Solicitante: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewEmpresa}" escape="false"/>
+
+                        <p:outputLabel value="Nro. Resolución: " rendered="#{!eppRegistroGuiaTransitoController.esSinGTRef}" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewRefRg}" rendered="#{!eppRegistroGuiaTransitoController.esSinGTRef}" escape="false" />
+
+                        <p:outputLabel value="Para que pueda emitir desde: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewOrigen}" escape="false"/>
+
+                        <p:outputLabel value="Con destino: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewDestino}" escape="false"/>
+
+                        <p:outputLabel value="Tipo transporte: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.selectedBulk.tipoTransporte.nombre}" escape="false"/>
+
+                        <p:outputLabel value="Empresa transporte: " />
+                        <p:column>
+                            <p:autoComplete id="acEmpresaTransporte" 
+                                            value="#{eppRegistroGuiaTransitoController.empresaTransporte}"
+                                            completeMethod="#{eppRegistroGuiaTransitoController.autoCompleteEmpresaTransporte}"
+                                            placeholder="RUC / RZN. SOCIAL"                                            
+                                            var="item" 
+                                            itemLabel="#{eppRegistroGuiaTransitoController.obtenerDescEmpresa(item)}"
+                                            itemValue="#{item}"  
+                                            minQueryLength="3" 
+                                            cache="true" 
+                                            size="80" 
+                                            maxResults="10"
+                                            forceSelection="true" >
+                                <p:ajax event="itemSelect" listener="#{eppRegistroGuiaTransitoController.seleccionarDlgEmpresaTranspBulk}" update="@form" />
+                            </p:autoComplete>
+                            <pe:tooltip for="acEmpresaTransporte"  
+                                        value="Ingrese ruc o razón social de la empresa de transporte" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/> 
+                        </p:column>
+
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel id="pnlProductos" header="EXPLOSIVOS Y MATERIALES RELACIONADOS" style="margin-bottom:20px" >
+                    <p:dataTable id="dtProductos"
+                                 style="width: 55%"
+                                 value="#{eppRegistroGuiaTransitoController.lstExplosivosActivosBulk}"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 var="item"
+                                 rowKey="#{item.id}" >
+                        <p:column headerText="Explosivo o material relacionado">
+                            <h:outputText value="#{item.explosivoId.nombre}" />
+                        </p:column>
+                        <p:column headerText="Unidad de Medida">
+                            <h:outputText value="#{item.explosivoId.unidadMedidaList[0].nombre}" />
+                        </p:column>
+                        <p:column headerText="Cantidad a transportar">
+                            <h:outputText value="#{item.cantidad}" >
+                                <f:convertNumber locale="en-US" maxFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+
+                <p:panel header="DATOS DEL CONDUCTOR Y VEHICULO" style="margin-bottom:20px" id="pnlDatosCyV">
+                    <h:panelGrid columns="4" id="pnlgDatosCyV" >
+                        <p:outputLabel value="Conductor: " />
+                        <p:commandButton value="Buscar"
+                                         action="#{eppRegistroGuiaTransitoController.openDlgBuscarConductor}"
+                                         update="pnlDatosCyV" >
+                        </p:commandButton>
+                        <p:outputLabel value="" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strConductor}"/>
+
+                        <p:outputLabel value="Vehiculo: " />
+                        <p:commandButton value="Buscar" action="#{eppRegistroGuiaTransitoController.openDlgBuscarVehiculo}"
+                                         update="pnlDatosCyV" >
+                        </p:commandButton>
+                        <p:commandButton value="Nuevo Vehículo" action="#{eppRegistroGuiaTransitoController.openDlgCrearVehiculo}"
+                                         update="pnlDatosCyV" >
+                        </p:commandButton>
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strVehiculo}"/>
+                    </h:panelGrid>
+                </p:panel>
+
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                    <p:commandButton icon="ui-icon-disk"
+                                     update="@form"
+                                     action="#{eppRegistroGuiaTransitoController.direccionarVerPreview()}"
+                                     style="height: 30px;width: 150px"
+                                     value="Ver Vista Previa" />
+                    <p:commandButton icon="ui-icon-search"
+                                     action="#{eppRegistroGuiaTransitoController.direccionarGT()}"
+                                     style="height: 30px;width: 150px"
+                                     value="Cancelar" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+
+            </h:form>
+            <p:dialog widgetVar="dlgAyuda"
+                      closable="true"
+                      header="#{bundleSistemaBase.Ayuda}"
+                      resizable="false"
+                      modal="true"
+                      appendTo="@(body)"
+                      width="850"
+                      height="600"
+                      maximizable="false" >
+                <center>
+                    <h:graphicImage name="imagenes/ayuda_emitir.jpg"/>
+                </center>
+            </p:dialog>
+            <ui:include src="dlgBuscarPolicia.xhtml"/>
+            <ui:include src="dlgBuscarVehiculo.xhtml"/>
+            <ui:include src="dlgCrearVehiculo.xhtml"/>
+            <ui:include src="dlgBuscarConductorGt.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

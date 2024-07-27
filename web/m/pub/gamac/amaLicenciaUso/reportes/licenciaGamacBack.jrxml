@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-12-12T14:18:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="licenciaGamacBack" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="242" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="de67ae3d-8be2-4cf1-a400-7e218391d8b8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<parameter name="P_qr" class="java.lang.String"/>
+	<parameter name="P_FECHA_INICIO" class="java.lang.String"/>
+	<parameter name="P_FECHA_FIN" class="java.lang.String"/>
+	<parameter name="P_NRO_EXPEDIENTE" class="java.lang.String"/>
+	<parameter name="P_VIGILANTE_NUMDOC" class="java.lang.String"/>
+	<parameter name="P_EMPRESA_RUC" class="java.lang.String"/>
+	<parameter name="P_DPTO" class="java.lang.String"/>
+	<parameter name="P_PROV" class="java.lang.String"/>
+	<parameter name="P_DIST" class="java.lang.String"/>
+	<parameter name="P_NUM_DOC" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="6" y="8" width="50" height="10" uuid="24f2ea3e-8e4f-481f-bd5b-cd9312a03a47"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[FECHA DE EMISIÓN:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="56" y="8" width="38" height="10" uuid="44da6b41-f0fe-4899-b3a5-213f1acaccc4">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_INICIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="94" y="8" width="64" height="10" uuid="824863f2-97ba-4092-964f-196c8f9f78a2"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[FECHA DE VENCIMIENTO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="158" y="7" width="37" height="10" uuid="eb0027de-75ee-49ad-9b55-7fc04cd6d695">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_FIN}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="188" y="3" width="60" height="55" uuid="b456fec3-9469-4278-a255-a2bd3f19f1d5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{P_qr} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$P{P_qr}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="206" y="56" width="26" height="80" uuid="9a508698-d08e-4e76-acb2-800e7d0e8a4a">
+					<property name="com.jaspersoft.studio.unit.moduleWidth" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" orientation="right" textPosition="none" verticalQuietZone="0.0">
+					<jr:codeExpression><![CDATA[$P{P_NRO_EXPEDIENTE}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<staticText>
+				<reportElement x="181" y="0" width="14" height="153" uuid="b52eb543-3c02-4bc4-8395-683898198e62">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Justified" rotation="Left" markup="html">
+					<font isBold="true"/>
+					<paragraph lineSpacingSize="0.0"/>
+				</textElement>
+				<text><![CDATA[__________________________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="47" width="68" height="9" uuid="2fb7af26-0142-46d7-9ddb-bc99dd8fd193">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONDICIONES DE USO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="54" width="6" height="10" uuid="2dc3a45c-661b-438e-ade7-a97c77635959">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="73" width="6" height="10" uuid="b092310b-d404-45fe-a796-2d7cf81f60b3">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[2.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="85" width="6" height="10" uuid="c345ebcf-8ad6-4501-97ce-17a1e7acffa6">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[3.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="57" width="170" height="20" uuid="13305e7a-31ab-4d10-9f63-fef6e233218b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[Portar el carné original y vigente, expedido por la SUCAMEC, el cual deberá corresponder a la modalidad autorizada y a la empresa de seguridad de la cual depende.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="76" width="170" height="14" uuid="c3bfc8d4-96b5-4054-a529-ef5df27c99cb">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[En caso de pérdida o robo, formular la denuncia ante la autoridad competente y gestionar su duplicado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="89" width="170" height="19" uuid="99a0f849-5548-4195-b209-9026a0d49db6">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[Este carné acredita la calidad de personal de seguridad privada, únicamente a su titular, así como su capacitación de acuerdo al Plan de Formación Básica y/o Perfeccionamiento.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="199" y="134" width="41" height="10" uuid="f571f923-8869-410c-9c4c-106574d3125c">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_FIN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="109" width="170" height="14" uuid="5d5f7c5c-69ca-4dca-aa59-8fd26d310a30"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[Ante la presencia de Inspectores de la SUCAMEC, debidamente acreditados, es obligatorio su presentación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="106" width="6" height="10" uuid="2b751bff-b077-409a-8ae6-8ccffcf52481">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[4.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="199" y="142" width="41" height="8" uuid="304a94fe-543c-4828-812b-99edebaab6bd">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="3"/>
+				</textElement>
+				<text><![CDATA[FECHA VENCIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="103" y="140" width="13" height="8" uuid="ae8316c8-486a-45ee-b1ff-723da2c045a5">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<text><![CDATA[DNI:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="117" y="139" width="51" height="8" uuid="ab4dd9b3-530d-46ab-b532-2d38717b2e42">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NUM_DOC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="6" y="38" width="50" height="8" uuid="b6275ca4-8ab4-413b-b64b-056e5578a768">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[N° DE EXPEDIENTE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="56" y="38" width="53" height="8" uuid="2684c915-24a3-4290-a29e-2bacd906010e">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NRO_EXPEDIENTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="119" width="6" height="10" uuid="32261539-026a-4670-b1af-04f06b072aec">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[5.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="122" width="170" height="14" uuid="402c5c54-5fab-4b48-88b4-24fb93f7e50a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[El servicio de seguridad privada coayuda a los fines de seguridad ciudadana.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="6" y="19" width="18" height="7" uuid="1c361fc6-9e54-4c26-aa89-4da06c498a7d">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[DPTO.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="24" y="19" width="156" height="8" uuid="0ae15af8-d372-41c1-9246-8a02eb0ac27e">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DPTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="24" y="25" width="156" height="7" uuid="ef72007a-22ed-48b3-8c0e-74e93ce623f6">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_PROV}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" positionType="Float" x="24" y="31" width="156" height="7" uuid="5edfe582-a580-448f-ae71-af3562bcf49c">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DIST}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="6" y="25" width="17" height="7" uuid="f5e8e391-04b1-4e9d-a3aa-df907f5b7d6e">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[PROV.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" positionType="Float" x="6" y="31" width="15" height="7" uuid="4aefd1a5-1428-45c2-af13-56617fc8db5f"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[DIST.:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

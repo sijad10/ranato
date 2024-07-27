@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="devMunicion" header="#{bundleGamacCVMuni.listVentasFrmDev_Title}" 
+              widgetVar="devMunicionDialog" modal="true" showEffect="fade" hideEffect="fade" width="95%" responsive="true"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="dialogDevInicio()" onHide="updateDialogInicioHide()" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="viewDevMunicion" style="text-align:left; padding:0px!important">
+            <h:form id="devMunicionForm">
+                <div class="ui-fluid">
+
+                    <div class="ui-g" style="padding-bottom: 0!important" >
+                        <div class="ui-g-12 ui-md-2 ui-lg-1" style="padding-bottom: 0!important" >
+                            <p:outputLabel for="dniRepresentante" value="#{bundleGamacCVMuni.listVentasFrmDev_SolicitanteDev_Label}" class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3" style="padding-bottom: 0!important" >
+                            <p:selectOneMenu id="dniRepresentante" autoWidth="false" >
+                                <f:selectItem itemLabel="--Elige Representante--" itemValue="#{null}"  />
+                                <f:selectItems var="item" itemLabel="#{item.numDoc} #{item.nombres} #{item.apePat} #{item.apeMat}" itemValue="#{item.id}"
+                                               value="#{gamacMunicionesListadoVentasController.devLstRepresentantes}" />
+                                <p:ajax event="itemSelect" listener="#{gamacMunicionesListadoVentasController.eligeRepresentanteDev}"
+                                        partialSubmit="true" process="@this" update="@none" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-8" style="padding-bottom: 0!important" >
+                            
+                        </div>
+
+                        <div class="ui-g-12 ui-md-2 ui-lg-1">
+                            <p:outputLabel for="fechaDevo" value="#{bundleGamacCVMuni.listVentasFrmDev_FechaDev_Label}" class="txtLabel"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+                            <p:calendar id="fechaDevo" value="#{gamacMunicionesListadoVentasController.devFecha}" required="true" size="10"
+                                        autocomplete="false" requiredMessage="Ingresa la fecha de devolución"
+                                        pattern="#{bundleGamacCVMuni.FormatoFecha}" navigator="true" locale="es" showOn="button">
+                            </p:calendar>
+                        </div>
+                        
+                        <div class="ui-g-12 ui-md-2 ui-lg-2">
+                            <p:outputLabel for="chkDevTodoEmp"  value="#{bundleGamacCVMuni.listVentasFrmDev_SeDevolvieron_Label}" class="txtLabel"/>
+                        </div> 
+                        <div class="ui-g-12 ui-md-1 ui-lg-1">
+                            <p:selectBooleanCheckbox id="chkDevTodoEmp" value="#{gamacMunicionesListadoVentasController.todoEmpaques}" >
+                                <p:ajax update="" process="@this" listener="#{gamacMunicionesListadoVentasController.chkTodoEmpaques}" />
+                            </p:selectBooleanCheckbox>    
+                        </div>
+                        <div class="ui-g-12 ui-md-1 ui-lg-5" style="padding-bottom: 0!important" >
+                            
+                        </div>
+
+                    </div>
+                    
+                    <div id="divMsgBioDev" class="ui-grid-row ui-helper-hidden" style="padding: 0!important" >
+                        <div class="ui-g-12 ui-md-2 ui-lg-1" style="padding: 0!important" >&nbsp;
+                        </div>
+                        <div class="ui-g-10 ui-md-6 ui-lg-10" style="padding: 0 6px 0 6px!important" >
+                            <div class="ui-messages ui-widget" style="padding: 0!important" >
+                                <div class="ui-messages-info ui-corner-all" style="margin-top: 0!important" >
+                                    <span class="ui-messages-info-icon"></span>
+                                    <ul>
+                                        <li><span id="textDevMsgBio" class="ui-messages-info-detail"></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-3">
+
+                        </div>                        
+
+                    </div>
+
+                    <p:dataTable id="detDevDatatable" value="#{gamacMunicionesListadoVentasController.lstDetalleDev1}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleGamacCVMuni.MensajeNoResultados}" 
+                                 paginator="true" rows="10"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="10, 20"
+                                 editable="true" editMode="cell"
+                                 selectionMode="single"
+                                 reflow="true">
+
+                        <p:ajax event="cellEdit" listener="#{gamacMunicionesListadoVentasController.onCellEditGridDev}" update=":devMunicionForm:detDevDatatable" />                        
+
+                        <p:column headerText="#{bundleGamacCVMuni.listVentasFrmDevDT_CalibreArm_Title}" style="font-size:92%!important">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CalibreArm_Title}" />
+                            </f:facet>
+                            <h:outputText value="#{item.calibre}"/>
+                            <h:inputHidden id="idDetDev" value="#{item.id}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundleGamacCVMuni.listVentasFrmDevDT_Articulo_Title}" style="font-size:92%!important">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" />
+                            </f:facet>
+                                <h:outputText value="#{item.municion}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_MunixEmp_Title}" style="font-size:92%!important; text-align: right!important" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_MunixEmp_Title}" />
+                            </f:facet>
+                                <h:outputText value="#{item.muniPorEmpaque}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundleGamacCVMuni.listVentasFrmDevDT_EmpaqueVen_Title}" style="font-size:92%!important; text-align: right!important" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleGamacCVMuni.listVentasFrmDevDT_EmpaqueVen_Title}" />
+                            </f:facet>
+                                <h:outputText value="#{item.cantidadEmpaques}"/>
+                        </p:column>
+
+                        <p:column headerText="#{bundleGamacCVMuni.listVentasFrmDevDT_EmpaqueDev_Title}" style="font-size:92%!important; text-align: right!important" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleGamacCVMuni.listVentasFrmDevDT_EmpaqueDev_Title}" />
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{item.cantidadEmpDev}" /></f:facet>
+                                <f:facet name="input">
+                                    <p:inputNumber id="empInput" value="#{item.cantidadEmpDev}" minValue="0" maxValue="#{item.cantidadEmpaques}">  
+                                        
+                                    </p:inputNumber>                                      
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        
+                    </p:dataTable>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-3">
+                            <p:commandButton value="Guardar" actionListener="#{gamacMunicionesListadoVentasController.guardarDevRV}" id="btnGuardarDev" icon="ui-icon-disk"
+                                             process="@form" update=":buscarForm"
+                                             partialSubmit="true" oncomplete="confirmaRegistro();" >
+                                <p:confirm header="#{bundleGamacCVMuni.ConfirmarTitulo}" message="#{bundleGamacCVMuni.ConfirmarGuardarDevVenta}" icon="ui-icon-alert"  />
+                            </p:commandButton>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-lg-3">
+                            <p:commandButton value="#{bundleGamacCVMuni.CancelarTitulo}" actionListener="#{gamacMunicionesListadoVentasController.closeDevolVenta}"
+                                             id="btnCancelView" icon="ui-icon-circle-close"
+                                             process="@this" update="@none" partialSubmit="true"/>
+                            
+                        </div>
+                        <div class="ui-g-12 ui-md-2 ui-lg-3">&nbsp;</div>                        
+                    </div>
+
+                </div>
+                <p:blockUI block="viewDevMunicion" trigger="btnGuardarDev" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    <script type="text/javascript">
+        
+        function dialogDevInicio() {
+            $("#devMunicion").css('top', 30);
+            $(".txtLabel").parent().attr("style", "padding-top:11px");
+        }
+        
+        function confirmaRegistro(){
+            
+        }
+    
+    </script>
+    
+</ui:composition>

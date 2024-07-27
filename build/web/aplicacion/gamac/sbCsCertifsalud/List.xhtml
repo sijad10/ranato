@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{BundleBDIntegrado.BuscarsbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.VersbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'VER'}"/>
+        <h:outputText value="#{BundleBDIntegrado.EditarsbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'EDITAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.CrearsbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'CREAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.RectificarsbCsCertifsaludTitulo}" rendered="#{sbCsCertifsaludController.estado == 'RECTIFICAR'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="listForm" rendered="#{sbCsCertifsaludController.estado == 'BUSCAR'}">
+            <p:defaultCommand target="btnBuscarBandeja"/>
+            <p:link target="_blank"  href="/resources/Manual_Centro_Salud.pdf" >
+                <p:graphicImage url="/resources/imagenes/btn-manual_centros_medicos.png"/>
+            </p:link>
+            <br/>
+            <h:outputText value="Consideraciones:" style="font-weight: bold;" /> <br/>
+            <h:outputText value="- Se requiere el registro de los médicos intervinientes (psicólogo, psiquiatra, director o subdirector) antes del registro de los Certificados de Salud." /> <br/>
+            <h:outputText value="* Para obtener ayuda presionar el siguiente botón " /> 
+            <h:graphicImage name="imagenes/ayuda.png" style="cursor: help;" >
+                <p:ajax event="click" process="@this" update="@this" listener="#{sbCsCertifsaludController.openDlgAyuda(1)}" />
+            </h:graphicImage>
+            <br/><br/>
+                       
+            <h:panelGrid columns="2" width="100%" >
+                <p:fieldset>
+                    <h:panelGrid columns="2" >
+                        <h:outputText value="#{BundleBDIntegrado.sbCsCertifsalud_buscarPorEstablecimiento}" style="display: block; width: 90px;" />
+                        <p:selectOneMenu id="estadoCentroSalud"
+                                         value="#{sbCsCertifsaludController.establecimiento}" >
+                           <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                           <f:selectItems var="item" itemValue="#{item}" itemLabel="#{sbCsCertifsaludController.obtenerDescripcionEstablecimiento(item)}"
+                                          value="#{sbCsCertifsaludController.obtenerEstablecimientosCSActivo }"/>
+                       </p:selectOneMenu>
+                    </h:panelGrid>
+                    <h:panelGrid columns="5" >
+                        <h:outputText value="#{BundleBDIntegrado.sbCsCertifsalud_buscarPor}" style="display: block; width: 90px;" />
+                        <h:panelGrid columns="4" >
+                            <p:selectOneMenu id="buscarPor"
+                                             value="#{sbCsCertifsaludController.tipoBusqueda}"
+                                             autoWidth="false"
+                                             style="width: 130px;">
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItem itemLabel="DNI O CE SOLICITANTE" itemValue="1"/>
+                               <f:selectItem itemLabel="MÉDICO QUE AUTORIZÓ" itemValue="2"/>
+                               <f:selectItem itemLabel="NRO. CERTIFICADO" itemValue="3"/>
+                               <f:selectItem itemLabel="FECHA EMISIÓN" itemValue="4"/>
+                               <f:selectItem itemLabel="ESTADO" itemValue="5"/>
+                               <p:ajax event="change" process="@this,pnlBusquedaCriterio" update="@this,pnlBusquedaCriterio" 
+                                        listener="#{sbCsCertifsaludController.cambiaTipoBusqueda()}" />
+                            </p:selectOneMenu>
+                            <pe:tooltip for="buscarPor"  value="#{BundleBDIntegrado.sbCsCertifsalud_tooltip_tipoBusqueda}" showEffect="slideToggle"  
+                                        hideEffect="slideToggle" showDelay="0" myPosition="left center" atPosition="right center"/>  
+
+                            <h:panelGrid columns="3" id="pnlBusquedaCriterio">
+                                <p:inputText value="#{sbCsCertifsaludController.filtro}"
+                                             rendered="#{!sbCsCertifsaludController.renderFechaSolicitante and sbCsCertifsaludController.tipoBusqueda != 5}"
+                                             id="filtroBusqueda"
+                                             placeholder="Escriba un texto"
+                                             style="width: 280px;" />
+                                <p:calendar  id="fechaSolicitante"
+                                            showOn="button" 
+                                            navigator="true"
+                                            locale="es"
+                                            rendered="#{sbCsCertifsaludController.renderFechaSolicitante}"
+                                            value="#{sbCsCertifsaludController.fechaSolicitante}"
+                                            pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </p:calendar>
+                                
+                                <p:selectOneMenu id="estadoCertif"
+                                                 rendered="#{sbCsCertifsaludController.tipoBusqueda == 5}"
+                                                 value="#{sbCsCertifsaludController.estadoCertif}"
+                                                 autoWidth="false"
+                                                 style="width: 250px;">
+                                      <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                      <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                                     value="#{sbCsCertifsaludController.estadosCertificadoSaludM }"/>
+                                </p:selectOneMenu>
+                             </h:panelGrid>
+
+                            <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                             id="btnBuscarBandeja"
+                                             process="@form"
+                                             style="margin-left: 20px;"
+                                             icon="ui-icon-search "
+                                             actionListener="#{sbCsCertifsaludController.buscarBandeja()}"
+                                             update="@form"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:fieldset>
+                
+                <p:commandButton icon="ui-icon-plus"
+                                 ajax="false"
+                                 process="@form"
+                                 rendered="#{sbCsCertifsaludController.centrosHabilitados > 0}"
+                                 value="#{BundleBDIntegrado.sbCsCertifsalud_registrarCertif}"
+                                 actionListener="#{sbCsCertifsaludController.mostrarCrear() }" />
+            </h:panelGrid>
+            
+            <h:panelGrid columns="1" >
+                
+                <h:panelGrid columns="2" style="width: 100%;" >          
+                    <h:panelGrid columns="2" style="float: left;" >
+                        <p:commandButton icon="ui-icon-plus"                                            
+                                            process="@this"
+                                            rendered="#{sbCsCertifsaludController.centrosHabilitados > 0}"
+                                            value="Transmitir"
+                                            actionListener="#{sbCsCertifsaludController.openDlgConfirmarTransmitir() }" >
+                        </p:commandButton>
+                        <h:outputText value="Para completar correctamente el registro de los Certificados, deberá presionar el botón TRANSMITIR." style="font-weight: bold;color: red;" /> <br/>
+                    </h:panelGrid>
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2" style="width: 100%;margin-bottom: -10px;" >     
+                    <h:panelGrid columns="2" 
+                                 style="float: left;"
+                                 rendered="#{sbCsCertifsaludController.resultados != null}">                            
+                        <p:graphicImage url="/resources/imagenes/orange_rectangle.png" />             
+                        <p:outputLabel value="Certificados rectificados" escape="false"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" style="float: right;" rendered="#{sbCsCertifsaludController.resultados.rowCount > 0}" >
+                        <h:commandLink  >
+                            <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleBDIntegrado.ExportarExcel}"/>
+                            <p:dataExporter type="xls" target="buscarDatatableRegistro" fileName="ListadoCertificadosDeSalud"  />
+                        </h:commandLink>
+                    </h:panelGrid>
+                </h:panelGrid>
+                
+                <p:dataTable id="buscarDatatableRegistro" value="#{sbCsCertifsaludController.resultados}"
+                                     var="itemReg"
+                                     currentPageReportTemplate="Total {totalRecords} elementos"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                     {RowsPerPageDropdown}"
+                                     rowStyleClass="#{sbCsCertifsaludController.estiloPorTipo(itemReg)}"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                    
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_nroCertificado}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.numero}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_fechaEmisión}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.fechaEmision}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_fechaVencimiento}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.fechaVencimiento}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_tipoYNroDoc}" style="text-align: center;" exportable="false">
+                                <h:outputText value="#{sbCsCertifsaludController.getTipoDocumento(itemReg.solicitanteId)} #{itemReg.solicitanteId.numDoc }" />
+                            </p:column>                    
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_tipoDoc}" style="text-align: center;" visible="false" >
+                                <h:outputText value="#{sbCsCertifsaludController.getTipoDocumento(itemReg.solicitanteId)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_nroDoc}" style="text-align: center;" visible="false" >
+                                <h:outputText value="#{itemReg.solicitanteId.numDoc }" />
+                            </p:column>                    
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_solicitante}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.solicitanteId.apellidosyNombres }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_centroSalud}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.establecimientoId.nombre }" />
+                            </p:column>                    
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_estado}" style="text-align: center;" visible="false" >
+                                <h:outputText value="#{itemReg.estadoId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_estado}" style="text-align: center;" exportable="false" >
+                                <h:outputText value="#{itemReg.estadoId.nombre}" /><br style="#{itemReg.estadoId.codProg == 'TP_ECS_TRA'?'':'display:none;'}" />
+                                <h:outputText value="#{itemReg.fechaPresentacion}" rendered="#{itemReg.estadoId.codProg == 'TP_ECS_TRA'}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_responsable}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.usuarioId.login}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_dtListado_acciones}" style="text-align: center;" exportable="false" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 ajax="false"
+                                                 title="Ver"
+                                                 rendered="#{sbCsCertifsaludController.renderBtnVer(itemReg) }"
+                                                 actionListener="#{sbCsCertifsaludController.mostrarVer() }" />
+                                <p:commandButton icon="ui-icon-wrench"
+                                                 ajax="false"
+                                                 title="Editar"
+                                                 rendered="#{sbCsCertifsaludController.renderBtnEditar(itemReg) }"
+                                                 actionListener="#{sbCsCertifsaludController.mostrarEditar() }" />
+                                <p:commandButton icon="ui-icon-newwin"
+                                                 ajax="false"
+                                                 title="Rectificar - Disponible sólo 48h desde su primera presentación"
+                                                 rendered="#{sbCsCertifsaludController.renderBtnRectificar(itemReg) }"
+                                                 actionListener="#{sbCsCertifsaludController.mostrarRectificar() }" />
+                                <p:commandButton icon="ui-icon-trash"
+                                                 styleClass="botonBorrar"
+                                                 update="@form"
+                                                 title="Borrar"
+                                                 rendered="#{sbCsCertifsaludController.renderBtnBorrar(itemReg) }"
+                                                 actionListener="#{sbCsCertifsaludController.borrarRegistro() }" >
+                                    <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro seleccionado?" icon="ui-icon-alert" /> 
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                        <br/>
+            </h:panelGrid>
+        </h:form>
+        
+        <ui:include src="Create.xhtml" />
+        <ui:include src="Edit.xhtml" />        
+        <ui:include src="View.xhtml" />        
+        <ui:include src="dlgNuevoSolicitante.xhtml" />
+        <ui:include src="dlgFoto.xhtml" />
+        <ui:include src="dlgAyuda.xhtml" />
+        <ui:include src="dlgConfirmTransmitir.xhtml" />
+    </ui:define>
+</ui:composition>
+

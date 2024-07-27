@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGamac.EntregaArmas_Titulo}" rendered="#{amaInventarioArmaController.estado == 'VERENTARM'}"/>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="entregaArmasForm">
+                <p:outputLabel value="#{bundleGamac.SeleccionArmasEntrega}"/>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-8" >
+                        <p:fieldset legend="#{bundleGamac.Busqueda}" id="panelEntregaArmas">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-6 ui-lg-1" >
+                                    <p:outputLabel value="Estado"/> 
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-3" >
+                                    <p:selectOneMenu style="width: 20%" value="#{amaInventarioArmaController.estadoBusqueda}" id="cboEstato">
+                                        <f:selectItem itemValue="#{null}" itemLabel="--- Todos ---" />
+                                        <f:selectItem itemValue="ENTREGADO" itemLabel="ENTREGADO" />
+                                        <f:selectItem itemValue="POR ENTREGAR" itemLabel="POR ENTREGAR" />
+                                        <f:selectItem itemValue="VENCIDO" itemLabel="VENCIDO"/>
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-6 ui-lg-1" >
+                                    <p:outputLabel value="Buscar Por"/> 
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-3" >
+                                    <p:selectOneMenu style="width: 20%" value="#{amaInventarioArmaController.idTipoBusquedaEntrega1}" id="cboCriterio">
+                                        <f:selectItem itemValue="#{null}" itemLabel="---" />
+                                        <f:selectItem itemValue="1" itemLabel="PROPIETARIO" />
+                                        <f:selectItem itemValue="2" itemLabel="SERIE DE ARMA" />
+                                        <f:selectItem itemValue="3" itemLabel="NRO. RUA" />
+                                        <p:ajax event="change" update="cboCriterio"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-3" >
+                                    <p:inputText value="#{amaInventarioArmaController.filtroEntrega}" id="filtroEntrega" />
+                                </div>
+                                <div class="ui-g-12 ui-md-6 ui-lg-5" >
+                                    <p:commandButton value="Buscar" icon="ui-icon-search" actionListener="#{amaInventarioArmaController.buscarParaEntrega}" process="@this,panelEntregaArmas" update="buscarDatatable"/>
+                                </div>
+                            </div>
+                        </p:fieldset>
+                    </div>
+                    <div class="ui-g-12 ui-md-12 ui-lg-2" align="center">
+                        <p:fieldset legend="Opciones">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                                    <p:commandButton value="#{bundleGamac.BtnRegistrarEntrega}"
+                                                     actionListener="#{amaInventarioArmaController.openDlgConfRegistrarEntrega}"
+                                                     process="@this,panelEntregaArmas,buscarDatatable" 
+                                                     update="panelEntregaArmas"/>
+                                </div>
+                            </div>
+                        </p:fieldset>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                        <p:fieldset legend="Leyenda" id="pnlEstados">
+                            <h:panelGrid columns="6">
+                                <p:graphicImage name="/imagenes/estadosTarjetaArmas/verde_.png" 
+                                                width="25" alt="#{bundleGamac.EstadoTarjetaPorSolicitar}" style="margin-left: 10px;" />
+                                <p:outputLabel value="#{bundleGamac.EstadoTarjetaEntregado}" />
+                                <p:graphicImage name="/imagenes/estadosTarjetaArmas/amarillo_.png" 
+                                                width="25" alt="#{bundleGamac.EstadoTarjetaParaEntregar}" style="margin-left: 10px;" />
+                                <p:outputLabel value="#{bundleGamac.EstadoTarjetaParaEntregar}" />
+                                <p:graphicImage name="/imagenes/estadosTarjetaArmas/rojo.png" 
+                                                width="25" alt="#{bundleGamac.EstadoTarjetaParaEntregarFecVencida}" style="margin-left: 10px;" />
+                                <p:outputLabel value="#{bundleGamac.EstadoTarjetaParaEntregarFecVencida}" />
+                            </h:panelGrid>
+                        </p:fieldset>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" >
+                        <p:dataTable id="buscarDatatable" value="#{amaInventarioArmaController.lstArmasEntregaMap}" 
+                                     reflow="true"
+                                     var="item"
+                                     rowKey="#{item.ID}"
+                                     selection="#{amaInventarioArmaController.lstArmasEntregaMapSelect}"                                 
+                                     emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                                     paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                                     currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"  
+                                     rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}"
+                                     rowStyleClass="#{item.ESTADO eq 'ENTREGADO'? 'datatable-row-verde':(item.ESTADO eq 'POR ENTREGAR'?'datatable-row-amarillo':'datatable-row-rojo')}">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                    <p:graphicImage value="/resources/icons/xls.png" width="32" alt="Exportar a Excel."/>
+                                    <p:dataExporter type="xls" target="buscarDatatable" fileName="ListaArmas"/>
+                                </h:commandLink>
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:10%;text-align:center" rendered="true" visible="#{item.ESTADO eq 'POR ENTREGAR'}"/>
+                            <p:column rendered="true" visible="#{item.ESTADO ne 'POR ENTREGAR'}"/>
+                            <p:column headerText="Propietario" style="text-align: center;" >
+                                <h:outputText value="#{item.PROPIETARIO}"/>
+                            </p:column> 
+                            <p:column headerText="Nro Tarjeta Propiedad" style="text-align: center;">
+                                <h:outputText value="#{item.NRO_RUA}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Arma" style="text-align: center;" > 
+                                <h:outputText value="#{item.TIPOARMA}" />
+                            </p:column>
+                            <p:column headerText="Serie" style="text-align: center;" filterBy="#{item.SERIE}"> 
+                                <h:outputText value="#{item.SERIE}" />
+                            </p:column>
+                            <p:column headerText="Calibre" style="text-align: center;" > 
+                                <h:outputText value="#{item.CALIBRE}" />
+                            </p:column>
+                            <p:column headerText="Marca" style="text-align: center;" > 
+                                <h:outputText value="#{item.MARCA}" />
+                            </p:column>
+                            <p:column headerText="Modelo" style="text-align: center;" filterBy="#{item.MODELO}"> 
+                                <h:outputText value="#{item.MODELO}" />
+                            </p:column>
+                            <p:column headerText="Estado de Entrega" style="text-align: center;" id="idEstado"> 
+                                <h:outputText value="#{item.ESTADO}"/>
+                            </p:column>
+                            <p:column headerText="Fecha Limite" style="text-align: center;" >
+                                <h:outputText value="#{item.FECHA_LIMITE}">
+                                    <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Fecha Entrega" style="text-align: center;" >
+                                <h:outputText value="#{item.FECHA_ENTREGA}">
+                                    <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </h:form>
+            <ui:include src="dlgNotificacion.xhtml" />
+            <ui:include src="dlgConfirmRegistrarEntrega.xhtml" />
+        </ui:define>
+    </ui:composition>
+</html>

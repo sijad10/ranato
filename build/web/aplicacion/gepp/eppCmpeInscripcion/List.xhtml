@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions" >
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <h:outputText value="#{BundleBDIntegrado.EppCertificadoTitulo_ListadoInscritos}" rendered="#{eppCmpeInscripcionController.estado == 'BUSCAR'}"/>
+            <h:outputText value="#{BundleBDIntegrado.EppCertificado_Ver}" rendered="#{eppCmpeInscripcionController.estado == 'VER'}"/>
+            <h:outputText value="#{BundleBDIntegrado.EppCertificado_Editar}" rendered="#{eppCmpeInscripcionController.estado == 'EDITAR'}"/>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listBand" rendered="#{eppCmpeInscripcionController.estado == 'BUSCAR'}" >
+                <p:panel header="Busqueda" id="panBusqueda" >
+                    <h:panelGrid columns="1" id="pnlgBusqueda" >
+                            <p:fieldset legend="#{BundleBDIntegrado.EppCertificado_criterioBusq}" >
+                                
+                                <h:panelGrid columns="2" id="pnlCapacitacion">
+                                    <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_capacitacionProg}" for="bus"/> 
+                                    
+                                    <p:selectOneMenu id="lugarFecha"
+                                                     autoWidth="false"
+                                                     style="width: 450px;"
+                                                     value="#{eppCmpeInscripcionController.capacitacion }" >
+                                       <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                       <f:selectItems var="item" itemValue="#{item}" itemLabel="#{eppCmpeInscripcionController.obtenerLugarFechaCertificacionesConstancia(item)}"
+                                                      value="#{eppCmpeInscripcionController.itemsCapacitacionCertificadoMS}"/>
+                                       <p:ajax event="change" update="@this" process="@this" />
+                                   </p:selectOneMenu>                                    
+                                </h:panelGrid>
+                                <br/>
+                                <h:panelGrid columns="2" id="pnlFiltro">
+                                    <h:panelGrid columns="5" >
+                                        <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_rangoFecha}"/>
+                                        <p:outputLabel value=""/>
+                                        <p:outputLabel value=""/>
+                                        <p:outputLabel value=""/>
+                                        <p:outputLabel value=""/>
+                                        
+                                        <p:calendar id="fechaInicio"
+                                                    locale="es"
+                                                    showOn="button" value="#{eppCmpeInscripcionController.fechaInicio }"
+                                                    pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                        </p:calendar>
+                                        <pe:tooltip for="fechaInicio"
+                                                    value="Ingrese la fecha de inicio de búsqueda" 
+                                                    showEffect="slideToggle"  
+                                                    hideEffect="slideToggle" 
+                                                    showDelay="0" 
+                                                    myPosition="left center" 
+                                                    atPosition="right center"/>  
+                                        <p:outputLabel value="al"/>
+                                        <p:calendar id="fechaFin"
+                                                    locale="es"
+                                                    showOn="button" value="#{eppCmpeInscripcionController.fechaFin }"
+                                                    pattern="#{BundleBDIntegrado.FormatoFecha}" >  
+                                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                        </p:calendar>
+                                        <pe:tooltip for="fechaFin"
+                                                    value="Ingrese la fecha final de búsqueda" 
+                                                    showEffect="slideToggle"  
+                                                    hideEffect="slideToggle" 
+                                                    showDelay="0" 
+                                                    myPosition="left center" 
+                                                    atPosition="right center"/> 
+                                        
+                                    </h:panelGrid>
+                                    
+                                    <h:panelGrid columns="3" >
+                                        <p:outputLabel value="#{BundleBDIntegrado.EppCertificado_buscarpor}" for="bus"/>
+                                        <p:outputLabel value=""/>
+                                        <p:outputLabel value=""/>
+                                        
+                                        <p:selectOneMenu id="bus" value="#{eppCmpeInscripcionController.tipoBusqueda}"  >
+                                            <f:selectItem itemValue="#{null}" itemLabel="------"/>
+                                            <f:selectItem itemValue="1" itemLabel="APELLIDOS Y NOMBRES DE PARTICIPANTE" />
+                                            <f:selectItem itemValue="2" itemLabel="NRO. DOCUMENTO DE PARTICIPANTE" />
+                                            <f:selectItem itemValue="3" itemLabel="RESULTADO DE LA CAPACITACION" />
+                                            <p:ajax event="change" update="@this,pnlBusquedaCriterio" listener="#{eppCmpeInscripcionController.cambiaResultadoBusqueda()}" />
+                                        </p:selectOneMenu>
+                                        <h:panelGrid columns="2" id="pnlBusquedaCriterio">
+                                            <p:inputText value="#{eppCmpeInscripcionController.filtro}" rendered="#{!eppCmpeInscripcionController.muestraBusquedafecha}" id="filtroBusqueda" />
+                                            <pe:tooltip for="filtroBusqueda"                                                        value="Ingrese el criterio de búsqueda" 
+                                                        showEffect="slideToggle"  
+                                                        hideEffect="slideToggle" 
+                                                        showDelay="0" 
+                                                        myPosition="left center" 
+                                                        atPosition="right center"/> 
+                                            
+                                            <p:selectOneMenu id="result" value="#{eppCmpeInscripcionController.tipoResultado}"  rendered="#{eppCmpeInscripcionController.muestraBusquedafecha}" >
+                                                <f:selectItem itemValue="#{null}" itemLabel="------"/>                                                
+                                                <f:selectItem itemValue="APROBADO" itemLabel="APROBADO" />
+                                                <f:selectItem itemValue="DESAPROBADO" itemLabel="DESAPROBADO" />                                                
+                                                <p:ajax event="change" update="@this" process="@this" />
+                                            </p:selectOneMenu>
+                                        </h:panelGrid>
+                                        <p:commandButton value="#{BundleBDIntegrado.Buscar}" 
+                                                     process="@this,pnlgBusqueda"
+                                                     icon="ui-icon-search " actionListener="#{eppCmpeInscripcionController.buscarBandeja()}" 
+                                                     update="@form"/>  
+                                    </h:panelGrid>
+                                </h:panelGrid>
+     
+                            </p:fieldset>
+                    </h:panelGrid>
+                    <br/>
+                    <p:commandButton value="#{BundleBDIntegrado.EppCertificado_btnInscribir}"
+                                         actionListener="#{eppCmpeInscripcionController.openDlgDeclaracionInscripcion()}"
+                                         process="@this,buscarDatatableRegistro" />
+                    <br/><br/>
+                    <p:dataTable id="buscarDatatableRegistro" value="#{eppCmpeInscripcionController.resultadosBandeja}"
+                                 var="itemReg"
+                                 rowKey="#{itemReg.ID}"
+                                 selection="#{eppCmpeInscripcionController.listEppRegistroSelec}"                                                   
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                 paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                 {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">                    
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center" rendered="true" visible="#{itemReg.TIPOREG == 2}" />
+                        <p:column rendered="true" visible="#{itemReg.TIPOREG != 2}" style="width:16px;text-align:center" />
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_id}" sortBy="#{itemReg.ID}" style="text-align: center;" >                               
+                            <h:outputText value="#{itemReg.ID}" />
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_Participante}" style="text-align: center;" >                            
+                            <h:outputText value="#{itemReg.APE_PAT.concat(' ').concat(itemReg.APE_MAT).concat(' ').concat(itemReg.NOMBRES) }"/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_numDocumento}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.NUM_DOC}"/><br/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_fechaInscrip}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.FECHA}">
+                                <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_lugarFecha}" style="text-align: center;" >
+                            <h:outputText value="#{eppCmpeInscripcionController.obtenerLugarFechaCertificacionesMS(itemReg)}"/><br/>
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_expediente}" style="text-align: center;" >
+                            <h:outputText value="#{itemReg.NRO_EXPEDIENTE}"/><br/>
+                        </p:column>                        
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_resultado}" style="text-align: center;" >                               
+                            <h:outputText value="#{eppCmpeInscripcionController.formatoResultadoCap(itemReg) }"/>                            
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.EppCertificado_dtBandeja_accion}" style="text-align: center;">  
+                            <p:commandButton  id="botonReporteD" icon="ui-icon-print" 
+                                              rendered="#{itemReg.TIPOREG == 1}"
+                                              ajax="false" 
+                                              value="Ver PDF"
+                                              partialSubmit="true"                              
+                                              onclick="this.form.target = '_blank'" 
+                                              onblur="this.form.target = '_self'" 
+                                              immediate="true" >
+                                <p:fileDownload value="#{eppCmpeInscripcionController.constanciaListado(itemReg)}" contentDisposition="inline"  />
+                            </p:commandButton>
+                            
+                            <p:commandButton id="btnVer"
+                                             update="@form"
+                                             rendered="#{itemReg.TIPOREG == 2}"
+                                             icon="ui-icon-search" 
+                                             ajax="false"
+                                             actionListener="#{eppCmpeInscripcionController.mostrarVer(itemReg)}" >
+                            </p:commandButton>
+                            <pe:tooltip for="btnVer"                                          
+                                        value="Ver detalle del borrador" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>
+                            
+                            
+                            <p:commandButton id="btnEditar"
+                                             update="@form"
+                                             rendered="#{itemReg.TIPOREG == 2}"
+                                             icon="ui-icon-pencil" 
+                                             ajax="false"
+                                             actionListener="#{eppCmpeInscripcionController.mostrarEditar(itemReg)}" >
+                            </p:commandButton>
+                            <pe:tooltip for="btnEditar"                                          
+                                        value="Editar registro"
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>
+                            
+                            <p:commandButton id="btnBorrar"
+                                             update="@form"
+                                             icon="ui-icon-trash"
+                                             styleClass="botonBorrar"
+                                             rendered="#{itemReg.TIPOREG == 2}"                                             
+                                             actionListener="#{eppCmpeInscripcionController.borrarRegistroListado(itemReg)}" >
+                                 <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro?" icon="ui-icon-alert" /> 
+                            </p:commandButton> 
+                            <pe:tooltip for="btnBorrar"                                          
+                                        value="Borrar" 
+                                        showEffect="slideToggle"  
+                                        hideEffect="slideToggle" 
+                                        showDelay="0" 
+                                        myPosition="left center" 
+                                        atPosition="right center"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>                    
+            </h:form>
+            
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+            <ui:include src="dlgConfirmarInscripcion.xhtml"/>
+            <ui:include src="dlgAyuda.xhtml"/>
+            <ui:include src="dlgBuscarPersona.xhtml"/>
+            <ui:include src="dlgNuevaPersona.xhtml"/>
+            <ui:include src="dlgDni.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

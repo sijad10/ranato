@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="dlgConfirmarCancelacion" widgetVar="wvConfirmarCancelacion" closable="false" header="CONFIRMACIÓN DE CANCELACIÓN DE CURSO" 
+                  resizable="false" modal="true" appendTo="@(body)" width="40%" height="45%">    
+
+            <h:form id="frmConfirmarCancelacion">
+                <h:panelGrid columns="1" >
+                    <h:outputText value="#{sspRegistroCursoController.obtenerMensajeCancelacion()}" style="font-size: small;" />
+                    <br/>
+                    <h:outputText value="Motivo de cancelación: " style="font-size: small;" />
+                    <p:inputTextarea id="observacionSustento" cols="120" rows="5" 
+                                     onblur="this.value = this.value.toUpperCase();" 
+                                     value="#{sspRegistroCursoController.registro.observacion}"
+                                     maxlength="300" />
+                    <br/>
+                    <h:outputText value="#{BundleBDIntegrado.sspCursos_msjeCancelacion2}" style="font-size: small;font-weight: bold;"  />
+                </h:panelGrid>
+                <br/>
+                <h:panelGroup style="float: right">
+                    <p:commandButton value="SI"
+                                     process="@form"
+                                     update="@form"
+                                     ajax="false"
+                                     action="#{sspRegistroCursoController.cancelacionCurso()}"
+                                     icon="ui-icon-disk" />
+                    <p:commandButton value="NO" 
+                                 process="@this"
+                                 update="frmConfirmarCancelacion" 
+                                 actionListener="#" 
+                                 oncomplete="PF('wvConfirmarCancelacion').hide()" 
+                                 icon="ui-icon-cancel" />
+                </h:panelGroup>
+                <br/>
+            </h:form>
+        </p:dialog>
+        
+    </ui:composition>
+</html>

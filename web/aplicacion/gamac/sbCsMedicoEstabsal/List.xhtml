@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{BundleBDIntegrado.BuscarSbCsMedicoTitulo}" rendered="#{sbCsMedicoEstabsalController.estado == 'BUSCAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.VerSbCsMedicoTitulo}" rendered="#{sbCsMedicoEstabsalController.estado == 'VER'}"/>
+        <h:outputText value="#{BundleBDIntegrado.EditarSbCsMedicoTitulo}" rendered="#{sbCsMedicoEstabsalController.estado == 'EDITAR'}"/>
+        <h:outputText value="#{BundleBDIntegrado.CrearSbCsMedicoTitulo}" rendered="#{sbCsMedicoEstabsalController.estado == 'CREAR'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="listForm" rendered="#{sbCsMedicoEstabsalController.estado == 'BUSCAR'}">
+            <p:focus context="listForm" />
+            <h:outputText value="#{BundleBDIntegrado.sbCsMedico_msje}" /> <br/><br/>
+            
+            <h:panelGrid columns="2" width="100%" >
+                <p:fieldset>
+                    <h:panelGrid columns="5" >
+                        <h:outputText value="#{BundleBDIntegrado.sbCsMedico_buscarPor}" style="display: block; width: 80px;" />
+                        <h:panelGrid columns="3" >
+                            <p:selectOneMenu id="buscarPor"
+                                             value="#{sbCsMedicoEstabsalController.tipoBusqueda}"
+                                             autoWidth="false"
+                                             style="width: 130px;">
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItem itemLabel="DNI/CE MÉDICO" itemValue="1"/>                               
+                               <f:selectItem itemLabel="NOMBRE DE MÉDICO" itemValue="2"/>
+                               <f:selectItem itemLabel="ESTABLECIMIENTO" itemValue="3"/>
+                               <p:ajax event="change" process="@this,pnlBusquedaCriterio" update="@this,pnlBusquedaCriterio" 
+                                        listener="#{sbCsMedicoEstabsalController.cambiaTipoBusqueda()}" />
+                            </p:selectOneMenu>
+
+                            <h:panelGrid columns="2" id="pnlBusquedaCriterio">
+                                <p:inputText value="#{sbCsMedicoEstabsalController.filtro}"
+                                             rendered="#{!sbCsMedicoEstabsalController.renderComboEstablecimiento}"
+                                             id="filtroBusqueda"
+                                             placeholder="Escriba un texto"
+                                             style="width: 280px;" />
+                                <p:selectOneMenu id="estadoCentroSalud"
+                                                 rendered="#{sbCsMedicoEstabsalController.renderComboEstablecimiento}"
+                                                 value="#{sbCsMedicoEstabsalController.establecimientoCS}" >
+                                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                    <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}"
+                                                   value="#{sbCsMedicoEstabsalController.obtenerEstablecimientosCS }"/>
+                               </p:selectOneMenu>
+                             </h:panelGrid>
+
+                            <p:commandButton value="#{BundleBDIntegrado.Buscar}"
+                                             id="btnBuscarBandeja"
+                                             process="@form"
+                                             style="margin-left: 20px;"
+                                             icon="ui-icon-search "
+                                             actionListener="#{sbCsMedicoEstabsalController.buscarBandeja()}"
+                                             update="@form"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:fieldset>                
+                
+                <p:commandButton icon="ui-icon-plus"
+                                 ajax="false"
+                                 process="@form"
+                                 rendered="#{sbCsMedicoEstabsalController.centrosHabilitados > 0}"
+                                 value="#{BundleBDIntegrado.sbCsMedico_registrarMedico}"
+                                 actionListener="#{sbCsMedicoEstabsalController.mostrarCrear() }" />
+            </h:panelGrid>
+            
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="2" style="float: right;" rendered="#{sbCsMedicoEstabsalController.resultados.rowCount > 0}" >
+                    <h:commandLink >
+                        <p:graphicImage name="/icons/xls.png" width="32" alt="#{BundleBDIntegrado.ExportarExcel}"/>
+                        <p:dataExporter type="xls" target="buscarDatatableRegistro" fileName="ListadoCentrosDeSalud"  />
+                    </h:commandLink>
+                </h:panelGrid>
+                
+                <p:dataTable id="buscarDatatableRegistro" value="#{sbCsMedicoEstabsalController.resultados}"
+                                     var="itemReg"
+                                     currentPageReportTemplate="Total {totalRecords} elementos"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}
+                                     {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_centroSalud}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.establecimientoId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_tipoYNroDoc}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsMedicoEstabsalController.getTipoDocumento(itemReg.medicoId.personaId)} " />
+                                <h:outputText value="#{itemReg.medicoId.personaId.numDoc }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_medico}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.medicoId.personaId.apellidosyNombres }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_cargo}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsMedicoEstabsalController.obtenerDescDelegadoListadoMedicos(itemReg) }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_fechaInicio}" style="text-align: center;" sortBy="#{itemReg.fechaIni}">
+                                <h:outputText value="#{itemReg.fechaIni}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_fechaFin}" style="text-align: center;" sortBy="#{itemReg.fechaFin}" >
+                                <h:outputText value="#{itemReg.fechaFin}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>             
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_estado}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsMedicoEstabsalController.getMedicoActivoXEstablecimiento(itemReg) }" />
+                            </p:column>                            
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_responsable}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.usuarioId.login}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsMedico_dtListadoMedico_acciones}" style="text-align: center;" exportable="false" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 ajax="false"
+                                                 title="Ver"
+                                                 rendered="#{sbCsMedicoEstabsalController.renderBtnVer(itemReg) }"
+                                                 actionListener="#{sbCsMedicoEstabsalController.mostrarVer() }" />
+                                <p:commandButton icon="ui-icon-wrench"
+                                                 ajax="false"
+                                                 title="Editar"
+                                                 rendered="#{sbCsMedicoEstabsalController.renderBtnEditar(itemReg) }"
+                                                 actionListener="#{sbCsMedicoEstabsalController.mostrarEditar() }" />
+                                <p:commandButton icon="ui-icon-trash"
+                                                 title="Borrar"
+                                                 styleClass="botonBorrar"
+                                                 update="@form"
+                                                 rendered="#{sbCsMedicoEstabsalController.renderBtnBorrar(itemReg) }"
+                                                 actionListener="#{sbCsMedicoEstabsalController.borrarRegistro() }" >
+                                    <p:confirm header="Confirmación" message="¿Está seguro de borrar el registro seleccionado?" icon="ui-icon-alert" /> 
+                                </p:commandButton>
+                                <p:commandButton icon="#{itemReg.habilitado == 1?'ui-icon-cancel':'ui-icon-check'}"
+                                                 styleClass="#{itemReg.habilitado == 1?'botonSuspender':'botonActivar'}"
+                                                 update="@form"
+                                                 title="#{itemReg.habilitado == 1?'Suspender':'Activar'}"
+                                                 rendered="#{sbCsMedicoEstabsalController.renderBtnSuspender(itemReg) }"
+                                                 actionListener="#{sbCsMedicoEstabsalController.habilitarCentroSalud() }" >
+                                    <p:confirm header="Confirmación" message="¿Está seguro de #{itemReg.habilitado == 1?'suspender':'habilitar'} al médico seleccionado?" icon="ui-icon-alert" /> 
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+            </h:panelGrid>
+        </h:form>
+        
+        <ui:include src="Create.xhtml" />
+        <ui:include src="Edit.xhtml" />
+        <ui:include src="View.xhtml" />
+        <ui:include src="dlgNuevoMedico.xhtml" />
+    </ui:define>
+</ui:composition>
+

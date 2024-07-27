@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="editarForm" rendered="#{eppLibroController.estado == 'EDITAR'}" >
+        <p:focus context="editarForm" />
+        <p:panel header="Datos de Venta" id="pnDv">
+            <h:panelGrid columns="4" cellspacing="5" id="pndVenta">
+                <p:outputLabel value="RG Comercializacion" for="resPL"/>
+                <p:selectOneMenu value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 filter="true"  id="resPL" disabled="true"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                    <p:ajax event="change" listener="#{eppLibroController.ajaxMostrarRgfabricaComercio()}"
+                            process="@this,resPL" 
+                            update="crearForm"/>
+
+                </p:selectOneMenu>
+                <p:outputLabel value="RG Fabricacion"/>
+                <p:inputText value="#{eppLibroController.numeroResFabri}" id="nroRes" size="40" disabled="true"/>
+
+                <p:outputLabel value="Local Comercial"/>
+                <p:inputTextarea value="#{eppLibroController.registroPlantaUsoComercio.eppLocalList.get(0).getDireccionCompleta()}" 
+                                 id="resCo" maxlength="200"  rows="3" cols="40" styleClass="inputTextArea"  disabled="true" />
+
+                <p:outputLabel value="Fabrica" id="tluso" />
+                <p:inputTextarea value="#{eppLibroController.direccionFabrica}" maxlength="200" 
+                                 rows="3" cols="40" styleClass="inputTextArea" disabled="true" />         
+
+            </h:panelGrid>
+            
+
+
+
+        </p:panel><br/><br/>
+        <!-- explosivos -->
+        <p:panel header="Explosivos o Material Relacionado Vendidos" id="pnExUso" >
+            <h:panelGrid columns="4">
+                <p:outputLabel value="Tipo Destinatario"/>
+                <p:selectOneMenu value="#{eppLibroController.tipoDestinatario}" id="tpm"
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{tipoExplosivoController.selectItemsTipo('TP_LIBCOM', null)}" 
+                                   var="tiDes" itemLabel="#{tiDes.nombre}"
+                                   itemValue="#{tiDes}"/>
+                    <p:ajax process="@this,cp" update=":editarForm:cp,:editarForm:des" listener="#{eppLibroController.limpiarComprador}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Comprador"/>
+                <h:panelGroup id="comp">
+                    <p:inputText value="#{eppLibroController.comprador}" size="80" id="cp" readonly="true"/>
+                    <p:commandButton value="Buscar" process="@this,tpm" icon="ui-icon-search"
+                                     actionListener="#{eppLibroController.limpiarTabla}" update="compForm"
+                                     oncomplete="PF('ComprafDialog').show()"/>
+                </h:panelGroup>
+            </h:panelGrid><br/>
+            <h:panelGrid columns="2" cellspacing="5">
+                <p:outputLabel value="Destino" />
+                <p:inputTextarea value="#{eppLibroController.destino}" 
+                                 id="des" maxlength="200" rows="3" styleClass="inputTextArea" cols="150" readonly="true"/>
+            </h:panelGrid>
+            <h:panelGrid columns="6" cellspacing="5">
+                <p:outputLabel value="Explosivos"/>
+                <p:selectOneMenu value="#{eppLibroController.libroUsoDiario}" 
+                                 id="exploC" autoWidth="false"
+                                 filter="true" effect="fade">
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listEppLibroExploFabricadosCo}"               
+                                   var="exC" itemLabel="#{exC.explosivoId.nombre}"
+                                   itemValue="#{exC}"/> 
+
+                </p:selectOneMenu>
+                <p:outputLabel value="Cantidad"/>
+                <p:inputText value="#{eppLibroController.cantidad}">
+                    <p:keyFilter mask="money" preventPaste="false"/>  
+                    <f:validateDoubleRange minimum="0.0" maximum="9999999999.99" />
+                </p:inputText>
+
+
+
+                <p:outputLabel value="Nro Lote"/>
+                <p:inputText value="#{eppLibroController.nroLote}" maxlength="20" />
+                
+              
+
+                <p:outputLabel value="Dia"/>
+                <p:selectOneMenu value="#{eppLibroController.diaVenDiarioEx}" id="da">
+                    <f:selectItems value="#{eppLibroController.listaVenExMesList}" 
+                                   var="dia" itemLabel="#{dia}" itemValue="#{dia}"/>
+                </p:selectOneMenu>
+
+                <p:commandButton value="Agregar" update="@form"  icon="ui-icon-plus"
+                                 actionListener="#{eppLibroController.agregarEppLibroDetalle()}"/>     
+
+
+
+
+            </h:panelGrid>
+
+            <p:dataTable id="deExp"  
+                         value="#{eppLibroController.listEppLibroDetalle}"
+                         var="exploC"  widgetVar="C" 
+                         selection="#{eppLibroController.selectLibrodetalle}"
+                         rowKey="#{exploC.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="25"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo"  filterBy="#{exploC.libroUsoDiarioId.explosivoId.nombre}" filterMatchMode="contains" >
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.libroUsoDiarioId.explosivoId.nombre}"/>
+                </p:column>
+                <p:column headerText="Tipo Destinatario"  filterBy="#{exploC.getTipoRegistroId().getNombre()}" filterMatchMode="contains">  
+                    <f:facet name="header">
+                        <p:outputLabel value="Tipo Destinatario"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.getTipoRegistroId().getNombre()}"/>
+                </p:column>
+                <p:column headerText="Comprador"  filterBy="#{exploC.getRegcompradorId().getEmpresaId().getRznSocial()}" filterMatchMode="contains">  
+                    <f:facet name="header">
+                        <p:outputLabel value="Comprador"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.getRegcompradorId().getEmpresaId().getRznSocial()}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.libroUsoDiarioId.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Fecha"  filterBy="#{exploC.fecha}"  filterMatchMode="contains">
+                    <f:facet name="header">
+                        <p:outputLabel value="Fecha"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.fecha}">
+                        <f:convertDateTime  pattern="#{bundle.FormatoFecha}" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Cantidad Vendida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Fabricada"/>
+                    </f:facet>
+                    <h:outputText value="#{exploC.cantidad}" >
+                        <f:convertNumber locale="en-US"/>
+                    </h:outputText>
+                </p:column>
+                <f:facet name="footer">
+                    <p:commandButton value="Eliminar detalle explosivos" icon="ui-icon-trash"
+                                     process="@this,deExp" update="@form"
+                                     actionListener="#{eppLibroController.elimimarMultipleEpplibroDetalle()}"
+                                     style="float: left">                  
+                        <p:confirm header="#{bundle.ConfirmarTitulo}" message="#{bundle.ConfirmarAnular}" icon="ui-icon-alert" />  
+                    </p:commandButton>
+                </f:facet>
+
+            </p:dataTable>   
+
+        </p:panel><br/>
+
+
+
+        <br/>
+        <div align="center">
+            <p:commandButton id="botonGuardar" icon="ui-icon-disk" update="@all" 
+                             actionListener="#{eppLibroController.editarComercio}" 
+                             value="#{bundle.Guardar}"/>
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroComercio()}" 
+                             value="Listado Venta/Comercio" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

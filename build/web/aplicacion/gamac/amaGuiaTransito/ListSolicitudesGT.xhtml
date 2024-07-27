@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGamac.ListadoSolicitudesGT_Titulo}" rendered="#{amaGuiaTransitoController.estado == 'BUSCAR'}"/>
+            <h:outputText value="#{bundleGamac.RegistroSolicitudGT_Titulo}" rendered="#{amaGuiaTransitoController.estado == 'CREAR'}"/>
+            <h:outputText value="#{bundleGamac.VerDatosGuiaTransito_Titulo}" rendered="#{amaGuiaTransitoController.estado == 'VER'}"/>
+            <h:outputText value="#{bundleGamac.EditarDatosGuiaTransito_Titulo}" rendered="#{amaGuiaTransitoController.estado == 'EDITAR'}"/>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listarSolForm" rendered="#{amaGuiaTransitoController.estado == 'BUSCAR'}">
+                <p:outputLabel value="#{bundleGamac.SolicitudesGuiaTransito_SubTitulo}"/>
+                <h:panelGrid columns="2" width="75%">
+                    <p:panel header="#{bundleGamac.Busqueda}" id="panelPrincipal">
+                        <h:panelGrid columns="2" width="72%">
+                            <p:outputLabel value="Rango de Fecha" style="width: 50%"/>
+                            <p:outputLabel value="Buscar Por" style="width: 100%"/> 
+                        </h:panelGrid >
+                        <h:panelGrid columns="6">
+                            <p:calendar id="fechainicio" maxdate="#{amaGuiaTransitoController.fechaHoy}" 
+                                        showOn="button" value="#{amaGuiaTransitoController.fechaini}" 
+                                        pattern="#{bundleGamac.FormatoFecha}"
+                                        navigator="true" locale="es">  
+                                <p:ajax event="dateSelect" update="fechafin" />
+                                <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                            </p:calendar>
+                            <p:outputLabel value=" al " />                                
+                            <p:calendar id="fechafin" mindate="#{amaGuiaTransitoController.fechaini}" maxdate="#{amaGuiaTransitoController.fechaHoy}"
+                                        showOn="button" value="#{amaGuiaTransitoController.fechafin}"
+                                        pattern="#{bundleGamac.FormatoFecha}"
+                                        navigator="true" locale="es">
+                                <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                            </p:calendar>
+                            <p:selectOneMenu style="width: 50%" value="#{amaGuiaTransitoController.idTipoBusqueda}" onchange="" id="cbCriterio">
+                                <f:selectItem itemValue="#{null}" itemLabel="---" />
+                                <f:selectItem itemValue="1" itemLabel="RAZON SOCIAL O NOMBRE" />
+                                <f:selectItem itemValue="2" itemLabel="RUC" />
+                                <p:ajax event="change" update="cbCriterio "/>
+                            </p:selectOneMenu>
+                            <p:inputText value="#{amaGuiaTransitoController.filtro}" id="filtro"/>
+                            <p:commandButton value="Buscar" icon="ui-icon-search" style="float: right !important; height: 20%;width:100%" actionListener="#{amaGuiaTransitoController.buscar}" process="@this,panelPrincipal" update=":listarSolForm:listaSolicitudes"/>
+                        </h:panelGrid>
+
+                    </p:panel>
+                    <h:panelGrid>
+                        <p:commandButton id="botonCrear" value="#{bundleGamac.BotonCrearSolGT}" 
+                                         actionListener="#{amaGuiaTransitoController.accionCrearSolicitudGT}"
+                                         update="@form"
+                                         immediate="true"
+                                         process="@this" 
+                                         partialSubmit="true" 
+                                         ajax="false"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+                <p:dataTable id="listaSolicitudes" value="#{amaGuiaTransitoController.listaSolGT}" 
+                             var="item"
+                             rowKey="#{item.id}"
+                             selection="#{amaGuiaTransitoController.listaSolGTSelected}"                                 
+                             emptyMessage="#{bundleGamac.MensajeNoResultados}" 
+                             paginator="true" rows="#{bundleGamac.PaginatorFilas}"  
+                             currentPageReportTemplate="#{bundleGamac.TotalRegistrosEncontrados} {totalRecords} #{bundleGamac.DescripcionItemsEncontrados}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{bundleGamac.PaginatorFilasPorPagina}">
+                    <p:column selectionMode="multiple" style="width:5%;text-align:center;background-color: #dfecf1" rendered="true" 
+                              visible="true" />
+                    <p:column headerText="#{bundleGamac.Correlativo_head}" style="text-align: center;width: 8%;" >
+                        <h:outputText value="#{item.correlativo}"/>
+                    </p:column> 
+                    <p:column headerText="#{bundleGamac.FechaEmision_head}" style="text-align: center;width: 6%;" >
+                        <h:outputText value="#{item.fechaEmision}">
+                            <f:convertDateTime pattern="#{bundleGamac.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{bundleGamac.Solicitante_head}" style="text-align: center;width: 20%;" >
+                        <h:outputText value="#{item.personaArmeriaId.rznSocial==null?item.personaArmeriaId.nombres.concat(' ').concat(item.personaArmeriaId.apePat).concat(' ').concat(item.personaArmeriaId.apeMat):item.personaArmeriaId.rznSocial}"/>
+                    </p:column> 
+
+                    <p:column headerText="#{bundleGamac.Acciones_head}" style="text-align: center;;width: 15%;" > 
+                        <p:commandButton id="btnVer" value="#{bundleGamac.BotonVer}" action="#{amaGuiaTransitoController.accionVer(item)}" icon="ui-icon-folder-open"
+                                         process="@this" 
+                                         partialSubmit="true" 
+                                         immediate="true"
+                                         ajax="false"/>
+                        <p:commandButton id="btnEditar" value="#{bundleGamac.BotonEditar}" actionListener="#{amaGuiaTransitoController.accionEditar(item)}" icon="ui-icon-pencil"
+                                         update="@form"
+                                         process="@this" 
+                                         partialSubmit="true" 
+                                         immediate="true"
+                                         ajax="false"/>
+                        <p:commandButton id="btnAnular" value="#{bundleGamac.BotonAnularGuia}" actionListener="#{amaGuiaTransitoController.accionAnular(item)}" icon="ui-icon-trash"
+                                         immediate="true"
+                                         process="@this" 
+                                         partialSubmit="true" 
+                                         style="background-color: firebrick">
+                            <p:confirm header="Confirmación" message="¿Está seguro que desea eliminar la Guía de Tránsito del Expediente seleccionado?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-recibido" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+            <ui:include src="CrearSolGuia.xhtml"/>
+        </ui:define>
+    </ui:composition>
+</html>

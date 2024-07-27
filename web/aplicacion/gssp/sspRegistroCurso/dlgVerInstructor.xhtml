@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgVerInstructores" widgetVar="wvDlgVerInstructores" width="45%" height="52%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="INSTRUCTORES" closable="false">
+        <h:form id="frmVerInstructores">
+            <h:panelGrid columns="1" >
+                <p:dataTable id="dtListado"
+                             value="#{sspRegistroCursoController.obtenerListadoInstructores()}" 
+                             var="item" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="5"
+                             currentPageReportTemplate="Total {totalRecords} instructor(es)"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda_}">
+                    <p:column headerText="Instructor" style="text-align: center;" >
+                        <h:outputText value="#{item.personaId.nombres} #{item.personaId.apePat} #{item.personaId.apeMat}" />
+                    </p:column>
+                    <p:column headerText="Num. Doc." style="text-align: center;" >
+                        <h:outputText value="#{item.personaId.numDoc}" />
+                    </p:column>
+                    <p:column headerText="Nro. Ficha" style="text-align: center;" >
+                        <h:outputText value="#{item.nroFicha}" />
+                    </p:column>
+                    <p:column headerText="Fecha Vencimiento" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaVencimiento}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmVerInstructores" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDlgVerInstructores').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

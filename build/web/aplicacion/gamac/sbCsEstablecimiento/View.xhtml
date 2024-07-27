@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="viewForm" rendered="#{sbCsEstablecimientoController.estado == 'VER'}" >
+        <p:focus context="viewForm" />
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_datosIpress}" id="pnlDatosCrear" >
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_tipo}" style="font-weight: bold;" />
+                <p:outputLabel  value="#{sbCsEstablecimientoController.registro.tipoId.nombre }" />
+                              
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_denominacion}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsEstablecimientoController.registro.nombre}" />
+                              
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_propietario}" style="font-weight: bold;" />
+                <h:outputText  value="#{sbCsEstablecimientoController.obtenerDescPropietario(sbCsEstablecimientoController.registro.propietarioId)}"
+                              rendered="#{!sbCsEstablecimientoController.renderPropietario}" />
+               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_direccion}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsEstablecimientoController.obtenerDescripcionDireccion(sbCsEstablecimientoController.registro.direccionId) }" />
+
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_resolucion}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsEstablecimientoController.registro.nroResFuncionamiento}" />
+
+               <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_fechaInicio}" style="font-weight: bold;" />
+               <p:outputLabel value="#{sbCsEstablecimientoController.registro.fechaIni}" >
+                   <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+               </p:outputLabel>
+               
+               <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_fechaVencimiento}" style="font-weight: bold;" />
+               <p:outputLabel value="#{sbCsEstablecimientoController.registro.fechaFin}" >
+                   <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+               </p:outputLabel>
+               
+               <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_ubicación}" style="font-weight: bold;" />
+               <h:panelGrid id="pnlMapa" columns="5" >
+                    <p:commandButton icon="ui-icon-search"                                            
+                                        process="@this,pnlMapa"
+                                        update="@this,pnlMapa"
+                                        value="Ver Mapa"
+                                        id="btnMapa"
+                                        actionListener="#{sbCsEstablecimientoController.openDlgVerMapa() }" >
+                    </p:commandButton>
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_latitud}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.registro.direccionId.geoLat }" />
+                    <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_longitud}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{sbCsEstablecimientoController.registro.direccionId.geoLong}" />
+                </h:panelGrid>
+               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_estado}" style="font-weight: bold;" />
+                <h:outputText value="#{sbCsEstablecimientoController.obtenerDescripcionCentroSalud(sbCsEstablecimientoController.registro)}" />
+               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_nroResMinsa} " style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsEstablecimientoController.registro.nroResMinsa}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_fechaInicioRgMinsa} " style="font-weight: bold;"/>
+                <p:outputLabel value="#{sbCsEstablecimientoController.registro.fechaIniRgMinsa}" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsEstablecimiento_crear_fechaFinRgMinsa} " style="font-weight: bold;"/>
+                <p:outputLabel value="#{sbCsEstablecimientoController.registro.fechaFinRgMinsa}" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+            </h:panelGrid>
+            
+            <br/>
+            <p:fieldset id="fsHorario" legend="#{BundleBDIntegrado.sbCsEstablecimiento_crear_horarioAtencion}">
+                <h:panelGrid id="pnlListadoHoras" columns="2" >
+                    <p:dataTable id="dtHorario" value="#{sbCsEstablecimientoController.horariosActivos}"
+                                 var="itemReg"                                     
+                                 emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtHorario_dias}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsEstablecimientoController.obtenerNombresDeHorario(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_dtHorario_horario}" style="text-align: center;" >
+                                <h:outputText value="#{sbCsEstablecimientoController.obtenerDesHorarioAtencion(itemReg)}" />
+                            </p:column>
+                        </p:dataTable>
+                </h:panelGrid>
+            </p:fieldset>
+        </p:panel>
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_datosMedicosAutorizar}" id="pnlListado" >
+            <p:dataTable id="dtMedicos" value="#{sbCsEstablecimientoController.lstMedicosXEstablecimiento}"
+                         var="itemReg"
+                         emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_medico}" style="text-align: center;" >
+                    <h:outputText value="#{itemReg.medicoId.personaId.apellidosyNombres}" />
+                </p:column>
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_cargo}" style="text-align: center;" >
+                    <h:outputText value="#{sbCsEstablecimientoController.obtenerNombreCargoVer(itemReg)}" />
+                </p:column>
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_fechaInicio}" style="text-align: center;width: 110px;" >
+                    <h:outputText value="#{itemReg.fechaIni}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_fechaFin}" style="text-align: center;width: 110px;" >
+                    <h:outputText value="#{itemReg.fechaFin}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_fechaInicioHab}" style="text-align: center;width: 110px;" >
+                    <h:outputText value="#{itemReg.fechaIniHab}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_verIpress_fechaFinHab}" style="text-align: center;width: 110px;" >
+                    <h:outputText value="#{itemReg.fechaFinHab}" >
+                        <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+        <br/>
+        <p:panel header="#{BundleBDIntegrado.sbCsEstablecimiento_crearIpress_suspensionCs}" id="pnlSuspension" >
+            <p:fieldset >
+                <h:panelGrid columns="1" style="border: 0px;">                                        
+                    <h:panelGrid columns="2" >
+                        <h:panelGrid style="width: 20px; height: 20px;" class="dtSuspension-activa" />
+                        <h:outputText value="Suspensión vigente" />
+                    </h:panelGrid>
+                </h:panelGrid>
+            </p:fieldset>
+            <h:panelGrid columns="1">
+                <p:dataTable id="dtSuspension"
+                             value="#{sbCsEstablecimientoController.listadoSuspensionesCsActivas}"
+                             var="item"
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                             paginator="true"
+                             rows="#{BundleBDIntegrado.PaginatorFilas_busqueda5}"
+                             rowStyleClass="#{sbCsEstablecimientoController.obtenerColorSuspensionActiva(item)}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda}">
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_tipo}" style="text-align: center;" >
+                        <h:outputText value="#{item.tipoId.nombre}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_fechaInicio}" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaInicio}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_fechaFin}" style="text-align: center;" >
+                        <h:outputText value="#{item.fechaFin}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_nroExpediente}" style="text-align: center;" >
+                        <h:outputText value="#{item.nroExpediente}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_documentoSustento}" style="text-align: center;" >
+                        <h:outputText value="#{item.nroDocSustento}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_descripcion}" style="text-align: center;" >
+                        <h:outputText value="#{item.descripcion}" />
+                    </p:column>
+                     <p:column headerText="#{BundleBDIntegrado.sbCsEstablecimiento_suspension_dt_opcion}" style="text-align: center;" >
+                        <p:commandButton icon="ui-icon-search"
+                                         value="Ver"
+                                         title="Ver"
+                                         actionListener="#{sbCsEstablecimientoController.openDlgVerSuspensionCs(item)}" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </p:panel>
+        
+        <br/>
+        <br/>
+        <p:commandButton icon="ui-icon-closethick"
+                         action="#{sbCsEstablecimientoController.prepareList()}"
+                         value="Cancelar"
+                         style="margin-left: 20px;"
+                         immediate="true" update="@all"  />
+        <br />
+    </h:form>
+</ui:composition>
+

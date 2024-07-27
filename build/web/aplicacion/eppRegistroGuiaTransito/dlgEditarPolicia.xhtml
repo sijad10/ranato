@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="dlgEditarPolicia" widgetVar="wvEditarPolicia" width="25%" height="40%" 
+                  closable="false" modal="true" resizable="false" appendTo="@(body)" header="Actualizar datos de Policía">
+            <h:form id="editarPoliciaForm" >
+                <h:panelGroup id="docDisplay">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel value="DNI" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.policia.dniPolicia}" />                        
+
+                        <p:outputLabel value="APELLIDO PATERNO" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.policia.apaternoPolicia}" />
+                        
+                        <p:outputLabel value="APELLIDO MATERNO" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.policia.amaternoPolicia}" />                        
+
+                        <p:outputLabel value="NOMBRES" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.policia.nombresPolicia}" />
+
+                        <p:outputLabel value="NÚMERO DE CIP" />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.policia.nroPlaca}" />
+                        
+
+                        <p:outputLabel value="GRADO" />
+                        <p:selectOneMenu id="cboGrado" 
+                                         autoWidth="false" 
+                                         style="width: 150px !important;" 
+                                         value="#{eppRegistroGuiaTransitoController.policia.gradoId}" >
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems value="#{tipoBaseController.lstGradoPolicia}" 
+                                           var="item" 
+                                           itemLabel="#{item.nombre}" 
+                                           itemValue="#{item}" />
+                            <p:ajax event="change" update="cboGrado" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="UNIDAD POLICIAL" />
+                        <p:selectOneMenu id="cboUniPolicial" 
+                                         autoWidth="false" 
+                                         style="width: 150px !important;" 
+                                         value="#{eppRegistroGuiaTransitoController.policia.unidadPolicialId}" >
+                            <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                            <f:selectItems value="#{tipoBaseController.lstUnidadPolicia}" 
+                                           var="item" 
+                                           itemLabel="#{item.nombre}" 
+                                           itemValue="#{item}" />
+                            <p:ajax event="change" update="cboUniPolicial" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </h:panelGroup>
+                <p:spacer/> 
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                    <p:commandButton value="#{bundleGeppGte.Guardar}" 
+                                     actionListener="#{eppRegistroGuiaTransitoController.editarPolicia()}" 
+                                     icon="ui-icon-disk" />
+                    <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                     process="@this"
+                                     update="editarPoliciaForm" 
+                                     actionListener="#" 
+                                     oncomplete="PF('wvEditarPolicia').hide()" 
+                                     icon="ui-icon-cancel" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

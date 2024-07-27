@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"                
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <p:dialog id="dlgCompletarProceso" widgetVar="wvDialogCompletarProceso" width="30%"  modal="true" resizable="false" appendTo="@(body)" 
+              onShow="showDlgCompletarProceso()" header="Transmisión de Registro" responsive="true" closable="false">
+            
+        <h:form id="frmCompletarProceso" >
+            <div class="ui-fluid">        
+                <br/>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;">
+                        <h:outputText style="font-weight: bold; font-size: 19px;" value="¿Está seguro que desea transmitir el registro seleccionado?"  />
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <h:outputText value="Por favor no cerrar esta ventana hasta que el proceso finalice." rendered="#{gsspSolicitudCertificacionBandejaController.transBlnProcesoTransmision}" />
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;">
+                        <h:outputText style="color: #e0263b; font-weight: bold; font-size: 12px;" value="Se generará el Número de Solicitud, luego deberá presentar sus documentos fisicos según registrador en la Solicitud de Certificación entregando a la Sede Central, Intendencia Regional o Jefatura Zonal más cercano." />
+                    </div>    
+                </div>
+                <div class="ui-g">
+                    <div id="pnlProgressMsje" style="width: 100%;display: none;" class="ui-g-12 ui-md-12 ui-lg-12">
+                        <br/>
+                        <h:outputText value="Por favor no abrir o cerrar un ventana mientras se realiza el proceso de transmisión." style="font-weight: bold; font-size: large;" />
+                        <br/>
+                    </div>
+                </div>    
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-lg-12">
+                        <div id="pnlProgressBar" style="width: 100%;display: none;" >
+                            <p:progressBar widgetVar="pbAjax" ajax="true" labelTemplate="{value}%" styleClass="animated" global="false"
+                                           value="#{gsspSolicitudCertificacionBandejaController.progressCompletarProceso}" id="progressBar" />
+                        </div>
+                    </div>        
+                </div>    
+                
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3 ui-lg-3"></div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:commandButton value="Transmitir" icon="ui-icon-circle-check"  process="@form" update="@form" onclick="setVisibleProgressBar(); PF('pbAjax').start();" 
+                                    rendered="#{!gsspSolicitudCertificacionBandejaController.transBlnProcesoTransmision}"
+                                    actionListener="#{gsspSolicitudCertificacionBandejaController.transmitirSolicitud()}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-3 ui-lg-3">
+                        <p:commandButton value="Cerrar" icon="ui-icon-closethick" process="@this" update="frmCompletarProceso" actionListener="#" oncomplete="PF('wvDialogCompletarProceso').hide()" />
+                    </div>    
+                    <div class="ui-g-12 ui-md-3 ui-lg-3"></div>
+                </div>  
+                
+            </div>    
+        </h:form>
+    </p:dialog>
+    <script type="text/javascript">
+        function showDlgCompletarProceso() {
+            $("div[id*='dlgCompletarProceso'] > .ui-dialog-titlebar ").attr("style", "margin:0!important; padding: 5px!important; color:#fff!important; background:#2399e5!important;");
+            $("div[id*='dlgCompletarProceso'] > .ui-dialog-titlebar > .ui-dialog-title").attr("style", "margin:0!important; font-size:110%!important; color:#fff!important;");
+            $("div[id*='dlgCompletarProceso'] > .ui-dialog-content").attr("style", "padding:4px!important;");
+            $(".ui-datatable-footer").attr("style", "padding:2px!important");
+            $(".ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled").attr("style", "opacity: .70; filter: Alpha(Opacity=70); background-image: none;");
+        }
+        function setVisibleProgressBar() {
+            document.getElementById("pnlProgressBar").style.display = 'block';
+            document.getElementById("pnlProgressMsje").style.display = 'block';                    
+        }
+    </script> 
+</ui:composition>

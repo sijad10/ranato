@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <p:dialog id="msjeDialog" widgetVar="impresionInpe" width="35%" height="35%"
+                  modal="true" resizable="false" appendTo="@(body)" header="Listado de archivos de impresión" closable="true"  >
+            <h:form id="msjeForm" >
+                <p:panel >
+                    <p:outputLabel value="Los expedientes disponibles para imprimir son los siguientes:"  />
+                </p:panel>
+                
+                <p:panel >
+                    <p:dataTable id="buscarDatatableRegistro" value="#{amaRegEmpArmaController.lstExpedientesImpresion}"
+                                     var="itemReg" 
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                                     paginator="true" rows="5"  
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda}">                    
+          
+                            <p:column headerText="Expediente Master" style="text-align: center;" >                               
+                                <h:outputText value="#{itemReg.EXPEDIENTE}" />
+                            </p:column>
+                            <p:column headerText="Fecha de Proceso" style="text-align: center;" >                               
+                                <h:outputText value="#{itemReg.FECHA}" >
+                                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estado" style="text-align: center;" >                               
+                                <h:outputText value="#{amaRegEmpArmaController.obtenerEstadoExpediente(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="Opción" style="text-align: center;" >
+                                <p:commandButton  icon="ui-icon-disk"
+                                            id ="btnImprimir"
+                                            ajax="false"
+                                            rendered="#{itemReg.ESTADO == '3'}"
+                                            value="Imprimir"                                            
+                                            process="@all"
+                                            onclick="this.form.target = '_blank'"
+                                            onblur="this.form.target = '_self'"
+                                            immediate="true" >
+                                  <p:fileDownload value="#{amaRegEmpArmaController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                               </p:commandButton>
+                                <p:commandButton  icon="ui-icon-disk"
+                                            id ="btnCompletarProceso"
+                                            value="Generar PDF"
+                                            style="background: #FE2E2E;"
+                                            rendered="#{itemReg.ESTADO == '0'}"
+                                            process="@form"
+                                            update="@form"
+                                            actionListener="#{amaRegEmpArmaController.completarProcesoInpe(itemReg)}" >
+                              </p:commandButton>
+                            </p:column>
+                    </p:dataTable>
+                </p:panel>
+                
+                <p:spacer/> 
+                <h:panelGroup style="float: right">
+                    <p:commandButton value="Aceptar"
+                                   process="@this" 
+                                   actionListener="#"
+                                   style="float: right"
+                                   update="msjeForm" 
+                                   oncomplete="PF('impresionInpe').hide()" />                    
+                </h:panelGroup>
+            </h:form>         
+        </p:dialog>
+    </ui:composition>
+</html>

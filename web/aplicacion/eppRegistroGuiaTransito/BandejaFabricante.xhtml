@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.TituloBandejaFabricante}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" >                
+                <h:panelGroup>
+                    <h:panelGrid columns="2" >
+                        <h:panelGrid columns="1">    
+                            <p:fieldset legend="Búsqueda" style="margin-bottom:20px">
+                                <h:panelGrid columns="3" id="pnlBusqueda">
+
+                                    <p:outputLabel value="Estado: " />
+                                    <p:selectOneMenu value="#{eppRegistroGuiaTransitoController.tipoEstadoBandeja}" 
+                                                     style="width: 150px" >
+                                        <f:selectItem itemLabel="---" itemValue="#{null}" />
+                                        <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombre}" 
+                                                       value="#{eppRegistroGuiaTransitoController.lstTipoEstadoGuiaFabricante}"/>
+                                        <p:ajax event="change" listener="#{eppRegistroGuiaTransitoController.lstnrMostrarTablaFabricante}" update="@form"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton value="Buscar" actionListener="#{eppRegistroGuiaTransitoController.buscarBandejaFabricanteMap()}" 
+                                                     update="@form" />                                    
+
+                                    <p:outputLabel value="Buscar Por: " />
+                                    <p:selectOneMenu id="bus"
+                                                     style="width: 150px"
+                                                     value="#{eppRegistroGuiaTransitoController.tipoBusqueda}"  >
+                                        <f:selectItem itemValue="#{null}" itemLabel="---"/>
+                                        <f:selectItems var="item" itemValue="#{item.key}" itemLabel="#{item.value}" 
+                                                       value="#{eppRegistroGuiaTransitoController.lstOpcionesBandeja}"/>
+                                        <p:ajax event="change" update="pnlBusqueda" listener="#{eppRegistroGuiaTransitoController.actualizaBuscarPor()}" />
+                                    </p:selectOneMenu>
+                                    <p:inputText value="#{eppRegistroGuiaTransitoController.filtro}" disabled="#{eppRegistroGuiaTransitoController.tipoBusqueda == null}" />                                                                     
+                                </h:panelGrid>
+                            </p:fieldset>                             
+                        </h:panelGrid>
+                    </h:panelGrid>  
+                    <br/>
+                    <p:fieldset style="margin-bottom:20px" rendered="#{eppRegistroGuiaTransitoController.resultadosGuiaGte != null or eppRegistroGuiaTransitoController.resultadosGuia !=null}" >
+                        <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                            <h:panelGrid columns="2" >
+                                <h:panelGrid style="width: 20px; height: 20px;border-style: solid;border-width: 1px;" class="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario('TP_RGUIA_ADQUI1','color') }" />
+                                <h:outputText value="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario('TP_RGUIA_ADQUI1','descripcion') }" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" >
+                                <h:panelGrid style="width: 20px; height: 20px;" class="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario('TP_RGUIA_COMFAB','color') }" />
+                                <h:outputText value="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario('TP_RGUIA_COMFAB','descripcion') }" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <p:commandButton  id="botonReporteD" 
+                                      icon="imageButtonXls" 
+                                      value="Descargar"
+                                      rendered="#{eppRegistroGuiaTransitoController.resultadosGuia !=null}"
+                                      title="Descargar Excel"
+                                      ajax="false"
+                                      process="@this,datatable" 
+                                      partialSubmit="true"
+                                      onclick="this.form.target = '_blank'" 
+                                      onblur="this.form.target = '_self'" 
+                                      immediate="true" >
+                        <p:fileDownload value="#{eppRegistroGuiaTransitoController.downloadExcelMap(1)}" contentDisposition="inline"  />
+                    </p:commandButton>                    
+                    <p:dataTable id="datatable" 
+                                 value="#{eppRegistroGuiaTransitoController.resultadosGuia}" 
+                                 var="item" 
+                                 widgetVar="usrTable"
+                                 rendered="#{eppRegistroGuiaTransitoController.renderTablaRegistro}"
+                                 selection="#{eppRegistroGuiaTransitoController.resultadosGuiaSeleccionados}" 
+                                 rowKey="#{item.ID}" 
+                                 style="margin-bottom:0"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 paginator="true" 
+                                 scrollable="true" 
+                                 scrollHeight="400"  
+                                 rows="#{bundleGeppGte.PaginatorFilas}"  
+                                 rowStyleClass="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario(item.TIPO_TRAMITE,'color')}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"                                   
+                                 rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}" >
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center" />    
+                        <p:column headerText="Id" style="width:40px;text-align:center">
+                            <h:outputText value="#{item.ID}"/>
+                        </p:column>
+                        <p:column headerText="Documento" style="width:90px;text-align:center">
+                            <h:outputText value="#{eppRegistroGuiaTransitoController.obtenerTipoDocListado(item.TIPO_DOC_CODPROG, item.TIPO_DOC, item.RUC) }"/> <br/>
+                            <h:outputText value="#{item.RUC }"/>
+                        </p:column>
+                        <p:column headerText="Solicitante" style="width:100px;text-align:center">
+                            <h:outputText value="#{(item.RZN_SOCIAL != null)?item.RZN_SOCIAL:item.NOMBRE_DNI}"/>
+                        </p:column> 
+                        <p:column headerText="Origen" style="width: 170px;" >
+                            <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenReporte(item, false)}"  
+                                          value="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenReporte(item, true)}" />
+                        </p:column>
+                        <p:column headerText="Destino" style="width: 180px;" >
+                            <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoReporte(item, false)}" 
+                                          value="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoReporte(item, true)}" />
+                        </p:column>
+                        <p:column headerText="Estado" style="width:110px;text-align:center">
+                            <h:outputText value="#{item.ESTADO}" /><br/><br/>
+                            <b><h:outputText value="#{item.RESOLUCION==null?'':item.RESOLUCION}" /></b>
+                        </p:column>
+                        <p:column headerText="Responsable" style="width:100px;text-align:center">
+                            <h:outputText value="#{item.LOGIN }"/>
+                        </p:column>
+                        
+                        <p:column headerText="Explosivos Solicitados" style="width: 300px;" exportable="false"> 
+                            <p:dataTable var="mylist" id="subtableExplosivos"
+                                         value="#{eppRegistroGuiaTransitoController.construirLstGuiaDetailExp(item.ID)}" 
+                                         emptyMessage="#{bundle.MensajeNoResultados}" >  
+                                <p:column headerText="PRODUCTO" > 
+                                    #{mylist.EXPS_NOM}
+                                </p:column>                                   
+                                <p:column headerText="CANTIDAD" style="width: 55px;" >                                         
+                                    <h:outputText value="#{mylist.EXPS_CANT_AUT}" >
+                                        <f:convertNumber locale="en-US" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="UNIDAD DE MEDIDA" >
+                                    #{mylist.EXPS_UM}
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                        <p:column headerText="GT" style="text-align:center; width: 30px;" >
+                            <p:commandButton  id="botonReporteD"
+                                              icon="ui-icon-print"
+                                              title="Ver GT"
+                                              ajax="false"
+                                              rendered="#{eppRegistroGuiaTransitoController.mostrarBtnReporteMap(item.ESTADO_CODPROG, item.RESOLUCION)}"
+                                              process="@this,buscarDatatableRegistro"
+                                              partialSubmit="true"
+                                              onclick="this.form.target = '_blank'"
+                                              onblur="this.form.target = '_self'"
+                                              immediate="true" >
+                                <p:fileDownload value="#{eppRegistroGuiaTransitoController.reporteMap(item.ID)}" contentDisposition="inline"  />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    <p:commandButton  id="botonReporteDTemp"
+                                      icon="imageButtonXls"
+                                      value="Descargar"
+                                      rendered="#{eppRegistroGuiaTransitoController.resultadosGuiaGte !=null}"
+                                      title="Descargar Excel"
+                                      ajax="false" 
+                                      process="@this,datatable" 
+                                      partialSubmit="true"                              
+                                      onclick="this.form.target = '_blank'" 
+                                      onblur="this.form.target = '_self'" 
+                                      immediate="true" >
+                        <p:fileDownload value="#{eppRegistroGuiaTransitoController.downloadExcelMap(2)}" contentDisposition="inline"  />
+                    </p:commandButton>
+                    <p:dataTable id="dt" 
+                                 value="#{eppRegistroGuiaTransitoController.resultadosGuiaGte}" 
+                                 var="item" 
+                                 widgetVar="usrTb"   
+                                 rendered="#{eppRegistroGuiaTransitoController.renderTablaGteRegistro}"
+                                 selection="#{eppRegistroGuiaTransitoController.resultadosGuiaGteSeleccionados}" 
+                                 rowKey="#{item.ID}" 
+                                 style="margin-bottom:0"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}"
+                                 paginator="true" 
+                                 scrollable="true" 
+                                 scrollHeight="400"  
+                                 rows="#{bundleGeppGte.PaginatorFilas}"  
+                                 rowStyleClass="#{eppRegistroGuiaTransitoController.obtenerDatoGTEListadoUsuario(item.TIPO_TRAMITE,'color')}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}" >
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center" /> 
+                        <p:column headerText="Id" style="width:40px;text-align:center">
+                            <h:outputText value="#{item.ID}"/>
+                        </p:column>
+                        <p:column headerText="Documento" style="width:90px;text-align:center">
+                            <h:outputText value="#{eppRegistroGuiaTransitoController.obtenerTipoDocListado(item.TIPO_DOC_CODPROG, item.TIPO_DOC, item.RUC) }"/> <br/>
+                            <h:outputText value="#{item.RUC}"/>
+                        </p:column>                        
+                        <p:column headerText="Solicitante" style="width:110px;text-align:center">
+                            <h:outputText value="#{(item.RZN_SOCIAL != null)?item.RZN_SOCIAL:item.NOMBRE_DNI}"/>
+                        </p:column>
+                        <p:column headerText="Origen" style="width: 170px;text-align: center;" >
+                            <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenGteBulkReporte(item, false)}"  
+                                          value="#{eppRegistroGuiaTransitoController.mostrarNombreOrigenGteBulkReporte(item, true)}" />
+                        </p:column>
+                        <p:column headerText="Destino" style="width: 170px;text-align: center;" >
+                            <h:outputText title="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoGteBulkReporte(item, false)}" 
+                                          value="#{eppRegistroGuiaTransitoController.mostrarNombreDestinoGteBulkReporte(item, true)}" />
+                        </p:column>
+                        <p:column headerText="Estado" style="width:110px;text-align:center">
+                            <h:outputText value="#{item.ESTADO}" /><br/><br/>
+                            <b><h:outputText value="#{item.RESOLUCION ==null?'':item.RESOLUCION }" /></b>
+                            <br/>
+                            <h:outputText value="#{item.NROSOLICITUD==null?'':item.NROSOLICITUD}" />
+                        </p:column>                        
+                        <p:column headerText="Responsable" style="width:100px;text-align:center">
+                            <h:outputText value="#{item.LOGIN}"/>
+                        </p:column>
+                        <p:column headerText="Explosivos Solicitados" style="width: 300px;" exportable="false"> 
+                            <p:dataTable var="mylist" id="subtableExplosivos"
+                                         value="#{eppRegistroGuiaTransitoController.construirLstGuiaDetailExpGte(item.ID)}" 
+                                         emptyMessage="#{bundle.MensajeNoResultados}" >  
+                                <p:column headerText="PRODUCTO" > 
+                                    #{mylist.EXPS_NOM}
+                                </p:column>                                   
+                                <p:column headerText="CANTIDAD" style="width: 55px;" >                                         
+                                    <h:outputText value="#{mylist.EXPS_CANT_AUT}" >
+                                        <f:convertNumber locale="en-US" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="UNIDAD DE MEDIDA" > 
+                                    #{mylist.EXPS_UM}
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                        <p:column headerText="Opciones" style="width:120px; text-align:center">
+                            <p:commandButton update="@form"
+                                             ajax="false"
+                                             rendered="#{eppRegistroGuiaTransitoController.mostrarEmitirGtBulkMap(item)}"
+                                             action="#{eppRegistroGuiaTransitoController.emitirGtMap(item.ID)}"
+                                             value="Emitir Guía" >
+                            </p:commandButton>                            
+                            <p:commandButton update="@form" 
+                                             icon="ui-icon-trash" 
+                                             title="Borrar"
+                                             rendered="#{eppRegistroGuiaTransitoController.mostrarBtnAnularBulkMap(item)}"
+                                             actionListener="#{eppRegistroGuiaTransitoController.anularGtBulkMap(item)}"  
+                                             value="Anular" >
+                                <p:confirm header="Confirmación" message="¿Confirma que desea Anular el Registro seleccionado?" icon="ui-icon-alert" /> 
+                            </p:commandButton>
+                        </p:column>  
+                        <p:column headerText="GT" style="text-align:center; width: 40px;" >                            
+                            <p:commandButton  id="botonReporteD" 
+                                              icon="ui-icon-print" 
+                                              title="Mostrar PDF de Solicitud"
+                                              ajax="false"
+                                              rendered="#{eppRegistroGuiaTransitoController.mostrarBtnPdfBulkMap(item.ESTADO_CODPROG)}"
+                                              process="@this,dt" 
+                                              partialSubmit="true"                              
+                                              onclick="this.form.target = '_blank'" 
+                                              onblur="this.form.target = '_self'" 
+                                              immediate="true" >
+                                <p:fileDownload value="#{eppRegistroGuiaTransitoController.solicitudGteMap(item.ID)}" contentDisposition="inline"  />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                </h:panelGroup>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

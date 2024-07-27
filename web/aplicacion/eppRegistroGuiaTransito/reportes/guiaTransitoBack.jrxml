@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-01-17T14:36:38 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="761" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46a0cb25-370d-4b3d-bcbc-7c67f1407e77">
+	<property name="ireport.zoom" value="1.9487171000000099"/>
+	<property name="ireport.x" value="85"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_IMG_DIR" class="java.lang.String"/>
+	<parameter name="P_TIPO_GT" class="java.lang.String"/>
+	<parameter name="P_NRO_GT" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="721" splitType="Stretch">
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="111" width="507" height="16" uuid="9dbe001c-9dce-430b-bf61-383c5c70e9f9"/>
+			</rectangle>
+			<elementGroup>
+				<rectangle>
+					<reportElement positionType="Float" x="24" y="10" width="507" height="52" uuid="09475573-3a68-420b-940e-e2fdd14fe1af"/>
+					<graphicElement>
+						<pen lineWidth="1.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement positionType="Float" x="151" y="14" width="378" height="27" uuid="8e0afc35-5096-443b-8c00-d7f69add5c58"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AUTORIZACIÓN PARA EL TRASLADO DE EXPLOSIVOS Y MATERIALES RELACIONADOS]]></text>
+				</staticText>
+				<image hAlign="Center" vAlign="Middle">
+					<reportElement positionType="Float" x="25" y="16" width="126" height="40" uuid="2c3e8505-bbff-4077-95de-1af9b2e94464"/>
+					<imageExpression><![CDATA[$P{P_IMG_DIR}+"/logo_bn.png"]]></imageExpression>
+				</image>
+			</elementGroup>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="127" width="73" height="16" uuid="7d4d6ce9-7cd5-4d39-8467-453cb6875bf0"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="127" width="73" height="16" uuid="14e546b4-65bb-4f3d-9707-26766513dfab"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="127" width="75" height="16" uuid="faf701db-93d7-44dc-97cd-205c59f34056"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="127" width="73" height="16" uuid="ad40d1b7-1d3c-44fb-8106-2ae6abaf95ab"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="127" width="213" height="16" uuid="fc093711-c7ce-46a9-883a-efae3463c4b3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="143" width="73" height="16" uuid="0c0758dc-b0e5-48f8-91f3-0f579db3b1e7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="159" width="73" height="16" uuid="91b54adc-1da9-49e3-a315-00daec455307"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="175" width="73" height="16" uuid="6288739c-6765-49af-8980-579d8345486b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="191" width="73" height="16" uuid="f4279251-05f1-4f3f-9f6b-3e6a1bca7162"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="207" width="73" height="16" uuid="0c09f5c8-05d2-45ed-81fd-8f960e7cf034"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="239" width="73" height="16" uuid="3522ee76-1690-49ef-963a-e7ba1e7f9548"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="223" width="73" height="16" uuid="718c4f5f-4e2a-46e2-bd3b-bc0f3e5eebe3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="255" width="73" height="16" uuid="ce499feb-b6d1-4839-afcd-f479c355d245"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="271" width="73" height="16" uuid="222cfaae-35e1-4f6e-82cb-271dc032ac1e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="287" width="73" height="16" uuid="a47088b7-fe06-409a-9f50-1f3716362ef6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="303" width="73" height="16" uuid="e9b6e9a8-acf5-475c-8d09-da9ec1251309"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="319" width="73" height="16" uuid="bd70e49b-46cc-4cfa-9ae1-e6f51a204b98"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="143" width="75" height="16" uuid="7b71eb07-1d00-4291-8178-c67102d2378f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="159" width="75" height="16" uuid="d9ad2519-ab7d-42ae-bc4c-50b030155c9c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="175" width="75" height="16" uuid="6f91f216-983a-48c7-a304-ec16388b0744"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="191" width="75" height="16" uuid="6f7504e5-7faa-4e48-9247-b878ce13ce8d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="207" width="75" height="16" uuid="95cc9f7b-bab2-43b9-ba69-139fbec720d8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="223" width="75" height="16" uuid="bc6b1576-a0bc-4dfa-ba38-238fbf4e3940"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="239" width="75" height="16" uuid="af31b77a-209d-48dd-b6d9-0fa0161eb1c4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="255" width="75" height="16" uuid="bbf39d03-2541-4993-a15a-9fe7b6a476db"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="271" width="75" height="16" uuid="09d743eb-d71d-45c6-9c3d-3664ddef58e6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="287" width="75" height="16" uuid="9972c706-b302-4763-ac69-167413db883c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="303" width="75" height="16" uuid="a6502d18-f813-4fc6-ad6e-181a835589a7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="456" y="319" width="75" height="16" uuid="7e65ed0a-68aa-45fd-a17b-3111d27784d7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="143" width="73" height="16" uuid="0699f8b9-7c6a-456c-9588-5227a7aa1c2c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="159" width="73" height="16" uuid="a5c39625-56da-425c-bfe6-66306b19258d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="175" width="73" height="16" uuid="e8e8e4b6-2318-4793-88fe-1a7e74f077d9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="191" width="73" height="16" uuid="685d16af-f575-4f66-954a-ee5b126da8ec"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="207" width="73" height="16" uuid="45c843c2-db08-4d7e-a873-fb7592602714"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="223" width="73" height="16" uuid="a258c50c-24d1-4ea5-866e-2089e0a827d5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="239" width="73" height="16" uuid="655cd92c-9ed4-4f58-8e4a-289175066fc9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="255" width="73" height="16" uuid="5d1f804f-6e9d-45d7-958c-f7a17d20932b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="271" width="73" height="16" uuid="b806c7e8-1c55-45bc-a8ff-95628590b6c6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="287" width="73" height="16" uuid="c502b02f-7c64-4209-8384-eb829f4484b7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="303" width="73" height="16" uuid="2a02f25c-0c63-4b3e-9374-28d9ff4876e5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="383" y="319" width="73" height="16" uuid="3c149440-df91-4dc6-9118-d7fa958f3237"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="143" width="213" height="16" uuid="e9875456-4cdd-4ba3-9256-c5479696d5ca"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="159" width="213" height="16" uuid="6261a416-b525-4dda-9da5-bbe822262a77"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="175" width="213" height="16" uuid="1731c198-3f88-4c53-91c5-da33a88bf141"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="191" width="213" height="16" uuid="ed4b27e8-be8d-42fc-86c7-1b6e566b8e45"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="207" width="213" height="16" uuid="8561dcf9-3a5c-4814-9614-5b1206d6ffd2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="223" width="213" height="16" uuid="76bcb51e-5995-405c-bdc8-19c226aad6cc"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="239" width="213" height="16" uuid="8999d1f6-c1d9-4af0-af77-e5ccc5dbb730"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="255" width="213" height="16" uuid="4334009e-b921-4403-874b-91dd4dbe9eb9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="271" width="213" height="16" uuid="06e235e2-e483-459b-9d44-274df0e7091f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="287" width="213" height="16" uuid="a6ce5005-1811-4093-9914-a8020ebb794f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="303" width="213" height="16" uuid="96deb2b9-9cb1-43a9-9434-3e618f7d0ff9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="170" y="319" width="213" height="16" uuid="267242fc-495f-4b42-9340-7b93063b66ff"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="143" width="73" height="16" uuid="13a007c0-3469-49dc-92ce-d0756e0ed540"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="159" width="73" height="16" uuid="93f3c089-5aa3-4150-abad-2e7f7b89037b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="175" width="73" height="16" uuid="bfbd0c71-f4a9-4528-9e88-18e3a63870a6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="191" width="73" height="16" uuid="a5d576fb-db67-4633-bb5e-4819547b927e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="207" width="73" height="16" uuid="8f145ffd-ed26-4ea5-aff2-9608822b2efb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="223" width="73" height="16" uuid="1e8fc139-db3c-454a-9ada-a7586523b63d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="239" width="73" height="16" uuid="22ff2022-7ea8-43cc-a5af-6c3c624873f3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="255" width="73" height="16" uuid="f919d5bb-42b0-4231-8801-e152510d3bbb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="271" width="73" height="16" uuid="345211fa-b5ff-4a3f-92c2-3c47aa3d758f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="287" width="73" height="16" uuid="96090fd0-887e-4f43-a7ae-fb04756bbc49"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="303" width="73" height="16" uuid="10ac8fcf-f955-4abf-9d85-ea4caa174867"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="97" y="319" width="73" height="16" uuid="c0419758-9c7d-4ba5-9292-228f970bb827"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="180" y="111" width="195" height="16" uuid="1a21b96b-7668-4a7d-97eb-61adf59faae7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUSTODIA ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="25" y="127" width="72" height="16" uuid="33559cb8-33a7-4d50-970b-bb5a520c5fad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="98" y="127" width="72" height="16" uuid="695aa912-4128-4fcf-a603-b8e12acb800e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="180" y="127" width="195" height="16" uuid="824574af-2e3e-496f-af57-6e30a8300b71"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES Y APELLIDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="385" y="127" width="71" height="16" uuid="54422514-3c1a-4b52-ba4d-0c7a4336db17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="458" y="127" width="72" height="16" uuid="4173c052-1fed-46f1-83ba-ba893e4cadfc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="43" y="351" width="100" height="20" uuid="6ab01813-25ea-4937-8375-8f7e6057ebe3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="309" y="351" width="100" height="20" uuid="25a5a5e3-0edd-4e5d-9aee-4c3af568a876"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA LLEGADA]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="143" y="370" width="100" height="1" uuid="c8991d39-94e4-4090-99c7-09891f67bedf"/>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="409" y="371" width="100" height="1" uuid="ece13b85-cd33-46e0-9da7-cd4c33d397ea"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="124" y="385" width="297" height="20" uuid="a380d3c2-546c-4973-af19-e042d36e43eb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PUESTO DE CONTROL ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="501" width="245" height="15" uuid="8dc94847-2635-4d3d-8fd3-ff63204517b8"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="26" y="502" width="92" height="15" uuid="06800fa4-f64d-486c-bac9-2287240b9451"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="418" width="245" height="83" uuid="74c8b748-8a4f-49a9-b428-9a7584891594"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="599" width="245" height="15" uuid="bf8646aa-0e79-4377-b2ef-1160b94454b8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="695" width="245" height="15" uuid="f54ed40b-e4e0-47c2-85d2-0711bd1d2e75"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="501" width="245" height="15" uuid="5f5691f5-d94b-4545-9748-4a82abdb74f3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="516" width="245" height="83" uuid="89865103-e34b-4372-af53-702bb24ea527"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="599" width="245" height="15" uuid="635dd8d3-1c3f-4803-93c8-17476e35651e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="614" width="245" height="83" uuid="8c9632c1-4868-442e-83fe-9555a807ae4c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="284" y="695" width="245" height="15" uuid="0d1e11d9-a4f0-4c26-a86c-1186842faa85"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="284" y="418" width="18" height="15" uuid="220884a7-8eef-4793-9d0a-8da62c3cb8c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="284" y="517" width="18" height="15" uuid="a3eab8a4-d807-4c49-af5f-84e454b74514"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="284" y="614" width="18" height="15" uuid="47d546ed-9c24-4c31-9b88-9146c389c61e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="286" y="501" width="92" height="15" uuid="aac6251b-f051-4a7d-9811-716606c166ff"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="26" y="599" width="92" height="15" uuid="2c896942-f390-422c-90fa-5eb36c9b6092"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="286" y="599" width="92" height="15" uuid="9885bdbf-1653-4b2c-b15e-f6d0d0507f7b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="27" y="695" width="92" height="15" uuid="a519f7a7-ba22-44da-8597-4095d55d6608"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="286" y="695" width="92" height="15" uuid="6f8a8c54-2090-4d0a-bddd-f570b503df72"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FIRMA Y POSTFIRMA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="418" width="245" height="83" uuid="5b27d868-0e1b-48c9-878d-0cd392b2ae59"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="516" width="245" height="83" uuid="7056adf3-25d9-4ae0-9697-54523bbf377d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" x="24" y="613" width="245" height="83" uuid="17935b6c-bfe1-48c6-9bab-1ec0c1e5588d"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="25" y="419" width="18" height="15" uuid="710864d7-772d-448b-aa16-b8e2a9d9c450"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="26" y="517" width="19" height="15" uuid="9ffa5826-acba-42da-a8b6-698b66999a18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="26" y="614" width="19" height="15" uuid="fb9dd9a7-80a7-45a4-8902-dacc4591d9cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PC5]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="151" y="41" width="368" height="20" uuid="a40cf1d4-6aad-41df-9dc9-8ed269e50f8f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_TIPO_GT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="276" y="66" width="255" height="20" uuid="b2ae4aa5-8a10-41c4-8d47-3543c146528d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_NRO_GT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

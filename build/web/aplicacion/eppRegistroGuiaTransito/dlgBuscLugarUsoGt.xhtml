@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="CreateViewDlgLugarUso" 
+              widgetVar="CreateViewDialogLugarUso" 
+              width="60%" 
+              height="52%"
+              modal="true" 
+              resizable="false" 
+              appendTo="@(body)" 
+              header="BUSCAR LUGAR DE USO" 
+              closable="false">
+        <h:form id="frmDlgLugarUso">
+            <h:panelGrid columns="1" >                
+                <p:dataTable id="dttbllugaruso"  
+                             widgetVar="usrTablebusqrepres" 
+                             value="#{eppRegistroGuiaTransitoController.lstDlgLugarUso}" 
+                             var="item" 
+                             emptyMessage="#{bundleGeppGte.MensajeNoResultados}" >                    
+                    <p:column headerText="Usada en" style="vertical-align: middle">
+                        <h:outputText value="#{item.tipoLugarId.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Nombre" style="vertical-align: middle">
+                        <h:outputText value="#{item.nombre}"/>
+                    </p:column>
+                    <p:column headerText="Ubigeo" style="text-align: center">
+                        <p:dataTable var="mylist" value="#{item.eppLugarUsoUbigeoList}"> 
+                            <p:column headerText="Departamento">
+                                #{mylist.distId.provinciaId.departamentoId.nombre}
+                            </p:column>
+                            <p:column headerText="Provincia">
+                                #{mylist.distId.provinciaId.nombre}
+                            </p:column>
+                            <p:column headerText="Distrito">
+                                #{mylist.distId.nombre}
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+                    <p:column headerText="#{bundleGeppGte.Opcion}" style="width:5%; vertical-align: middle" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('CreateViewDialogLugarUso').hide()" 
+                                         actionListener="#{eppRegistroGuiaTransitoController.seleccionarDlgLugarUsoGt(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{bundleGeppGte.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmDlgLugarUso" 
+                                 actionListener="#{eppRegistroGuiaTransitoController.cancelarSeleccionarDlgLugarUsoGt()}"
+                                 oncomplete="PF('CreateViewDialogLugarUso').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

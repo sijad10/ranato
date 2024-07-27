@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="viewVenta" header="#{bundleGamacCVMuni.listVentasFrmView_Title}" 
+              widgetVar="viewVentaDialog" modal="true" showEffect="fade" hideEffect="fade" width="95%"
+              resizable="true" appendTo="@(body)" draggable="true" onShow="updateDialogInicio()" onHide="updateDialogInicioHide()" position="center top"
+              style="padding:0!important"  >
+        <p:outputPanel id="panelViewVenta" style="text-align:left; padding:0px!important">
+            <h:form id="viewVentaForm">
+                <div class="ui-fluid">
+
+                    <p:panel id="datosVentaPanel" header="#{bundleGamacCVMuni.listVentasFrmCrePanelVenta_title}" style="margin-bottom:10px;" widgetVar="panel" >
+                        <div class="ui-g viewTipo3">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <p:outputLabel for="rgTrasnfMuni" value="#{bundleGamacCVMuni.listVentasFrmCre_RGTransf_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="rgTrasnfMuni" value="#{gamacMunicionesListadoVentasController.selectedVenta.rgAutotransf} #{gamacMunicionesListadoVentasController.selectedVenta.tipoclienteproveedorId.codProg}" styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-8 ui-lg-8">
+                                <p:outputLabel for="local" value="#{bundleGamacCVMuni.listVentasFrmCre_Local_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="local" value="#{gamacMunicionesListadoVentasController.selectedVenta.localcomercialId.direccion} #{gamacMunicionesListadoVentasController.selectedVenta.localcomercialId.numero},
+                                              #{gamacMunicionesListadoVentasController.selectedVenta.localcomercialId.distritoId.nombre} - #{gamacMunicionesListadoVentasController.selectedVenta.localcomercialId.distritoId.provinciaId.nombre}
+                                              - #{gamacMunicionesListadoVentasController.selectedVenta.localcomercialId.distritoId.provinciaId.departamentoId.nombre}"
+                                              styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                                <p:outputLabel for="tipoComprador" value="#{bundleGamacCVMuni.listVentasFrmView_TipoComprador_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="tipoComprador" value="#{gamacMunicionesListadoVentasController.selectedVenta.tipoclienteproveedorId.nombre}" styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g viewTipo1">
+                            <div class="ui-g-12 ui-md-12 ui-lg-12">
+                                <p:outputLabel for="dniComprador" value="Comprador: " styleClass="txtLabel"/>
+                                <h:outputText id="dniComprador" value="DNI #{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.numDoc} - 
+                                              #{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.apePat} #{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.apeMat} 
+                                              #{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.nombres}"
+                                              styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                        </div>
+                        
+                        <div class="ui-g viewTipo2 viewTipo3 viewTipo4">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel for="rucComprador" value="#{bundleGamacCVMuni.listVentasFrmCre_RucComp_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="rucComprador" value="#{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.ruc}" styleClass="txtLabel text-bold" style="font-weight: bold"/>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel for="razonSocial" value="#{bundleGamacCVMuni.listVentasFrmCre_RznSocial_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="razonSocial" value="#{gamacMunicionesListadoVentasController.selectedVenta.clienteproveedorId.rznSocial}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                        </div>
+
+                        <div class="ui-g viewTipo2 viewTipo3 viewTipo4">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel for="clienteNroRD" value="#{bundleGamacCVMuni.listVentasFrmCre_NroResolu_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="clienteNroRD" value="#{gamacMunicionesListadoVentasController.selectedVenta.rgAutoClipro}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-8">
+                                <p:outputLabel for="clienteFecVen" value="#{bundleGamacCVMuni.listVentasFrmCre_FechaCad_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="clienteFecVen" value="#{gamacMunicionesListadoVentasController.clienteFecVen}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>                            
+                        </div>
+
+                        <div class="ui-g viewTipo2 viewTipo3 viewTipo4">
+                            <div class="ui-g-12 ui-md-6 ui-lg-12">
+                                <p:outputLabel for="dniRepresentante" value="#{bundleGamacCVMuni.listVentasFrmCre_Representante_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="dniRepresentante" value="#{gamacMunicionesListadoVentasController.selectedVenta.representanteId.numDoc} - 
+                                              #{gamacMunicionesListadoVentasController.selectedVenta.representanteId.apePat} #{gamacMunicionesListadoVentasController.selectedVenta.representanteId.apeMat}
+                                              #{gamacMunicionesListadoVentasController.selectedVenta.representanteId.nombres}"
+                                              styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                            
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel for="fechaVenta" value="#{bundleGamacCVMuni.listVentasFrmCre_FechaVen_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="fechaVenta" value="#{gamacMunicionesListadoVentasController.selectedVenta.fechatransaccion}" styleClass="txtLabel text-bold" style="font-weight: bold" >
+                                    <f:convertDateTime pattern="#{bundleGamacCVMuni.FormatoFecha}" />
+                                </h:outputText>                                
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel for="tipoDocumento" value="#{bundleGamacCVMuni.listVentasFrmCre_TipoDoc_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="tipoDocumento" value="#{gamacMunicionesListadoVentasController.selectedVenta.tipodocTransacId.nombre}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <p:outputLabel for="nroDoc" value="#{bundleGamacCVMuni.listVentasFrmCre_NroDoc_Label} " styleClass="txtLabel"/>
+                                <h:outputText id="nroDoc" value="${gamacMunicionesListadoVentasController.selectedVenta.numdocTransac}" styleClass="txtLabel text-bold" style="font-weight: bold" />
+                            </div>
+                        </div>
+
+                    </p:panel>
+
+                    <p:panel id="datosMunicPanel" header="#{bundleGamacCVMuni.listVentasFrmCrePanelMuniciones_title}" style="margin-bottom:10px;" widgetVar="panel" >
+
+                        <p:dataTable id="detalleDatatable1" value="#{gamacMunicionesListadoVentasController.selectedVenta.gamacAmaAdmunDetalleTransCollection}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleSiciv.MensajeNoResultados}" 
+                                     paginator="true" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="10, 20"
+                                     reflow="true" class="viewTipo1 viewTipo2">
+
+                            <p:column headerText="#{bundleGamacCVMuni.RegVentaG1NroRua_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.RegVentaG1NroRua_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tarjetaPropiedadId.armaId.nroRua}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.RegVentaG1DetalleArma_Title}" style="font-size:92%!important" class="ui-lg-2">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.RegVentaG1DetalleArma_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tarjetaPropiedadId.armaId.modeloId.tipoArmaId.nombre} #{item.tarjetaPropiedadId.armaId.modeloId.marcaId.nombre}
+                                              #{item.tarjetaPropiedadId.armaId.modeloId.modelo}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.RegVentaG1Modalidad_Title}" style="font-size:92%!important" class="ui-lg-2">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.RegVentaG1Modalidad_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.tarjetaPropiedadId.modalidadId.nombre}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" style="font-size:92%!important" class="ui-lg-2">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.articuloMunicionId.marcaId.nombre} #{item.articuloMunicionId.calibrearmaId.nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" style="font-size:92%!important; text-align: right!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantidadMuniciones}"/>
+                            </p:column>
+                            
+                        </p:dataTable>
+
+                        <p:dataTable id="detalleDatatable2" value="#{gamacMunicionesListadoVentasController.selectedVenta.gamacAmaAdmunDetalleTransCollection}"
+                                     var="item"
+                                     rowKey="#{item.id}"
+                                     emptyMessage="#{bundleSiciv.MensajeNoResultados}" 
+                                     paginator="true" rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="10, 20"
+                                     reflow="true"
+                                     class="viewTipo3 viewTipo4">
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_CalibreArm_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CalibreArm_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.articuloMunicionId.calibrearmaId.nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" style="font-size:92%!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_Articulo_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.articuloMunicionId.marcaId.nombre} #{item.articuloMunicionId.calibrearmaId.nombre}"/>
+                            </p:column>
+
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasFrmCreDT_CantEmp_Label}" style="font-size:92%!important; text-align: right!important" >
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasFrmCreDT_CantEmp_Label}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantidadEmpaques}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listComprasFrmCreDT_MunixEmp_Label}" style="font-size:92%!important; text-align: right!important" >
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listComprasFrmCreDT_MunixEmp_Label}" />
+                                </f:facet>
+                                <h:outputText value="#{item.muniPorEmpaque}"/>
+                            </p:column>
+                            
+                            <p:column headerText="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" style="font-size:92%!important; text-align: right!important">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundleGamacCVMuni.listVentasFrmCreDT_CantMuni_Title}" />
+                                </f:facet>
+                                <h:outputText value="#{item.cantidadMuniciones}"/>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        
+                    </p:panel>
+                    
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">&nbsp;</div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">
+                            <p:commandButton value="#{bundleGamacCVMuni.Cerrar}" actionListener="#{gamacMunicionesListadoVentasController.closeViewVenta}" id="btnCancelView" 
+                                             process="@this" update="@none" partialSubmit="true"/>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-4">&nbsp;</div>
+                    </div>
+
+                </div>
+                <p:blockUI block="panelViewVenta" trigger="btnCancelView" />
+            </h:form>
+        </p:outputPanel>
+    </p:dialog>
+    <script type="text/javascript">
+        function showViewOptions(a){
+            console.log("tipo: " + a);
+            $(".viewTipo1, .viewTipo2, .viewTipo3, .viewTipo4").hide();
+            switch (a) {
+                case 1:
+                    $(".viewTipo1").show();
+                    break;
+                case 2:
+                    $(".viewTipo2").show();
+                    break;
+                case 3:
+                    $(".viewTipo3").show();
+                    break;
+                case 4:
+                    $(".viewTipo4").show();
+                    break; 
+            }            
+        }
+    </script>
+
+</ui:composition>

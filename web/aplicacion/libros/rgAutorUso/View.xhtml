@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="verForm" rendered="#{eppLibroController.estado == 'VER'}" >     
+        <p:panel header="Datos de Movimiento">
+            <h:panelGrid columns="4" cellspacing="5">
+                <p:outputLabel value="RG Adquisicion de Uso"/>
+                <p:selectOneMenu value="#{eppLibroController.registroPlantaUsoComercio}"
+                                 disabled="#{eppLibroController.disabledCabeceraEdit}"
+                                 filter="true" required="true" id="resPL" autoWidth="false"
+                                 effect="fade" filterMatchMode="contains" 
+                                 >
+                    <f:selectItem itemValue="#{null}" itemLabel="-----"/>
+                    <f:selectItems value="#{eppLibroController.listRegistrosPlantaUsoComercio}" 
+                                   var="res" itemLabel="#{res.eppResolucion.numero}"
+                                   itemValue="#{res}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Tipo Lugar de Uso" id="tluso" />
+                <p:inputText value="#{eppLibroController.tipoLugarUso}" size="80"  disabled="#{eppLibroController.disabledCabeceraEdit}"/>
+
+                <p:outputLabel value="Lugar de Uso"/>
+               <p:inputTextarea value="#{eppLibroController.labelLugaUso}" 
+                                 id="nroRes" maxlength="500" styleClass="inputTextArea" disabled="true"
+                                  rows="3" cols="80"/>
+                <p:outputLabel value="Periodo"/>
+                <h:panelGroup>
+                    <p:selectOneMenu value="#{eppLibroController.libroMes.mesId}" disabled="true"
+                                     >
+                        <f:selectItems value="#{tipoBaseController.selectItemsTipo('TP_MES', null)}"                                     
+                                       var="mes" itemLabel="#{mes.abreviatura}" itemValue="#{mes}"/>
+                    </p:selectOneMenu>
+                    <p:inputText value="#{eppLibroController.libroMes.libromAnio}" disabled="true"/>
+                </h:panelGroup>
+
+            </h:panelGrid>
+
+
+
+
+        </p:panel><br/><br/>
+        <!-- explosivos -->
+        <p:panel header="Explosivos o Material Relacionado Vendidos" id="pnExUso" >
+           
+            <p:dataTable id="deExpM"  
+                         value="#{eppLibroController.listEppLibroExploFabricados}"
+                         var="explo"  
+                         selection="#{eppLibroController.selectExplosivos}"
+                         rowKey="#{explo.id}" style="margin-bottom:0"
+                         emptyMessage="#{bundle.MensajeNoResultados}"
+                         paginator="true" 
+                         rows="#{bundle.PaginatorFilas}"  
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                         rowsPerPageTemplate="#{bundle.PaginatorFilasPorPagina}">
+                <f:facet name="header">
+                    Lista de Explosivos
+                </f:facet>  
+                <p:column selectionMode="multiple" width="20"/>
+                <p:column headerText="Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.explosivoId.nombre}"/>
+                </p:column>
+                <p:column headerText="Tipo Registro">
+                    <f:facet name="header">
+                        <p:outputLabel value="Tipo Registro"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.tipoRegistroId.nombre} / de la guia /  #{explo.guiaTransitoId.registroId.eppResolucion.numero}"/>
+                </p:column>
+                <p:column headerText="Unidad Medida">
+                    <f:facet name="header">
+                        <p:outputLabel value="Unidad Medida"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.explosivoId.unidadMedidaList.get(0).getNombre()}"/>
+                </p:column>
+                <p:column headerText="Cantidad Explosivo">
+                    <f:facet name="header">
+                        <p:outputLabel value="Cantidad Explosivo"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.cantidad}"/>
+                </p:column>
+                <p:column headerText="Año">
+                    <f:facet name="header">
+                        <p:outputLabel value="Año"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.libroMesId.libromAnio}"/>
+                </p:column>
+                <p:column headerText="Mes ">
+                    <f:facet name="header">
+                        <p:outputLabel value="Mes"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.libroMesId.mesId.nombre}"/>
+                </p:column>
+                <p:column headerText="Dia">
+                    <f:facet name="header">
+                        <p:outputLabel value="Dia"/>
+                    </f:facet>
+                    <h:outputText value="#{explo.dia}"/>
+                </p:column>               
+            </p:dataTable>  
+
+        </p:panel><br/>
+        <br/>
+        <div align="center">
+            <p:commandButton icon="ui-icon-search" update="@all" actionListener="#{eppLibroController.menuLibroUso()}" 
+                             value="Listado Uso" immediate="true"/>     
+        </div>
+
+        <br />
+    </h:form>
+
+</ui:composition>
+

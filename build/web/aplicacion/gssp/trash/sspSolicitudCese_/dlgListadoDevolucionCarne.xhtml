@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <p:dialog id="dlgInscritos" widgetVar="wvDialogListadoInscritos" width="75%" height="55%"
+              modal="true" resizable="false" appendTo="@(body)" closable="true" >
+        <h:form id="frmInscritos">
+            <h:panelGrid columns="1" >
+                <h:panelGrid columns="2" style="width: 100%;text-align: center;">
+                        <h:outputText value="Ver devolución de Carné" style="font-weight: bold;font-size: large;" />
+                        <h:commandLink style="float: right; display: block; clear: both; ">
+                            <p:graphicImage value="/resources/icons/xls.png" width="32" alt="Exportar a Excel."/>
+                            <p:dataExporter type="xls" target="dtListado" fileName="dtListado" />
+                        </h:commandLink>
+                </h:panelGrid>
+                <p:dataTable id="dtListado" var="item" 
+                             value="#{sspSolicitudCeseController.lstInscritos}" 
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas_busqueda}"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                             {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina_busqueda}" >  
+                    <p:column headerText="Exp. Cese" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Exp. Cese" />
+                        </f:facet>
+                        <h:outputText value="#{item.nroExpe}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Nro. Carné" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Nro. Carné" />
+                        </f:facet>
+                        <h:outputText value="#{item.nroCarne}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Nro. de Documento" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Nro. de Documento" />
+                        </f:facet>
+                        <h:outputText value="#{item.numDoc}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Nombres y Apellidos" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Nombres y Apellidos" />
+                        </f:facet>
+                        <h:outputText value="#{item.nombreVigilante}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Modalidad" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Modalidad" />
+                        </f:facet>
+                        <h:outputText value="#{item.modalidad}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Fecha Cese" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Fecha Cese" />
+                        </f:facet>
+                        <h:outputText value="#{item.fecCese}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Exp. Devolución" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Exp. Devolución" />
+                        </f:facet>
+                        <h:outputText value="#{(item.expeDevolucion == null)?'-':item.expeDevolucion}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Fecha Devolución" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Fecha Devolución" />
+                        </f:facet>
+                        <h:outputText value="#{(item.fecDevolucion eq null)?'-':item.fecDevolucion}" >
+                            <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Denuncia Policial" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Denuncia Policial" />
+                        </f:facet>
+                        <h:outputText value="#{(item.denunciaPolicial == null?'-':item.denunciaPolicial)}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Devolución" style="text-align:center" >
+                        <f:facet name="header">
+                            <h:outputText value="Devolución" />
+                        </f:facet>
+                        <h:outputText value="#{item.estado}"/>
+                    </p:column>
+               </p:dataTable>
+                
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}" 
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmInscritos" 
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogListadoInscritos').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

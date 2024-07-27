@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2019-10-10T10:16:26 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CMP" pageWidth="243" pageHeight="153" orientation="Landscape" columnWidth="242" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="de67ae3d-8be2-4cf1-a400-7e218391d8b8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<parameter name="P_FIRMA" class="java.lang.String"/>
+	<parameter name="P_FOTO_PERSONA" class="java.io.InputStream"/>
+	<parameter name="P_FONDO_CMP" class="java.lang.String"/>
+	<parameter name="P_ANIO" class="java.lang.String"/>
+	<parameter name="P_FOTO_PERSONA_PEQ" class="java.io.InputStream"/>
+	<parameter name="P_FECHA_EMISION" class="java.lang.String"/>
+	<parameter name="P_FECHA_VENCIMIENTO" class="java.lang.String"/>
+	<parameter name="P_qr" class="java.lang.String"/>
+	<parameter name="P_DOMICILIO" class="java.lang.String"/>
+	<parameter name="P_DIST" class="java.lang.String"/>
+	<parameter name="P_PROV" class="java.lang.String"/>
+	<parameter name="P_DPTO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fechaVencimiento" class="java.util.Date">
+		<fieldDescription><![CDATA[fechaVencimiento]]></fieldDescription>
+	</field>
+	<field name="fechaEmision" class="java.util.Date">
+		<fieldDescription><![CDATA[fechaEmision]]></fieldDescription>
+	</field>
+	<field name="hashQr" class="java.lang.String">
+		<fieldDescription><![CDATA[hashQr]]></fieldDescription>
+	</field>
+	<field name="nroCarne" class="java.lang.Integer">
+		<fieldDescription><![CDATA[nroCarne]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="personaId" class="pe.gob.sucamec.bdintegrado.data.SbPersonaGt">
+		<fieldDescription><![CDATA[personaId]]></fieldDescription>
+	</field>
+	<field name="registroId" class="pe.gob.sucamec.bdintegrado.data.EppRegistro">
+		<fieldDescription><![CDATA[registroId]]></fieldDescription>
+	</field>
+	<field name="fotoId" class="pe.gob.sucamec.bdintegrado.data.EppFoto">
+		<fieldDescription><![CDATA[fotoId]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="7" y="3" width="50" height="10" uuid="24f2ea3e-8e4f-481f-bd5b-cd9312a03a47"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[FECHA DE EMISIÓN:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="57" y="3" width="38" height="10" uuid="44da6b41-f0fe-4899-b3a5-213f1acaccc4">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_EMISION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="94" y="3" width="64" height="10" uuid="824863f2-97ba-4092-964f-196c8f9f78a2"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[FECHA DE VENCIMIENTO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="158" y="3" width="37" height="10" uuid="eb0027de-75ee-49ad-9b55-7fc04cd6d695">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_VENCIMIENTO}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="188" y="3" width="60" height="55" uuid="b456fec3-9469-4278-a255-a2bd3f19f1d5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{P_qr} != null]]></printWhenExpression>
+				</reportElement>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$P{P_qr}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="206" y="56" width="26" height="80" uuid="9a508698-d08e-4e76-acb2-800e7d0e8a4a">
+					<property name="com.jaspersoft.studio.unit.moduleWidth" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" orientation="right" textPosition="none" verticalQuietZone="0.0">
+					<jr:codeExpression><![CDATA[$F{registroId}.getNroExpediente()]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<staticText>
+				<reportElement x="181" y="0" width="14" height="153" uuid="b52eb543-3c02-4bc4-8395-683898198e62">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Justified" rotation="Left" markup="html">
+					<font isBold="true"/>
+					<paragraph lineSpacingSize="0.0"/>
+				</textElement>
+				<text><![CDATA[__________________________________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="13" width="28" height="10" uuid="bd450576-1c3d-44cb-a5db-bfc4a4c5ddac"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[DOMICILIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" positionType="Float" x="7" y="42" width="15" height="7" uuid="cf8a8325-d0b1-40c4-b4aa-61dc3855e00e"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[DIST.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="36" width="17" height="7" uuid="acb553e0-3e2d-4d2c-a87e-2ff0b4643214">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[PROV.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="30" width="18" height="7" uuid="f856b7e6-c3b9-4669-9231-9e0107e09686">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[DPTO.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="51" width="50" height="8" uuid="b6275ca4-8ab4-413b-b64b-056e5578a768">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[N° DE EXPEDIENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="71" y="61" width="50" height="9" uuid="2fb7af26-0142-46d7-9ddb-bc99dd8fd193">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ADVERTENCIAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="66" width="6" height="10" uuid="2dc3a45c-661b-438e-ade7-a97c77635959">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[1.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="85" width="6" height="10" uuid="b092310b-d404-45fe-a796-2d7cf81f60b3">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[2.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="117" width="6" height="10" uuid="c345ebcf-8ad6-4501-97ce-17a1e7acffa6">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[3.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="69" width="170" height="20" uuid="13305e7a-31ab-4d10-9f63-fef6e233218b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[Este documento es personal e intransferible y debe ser utilizado exclusivamente por su titular para su identificación en el ejercicio de sus funciones.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="88" width="170" height="33" uuid="c3bfc8d4-96b5-4054-a529-ef5df27c99cb"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[El presente documento autoriza a su titular a la manipulación de productos pirotécnicos siempre que él o su empleador cuenten con autorización vigente para realizar cualquier tipo de actividades con dichos productos, bajo apercibimiento de ser sancionado administrativamente y denunciado penalmente por delito tipificado en el Código Penal.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="120" width="170" height="14" uuid="99a0f849-5548-4195-b209-9026a0d49db6"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[En caso de pérdida o robo de este carné, se debe reportar inmediatamente a la SUCAMEC.]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="59" y="51" width="81" height="8" uuid="2684c915-24a3-4290-a29e-2bacd906010e">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{registroId}.getNroExpediente()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" positionType="Float" x="25" y="42" width="156" height="7" uuid="47291fca-1a35-4df0-9e4d-5030e78b40d8">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DIST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="37" y="16" width="155" height="15" uuid="f25c0a5b-3e07-4d88-80e4-f76839f2fd89">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DOMICILIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="25" y="36" width="156" height="7" uuid="342fcf0c-78c9-4516-8647-80ec1f4c6425">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_PROV}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="25" y="30" width="156" height="8" uuid="297dc1c2-71c9-4537-884d-d93a82d65da3">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_DPTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="199" y="134" width="41" height="10" uuid="f571f923-8869-410c-9c4c-106574d3125c">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_VENCIMIENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="17" y="133" width="170" height="14" uuid="5d5f7c5c-69ca-4dca-aa59-8fd26d310a30"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[En caso de encontrar este documento, debe entregarlo a la sede más cercana de la SUCAMEC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="10" y="130" width="6" height="10" uuid="2b751bff-b077-409a-8ae6-8ccffcf52481">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<text><![CDATA[4.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="199" y="142" width="41" height="8" uuid="304a94fe-543c-4828-812b-99edebaab6bd">
+					<property name="com.jaspersoft.studio.unit.width" value="mm"/>
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="3"/>
+				</textElement>
+				<text><![CDATA[FECHA VENCIMIENTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="100" y="50" width="88" height="10" forecolor="#940014" uuid="dc9aade5-898e-462a-9d40-1058341ab542">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="SansSerif" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CARNÉ REFERENCIAL"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="228" y="57" width="14" height="70" forecolor="#940014" uuid="e04603d8-01f2-4d42-87f6-c4c914af394a">
+					<property name="com.jaspersoft.studio.unit.height" value="mm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left" markup="html">
+					<font fontName="SansSerif" size="5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CARNÉ REFERENCIAL"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

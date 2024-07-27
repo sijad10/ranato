@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="Listado de armas de fuego en posesión de mi empresa de seguridad" rendered="#{armasPosesionController.estado == 'BANDEJA'}"/>
+                <h:outputText value="Registro de armas de fuego en posesión de las empresas de seguridad" rendered="#{armasPosesionController.estado == 'CREAR'}"/>
+                <h:outputText value="Modificación de armas de fuego en posesión de las empresas de seguridad" rendered="#{armasPosesionController.estado == 'EDITAR'}"/>
+                  <h:outputText value="Ver datos del arma de fuego en posesión de la empresa de seguridad" rendered="#{armasPosesionController.estado == 'VER'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="listForm" rendered="#{armasPosesionController.estado == 'BANDEJA'}">
+              <h:outputText value="En este formulario podrá visualizar las armas de fuego en posesión de su empresa"/>
+              <p:panel>
+                  <h:panelGrid columns="6" id="panelBusqueda">
+                      <h:outputText value="Buscar por"/>
+                      <p:selectOneMenu value="#{armasPosesionController.filtro}">
+                          <f:selectItem itemLabel="SELECCIONA" itemValue="#{null}"/>
+                          <f:selectItem itemLabel="SERIE" itemValue="SE"/>
+                          <f:selectItem itemLabel="MODELO" itemValue="MO"/>
+                          <f:selectItem itemLabel="MARCA" itemValue="MA"/>
+                      </p:selectOneMenu>
+                      <p:inputText value="#{armasPosesionController.filtroTexto}" placeholder="Escribe una palabra y presione buscar" size="60"/>
+                      <p:commandButton value="Buscar" icon="ui-icon-search" process="@form" actionListener="#{armasPosesionController.buscarBandeja()}" update="dtResultados"/>
+                      <h:outputText value=""/>
+                      <p:commandButton value="Registrar" process="@form" update="@form" id="btnNuevo" ajax="false" actionListener="#{armasPosesionController.mostrarCrear()}" icon="ui-icon-plus" style="margin-left: 60px"/>
+                    
+                  </h:panelGrid>
+              </p:panel>
+              
+<p:dataTable id="dtResultados" 
+                           value="#{armasPosesionController.resultadosMap}"
+                                     var="itemReg"                                     
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="Total {totalRecords} registro(s)"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                   <p:column headerText="Tipo de Arma" style="text-align: center;font-weight: bold;" >
+                       <h:outputText rendered="#{armasPosesionController.verificarFlagConCat(itemReg.FLAG_SIN_CATALOGO)}"  value="#{itemReg.TIPOARMA}" />
+                       <h:outputText rendered="#{armasPosesionController.verificarFlagSinCat(itemReg.FLAG_SIN_CATALOGO)}" value="#{itemReg.NUEVO_TIPO_ARMA}" />
+                   </p:column>
+                    <p:column headerText="Marca" style="text-align: center; font-weight: bold;" >
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagConCat(itemReg.FLAG_SIN_CATALOGO)}"  value="#{itemReg.MARCA}" />
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagSinCat(itemReg.FLAG_SIN_CATALOGO)}" value="#{itemReg.NUEVO_MARCA}" />
+                   
+                   </p:column>
+                    <p:column headerText="Modelo" style="text-align: center;font-weight: bold;" >
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagConCat(itemReg.FLAG_SIN_CATALOGO)}"  value="#{itemReg.MODELO}" />
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagSinCat(itemReg.FLAG_SIN_CATALOGO)}" value="#{itemReg.NUEVO_MODELO}" />
+                   
+                   </p:column>
+                    <p:column headerText="Calibre" style="text-align: center;font-weight: bold;" >
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagConCat(itemReg.FLAG_SIN_CATALOGO)}"  value="#{itemReg.CALIBRE}" />
+                        <h:outputText rendered="#{armasPosesionController.verificarFlagSinCat(itemReg.FLAG_SIN_CATALOGO)}" value="#{itemReg.NUEVO_CALIBRE}" />
+                   
+                   </p:column>
+                    <p:column headerText="Serie" style="text-align: center;font-weight: bold;" >
+                        <h:outputText value="#{itemReg.NUMERO_SERIE}" />
+                   </p:column>
+                    <p:column headerText="Estado Fisico" style="text-align: center;font-weight: bold;" >
+                        <h:outputText value="#{itemReg.ESTADO}" />
+                   </p:column>
+                   <p:column headerText="Acciones" style="text-align: center;font-weight: bold;" >
+                     <p:commandButton title="VER" process="@form" update="@form" id="btnVer" ajax="false" actionListener="#{armasPosesionController.mostrarVer(itemReg.ID,itemReg.TIPOARMA,itemReg.MARCA,itemReg.MODELO,itemReg.CALIBRE)}"  icon="ui-icon-search" />
+                       <p:commandButton title="EDITAR" process="@form" update="@form" id="btnModificar" ajax="false" actionListener="#{armasPosesionController.mostrarEditar(itemReg.ID,itemReg.TIPOARMA,itemReg.MARCA,itemReg.MODELO,itemReg.CALIBRE)}"  icon="ui-icon-pencil" />
+                   </p:column>
+               </p:dataTable>
+            </h:form>
+            <ui:include src="Create.xhtml" />
+             <ui:include src="Edit.xhtml" />
+            <ui:include src="Ver.xhtml" />
+        </ui:define>
+    </ui:composition>
+</html>

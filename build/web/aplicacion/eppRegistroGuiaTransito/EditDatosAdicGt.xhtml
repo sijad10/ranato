@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundleGeppGte.VerDatosAdicGt}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form id="editarDatosAdicForm">     
+                <h:panelGrid columns="2" > 
+                    <p:outputLabel value="Ayuda: " />
+                    <h:graphicImage name="imagenes/ayuda.png" onclick="PF('dlgAyuda').show();" style="cursor: help;"/>
+                </h:panelGrid>
+                <p:panel id="pnlDatosGt" header="DATOS DE LA GUÍA DE TRÁNSITO ELECTRÓNICA" style="margin-bottom:20px" >
+                    <h:panelGrid columns="2" cellpadding="3" cellspacing="5" >
+                        <p:outputLabel rendered="false" value="Número Comprobante: " />
+                        <h:panelGrid rendered="false" columns="5" id="pnlgComprobante" cellpadding="2" cellspacing="4">    
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.strNroSecuencia}" escape="false"/>
+                            <p:outputLabel value="Fecha de Comprobante: "/>
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.strFechaMovimiento}" escape="false"/>   
+                            <p:outputLabel value="Monto: "/>
+                            <p:outputLabel value="#{eppRegistroGuiaTransitoController.strImporte}" escape="false"/>
+                        </h:panelGrid>
+
+                        <p:outputLabel value="Número Resolución: " />
+                        <p:column rendered="#{eppRegistroGuiaTransitoController.mostrarresglobprev}" >
+                            <h:panelGrid columns="3" cellpadding="2" cellspacing="4">                                                              
+                                <p:outputLabel value="#{eppRegistroGuiaTransitoController.numeroResolucionGerencia}" escape="false"/>
+                                <p:outputLabel value=" con fecha de caducidad: " />
+                                <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewVencimiento}" escape="false" />                               
+                            </h:panelGrid>
+                        </p:column>
+                        
+                        <p:outputLabel value="Número de Guía de Tránsito: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.current.registroId.eppResolucion.numero}" escape="false" style="font-weight: bold;" />
+
+                        <p:outputLabel value="Fecha Emisión: " />
+                        <h:outputText value="#{eppRegistroGuiaTransitoController.current.registroId.eppResolucion.fechaIni}" style="font-weight: bold;">
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+
+                        <p:outputLabel value="Fecha Vencimiento: " />
+                        <h:outputText value="#{eppRegistroGuiaTransitoController.current.registroId.eppResolucion.fechaFin}" style="font-weight: bold;">
+                            <f:convertDateTime pattern="#{bundleGeppGte.FormatoFecha}" />
+                        </h:outputText>
+
+                        <p:outputLabel value="Polvorín del fabricante: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewOrigen}" escape="false"/>
+
+                        <p:outputLabel value="Destino: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewDestino}" escape="false"/>
+
+                        <p:outputLabel value="Tipo transporte: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewTipoTransp}" escape="false"/>
+
+                        <p:outputLabel value="Empresa transporte: " />
+                        <p:outputLabel value="#{eppRegistroGuiaTransitoController.strViewEmpTransp}" escape="false"/>
+
+                    </h:panelGrid>
+                </p:panel>
+
+                <p:panel header="CUSTODIO POLICIAL" style="margin-bottom:20px" 
+                         id="pnlDatosCustodio" >
+                    <h:panelGrid columns="2" >
+                        <p:commandButton value="Buscar" 
+                                         action="#{eppRegistroGuiaTransitoController.openDlgBuscarPolicia()}" 
+                                         update="pnlDatosCustodio" >                   
+                        </p:commandButton>
+                        <p:commandButton value="Nuevo Custodio" 
+                                         action="#{eppRegistroGuiaTransitoController.openDlgCrearPolicia()}" 
+                                         update="pnlDatosCustodio" >                   
+                        </p:commandButton>
+                    </h:panelGrid>
+                    <p:dataTable id="dtCustodio" 
+                                 value="#{eppRegistroGuiaTransitoController.selected.eppGuiaTransitoPoliciaList}"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                                 var="item" 
+                                 rowKey="#{item.id}"
+                                 selection="#{eppRegistroGuiaTransitoController.lstCustodiosPoliciaEliminados}"  
+                                 paginator="true" rows="5"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink}
+                                 {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleGeppGte.PaginatorFilasPorPagina}" >
+                        <p:column selectionMode="multiple" width="16" />
+                        <p:column headerText="dni" >
+                            <h:outputText value="#{item.dniPolicia}"/>
+                        </p:column>
+                        <p:column headerText="Nombres y Apellidos" >
+                            <h:outputText value="#{item.nombresPolicia} #{item.apaternoPolicia} #{item.amaternoPolicia}"/>
+                        </p:column>
+                        <p:column headerText="Nro. de CIP" >
+                            <h:outputText value="#{item.nroPlaca}"/>
+                        </p:column>
+                        <p:column headerText="Grado" >
+                            <h:outputText value="#{item.gradoId.nombre}"/>
+                        </p:column>                                        
+                        <p:column headerText="Unidad Policial" >
+                            <h:outputText value="#{item.unidadPolicialId.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Opción" style="text-align: center;" >
+                             <p:commandButton value="Editar" 
+                                         action="#{eppRegistroGuiaTransitoController.openDlgEditarPolicia(item)}" 
+                                         update="dtCustodio" >                   
+                            </p:commandButton>
+                        </p:column>  
+                    </p:dataTable>
+                    <p:commandButton value="Eliminar Seleccionados" 
+                                     process="@this, dtCustodio" update="pnlDatosCustodio" 
+                                     actionListener="#{eppRegistroGuiaTransitoController.eliminarPoliciasSeleccionados()}">
+                        <p:confirm header="Confirmación" message="#{bundleGeppGte.ConfirmarEliminar}" ></p:confirm>
+                    </p:commandButton>
+                </p:panel>
+
+                <p:panel header="DATOS DEL TRASLADO" style="margin-bottom:20px" 
+                         id="pnlDatosTraslado" >
+                    <h:panelGrid columns="2" >
+                        <p:outputLabel value="Fecha Llegada: " />
+                        <p:calendar showOn="button" 
+                                    mindate="#{eppRegistroGuiaTransitoController.minDate()}"
+                                    maxdate="#{eppRegistroGuiaTransitoController.maxDate()}"
+                                    value="#{eppRegistroGuiaTransitoController.fechaLlegada}"
+                                    disabled="#{eppRegistroGuiaTransitoController.disabledFechaLlegada}"
+                                    pattern="#{bundle.FormatoFecha}" >
+                            <f:convertDateTime pattern="#{bundle.FormatoFecha}" />
+                        </p:calendar>
+                    </h:panelGrid>
+                </p:panel>
+                
+                <p:panel header="CONDUCTOR" style="margin-bottom:20px" id="pnlConductor" >
+                    <h:panelGrid columns="1" id="pnlgConductor" >                                                
+                        <p:dataTable id="dtConductor" 
+                                 style="width: 45%"
+                                 value="#{eppRegistroGuiaTransitoController.selected.eppLicenciaList1}"
+                                 emptyMessage="#{bundleGeppGte.MensajeNoResultados}" 
+                                 var="item"
+                                 rowKey="#{item.id}" >
+                        <p:column headerText="Conductor">                                
+                            <h:outputText value="#{item.personaId.nombreCompleto}" />
+                        </p:column>                        
+                        <p:column headerText="Nro. Licencia">                              
+                            <h:outputText value="#{item.nroLicencia}" />
+                        </p:column>                                                                                                        
+                    </p:dataTable>                         
+                    </h:panelGrid>
+                </p:panel>
+                
+                <p:panel header="DOCUMENTOS ADJUNTOS" style="margin-bottom:20px" id="pnlDocumentosAdjuntos" >
+                    <h:panelGrid columns="3" >
+                        <h:outputText value="Anexo Adjunto: " />
+                        <p:fileUpload   id="pfileUpload" label="Adjuntar"
+                                        invalidFileMessage="#{BundleBDIntegrado.eppRegistroGuiaTransito_fileUpload_InvalidFileMessage}"
+                                        invalidSizeMessage="#{eppRegistroGuiaTransitoController.obtenerMsjeInvalidSize()}"
+                                        fileUploadListener="#{eppRegistroGuiaTransitoController.handleFileUploadAdjuntoPDF}"
+                                        onstart="PF('loadingDialog').show()"
+                                        oncomplete="PF('loadingDialog').hide()"
+                                        mode="advanced" dragDropSupport="true"
+                                        multiple="false" sizeLimit="#{sbParametroController.obtenerParametroXNombre('eppRegistroGuiaTransito_sizeLimite_archivo').valor}"
+                                        auto="true" process="@this" update="@this" 
+                                        allowTypes="/(\.|\/)(pdf|PDF)$/" immediate="true"  >                        
+                            <p:commandButton  icon="ui-icon-document"
+                                            ajax="false"
+                                            style="background-color: #F2F2F2;color: #000000;"
+                                            value="#{eppRegistroGuiaTransitoController.archivo}"
+                                            rendered="#{eppRegistroGuiaTransitoController.archivo ne null}"
+                                            process="@all"
+                                            actionListener="#"
+                                            onclick="this.form.target = '_blank'"
+                                            onblur="this.form.target = '_self'"
+                                            immediate="true" >
+                                  <p:fileDownload value="#{eppRegistroGuiaTransitoController.cargarDocumento()}" contentDisposition="inline" />
+                            </p:commandButton>
+                        </p:fileUpload>
+                    </h:panelGrid>
+                </p:panel>
+
+                <h:panelGrid id="pnlBotones" columns="2" style="float: right; margin-bottom:20px; clear: both;">
+                    <p:commandButton icon="ui-icon-disk" update="@form" 
+                                     style="height: 40px;width: 150px"
+                                     value="Guardar" 
+                                     action="#{eppRegistroGuiaTransitoController.editarDatosAdicionales}" >
+                        <p:confirm header="Advertencia" 
+                                   message="¿ESTÁ SEGURO DE GUARDAR LOS CAMBIOS?" />
+                    </p:commandButton>
+                    <p:commandButton icon="ui-icon-search" 
+                                     action="#{eppRegistroGuiaTransitoController.direccionarDatosAdiGTE()}" 
+                                     style="height: 40px;width: 150px" value="Ir a Listado Traslado" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+
+            </h:form>      
+            <p:dialog widgetVar="dlgAyuda" 
+                      closable="true" 
+                      header="#{bundleSistemaBase.Ayuda}" 
+                      resizable="false" 
+                      modal="true" 
+                      appendTo="@(body)" 
+                      width="850" 
+                      height="600" 
+                      maximizable="false" >
+                <center>
+                    <h:graphicImage name="imagenes/img_ayuda_gte.jpg"/>
+                </center>
+            </p:dialog>
+            <ui:include src="dlgBuscarPolicia.xhtml"/>
+            <ui:include src="dlgCrearPolicia.xhtml"/>
+            <ui:include src="dlgEditarPolicia.xhtml"/>
+            <ui:include src="dlgBuscarConductorAdicGt.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

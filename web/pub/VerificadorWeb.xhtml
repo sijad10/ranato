@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3c.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>#{bundleSistemaBase.VerQRTitulo}</title>
+            </f:facet>
+            <h:outputStylesheet name="/css/estilos.css"/>
+        </h:head>
+
+        <h:body style="font-size: 12px; font-family: Arial; background: #888888">
+            <h:form id="validaForm" acceptcharset="UTF-8">
+                <p:focus context="validaForm" />
+                <p:defaultCommand target="verificar"/>
+                <center>
+                    <p:growl id="mensajesGrowl" autoUpdate="true" />
+                    <h:panelGrid columns="1" style="width: 950px; background: white;" cellpadding="5" >
+                        <h:panelGrid columns="2" style="width: 100%;">
+                            <p:commandLink action="/login" immediate="true" ajax="false"><p:graphicImage name="imagenes/logo_sucamec_h.png" style="padding-left: 20px;"/></p:commandLink>
+                            <h:outputLabel value="#{bundleSistemaBase.VerQRTitulo}" style="font-weight: bold; font-size: x-large;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3" >
+                            <p:outputLabel value="Tipo de documento:" style="width: 120px;font-weight: bold;"/>
+                            <p:selectOneMenu value="#{verificadorWebController.tipo}"
+                                             validatorMessage="#{bundleSistemaBase.VerQRTipoInvalido}"
+                                             requiredMessage="#{bundleSistemaBase.VerQRTipoRequerido}"
+                                             required="true"
+                                             >
+                                <f:selectItem itemValue="GEPP_RES" itemLabel="GUÍAS DE TRANSITO Y RESOLUCIONES - GEPP" />
+                                <f:selectItem itemValue="GAMAC_POL" itemLabel="CONSTANCIAS DE POLÍGONO - GAMAC" />
+                                <f:selectItem itemValue="GSSP_INS" itemLabel="FICHAS DE INSTRUCTOR - GSSP" />
+                                <f:selectItem itemValue="GAMAC_GTRAN" itemLabel="GUÍAS DE TRANSITO DE ARMAS - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_ACTA" itemLabel="ACTAS DE REINGRESO / RETIRO DE ARMAS - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_RAESS" itemLabel="RESOLUCIONES Y AUTORIZACIONES - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_CONSTLICTAR" itemLabel="CONSTANCIAS DE LICENCIAS Y TARJETAS DE PROPIEDAD - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_CONST_VAL" itemLabel="CONSTANCIAS DE VALIDACIÓN DE DATOS DE ARMAS DE FUEGO - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_CONST_VER" itemLabel="CONSTANCIAS DE VERIFICACIÓN DE ARMAS DE FUEGO - GAMAC" />
+                                <f:selectItem itemValue="GSSP_OFIC" itemLabel="OFICIO - GSSP" />
+                                <f:selectItem itemValue="GAMAC_OFIC" itemLabel="OFICIO - GAMAC" />
+                                <f:selectItem itemValue="GSSP_CONSTEM_CAR" itemLabel="CONSTANCIA TEMPORAL DE CARNE - GSSP" />
+                                <f:selectItem itemValue="GAMAC_CERT_IMP" itemLabel="CERTIFICADO DE IMPORTACIÓN - GAMAC" />
+                                <f:selectItem itemValue="GAMAC_EXAMEN_POLI" itemLabel="EXAMEN DE POLIGONO DE TIRO - GAMAC" />
+
+                                <p:ajax event="valueChange" process="@this" partialSubmit="true" update=":validaForm" listener="#{verificadorWebController.cambiarTipo}"/>
+                            </p:selectOneMenu>
+                            <h:graphicImage name="imagenes/ayuda.png" onclick="PF('dlgAyuda').show();" style="cursor: help;"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="3" style="width: 100%;">
+                            <h:panelGroup layout="block" style="width: 400px;">
+                                <h:panelGrid columns="7" rendered="#{verificadorWebController.tipo.equals('GEPP_RES')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_GTRAN')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_ACTA')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_RAESS')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_CONST_VAL')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_CONST_VER')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_CONSTLICTAR')
+                                                                     ||verificadorWebController.tipo.equals('GSSP_OFIC')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_OFIC')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_CERT_IMP')
+                                                                     ||verificadorWebController.tipo.equals('GAMAC_EXAMEN_POLI')
+                                                                     }">
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRCodigo}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRNumero}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRAnho}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <!--<p:outputLabel/> !-->
+                                    <p:inputText id="txtSubQr"
+                                                 maxlength="4"
+                                                 size="4"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.subQr}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRCodigoInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRCodigoRequerido}"
+                                                 required="true">
+                                        <f:validateLength minimum="4" maximum="4" />
+                                        <p:keyFilter for="txtSubQr" preventPaste="false"  regEx="/[a-z0-9]/i" />
+                                    </p:inputText>
+                                    <p:outputLabel value="-N°" style="width: 120px;font-weight: bold;"/>
+                                    <p:inputText id="txtNumero"
+                                                 maxlength="#{verificadorWebController.tipo eq 'GAMAC_ACTA'?'12':'9'}"
+                                                 size="#{verificadorWebController.tipo eq 'GAMAC_ACTA'?'12':'9'}"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.numero}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRNumeroInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRNumeroRequerido}"
+                                                 required="true"
+                                                 >
+                                        <p:keyFilter for="txtNumero" regEx="/[0-9]/i" preventPaste="false"/>
+                                    </p:inputText>
+                                    <p:outputLabel value="-" style="width: 120px;font-weight: bold;"/>
+                                    <p:selectOneMenu style="width: 50px;font-weight: bold;"
+                                                     value="#{verificadorWebController.anho}"
+                                                     validatorMessage="#{bundleSistemaBase.VerQRAnhoInvalido}"
+                                                     requiredMessage="#{bundleSistemaBase.VerQRAnhoRequerido}"
+                                                     required="true"
+                                                     >
+                                        <f:selectItem itemLabel="---" itemValue="" />
+                                        <f:selectItems value="#{verificadorWebController.listaAnhos}" />
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="-SUCAMEC-GEPP" style="width: 120px;font-weight: bold;" rendered="#{verificadorWebController.tipo!='GAMAC_GTRAN' and verificadorWebController.tipo!='GAMAC_ACTA'
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_RAESS' 
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_CONST_VAL' 
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_CONSTLICTAR'
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_CONST_VER'
+                                                                                                                             and verificadorWebController.tipo!='GSSP_OFIC'
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_OFIC'
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_CERT_IMP'
+                                                                                                                             and verificadorWebController.tipo!='GAMAC_EXAMEN_POLI'
+                                                                                                                             }"/>
+                                    <p:outputLabel value="-SUCAMEC-GAMAC" style="width: 120px;font-weight: bold;" rendered="#{verificadorWebController.tipo=='GAMAC_GTRAN' || verificadorWebController.tipo=='GAMAC_CONST_VAL' || verificadorWebController.tipo=='GAMAC_CONSTLICTAR' || verificadorWebController.tipo=='GAMAC_CONST_VER' || verificadorWebController.tipo=='GAMAC_EXAMEN_POLI'}"/>
+                                    <p:outputLabel value="-SUCAMEC/GAMAC" style="width: 120px;font-weight: bold;" rendered="#{verificadorWebController.tipo=='GAMAC_RAESS' || verificadorWebController.tipo=='GAMAC_OFIC'}"/>
+                                    <p:outputLabel value="-SUCAMEC-GSSP" style="width: 100px;font-weight: bold;" rendered="#{verificadorWebController.tipo=='GSSP_OFIC'}"/>  
+                                    <p:outputLabel value="-SUCAMEC-GAMAC-UFNO-CAMR" style="width: 100px;font-weight: bold;" rendered="#{verificadorWebController.tipo=='GAMAC_CERT_IMP'}"/>  
+
+                                </h:panelGrid>
+                                <h:panelGrid columns="6" rendered="#{verificadorWebController.tipo.equals('GAMAC_POL') or verificadorWebController.tipo.equals('GSSP_INS')}">
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRCodigo}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRNumero}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+                                    <p:inputText id="txtSubQr2"
+                                                 maxlength="4"
+                                                 size="4"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.subQr}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRCodigoInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRCodigoRequerido}"
+                                                 required="true">
+                                        <f:validateLength minimum="#{verificadorWebController.tipo.equals('GAMAC_POL')?'3':'4'}" maximum="4" />
+                                        <p:keyFilter for="txtSubQr2" preventPaste="false"  regEx="/[a-z0-9]/i" />
+                                    </p:inputText>
+                                    <p:outputLabel value=" - " style="width: 120px;font-weight: bold;"/>
+                                    <p:inputText id="txtNumero2"
+                                                 maxlength="9"
+                                                 size="9"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.numero}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRDniInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRDniRequerido}"
+                                                 required="true"
+                                                 >
+                                        <p:keyFilter for="txtNumero2" regEx="/[0-9]/i" preventPaste="false"/>
+                                    </p:inputText>
+                                    <p:outputLabel value="-SUCAMEC" style="width: 120px;font-weight: bold;"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="6" rendered="#{verificadorWebController.tipo.equals('GSSP_CONSTEM_CAR')}">
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRCodigo}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel value="#{bundleSistemaBase.VerQRNumero}" style="font-size: smaller;"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+                                    <p:inputText id="txtSubQr3"
+                                                 maxlength="4"
+                                                 size="4"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.subQr}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRCodigoInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRCodigoRequerido}"
+                                                 required="true">
+                                        <f:validateLength minimum="4" maximum="4" />
+                                        <p:keyFilter for="txtSubQr3" preventPaste="false"  regEx="/[a-z0-9]/i" />
+                                    </p:inputText>
+                                    <p:outputLabel value=" - " style="width: 120px;font-weight: bold;"/>
+                                    <p:inputText id="txtNumero3"
+                                                 maxlength="8"
+                                                 size="8"
+                                                 style="text-align: right;"
+                                                 value="#{verificadorWebController.numero}"
+                                                 validatorMessage="#{bundleSistemaBase.VerQRNumeroInvalido}"
+                                                 requiredMessage="#{bundleSistemaBase.VerQRNumeroRequerido}"
+                                                 required="true"
+                                                 >
+                                        <p:keyFilter for="txtNumero3" regEx="/[0-9]/i" preventPaste="false"/>
+                                    </p:inputText>
+                                </h:panelGrid>
+                            </h:panelGroup>
+                            <h:panelGrid id="gridCaptcha" columns="4" >
+                                <p:graphicImage id="imgCaptcha" value="#{verificadorWebController.captcha.imagen}"  width="200" height="50" cache="false"/>
+                                <p:commandButton id="botonCaptcha" icon="ui-icon-refresh"
+                                                 actionListener="#{verificadorWebController.captcha.generarCaptcha()}"
+                                                 value=""
+                                                 partialSubmit="true"
+                                                 process="@this"
+                                                 update="gridCaptcha"
+                                                 style="width: 35px; height: 50px;"/>
+                                <h:panelGrid columns="1">
+                                    <p:outputLabel for="textoCaptcha" value="Ingrese el captcha:" style="font-size: smaller;"/>
+                                    <p:inputText id="textoCaptcha" value="#{verificadorWebController.captcha.textoInput}"
+                                                 required="true"
+                                                 requiredMessage="#{bundleSistemaBase.Captcha_Requerido}"
+                                                 validatorMessage="#{bundleSistemaBase.Captcha_Invalido}"
+                                                 maxlength="5"
+                                                 style="width: 80px;">
+                                        <p:keyFilter for="textoCaptcha" preventPaste="false"  regEx="/[a-z0-9]/i" />
+                                    </p:inputText>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton id="verificar" value="Verificar" icon="ui-icon-search" ajax="false"
+                                             actionListener="#{verificadorWebController.buscarDocumento()}" style="width: 100px; height: 50px;"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGrid style="width: 950px; background: white; text-align: center;padding-top: 5px;"  rendered="#{verificadorWebController.nombreArchivo != null}">
+                        En caso de no poder ver el documento, por favor presione el siguiente botón para visualizarlo
+                        <p:link  href="/faces/qr/notqrpreview.xhtml?h=#{verificadorWebController.nombreArchivoEnc}" target="_blank">
+                            <p:graphicImage name="/icons/printVer.png" width="68" alt="Ver documento"/>
+                        </p:link>
+                        <p:media id="vistaPrevia" value="/faces/qr/pdf/NOTQR?n=#{verificadorWebController.nombreArchivo}" cache="false" player="pdf" width="100%" height="480px" />
+                    </h:panelGrid>
+                    <h:panelGroup rendered="#{verificadorWebController.visualizador.verDocumento and !verificadorWebController.inicio}" >
+                        <ui:repeat value="#{verificadorWebController.visualizador.imagenes}" var="img">
+                            <h:graphicImage value="/faces/qr/img/#{verificadorWebController.tipo}?imagen=#{img}&amp;rnd=#{verificadorWebController.visualizador.millis}"/><br/><br/>
+                        </ui:repeat>
+                    </h:panelGroup>
+                    <h:panelGroup layout="block" rendered="#{!verificadorWebController.visualizador.verDocumento and !verificadorWebController.inicio}" style="color: red; font-size: large; font-weight: bold; width: 950px; background: white;">
+                        <br/><br/><br/><br/><br/>
+                        <h:outputLabel escape="false" value="#{bundleSistemaBase.VerQRErrorDocQR}" />
+                        <br/><br/><br/><br/><br/>
+                    </h:panelGroup>
+                </center>
+                <p:ajaxStatus  onstart="PF('loadingDialog').show()" onsuccess="PF('loadingDialog').hide()" />
+                <p:dialog id="loadingDialog" style="background-color: transparent; border: none; box-shadow: none;"
+                          widgetVar="loadingDialog"
+                          showHeader="false"
+                          resizable="false" modal="true"
+                          closable="false"
+                          appendTo="@(body)" draggable="false">
+                    <p:graphicImage name="icons/ajax-loader.gif"/>
+                </p:dialog>
+            </h:form>
+            <p:dialog widgetVar="dlgAyuda" closable="true" header="#{bundleSistemaBase.Ayuda}" resizable="false" modal="true" appendTo="@(body)" width="400" height="480" maximizable="false" >
+                <center>
+                    <h:graphicImage name="imagenes/qr-img-ayuda.jpg"/>
+                </center>
+            </p:dialog>
+        </h:body>
+    </f:view>
+</html>

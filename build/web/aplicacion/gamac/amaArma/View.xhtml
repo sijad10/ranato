@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaArmaTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_id}"/>
+                    <h:outputText value="#{amaArmaController.selected.id}" title="#{bundle.ViewAmaArmaTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_nroRua}"/>
+                    <h:outputText value="#{amaArmaController.selected.nroRua}" title="#{bundle.ViewAmaArmaTitle_nroRua}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_serie}"/>
+                    <h:outputText value="#{amaArmaController.selected.serie}" title="#{bundle.ViewAmaArmaTitle_serie}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_pesoInicial}"/>
+                    <h:outputText value="#{amaArmaController.selected.pesoInicial}" title="#{bundle.ViewAmaArmaTitle_pesoInicial}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_descripcion}"/>
+                    <h:outputText value="#{amaArmaController.selected.descripcion}" title="#{bundle.ViewAmaArmaTitle_descripcion}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_activo}"/>
+                    <h:outputText value="#{amaArmaController.selected.activo}" title="#{bundle.ViewAmaArmaTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_audLogin}"/>
+                    <h:outputText value="#{amaArmaController.selected.audLogin}" title="#{bundle.ViewAmaArmaTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_audNumIp}"/>
+                    <h:outputText value="#{amaArmaController.selected.audNumIp}" title="#{bundle.ViewAmaArmaTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_marcaId}"/>
+                    <h:outputText value="#{amaArmaController.selected.marcaId}" title="#{bundle.ViewAmaArmaTitle_marcaId}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_tipoArmaId}"/>
+                    <h:outputText value="#{amaArmaController.selected.tipoArmaId}" title="#{bundle.ViewAmaArmaTitle_tipoArmaId}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_calibreId}"/>
+                    <h:outputText value="#{amaArmaController.selected.calibreId}" title="#{bundle.ViewAmaArmaTitle_calibreId}"/>
+                    <h:outputText value="#{bundle.ViewAmaArmaLabel_modeloId}"/>
+                    <h:outputText value="#{amaArmaController.selected.modeloId}" title="#{bundle.ViewAmaArmaTitle_modeloId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaArmaController.destroyAndView}" value="#{bundle.ViewAmaArmaDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaArmaEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaArmaController.prepareCreate}" value="#{bundle.ViewAmaArmaCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaArmaController.prepareList}" value="#{bundle.ViewAmaArmaShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaArmaIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui" >
+    
+    <h:form id="verEmitidosForm" rendered="#{amaRegEmpArmaController.estado == 'VEREMITIDO'}" >
+                    
+            <p:panel id = "pnlDatosAnteriores" header="#{BundleBDIntegrado.amaArma_registrar_datosAnteriores_title}"  >
+                <h:panelGrid columns="6"  >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_licencia}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.NRO_LIC}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_serie}" style="font-weight: bold;margin-left: 20px;"/>
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.NRO_SERIE}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_tipoArma}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_ARM}" />
+
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_marca}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_MARCA}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_modelo}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.DES_MODELO}" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_calibre}" style="font-weight: bold;margin-left: 20px;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.CALIBRE}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_Situac}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.ESTADO}" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                    <p:outputLabel value="" />
+                </h:panelGrid>
+            </p:panel>
+            <br/>
+
+            <p:panel id = "pnlDatosActualizados" header="#{BundleBDIntegrado.amaArma_registrar_emitidos_title}">
+                <h:panelGrid columns="2" >
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_serie}" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registroSelected.NRO_SERIE}" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_arma}" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.armaEmitido }" />
+                    
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_situacuion}" style="font-weight: bold;width: 110px; display: block;" />
+                    <p:outputLabel value="#{amaRegEmpArmaController.registro.situacionArma.nombre }" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="1" >
+                    <br/>
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_agregarFoto}" style="font-weight: bold;" />
+                    <p:outputLabel value="#{BundleBDIntegrado.amaArma_registrar_dimensiones}" style="font-weight: bold;" />
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2"  style="text-align: left ;width: 70%;">
+                    <p:dataTable id="tblFotos"
+                                style="width: 100%;"
+                                value="#{amaRegEmpArmaController.lstFotos}"
+                                emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" var="itemComp" >
+
+                       <p:column headerText="#{BundleBDIntegrado.amaArma_registrar_dt_Nro}" style="text-align:center">
+                           <f:facet name="header">
+                               <h:outputText value="#{BundleBDIntegrado.amaArma_registrar_dt_Nro}" />
+                           </f:facet>
+                           <h:outputText value="#{itemComp.nro}"/>
+                       </p:column>
+                       <p:column headerText="#{BundleBDIntegrado.amaArma_registrar_dt_foto}" style="text-align:center">
+                           <f:facet name="header">
+                               <h:outputText value="#{BundleBDIntegrado.amaArma_registrar_dt_foto}" />
+                           </f:facet>
+                           <p:commandLink id="foto" actionListener="#{amaRegEmpArmaController.openDlgFoto(itemComp) }">
+                                <h:outputText value="#{itemComp.nombre}"/>
+                           </p:commandLink>
+                       </p:column>
+                    </p:dataTable>
+                </h:panelGrid>                    
+            </p:panel>
+            <br/><br/>
+ 
+            <div align="center">
+                <p:commandButton id="botonGuardar"
+                                 icon="ui-icon-disk"
+                                 update="@all"
+                                 process="@all"
+                                 action="#{amaRegEmpArmaController.prepareListRegularizacionArma()}" 
+                                 value="Volver a Bandeja" />
+                <p:outputLabel value="  "/>
+            </div>
+            <br/>
+        </h:form>
+</ui:composition>
+
+                
+
+        
+        

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaCatalogoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_id}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.id}" title="#{bundle.ViewAmaCatalogoTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_nombre}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.nombre}" title="#{bundle.ViewAmaCatalogoTitle_nombre}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_abreviatura}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.abreviatura}" title="#{bundle.ViewAmaCatalogoTitle_abreviatura}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_descripcion}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.descripcion}" title="#{bundle.ViewAmaCatalogoTitle_descripcion}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_codProg}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.codProg}" title="#{bundle.ViewAmaCatalogoTitle_codProg}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_orden}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.orden}" title="#{bundle.ViewAmaCatalogoTitle_orden}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_activo}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.activo}" title="#{bundle.ViewAmaCatalogoTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_audLogin}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.audLogin}" title="#{bundle.ViewAmaCatalogoTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_audNumIp}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.audNumIp}" title="#{bundle.ViewAmaCatalogoTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaCatalogoLabel_tipoId}"/>
+                    <h:outputText value="#{amaCatalogoController.selected.tipoId}" title="#{bundle.ViewAmaCatalogoTitle_tipoId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaCatalogoController.destroyAndView}" value="#{bundle.ViewAmaCatalogoDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaCatalogoEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaCatalogoController.prepareCreate}" value="#{bundle.ViewAmaCatalogoCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaCatalogoController.prepareList}" value="#{bundle.ViewAmaCatalogoShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaCatalogoIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

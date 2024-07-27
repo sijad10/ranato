@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+            <h:form id="actualizarForm" rendered="#{sspRegistroCursoController.estado == 'ACTUALIZAR'}" >
+                <p:panel id="pnlAgendar" >
+                    <p:fieldset legend="#{BundleBDIntegrado.sspCursos_actualizar_administrado}" >
+                        <h:panelGrid columns="4" >
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_actualizar_ruc}" style="display: block; width: 95px;"  />
+                            <p:inputText id="rucAdministrado" value="#{sspRegistroCursoController.obtenerRucPersona(sspRegistroCursoController.registro.administradoId) }" readonly="true"   />
+                            <p:outputLabel value="#{BundleBDIntegrado.sspCursos_actualizar_rznSocial}" style="margin-left: 20px;" />
+                            <p:inputText id="rznSocialAdministrado" value="#{sspRegistroCursoController.obtenerRznSocialPersona(sspRegistroCursoController.registro.administradoId) }" readonly="true" style="width:300px" />
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <br/>
+                                        
+                    <p:dataTable var="itemReg" value="#{sspRegistroCursoController.lstModulosNoRep}" expandedRow="false" >
+                        <f:facet name="header">
+                            Programación
+                        </f:facet>
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_curso}">
+                            <h:outputText value="#{sspRegistroCursoController.mostrarDescModuloRegistro(itemReg)}" />
+                        </p:column>
+                        <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_confirmar}" style="text-align: center;width: 150px;" >
+                            <p:commandButton icon="ui-icon-document"
+                                                process="@form"
+                                                update="@form"
+                                                id="btnActualizarNota"
+                                                value="Actualizar"
+                                                styleClass="#{sspRegistroCursoController.obtenerColorBtnActualizar(itemReg)}"
+                                                rendered="#{sspRegistroCursoController.mostrarBtnActualizarNotas(itemReg) }"
+                                                actionListener="#{sspRegistroCursoController.openDlgActualizarNotas(itemReg) }">
+                            </p:commandButton>
+                             <h:outputText value="#{BundleBDIntegrado.sspCursos_cursoNoFinalizado}" rendered="#{sspRegistroCursoController.mostrartextoCursoNoFinalizado(itemReg) }" />
+                        </p:column>
+
+                        <p:rowExpansion>
+                                <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.obtenerDetalleProgramacionXCurso(itemReg)}"
+                                            var="detalle"
+                                            emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_local}" style="text-align: center;" >
+                                        <h:outputText value="#{detalle.localId.nombreLocal}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_instructor}" style="text-align: center;" >
+                                        <h:outputText value="#{detalle.instructorId.personaId.nombreCompleto}" />
+                                    </p:column>
+                                    <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_horario}" style="text-align: center;" >
+                                        <p:dataTable id="dtProgramacion" value="#{sspRegistroCursoController.getSspPrograHoraListActivos(detalle.sspPrograHoraList)}"
+                                              var="itemHorario" emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_fecha}" style="text-align: center;" >
+                                               <h:outputText value="#{itemHorario.fecha}" >
+                                                   <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                                               </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="#{BundleBDIntegrado.sspCursos_crear_dtProgramacion_hora}" style="text-align: center;" >
+                                               <h:outputText value="#{itemHorario.horaInicio}" >
+                                                   <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                               </h:outputText> - 
+                                               <h:outputText value="#{itemHorario.horaFin}" >
+                                                   <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoHora}" />
+                                               </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:column>                                    
+                                </p:dataTable>
+                        </p:rowExpansion>
+                    </p:dataTable>
+                                        
+                </p:panel>
+                
+                <br/>
+                <br />
+                <h:panelGrid columns="2" >
+                    <p:commandButton icon="ui-icon-arrowthick-1-w"
+                                     action="#{sspRegistroCursoController.prepareListView() }"
+                                     value="Regresar"
+                                     style="margin-left: 20px;"
+                                     immediate="true" update="@all"  />
+                    <br/><br/>
+                </h:panelGrid>
+            </h:form>
+</ui:composition>

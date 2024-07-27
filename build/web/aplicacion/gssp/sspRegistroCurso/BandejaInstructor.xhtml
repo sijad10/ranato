@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:composition template="/template.xhtml"> 
+        <ui:define name="title">
+            <b>
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_banjdeaInstructor_title}" rendered="#{sspRegistroCursoController.estado == 'BANDEJA'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_ver_title}" rendered="#{sspRegistroCursoController.estado == 'VER'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmarTutoria_title}" rendered="#{sspRegistroCursoController.estado == 'CONFIRMAR'}"/>
+                <h:outputText value="#{BundleBDIntegrado.sspCursos_confirmarNotas_title}" rendered="#{sspRegistroCursoController.estado == 'ACTUALIZAR'}"/>
+            </b>
+        </ui:define>
+        <ui:define name="body">
+            <p:growl id="mensajesGrowlCursos" autoUpdate="true" life="10000" />
+            
+            <h:form id="bandejaInstForm" rendered="#{sspRegistroCursoController.estado == 'BANDEJA'}" >
+                <h:panelGrid columns="1" id="pnlGeneral" >
+                    <h:panelGrid columns="2" width="100%" >
+                        <p:panel id="pnlBusquedaCurso" header="#{BundleBDIntegrado.sspCursos_list_busquedaCurso}" >
+                            <h:panelGrid columns="6" >
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_tipoEstado} *" style="margin-left: 20px;" />
+                                <p:selectOneMenu id="tipoEstado" value="#{sspRegistroCursoController.tipoEstado}" >
+                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>        
+                                   <f:selectItem itemLabel="POR CONFIRMAR" itemValue="1"/>
+                                   <f:selectItem itemLabel="CONFIRMADO" itemValue="2"/>
+                                   <f:selectItem itemLabel="SIN NOTA" itemValue="3"/>
+                                   <f:selectItem itemLabel="CON NOTA" itemValue="4"/>
+                                   <p:ajax event="change" process="@this" update="@this" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_buscarPor}" style="display: block; width: 75px;" />
+                                <h:panelGrid columns="2" >
+                                    <p:selectOneMenu id="buscarPor" value="#{sspRegistroCursoController.buscarPor}" >
+                                       <f:selectItem itemLabel="---" itemValue="#{null}"/>        
+                                       <f:selectItem itemLabel="CODIGO DE SEGUIMIENTO" itemValue="1"/>
+                                       <f:selectItem itemLabel="NRO. DE EXPEDIENTE" itemValue="2"/>
+                                       <f:selectItem itemLabel="CE/DNI ALUMNO" itemValue="3"/>
+                                       <p:ajax event="change" process="pnlBusquedaCurso" update="pnlBusquedaCurso" listener="#{sspRegistroCursoController.cambiarTipoBuscarPor() }" />
+                                    </p:selectOneMenu>
+                                    <p:inputText value="#{sspRegistroCursoController.filtro}" id="filtroBusqueda" 
+                                                 placeholder="Escriba un filtro" style="width: 150px;" >
+                                        <p:keyFilter mask="int" preventPaste="false" />
+                                    </p:inputText>
+                                </h:panelGrid>
+                                <p:outputLabel value="" />
+                                <p:commandButton value="#{BundleBDIntegrado.Buscar}" 
+                                                style="margin-left: 20px;"
+                                                process="@this,pnlBusquedaCurso"
+                                                icon="ui-icon-search " actionListener="#{sspRegistroCursoController.buscarBandejaInstructor() }" 
+                                                update="@form"/>
+
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_nombreLocal}" />
+                                <p:selectOneMenu id="nombreLocal" value="#{sspRegistroCursoController.local}"  autoWidth="false" style="width: 300px;">
+                                   <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                                   <f:selectItems var="item" itemValue="#{item}" itemLabel="#{item.nombreLocal}" value="#{sspRegistroCursoController.lstLocales}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value=""/>
+                                <p:outputLabel value=""/>
+                                <p:outputLabel value=" "/>
+                                <p:outputLabel value=" "/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel header="#{BundleBDIntegrado.sspCursos_tutorialSistema}" id="pnlLinks" style="border: 0px;">
+                            <h:panelGrid columns="12" >
+                                <p:link target="_blank"  href="#{BundleBDIntegrado.sspCursos_manual_instructor_sistema}" >
+                                    <p:graphicImage name="/icons/book_icon.png" width="23" />
+                                    <p:outputLabel value="Manual" style="margin-left: 5px;" />
+                                </p:link>
+
+                                <p:link target="_blank"  href="#{BundleBDIntegrado.sspCursos_youtube_instructor_tutorialSistema}" style="margin-left: 20px;" >
+                                    <p:graphicImage name="/icons/youtube_icon.png" width="23"  />
+                                    <p:outputLabel value="Video" style="margin-left: 5px;" />
+                                </p:link>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                        
+                    
+                    <h:panelGrid columns="2" width="100%" >
+                        <p:panel id="pnlLeyendaOpciones" header="#{BundleBDIntegrado.sspCursos_list_leyendaOpciones}" >
+                            <h:panelGrid columns="12" >
+                                <p:graphicImage name="/imagenes/admin_view.png" width="30"  />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_verCurso}"/>
+
+                                <p:graphicImage name="/imagenes/admin_check.png" width="30" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_confirmarCurso}"/>
+                                
+                                <p:graphicImage name="/imagenes/admin_refresh.png" width="30" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_actualizarCurso}"/>
+                                
+                                <p:graphicImage name="/imagenes/admin_print.png" width="30" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_imprimirConstancia}"/>
+                                
+                                <p:graphicImage name="/imagenes/admin_document.png" width="30" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_imprimirAsistencia}"/>    
+                                
+                                <p:graphicImage name="/imagenes/admin_script.png" width="30" style="margin-left: 12px;" />
+                                <p:outputLabel value="#{BundleBDIntegrado.sspCursos_list_leyenda_imprimirTermino}"/>    
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:panel id="pnlLeyendaTipoCurso" header="#{BundleBDIntegrado.sspCursos_list_leyendaTipoCurso}" >
+                            <h:panelGrid columns="3" style="border: 0px;"> 
+                                <h:panelGrid columns="2" >
+                                    <h:panelGrid style="width: 20px; height: 20px;border-style: solid;border-width: 1px;"  />
+                                    <h:outputText value="Estándar" />
+                                </h:panelGrid>
+                                <h:panelGrid columns="2" >
+                                    <h:panelGrid style="width: 20px; height: 20px;" class="dtHorario-row-teoria" />
+                                    <h:outputText value="Espectáculos, Certámenes y Convenciones" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+                    
+                    <br/>
+                    <p:dataTable id="buscarDatatableRegistro" value="#{sspRegistroCursoController.resultadosBandeja}"
+                                     var="itemReg"
+                                     rowStyleClass="#{sspRegistroCursoController.obtenerColorTipoCurso(itemReg)}"
+                                     emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}"
+                                     paginator="true" rows="#{BundleBDIntegrado.PaginatorFilas}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                                     {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} 
+                                     {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_id}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.id}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_nroExpediente}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.nroExpediente}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_empresa}" style="text-align: center;" >
+                                <h:outputText value="#{sspRegistroCursoController.obtenerAdministrado(itemReg.administradoId) }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_locales}" style="text-align: center;max-width: 90px;width: 90px;" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 process="@this,buscarDatatableRegistro"
+                                                 update="@this,buscarDatatableRegistro"
+                                                 value="Ver"
+                                                 title="Ver locales"
+                                                 id="btnVerLocales"
+                                                 actionListener="#{sspRegistroCursoController.openDlgVerLocales(itemReg) }" >
+                                </p:commandButton>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_instructores}" style="text-align: center;max-width: 90px;width: 90px;" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 process="@this,buscarDatatableRegistro"
+                                                 update="@this,buscarDatatableRegistro"
+                                                 value="Ver"
+                                                 title="Ver Instructores"
+                                                 id="btnVerInstructores"
+                                                 actionListener="#{sspRegistroCursoController.openDlgVerInstructores(itemReg) }" >
+                                </p:commandButton>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_prospectoVigilantes}" style="text-align: center;max-width: 90px;width: 90px;" >
+                                <p:commandButton icon="ui-icon-search"
+                                                 process="@this,buscarDatatableRegistro"
+                                                 update="@this,buscarDatatableRegistro"
+                                                 value="Ver"
+                                                 title="Ver Vigilantes"
+                                                 id="btnVerVigilantes"
+                                                 actionListener="#{sspRegistroCursoController.openDlgVerVigilantes(itemReg) }" >
+                                </p:commandButton>
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_tipoServicio}" style="text-align: center;" >
+                                <h:outputText value="#{sspRegistroCursoController.obtenerTipoServicioBandeja(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_tipoformación}" style="text-align: center;" >
+                                <h:outputText value="#{sspRegistroCursoController.obtenerTipoFormacionCursoBandeja(itemReg)}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_fechaInicioCurso}" style="text-align: center;" >
+                                <h:outputText value="#{sspRegistroCursoController.obtenerFechaInicioBandeja(itemReg) }" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_estado}" style="text-align: center;" >
+                                <h:outputText value="#{itemReg.estadoId.nombre}" />
+                            </p:column>
+                            <p:column headerText="#{BundleBDIntegrado.sspCursos_list_dtListado_acciones}" style="text-align: center;" >
+                                <p:commandButton update="@form"
+                                             icon="ui-icon-search"
+                                             ajax="false"
+                                             title="#{BundleBDIntegrado.sspCursos_list_verCurso}"
+                                             rendered="#{sspRegistroCursoController.renderBtnVer(itemReg.estadoId)}"
+                                             actionListener="#{sspRegistroCursoController.mostrarVer(itemReg, true)}" >
+                                </p:commandButton>
+                                <p:commandButton update="@form"
+                                             icon="ui-icon-check"
+                                             ajax="false"
+                                             title="#{BundleBDIntegrado.sspCursos_list_leyenda_confirmarCurso}"
+                                             rendered="#{sspRegistroCursoController.renderBtnConfirmar(itemReg)}"
+                                             actionListener="#{sspRegistroCursoController.mostrarConfirmar(itemReg)}" >
+                                </p:commandButton>
+                                <p:commandButton update="@form"
+                                                 icon="ui-icon-refresh"
+                                                 ajax="false"
+                                                 title="#{BundleBDIntegrado.sspCursos_list_leyenda_actualizarCurso}"
+                                                 rendered="#{sspRegistroCursoController.renderBtnActualizar(itemReg)}"
+                                                 actionListener="#{sspRegistroCursoController.mostrarActualizar(itemReg, true)}" >
+                                </p:commandButton>
+                                <p:commandButton  icon="ui-icon-print"
+                                                  id ="btnImprimir"
+                                                  ajax="false"
+                                                  rendered="#{sspRegistroCursoController.renderBtnImprimir(itemReg)}"
+                                                  process="@all"
+                                                  onclick="this.form.target = '_blank'"
+                                                  onblur="this.form.target = '_self'"
+                                                  immediate="true" >
+                                    <p:fileDownload value="#{sspRegistroCursoController.imprimirConstancia(itemReg)}" contentDisposition="inline" />
+                                </p:commandButton>
+                                <p:commandButton  icon="ui-icon-document"
+                                                  id ="btnListadoAsistencia"
+                                                  ajax="false"
+                                                  rendered="#{sspRegistroCursoController.renderBtnListadoAsistencia(itemReg)}"
+                                                  process="@all"
+                                                  onclick="this.form.target = '_blank'"
+                                                  onblur="this.form.target = '_self'"
+                                                  immediate="true" >
+                                    <p:fileDownload value="#{sspRegistroCursoController.imprimirListadoAsistencia(itemReg)}" contentDisposition="inline" />
+                                </p:commandButton>
+                                <p:commandButton  icon="ui-icon-script"
+                                                  id ="btnListadoTermino"
+                                                  ajax="false"
+                                                  rendered="#{sspRegistroCursoController.renderBtnTerminoActividad(itemReg)}"
+                                                  process="@all"
+                                                  onclick="this.form.target = '_blank'"
+                                                  onblur="this.form.target = '_self'"
+                                                  immediate="true" >
+                                    <p:fileDownload value="#{sspRegistroCursoController.imprimirListadoTermino(itemReg)}" contentDisposition="inline" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    <br/>
+                </h:panelGrid>                                   
+            </h:form>
+            
+            <ui:include src="View.xhtml" />
+            <ui:include src="ConfirmarTutoria.xhtml" />
+            <ui:include src="ConfirmarNota.xhtml" />
+            <ui:include src="dlgBuscarMapa.xhtml" />
+            <ui:include src="dlgBuscarLocal.xhtml" />
+            <ui:include src="dlgVerMapa.xhtml" />
+            <ui:include src="dlgVerLocal.xhtml" />
+            <ui:include src="dlgVerInstructor.xhtml" />
+            <ui:include src="dlgVerVigilantes.xhtml" />
+            <ui:include src="dlgConfirmarLiberarTutoria.xhtml" />
+            <ui:include src="dlgActualizarNota.xhtml" />
+            <ui:include src="dlgVerNota.xhtml" />
+            <ui:include src="dlgMediosContacto.xhtml" />
+            <ui:include src="dlgFoto.xhtml" />
+        </ui:define>
+    </ui:composition>
+
+</html>

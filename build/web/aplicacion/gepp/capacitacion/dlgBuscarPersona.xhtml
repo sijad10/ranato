@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <p:dialog id="dlgBuscarPersona" widgetVar="wvDialogBusquedaPersona" width="60%" height="45%"
+              modal="true" resizable="false" appendTo="@(body)" 
+              header="Buscar Persona" closable="true">
+        <h:form id="frmBuscPersona">
+            <h:panelGrid columns="1" > 
+                <h:panelGrid columns="6" id="pnlBusquedaPersona" >
+                            <p:outputLabel value="Buscar por:" />
+                            <p:selectOneMenu style="width: 150px;" id="buscarPor"                                             
+                                             value="#{eppCertificadoController.tipoBusqueda}" >
+                               <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                               <f:selectItem itemLabel="NOMBRES Y APELLIDOS" itemValue="nomb"/>                               
+                               <f:selectItem itemLabel="NRO. DOCUMENTO" itemValue="ndoc"/>
+                               <p:ajax event="change" update="pnlBusquedaPersona"/>
+                           </p:selectOneMenu>                            
+                            <p:inputText value="#{eppCertificadoController.filtro}"/>
+                            <p:commandButton value="Buscar" 
+                                             process="@this,pnlBusquedaPersona"
+                                             actionListener="#{eppCertificadoController.buscarDlgPersona()}" 
+                                             update="@form"/>
+                </h:panelGrid >
+                <p:dataTable id="dataTable" 
+                             var="item" widgetVar="dt"  
+                             value="#{eppCertificadoController.listaPersonasBusqueda}"
+                             emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" 
+                             paginator="true" 
+                             rows="#{BundleBDIntegrado.PaginatorFilas_busqueda}"  
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="#{BundleBDIntegrado.PaginatorFilasPorPagina}">
+                    <p:column headerText="Id" style="width: 30px;">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>                    
+                    <p:column headerText="Tipo Documento" style="text-align: center;" >
+                        <h:outputText value="#{ item.tipoDoc != null ? item.tipoDoc.nombre :''}"/>
+                    </p:column>
+                    <p:column headerText="Número Documento" style="text-align: center;">
+                        <h:outputText value="#{item.numDoc}"/>
+                    </p:column>
+                    <p:column headerText="Apellidos y Nombres">
+                        <h:outputText value="#{item.apePat.concat(' ').concat(item.apeMat).concat(' ').concat(item.nombres)}"/>
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.Opcion}" style="text-align: center" >
+                        <p:commandButton icon="ui-icon-check" 
+                                         title="SELECCIONAR" 
+                                         oncomplete="PF('wvDialogBusquedaPersona').hide()" 
+                                         actionListener="#{eppCertificadoController.seleccionarDlgPersona(item)}" />
+                    </p:column>
+                </p:dataTable>
+                <p:commandButton value="#{BundleBDIntegrado.Cancelar}"
+                                 style="float: right"
+                                 process="@this"
+                                 update="frmBuscPersona"
+                                 actionListener="#"
+                                 oncomplete="PF('wvDialogBusquedaPersona').hide()" />
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</html>

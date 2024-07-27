@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.2.final using JasperReports Library version 6.2.2  -->
+<!-- 2016-09-07T17:31:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ConstanciaCapacitacion" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="30de914b-f8f9-4710-8722-6412e1e71fe8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="P_LOGO_SUCAMEC" class="java.lang.String"/>
+	<parameter name="P_FECHA_REG" class="java.lang.String"/>
+	<parameter name="P_SOL_TIPODOC" class="java.lang.String"/>
+	<parameter name="P_SOL_RZNSOCIAL" class="java.lang.String"/>
+	<parameter name="P_PAR_TIPODOC" class="java.lang.String"/>
+	<parameter name="P_PAR_APELLIDOS" class="java.lang.String"/>
+	<parameter name="P_PAR_ACTIVIDADES" class="java.lang.String"/>
+	<parameter name="P_CAP_LUGAR" class="java.lang.String"/>
+	<parameter name="P_CAP_FECHAINS" class="java.lang.String"/>
+	<parameter name="Parameter1" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nroExpediente" class="java.lang.String">
+		<fieldDescription><![CDATA[nroExpediente]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="76" splitType="Stretch">
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" isUsingCache="true">
+				<reportElement positionType="Float" x="8" y="4" width="209" height="66" uuid="5b1acbcb-1570-4360-b5f4-7d04c0881017">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{P_LOGO_SUCAMEC}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="607" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="109" y="6" width="363" height="30" uuid="78f1d1df-1525-427e-8dbc-397660387b98"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONSTANCIA DE INSCRIPCIÓN A LA CAPACITACIÓN EN MEDIDAS DE SEGURIDAD"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="5" y="195" width="524" height="20" uuid="7872915a-e79a-4687-a905-2c6e355e0a11"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATOS DEL PARTICIPANTE"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="48" width="524" height="20" uuid="02f7fd14-9a72-4667-93db-00e62002f18e"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La SUCAMEC hace constar la inscripción a la Capacitación en Medidas de Seguridad para la Actividad Pirotécnica según los siguientes datos:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="5" y="85" width="524" height="20" uuid="9502cf3d-74bf-4b6e-afde-3e135ff1c234"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATOS DEL SOLICITANTE"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="5" y="325" width="524" height="20" uuid="1403d42d-26c6-429d-b60e-9c79d4fafd32"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATOS DE LA CAPACITACIÓN"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="5" y="434" width="524" height="20" uuid="7634fb56-bf0a-42cc-84fb-4e7f86f8e522"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Términos y Condiciones"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="460" width="502" height="20" uuid="081db0b1-2fa2-4125-9f11-d0e9355c4be1"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Debe estar presente en Lugar, Fecha y Hora indicado. Así como de asistir todos los días."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="480" width="502" height="20" uuid="f7903fc0-173b-4aff-bf9c-c2a71b1aca45">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Debe traer su DNI y su comprobante de pago original al momento de comenzar la capacitación."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="504" width="502" height="20" uuid="5b8d1c19-131f-4687-a49e-9b940de3244d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Al finalizar la capacitación, se va a realizar una evaluación. Se otorgará el certificado solo cuando haya obtenido una nota mayor a 11. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="27" y="528" width="502" height="20" uuid="c83f8abd-9e51-4ff3-be96-6d280f904052">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Todos los datos consignados en este registro tienen caracter de declaración jurada, por lo que en caso de falsedad, la SUCAMEC queda en facultada de anular el trámite y proceder de acuerdo al numeral 32.3 del Artículo N° 32 de la Ley N° 27444 Ley del Procedimiento Administrativo General"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="171" y="576" width="358" height="20" uuid="be638e39-a5d0-4536-9c9b-89e440bad9ee"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA_REG}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="352" width="124" height="20" uuid="525bfd9c-3890-4677-88a5-1832a8b614e6"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Lugar y Fecha"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="7" y="377" width="123" height="20" uuid="dc4f2f8a-9690-4063-823a-67e1cf2a036d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha de Inscripción"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="222" width="124" height="20" uuid="603bbaa6-374c-41b3-a059-0d285676bf2c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tipo y Nro Documento"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="245" width="124" height="20" uuid="0b90dc1b-4240-45af-8dd6-48a46964ba84"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Apellidos y Nombres"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="269" width="124" height="34" uuid="a0283483-2329-4e3f-8b21-b0994f95f76e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Actividades que desempeña"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="110" width="124" height="20" uuid="e9d0d30b-3e3f-4b3b-b102-22ea1073339a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tipo y Nro Documento"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="6" y="133" width="114" height="42" uuid="b018dff5-ee37-4abc-b536-c0baa1583f81"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Razón Social o Apellidos y Nombres"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="110" width="390" height="20" uuid="6a0bee52-7e89-4356-9d98-b055f73623b1"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_SOL_TIPODOC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="133" width="390" height="20" uuid="11c9ed7a-e90e-4acc-b701-51213d7ff42f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_SOL_RZNSOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="222" width="390" height="20" uuid="55800a06-032b-4859-ad92-003e36127306"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_PAR_TIPODOC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="245" width="390" height="20" uuid="d91e50a8-0201-4e6b-95a0-5acd12251c4b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_PAR_APELLIDOS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="269" width="390" height="20" uuid="997a4748-e88b-49e8-83c5-65d1a943251c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_PAR_ACTIVIDADES}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="352" width="390" height="20" uuid="711be453-e532-44a6-8d01-3d1516e982ed"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_CAP_LUGAR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="139" y="377" width="390" height="20" uuid="da75f294-ff7c-4705-b3bf-b1627ade3539"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_CAP_FECHAINS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="9" y="460" width="18" height="20" uuid="324f064d-33db-4c9a-87ce-f795c77b6633">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="9" y="480" width="18" height="20" uuid="a3c99479-a8bf-4fce-a102-ae2cfb5a6c6d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="9" y="500" width="18" height="20" uuid="69cd0883-83fd-4d5c-a159-8dbaa7093fcc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="9" y="528" width="18" height="20" uuid="fcdba27c-8718-45e1-b35e-0ef3374ea51d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4."]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="428" y="-55" width="100" height="30" uuid="b6be1155-0865-44a9-b6e4-b68a12cf24c3">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$F{nroExpediente}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

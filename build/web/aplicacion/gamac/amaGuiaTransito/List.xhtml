@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:form styleClass="jsfcrud_list_form">
+                <h:panelGroup id="messagePanel" layout="block">
+                    <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+                </h:panelGroup>
+                <h:outputText escape="false" value="#{bundle.ListAmaGuiaTransitoEmpty}" rendered="#{amaGuiaTransitoController.items.rowCount == 0}"/>
+                <h:panelGroup rendered="#{amaGuiaTransitoController.items.rowCount > 0}">
+                    <h:outputText value="#{amaGuiaTransitoController.pagination.pageFirstItem + 1}..#{amaGuiaTransitoController.pagination.pageLastItem + 1}/#{amaGuiaTransitoController.pagination.itemsCount}"/>&nbsp;
+                    <h:commandLink action="#{amaGuiaTransitoController.previous}" value="#{bundle.Previous} #{amaGuiaTransitoController.pagination.pageSize}" rendered="#{amaGuiaTransitoController.pagination.hasPreviousPage}"/>&nbsp;
+                    <h:commandLink action="#{amaGuiaTransitoController.next}" value="#{bundle.Next} #{amaGuiaTransitoController.pagination.pageSize}" rendered="#{amaGuiaTransitoController.pagination.hasNextPage}"/>&nbsp;
+                    <h:dataTable value="#{amaGuiaTransitoController.items}" var="item" border="0" cellpadding="2" cellspacing="0" rowClasses="jsfcrud_odd_row,jsfcrud_even_row" rules="all" style="border:solid 1px">
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_nroExpediente}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroExpediente}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_nroGuia}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.nroGuia}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_fechaEmision}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaEmision}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_fechaVencimiento}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaVencimiento}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_activo}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.activo}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_audLogin}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audLogin}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_audNumIp}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.audNumIp}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_hashQr}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.hashQr}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListAmaGuiaTransitoTitle_solicitudRecojoId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.solicitudRecojoId}"/>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="&nbsp;"/>
+                            </f:facet>
+                            <h:commandLink action="#{amaGuiaTransitoController.prepareView}" value="#{bundle.ListAmaGuiaTransitoViewLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaGuiaTransitoController.prepareEdit}" value="#{bundle.ListAmaGuiaTransitoEditLink}"/>
+                            <h:outputText value=" "/>
+                            <h:commandLink action="#{amaGuiaTransitoController.destroy}" value="#{bundle.ListAmaGuiaTransitoDestroyLink}"/>
+                        </h:column>
+                    </h:dataTable>
+                </h:panelGroup>
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.prepareCreate}" value="#{bundle.ListAmaGuiaTransitoCreateLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ListAmaGuiaTransitoIndexLink}"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>

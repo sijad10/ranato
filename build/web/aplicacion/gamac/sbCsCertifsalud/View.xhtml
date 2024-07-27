@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="viewForm" rendered="#{sbCsCertifsaludController.estado == 'VER'}" >
+        <p:focus context="viewForm" />
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsCertifsalud_crear_datosCertificado}" id="pnlDatosCrear" >
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroCertificado}" style="font-weight: bold;" />
+                <h:panelGrid columns="3" >
+                    <p:outputLabel value="#{sbCsCertifsaludController.registro.numero}" />
+                </h:panelGrid>
+
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_establecimiento}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.obtenerDescripcionEstablecimiento(sbCsCertifsaludController.registro.establecimientoId)}" />
+
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_solicitante}" style="font-weight: bold;" />
+                <h:outputText value="#{sbCsCertifsaludController.obtenerDescSolicitante(sbCsCertifsaludController.registro.solicitanteId)}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_fechaEmision}" style="display: block; font-weight: bold;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.fechaEmision}" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                               
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_fechaVencimiento}" style="display: block; font-weight: bold;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.fechaVencimiento}" >
+                    <f:convertDateTime pattern="#{BundleBDIntegrado.FormatoFecha}" />
+                </p:outputLabel>
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_condicionObtenida}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.condicionObtenidaId.nombre}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroHistoriaClinica}" style="font-weight: bold;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.nroHistClinica}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_nroEspecieValorada}" style="font-weight: bold;display: block;width: 130px;" />
+                <p:outputLabel value="#{sbCsCertifsaludController.registro.especieValorada}" />
+                
+                <p:outputLabel value="#{BundleBDIntegrado.sbCsCertifsalud_crear_certificadoAdjunto}" style="font-weight: bold;display: block;width: 120px;" />
+                <p:commandButton  icon="ui-icon-disk"
+                              ajax="false"
+                              value="#{sbCsCertifsaludController.archivo }"
+                              process="@all"
+                              onclick="this.form.target = '_blank'"
+                              onblur="this.form.target = '_self'"
+                              immediate="true" >
+                    <p:fileDownload value="#{sbCsCertifsaludController.cargarDocumento()}" contentDisposition="inline"  />
+                </p:commandButton>
+               
+            </h:panelGrid>
+        </p:panel>
+        <br/>
+        
+        <p:panel header="#{BundleBDIntegrado.sbCsCertifsalud_crear_medicosQueFirman}" id="pnlMedicosFirman" >
+            <h:panelGrid columns="1">
+                <p:dataTable id="dtMedicos" value="#{sbCsCertifsaludController.lstMedicosFirman}"
+                            var="itemReg"
+                            emptyMessage="#{BundleBDIntegrado.MensajeNoResultados}" >
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_nroCMP}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.nroCmp}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_dni}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.personaId.numDoc}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_apellidosYNombres}" style="text-align: center;" >
+                        <h:outputText value="#{itemReg.medicoId.personaId.apellidosyNombres}" />
+                    </p:column>
+                    <p:column headerText="#{BundleBDIntegrado.sbCsCertifsalud_crear_dtMedico_cargo}" style="text-align: center;" >
+                        <h:outputText value="#{sbCsCertifsaludController.obtenerDescDelegadoListadoMedicos(itemReg)}" />
+                    </p:column>
+               </p:dataTable>
+            </h:panelGrid>
+        </p:panel>
+        
+        <br/>
+        <br/>
+        <p:commandButton icon="ui-icon-closethick"
+                         action="#{sbCsCertifsaludController.prepareCertificadoDeSalud() }"
+                         value="Cancelar"
+                         style="margin-left: 20px;"
+                         immediate="true" update="@all"  />
+        <br />
+    </h:form>
+</ui:composition>
+

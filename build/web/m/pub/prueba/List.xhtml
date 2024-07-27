@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/m/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+    <ui:define name="body">
+        <pm:page id="buscarPage" rendered="#{sQLPruebaMovilController.estado == 'BUSCAR'}">
+            <pm:header title="#{bundlePrueba.BuscarSQLPruebaMovilTitulo}" />
+            <pm:content>
+				<h:form id="buscarForm" >
+				<p:focus context="buscarForm" />
+				<p:defaultCommand target="botonBuscar"/>
+					<h:panelGroup id="buscarPanel">
+						<pm:field>
+							<p:outputLabel id="buscarFiltro" value="#{bundlePrueba.Filtro}" />
+							<p:inputText  value="#{sQLPruebaMovilController.filtro}" size="40" />
+                                                </pm:field>
+							<p:commandButton id="botonBuscar" value="#{bundlePrueba.Buscar}" icon="ui-icon-search" actionListener="#{sQLPruebaMovilController.buscar}"  update=":buscarPage:buscarForm" />
+						<h:panelGroup rendered="#{sQLPruebaMovilController.resultados != null}">
+                                                        <h:outputLabel value="#{bundlePrueba.Resultados}" escape="false" />
+							<p:dataTable id="buscarDatatable" value="#{sQLPruebaMovilController.resultados}"
+                                         reflow="true"
+										 var="item"
+										 rowKey="#{item.id}"
+										 emptyMessage="#{bundlePrueba.MensajeNoResultados}" 
+										 paginator="true" rows="#{bundlePrueba.PaginatorFilas}"  
+										 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+										 rowsPerPageTemplate="#{bundlePrueba.PaginatorFilasPorPagina}">
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_ID_EXPEDIENTE}" sortBy="#{item.ID_EXPEDIENTE}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_ID_EXPEDIENTE}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.ID_EXPEDIENTE}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO}" sortBy="#{item.NUMERO}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.NUMERO}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO_IDENTIFICACION}" sortBy="#{item.NUMERO_IDENTIFICACION}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_NUMERO_IDENTIFICACION}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.NUMERO_IDENTIFICACION}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_PROCESO}" sortBy="#{item.PROCESO}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_PROCESO}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.PROCESO}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_FECHA}" sortBy="#{item.FECHA}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_FECHA}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.FECHA}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_TITULO}" sortBy="#{item.TITULO}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_TITULO}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.TITULO}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_OBSERVACIONMP}" sortBy="#{item.OBSERVACIONMP}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_OBSERVACIONMP}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.OBSERVACIONMP}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_ANHO}" sortBy="#{item.ANHO}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_ANHO}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.ANHO}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.SQLPruebaMovilTitle_ESTADO}" sortBy="#{item.ESTADO}">
+									<f:facet name="header">
+										<h:outputText value="#{bundlePrueba.SQLPruebaMovilTitle_ESTADO}" />
+									</f:facet>
+									
+									<h:outputText value="#{item.ESTADO}"/>
+								</p:column>
+								<p:column headerText="#{bundlePrueba.Opciones}" exportable="false">
+									<p:commandLink actionListener="#{sQLPruebaMovilController.mostrarVer}" value="#{bundlePrueba.Ver}" update="@all" process="@this" partialSubmit="true"/>
+									<h:outputText value=" "/>
+								</p:column>                                 
+							</p:dataTable>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:form>
+            </pm:content>
+        </pm:page>
+        <ui:include src="View.xhtml" />
+    </ui:define>
+</ui:composition>
+

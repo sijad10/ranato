@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:define name="title">
+        <h:outputText value="#{bundleRenagi.BuscarDcGsspVigilantesTitulo}" rendered="#{dcGsspVigilantesRenagiController.estado == 'BUSCAR_TER'}"/>
+        <h:outputText value="#{bundleRenagi.VerDcGsspVigilantesTitulo}" rendered="#{dcGsspVigilantesRenagiController.estado == 'VER_TER'}"/>
+    </ui:define>
+    <ui:define name="body">
+        <h:form id="buscarForm" rendered="#{dcGsspVigilantesRenagiController.estado == 'BUSCAR_TER'}">
+            <p:focus context="buscarForm" />
+            <p:defaultCommand target="botonBuscar"/>
+            <h:panelGroup id="buscarPanel">
+
+                <h:panelGrid columns="7">
+                    <p:outputLabel id="buscarFiltro" value="#{bundleRenagi.Filtro}" />
+                    <p:selectOneMenu id="tipoId" value="#{dcGsspVigilantesRenagiController.tipo}" style="width: 120px;" >
+                        <f:selectItem itemValue="numdoc" itemLabel="NRO DOCUMENTO"/>
+                        <f:selectItem itemValue="carne" itemLabel="NRO CARNÉ"/>
+                        <f:selectItem itemValue="nombre" itemLabel="NOMBRE VIGILANTE"/>
+                    </p:selectOneMenu>
+                    <p:inputText  value="#{dcGsspVigilantesRenagiController.filtro}" size="80" placeholder="#{bundleRenagi.PhCriterio}" required="true" requiredMessage="#{bundleRenagi.ErrorDatoBusquedaRequerido}"/>
+                    <p:commandButton id="botonBuscar" value="#{bundleRenagi.Buscar}" icon="ui-icon-search" actionListener="#{dcGsspVigilantesRenagiController.buscar}"  update=":buscarForm" />
+                </h:panelGrid>
+                <h:panelGroup rendered="#{dcGsspVigilantesRenagiController.resultados == null}">
+                    <br/><br/>
+                    <h:outputLabel value="#{bundleRenagi.Instrucciones}" style="font-weight: bold"/><br/><br/>
+                    <h:outputLabel value="#{bundleRenagi.InstruccionesGsspVigilantes}" escape="false"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{dcGsspVigilantesRenagiController.resultados != null}">
+                    <h:panelGrid columns="2" style="border: 0px; width: 100%;">
+                        <h:outputLabel value="#{bundleRenagi.Resultados}" escape="false" />
+                    </h:panelGrid>
+                    <p:dataTable id="buscarDatatable" value="#{dcGsspVigilantesRenagiController.resultados}"
+                                 var="item"
+                                 rowKey="#{item.id}"
+                                 emptyMessage="#{bundleRenagi.MensajeNoResultados}" 
+                                 paginator="true" rows="#{bundleRenagi.PaginatorFilas}"  
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="#{bundleRenagi.PaginatorFilasPorPagina}">
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_NRO_CRN_VIG}" sortBy="#{item.NRO_CRN_VIG}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_NRO_CRN_VIG}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NRO_CRN_VIG}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_NOMBRE}" sortBy="#{item.NOMBRE}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_NOMBRE}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.NOMBRE}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_FEC_EMI}" sortBy="#{item.FEC_EMI}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_FEC_EMI}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FEC_EMI}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_FEC_VENC}" sortBy="#{item.FEC_VENC}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_FEC_VENC}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.FEC_VENC}">
+                                <f:converter converterId="fechaConverter" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_COD_USR}" sortBy="#{item.COD_USR}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_COD_USR}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.COD_USR}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_ESTADO}" sortBy="#{item.ESTADO}" style="text-align: center;" >
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_ESTADO}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.ESTADO}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.DcGsspVigilantesTitle_DES_MOD}" sortBy="#{item.DES_MOD}" width="20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRenagi.DcGsspVigilantesTitle_DES_MOD}" />
+                            </f:facet>
+
+                            <h:outputText value="#{item.DES_MOD}"/>
+                        </p:column>
+                        <p:column headerText="#{bundleRenagi.Ver}" exportable="false" width="5%" style="text-align: center;" >
+                            <p:commandLink actionListener="#{dcGsspVigilantesRenagiController.mostrarVer}" value="#{bundleRenagi.Ver}" process="@this" partialSubmit="true" update="@all"/>
+                            <h:outputText value=" "/>
+                        </p:column>                                 
+                    </p:dataTable>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+        <ui:include src="ViewTercero.xhtml" />
+    </ui:define>
+</ui:composition>
+

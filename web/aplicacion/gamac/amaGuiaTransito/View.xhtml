@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/template.xhtml">
+        <ui:define name="title">
+            <h:outputText value="#{bundle.ViewAmaGuiaTransitoTitle}"></h:outputText>
+        </ui:define>
+        <ui:define name="body">
+            <h:panelGroup id="messagePanel" layout="block">
+                <h:messages errorStyle="color: red" infoStyle="color: green" layout="table"/>
+            </h:panelGroup>
+            <h:form>
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_id}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.id}" title="#{bundle.ViewAmaGuiaTransitoTitle_id}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_nroExpediente}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.nroExpediente}" title="#{bundle.ViewAmaGuiaTransitoTitle_nroExpediente}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_nroGuia}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.nroGuia}" title="#{bundle.ViewAmaGuiaTransitoTitle_nroGuia}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_fechaEmision}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.fechaEmision}" title="#{bundle.ViewAmaGuiaTransitoTitle_fechaEmision}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_fechaVencimiento}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.fechaVencimiento}" title="#{bundle.ViewAmaGuiaTransitoTitle_fechaVencimiento}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_activo}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.activo}" title="#{bundle.ViewAmaGuiaTransitoTitle_activo}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_audLogin}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.audLogin}" title="#{bundle.ViewAmaGuiaTransitoTitle_audLogin}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_audNumIp}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.audNumIp}" title="#{bundle.ViewAmaGuiaTransitoTitle_audNumIp}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_hashQr}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.hashQr}" title="#{bundle.ViewAmaGuiaTransitoTitle_hashQr}"/>
+                    <h:outputText value="#{bundle.ViewAmaGuiaTransitoLabel_solicitudRecojoId}"/>
+                    <h:outputText value="#{amaGuiaTransitoController.selected.solicitudRecojoId}" title="#{bundle.ViewAmaGuiaTransitoTitle_solicitudRecojoId}"/>
+                </h:panelGrid>
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.destroyAndView}" value="#{bundle.ViewAmaGuiaTransitoDestroyLink}"/>
+                <br />
+                <br />
+                <h:link outcome="Edit" value="#{bundle.ViewAmaGuiaTransitoEditLink}"/>
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.prepareCreate}" value="#{bundle.ViewAmaGuiaTransitoCreateLink}" />
+                <br />
+                <h:commandLink action="#{amaGuiaTransitoController.prepareList}" value="#{bundle.ViewAmaGuiaTransitoShowAllLink}"/>
+                <br />
+                <br />
+                <h:link outcome="/index" value="#{bundle.ViewAmaGuiaTransitoIndexLink}"/>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+
+</html>
